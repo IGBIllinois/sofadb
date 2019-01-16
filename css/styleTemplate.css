@@ -1,0 +1,394 @@
+/* Stylesheet / CSS */
+
+/* CSS Reset - Do not edit this line */ 
+html {margin:0;padding:0;border:0;}body, div, span, object, iframe,  h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, dialog, figure, footer, header, hgroup, nav, section {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+
+#navbar ul {
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+}
+#navbar a {
+	display: block;
+	width: 25%;
+	float: left;
+	text-transform: uppercase;
+	text-align: center;
+	color: #FFF;
+	background-color: #333;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	font-style: normal;
+	font-weight: bold;
+	text-decoration: none;
+	margin-bottom:10px;
+}
+#navbar a:hover, a:focus, a:active {
+	background-color: #099;
+	color: #C00;
+}
+
+
+#navbar2 ul {
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+}
+#navbar2 a {
+	display: block;
+	width: 50%;
+	float: left;
+	text-transform: uppercase;
+	text-align: center;
+	color: #FFF;
+	background-color: #333;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	font-style: normal;
+	font-weight: bold;
+	text-decoration: none;
+	margin-bottom:10px;
+}
+#navbar2 a:hover, a:focus, a:active {
+	background-color: #099;
+	color: #C00;
+}
+
+#leftnav {
+	float: left;
+	width: 10%;
+	background-color: #CCC;
+	margin-right: 15px;
+	margin-left: 10px;
+	padding-top: 20px;
+	padding-right: 10px;
+	padding-bottom: 23px;
+	padding-left: 10px;
+	border-radius: 15px;
+}
+
+
+#leftnav ul {
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+}
+#leftnav a {
+	display: block;
+	text-align: left;
+	color: #000;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	padding-left: 3px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-style: normal;
+	font-weight: bold;
+	text-decoration: none;
+	border-radius: 3px;
+	background-color: #099;
+}
+
+
+
+
+
+
+#header {
+	background-color: #FFF;
+	float: left;
+	margin-left: 10px;
+	margin-top: 10px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+article, aside, dialog, figure, footer, header, hgroup, nav, section {display:block;}body {line-height:1.5;background:white;}table {border-collapse:separate;border-spacing:0;}caption, th, td {text-align:left;font-weight:normal;float:none !important;}table, th, td {vertical-align:middle;}blockquote:before, blockquote:after, q:before, q:after {content:'';}blockquote, q {quotes:"" "";}a img {border:none;}:focus {outline:0;}
+
+
+/* General Styles
+----------------------------------------------------------------------------------------------------*/
+html {
+	min-height: 100%;
+}
+body {
+	height: 100%;
+	position: relative;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #888;
+	font-size: 13px;
+	line-height: 20px;
+	min-width: 1200px;
+	border-top: 3px solid #919191;
+	background-image: none;
+	background-repeat: repeat;
+	float: left;
+	width: 100%;
+}
+
+
+
+
+#title {
+	font-size: 18px;
+	margin-left: 10px;
+	padding-left: 10px;
+	float: left;
+	padding-top: 90px;
+}
+#hline {
+	clear: left;
+	float: none;
+}
+#footer {
+	background-color: #FFF;
+	margin-top: 20px;
+	clear: both;
+}
+
+#submit1 {
+	position:absolute;
+	z-index: 10;
+	border:0;
+}
+
+#submit2 {
+	position:absolute;
+	margin-top:0px;
+	border:0;
+}
+
+#contactname {
+	text-align: left;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 20px;
+}
+#contactentry {
+	padding-left: 20px;
+}
+#contactmessage {
+	padding-left: 20px;
+}
+#contactsend {
+	padding-left: 180px;
+}
+.cntr {
+	text-align: center;
+}
+#registerform {
+	
+	margin:auto;
+	float: left;
+	position: relative;
+	width: 72%;
+}
+.roundedborder {
+	border-radius: 15px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.label{
+	display: inline-block;
+	width: 210px;
+	text-align: right;
+	font-weight: bold;
+	margin-right: 2px;
+	color: #5E5D5D;
+	}
+	
+.labelsameline{
+	display: inline-block; width: 210px;  
+	
+	}
+.errorlocation {
+	font-family: Verdana;
+	font-size: 14px;
+	color: #DD0000;
+	padding-left: 200px;
+	clear: both;
+}
+
+#caseregion {
+	float: left;
+	margin-right: 15px;
+	width: 60%;
+}
+#rightnav {
+	float: left;
+}
+#caseform {
+	float: left;
+	margin-right: 15px;
+	margin-left: 0px;
+	width:70%
+	
+}
+
+#memberregion {
+	float: left;
+	margin-right: 15px;
+	width:70%;
+}
+
+
+#hortable
+{    line-height: 1.6em;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	background: #fff;
+	margin: 45px;
+	width: 800px;
+	border-collapse: collapse;
+	text-align: left;
+	float:left;
+	
+}
+#hortable th
+{
+	font-size: 14px;
+	font-weight: normal;
+	color: #039;
+	padding: 10px 8px;
+	border-bottom: 2px solid #6678b1;
+}
+#hortable td
+{
+	border-bottom: 1px solid #ccc;
+	color: #669;
+	padding: 6px 8px;
+}
+#hortable tbody tr:hover td
+{
+	color: #009;
+	background-color:#CCC;
+}
+
+
+
+#hortable2
+{    line-height: 1.6em;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	background: #fff;
+	margin: 45px;
+	width: 100%;
+	border-collapse: collapse;
+	text-align: left;
+	float:left;
+	
+}
+#hortable2 th
+{
+	font-size: 14px;
+	font-weight: normal;
+	color: #039;
+	padding: 10px 8px;
+	border-bottom: 2px solid #6678b1;
+}
+#hortable2 td
+{
+	border-bottom: 1px solid #ccc;
+	color: #669;
+	padding: 6px 8px;
+}
+#hortable2 tbody tr:hover td
+{
+	color: #009;
+	background-color:#CCC;
+}
+
+
+
+.scroll {
+	overflow: -moz-scrollbars-vertical;
+	overflow: -moz-scrollbars-horizontal;
+	overflow-x: scroll;
+	overflow-y: scroll;
+	width: 100%;
+}
+
+.clear{
+	width:100%;
+	float:none;
+	clear:both;
+}
+#methodholder {
+	height: 200px;
+}
+.userheading {
+	font-weight: bolder;
+	font-size: x-large;
+	text-align: center;
+	font-style: normal;
+	color: #171717;
+}
+.caseinfobox {
+	border: solid 1px #000000;
+	overflow: hidden;
+	border-radius: 15px;
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	padding-top: 4px;
+	padding-bottom: 10px;
+}
+
+.methodinfobox {
+	border-radius: 15px;
+	padding-left: 20px;
+	padding-right: 20px;
+	border: solid 1px #000000;
+	overflow: hidden;
+	
+	
+}
+.boldlegend {
+	color: #000000;
+	font-weight: bold;
+	font-size: large;
+}
+.enclosefieldset {
+	
+	border: solid 2px #cc0000;
+	border-radius: 15px;
+	padding-left: 20px;
+	padding-right: 20px;
+	overflow: hidden;
+	
+}
+.bigsavebutton {
+	margin-left: 8px;
+	padding-bottom: 0px;
+	padding-top: 0px;
+	position: relative;
+	left: -102px;
+	top: -70px;
+	float: right;
+	margin-bottom: -33px;
+}
+#templatecontainer {
+	min-height: 800px;
+}
+.dbresults {
+	color: #000;
+	font-weight: normal;
+	font-size: larger;
+}
+.outsidetext {
+	color: #900;
+}
