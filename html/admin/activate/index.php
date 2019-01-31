@@ -76,8 +76,10 @@ if(!result)
 
 $emailrow = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
-   $admin_email="hughesc@illinois.edu";
+   //$admin_email="hughesc@illinois.edu";
    $to = $emailrow['uname'];
+$admin_email = ADMIN_EMAIL;
+
    $subject = "SOFA Database Account Activated";
    $message = "Dear ".$emailrow['firstname']." ".$emailrow['lastname'].",\n Welcome to the SOFA Database. Your account is now activated and you can add cases, search the database, and download case information from the database.\n Best regards,\n SOFA DB ADMIN\n http://www.sofadb.org";
    $header = "From:".$admin_email."\r\n";

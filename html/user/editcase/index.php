@@ -474,7 +474,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $casenotes = mysqli_real_escape_string($dbcon, trim($_POST['casenotes']));
 	}
 	
-    
+        if(isset($_POST['farace_asian']))
+	{
+      $faAs=$_POST['farace_asian'];
+	}
+	else{$faAs=0;}
+	
+	 if(isset($_POST['farace_black']))
+	{
+      $faBl=$_POST['farace_black'];
+	}
+	else{$faBl=0;}
+	
+     if(isset($_POST['farace_white']))
+	{
+      $faWh=$_POST['farace_white'];
+	}
+	else{$faWh=0;}
+	
+	 if(isset($_POST['farace_hispanic']))
+	{
+      $faHi=$_POST['farace_hispanic'];
+	}
+	else{$faHi=0;}
+	
+   if(isset($_POST['farace_native']))
+	{
+      $faNa=$_POST['farace_native'];
+	}
+	else{$faNa=0;}
+  
+   if(isset($_POST['farace_white']))
+	{
+      $faWh=$_POST['farace_white'];
+	}
+	else{$faWh=0;}
+   
+    if(isset($_POST['farace_other']))
+	{
+      $faOt=$_POST['farace_other'];
+	}
+	else{$faOt=0;}
       
     
     
@@ -580,7 +620,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			 
 				
 			$result = @mysqli_query ($dbcon, $q); // Run the query.
-		$inid=mysql_insert_id();
+		$inid=mysqli_insert_id($dbcon);
      
         		if (!$result) 
                 { // If it ran OK.

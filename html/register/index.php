@@ -1,4 +1,6 @@
-<?php ob_start();?>
+<?php ob_start();
+$admin_email = ADMIN_EMAIL;
+        ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -165,13 +167,13 @@ $ph = NULL;
 	if (!empty($_POST['yearsexp'])) {
 		$exp = mysqli_real_escape_string($dbcon, trim($_POST['yearsexp']));
 	} else {
-		$exp=NULL;
+		$exp=0;
 	}
 	
 	if (!empty($_POST['casesperyear'])) {
 		$cases = mysqli_real_escape_string($dbcon, trim($_POST['casesperyear']));
 	} else {
-	$cases=NULL;	
+	$cases=0;	
 	}
 	
 	
@@ -183,12 +185,14 @@ $q = "SELECT id FROM members WHERE uname = '$e' ";
 $result=mysqli_query ($dbcon, $q) ; 	
 if (mysqli_num_rows($result) == 0){//The mail address has not been registered already therefore register the user in the users table
 		// Make the query:
-		$q = "INSERT INTO members (id,uname, pwd,firstname,lastname,title,degree,degreeyear,fieldofstudy,aafsstatus,institution,yearsexperience,caseperyear,region,mailaddress,mailaddress2,city,state,zip,phone,permissionstatus,dateregistered,casessubmitted,caseswithdrawn,totalcases) VALUES (' ', '$e', '$hash', '$fn', '$ln', '$title', '$degree', '$degreeyear','$field','$aafs','$inst','$exp','$cases','$region','$ad1','$ad2','$cty','$state','$pcode','$ph','0', NOW(), '0', '0', '0')";		
+		$q = "INSERT INTO members (uname, pwd,firstname,lastname,title,degree,degreeyear,fieldofstudy,aafsstatus,institution,yearsexperience,caseperyear,region,mailaddress,mailaddress2,city,state,zip,phone,permissionstatus,dateregistered,casessubmitted,caseswithdrawn,totalcases) VALUES ('$e', '$hash', '$fn', '$ln', '$title', '$degree', '$degreeyear','$field','$aafs','$inst','$exp','$cases','$region','$ad1','$ad2','$cty','$state','$pcode','$ph','0', NOW(), '0', '0', '0')";		
 		$result = @mysqli_query ($dbcon, $q); // Run the query.
 		if ($result) { // If it ran OK.
-	  $admin_email="hughesc@illinois.edu";
+	  //$admin_email="hughesc@illinois.edu";
+                    
       $to = $admin_email;
-   $from="admin@sofainc.org";
+   //$from="admin@sofainc.org";
+      $from= $admin_email;
    $subject = "SOFA DB ADMIN ALERT: Activate new user";
    $message = "New User:".$fn." ".$ln." is requesting activation.\n Email address is:".$e;
    $header = "From:".$from."\r\n";
@@ -322,7 +326,7 @@ By requesting registration to the SOFA Case Database, I agree to the following g
 </ol>
 	</fieldset>
 
-    
+    <?php echo("Email should go to $admin_email<BR>"); ?>
   <br />	<br /> <label class="label" for="regsubmit">Click here to register</label>
     <input name="regsubmit" id="regsubmit" type="submit" value="Register"/>
     <div id="registration_errorloc" class="errorlocation">
