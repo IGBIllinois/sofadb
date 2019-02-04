@@ -1,0 +1,70 @@
+[16-Jan-2019 17:20:06 UTC] PHP Warning:  require_once(C:/Apache24/htdocs/mysqli_connect.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\sofadb\user\addcase\index.php on line 8
+[16-Jan-2019 17:20:06 UTC] PHP Fatal error:  require_once(): Failed opening required 'C:/Apache24/htdocs/mysqli_connect.php' (include_path='.;C:\PHP\ext;C:\PHP\ext\imagick;C:\ImageMagick;C:\Users\mbach\BOA\') in C:\Apache24\htdocs\sofadb\user\addcase\index.php on line 8
+[25-Jan-2019 17:28:54 UTC] PHP Notice:  Undefined variable: faAs in C:\Apache24\htdocs\sofadb\user\addcase\index.php on line 531
+[25-Jan-2019 17:28:54 UTC] PHP Notice:  Undefined variable: faWh in C:\Apache24\htdocs\sofadb\user\addcase\index.php on line 531
+[25-Jan-2019 17:28:54 UTC] PHP Notice:  Undefined variable: faBl in C:\Apache24\htdocs\sofadb\user\addcase\index.php on line 531
+[25-Jan-2019 17:28:54 UTC] PHP Notice:  Undefined variable: faNa in C:\Apache24\htdocs\sofadb\user\addcase\index.php on line 531
+[25-Jan-2019 17:28:54 UTC] PHP Notice:  Undefined variable: faHi in C:\Apache24\htdocs\sofadb\user\addcase\index.php on line 531
+[25-Jan-2019 17:28:54 UTC] PHP Notice:  Undefined variable: faOt in C:\Apache24\htdocs\sofadb\user\addcase\index.php on line 531
+[25-Jan-2019 17:28:54 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_insert_id() in C:\Apache24\htdocs\sofadb\user\addcase\index.php:533
+Stack trace:
+#0 {main}
+  thrown in C:\Apache24\htdocs\sofadb\user\addcase\index.php on line 533
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 21
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 26
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 28
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 31
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 32
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 33
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 42
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 54
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 55
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 56
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 57
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 74
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 76
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 83
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 88
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 97
+[31-Jan-2019 20:41:14 UTC] PHP Notice:  Use of undefined constant ROOT_URL - assumed 'ROOT_URL' in C:\Apache24\htdocs\sofadb\html\include\header.php on line 101
+[31-Jan-2019 20:42:12 UTC] PHP Warning:  require_once(../conf/settings.inc.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\sofadb\html\include\header.php on line 2
+[31-Jan-2019 20:42:12 UTC] PHP Fatal error:  require_once(): Failed opening required '../conf/settings.inc.php' (include_path='.;C:\PHP\ext;C:\PHP\ext\imagick;C:\ImageMagick;C:\Users\mbach\BOA\') in C:\Apache24\htdocs\sofadb\html\include\header.php on line 2
+[31-Jan-2019 20:42:53 UTC] PHP Warning:  require_once(../../conf/settings.inc.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\sofadb\html\include\header.php on line 2
+[31-Jan-2019 20:42:53 UTC] PHP Fatal error:  require_once(): Failed opening required '../../conf/settings.inc.php' (include_path='.;C:\PHP\ext;C:\PHP\ext\imagick;C:\ImageMagick;C:\Users\mbach\BOA\') in C:\Apache24\htdocs\sofadb\html\include\header.php on line 2
+[31-Jan-2019 20:48:20 UTC] PHP Warning:  require_once(../../conf/settings.inc.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\sofadb\html\include\header.php on line 2
+[31-Jan-2019 20:48:20 UTC] PHP Fatal error:  require_once(): Failed opening required '../../conf/settings.inc.php' (include_path='.;C:\PHP\ext;C:\PHP\ext\imagick;C:\ImageMagick;C:\Users\mbach\BOA\') in C:\Apache24\htdocs\sofadb\html\include\header.php on line 2
+[31-Jan-2019 20:48:47 UTC] PHP Warning:  require_once(../conf/settings.inc.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\sofadb\html\include\header.php on line 2
+[31-Jan-2019 20:48:47 UTC] PHP Fatal error:  require_once(): Failed opening required '../conf/settings.inc.php' (include_path='.;C:\PHP\ext;C:\PHP\ext\imagick;C:\ImageMagick;C:\Users\mbach\BOA\') in C:\Apache24\htdocs\sofadb\html\include\header.php on line 2
+[31-Jan-2019 20:51:12 UTC] PHP Warning:  require_once(../../conf/settings.inc.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\sofadb\html\include\header.php on line 2
+[31-Jan-2019 20:51:12 UTC] PHP Fatal error:  require_once(): Failed opening required '../../conf/settings.inc.php' (include_path='.;C:\PHP\ext;C:\PHP\ext\imagick;C:\ImageMagick;C:\Users\mbach\BOA\') in C:\Apache24\htdocs\sofadb\html\include\header.php on line 2
+[31-Jan-2019 20:51:29 UTC] PHP Notice:  Constant DB_USER already defined in C:\Apache24\htdocs\mysqli_connect.php on line 5
+[31-Jan-2019 20:51:29 UTC] PHP Notice:  Constant DB_PASSWORD already defined in C:\Apache24\htdocs\mysqli_connect.php on line 6
+[31-Jan-2019 20:51:29 UTC] PHP Notice:  Constant DB_HOST already defined in C:\Apache24\htdocs\mysqli_connect.php on line 7
+[31-Jan-2019 20:51:29 UTC] PHP Notice:  Constant DB_NAME already defined in C:\Apache24\htdocs\mysqli_connect.php on line 8
+[31-Jan-2019 20:53:42 UTC] PHP Notice:  Constant DB_USER already defined in C:\Apache24\htdocs\mysqli_connect.php on line 5
+[31-Jan-2019 20:53:42 UTC] PHP Notice:  Constant DB_PASSWORD already defined in C:\Apache24\htdocs\mysqli_connect.php on line 6
+[31-Jan-2019 20:53:42 UTC] PHP Notice:  Constant DB_HOST already defined in C:\Apache24\htdocs\mysqli_connect.php on line 7
+[31-Jan-2019 20:53:42 UTC] PHP Notice:  Constant DB_NAME already defined in C:\Apache24\htdocs\mysqli_connect.php on line 8
+[31-Jan-2019 20:53:43 UTC] PHP Notice:  Constant DB_USER already defined in C:\Apache24\htdocs\mysqli_connect.php on line 5
+[31-Jan-2019 20:53:43 UTC] PHP Notice:  Constant DB_PASSWORD already defined in C:\Apache24\htdocs\mysqli_connect.php on line 6
+[31-Jan-2019 20:53:43 UTC] PHP Notice:  Constant DB_HOST already defined in C:\Apache24\htdocs\mysqli_connect.php on line 7
+[31-Jan-2019 20:53:43 UTC] PHP Notice:  Constant DB_NAME already defined in C:\Apache24\htdocs\mysqli_connect.php on line 8
+[31-Jan-2019 20:53:47 UTC] PHP Notice:  Constant DB_USER already defined in C:\Apache24\htdocs\mysqli_connect.php on line 5
+[31-Jan-2019 20:53:47 UTC] PHP Notice:  Constant DB_PASSWORD already defined in C:\Apache24\htdocs\mysqli_connect.php on line 6
+[31-Jan-2019 20:53:47 UTC] PHP Notice:  Constant DB_HOST already defined in C:\Apache24\htdocs\mysqli_connect.php on line 7
+[31-Jan-2019 20:53:47 UTC] PHP Notice:  Constant DB_NAME already defined in C:\Apache24\htdocs\mysqli_connect.php on line 8
+[01-Feb-2019 21:32:33 UTC] PHP Notice:  Undefined variable: faAs in C:\Apache24\htdocs\sofadb\html\user\addcase\index.php on line 286
+[01-Feb-2019 21:32:33 UTC] PHP Notice:  Undefined variable: faWh in C:\Apache24\htdocs\sofadb\html\user\addcase\index.php on line 286
+[01-Feb-2019 21:32:33 UTC] PHP Notice:  Undefined variable: faBl in C:\Apache24\htdocs\sofadb\html\user\addcase\index.php on line 286
+[01-Feb-2019 21:32:33 UTC] PHP Notice:  Undefined variable: faNa in C:\Apache24\htdocs\sofadb\html\user\addcase\index.php on line 286
+[01-Feb-2019 21:32:33 UTC] PHP Notice:  Undefined variable: faHi in C:\Apache24\htdocs\sofadb\html\user\addcase\index.php on line 286
+[01-Feb-2019 21:32:33 UTC] PHP Notice:  Undefined variable: faOt in C:\Apache24\htdocs\sofadb\html\user\addcase\index.php on line 286
+[01-Feb-2019 21:32:33 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_insert_id() in C:\Apache24\htdocs\sofadb\html\user\addcase\index.php:288
+Stack trace:
+#0 {main}
+  thrown in C:\Apache24\htdocs\sofadb\html\user\addcase\index.php on line 288
+[01-Feb-2019 22:21:51 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_insert_id() in C:\Apache24\htdocs\sofadb\html\user\addcase\index.php:335
+Stack trace:
+#0 {main}
+  thrown in C:\Apache24\htdocs\sofadb\html\user\addcase\index.php on line 335
+[01-Feb-2019 23:41:54 UTC] PHP Warning:  session_destroy(): Trying to destroy uninitialized session in C:\Apache24\htdocs\sofadb\html\include\session_user.php on line 2

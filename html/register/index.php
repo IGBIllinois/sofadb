@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$errors[] = 'Your two passwords did not match.';
 		} else {
 			$p = mysqli_real_escape_string($dbcon, trim($_POST['psword1']));
-$s = '%y0usha11n0tpass*';
+$s = SALT;
 $hash=md5($s . $p);
 		}
 	} else {

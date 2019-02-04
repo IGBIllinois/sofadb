@@ -12,3 +12,6 @@ DEFINE ('DB_HOST', '');
 DEFINE ('DB_NAME', '');
 
 DEFINE ('ADMIN_EMAIL', '');
+DEFINE ("ROOT_URL", '');
+
+DEFINE ("SALT", '');

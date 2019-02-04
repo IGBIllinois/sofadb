@@ -1,4 +1,5 @@
 <?php
+require_once("../conf/settings.inc.php");
 ob_start();
  session_start();
   session_regenerate_id();
@@ -26,22 +27,7 @@ elseif($_SESSION['loggedin']==1)
 	<link type="text/css" rel="stylesheet" href="css/style.css" media="screen" />
 	<!-- // Load stylesheets -->
 	
-<script>
 
-
-	$(document).ready(function(){
- 
-	$("#submit1").hover(
-	function() {
-	$(this).animate({"opacity": "0"}, "slow");
-	},
-	function() {
-	$(this).animate({"opacity": "1"}, "slow");
-	});
- 	});
-
-
-</script>
 
 
 </head>
@@ -79,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if (!empty($_POST['psword'])) {
 			$p = mysqli_real_escape_string($dbcon, trim($_POST['psword']));
 // below added code:
-$s = '%y0usha11n0tpass*';
+$s = SALT;
 $hash=md5($s . $p);
 	} else {
 	$p = FALSE;
@@ -196,14 +182,6 @@ exit(); // Cancels the rest of the script.
 		<div id="wrapperbottom"></div>
   
   
-  </div>
-  <br /><br /><br /><br />
-  </div>
-  <div id="footer">Copyright 2014 by <a href="http://www.sofainc.org/" target="_blank">SOFA</a>.</div>
-</div>
-</div>
-
-
-</body>
-</html>
-<?php ob_end_flush(); ?>
+<?php
+require_once("include/footer.php");
+?>
