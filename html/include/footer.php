@@ -7,28 +7,15 @@
  */
 
 ?>
-    
-    
-    
-    
-    
-    
-    </div>
-  
-  
-  
-  
-  
-  
-  
-</div>
-<div id="footer">Copyright 2014 by <a href="http://www.sofainc.org/" target="_blank">SOFA</a>.</div>
-</div>
 
-
+  </div>
+  <br /><br /><br /><br />
+  </div>
+  <div id="footer">Copyright 2014 by <a href="http://www.sofainc.org/" target="_blank">SOFA</a>.</div>
+</div>
+</div>
 
 
 </body>
 </html>
-
 <?php ob_end_flush(); ?>

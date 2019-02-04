@@ -1,7 +1,10 @@
 <?php 
-require_once('../../conf/settings.inc.php');
+require_once('../../../conf/settings.inc.php');
 require_once('session_user.php') ;
 require_once('main.inc.php');
+
+//echo("DIR = ".__DIR__."<BR>");
+//echo("DOC ROOT = ".$_SERVER['DOCUMENT_ROOT']."<BR>");
 
 ?>
 
@@ -10,7 +13,7 @@ require_once('main.inc.php');
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>My Account</title>
-<link href="<?php echo(ROOT_URL) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
+<link href="/sofadb/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 

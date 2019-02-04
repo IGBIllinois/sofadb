@@ -1,6 +1,12 @@
 <?php
 
+if(session_status() == PHP_SESSION_ACTIVE) {
+    // destroy old session
+    session_destroy();
+}
+if(session_status() != PHP_SESSION_ACTIVE) {
  session_start();
+}
  session_regenerate_id();
   ob_start();
   if(isset($_SESSION['loggedin']))
