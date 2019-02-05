@@ -155,7 +155,7 @@ $(document).ready(function(){
 	
 	
 	
-		$('#removemethodbutton').click(function(){
+		$('#removemethodbutton2').click(function(){
 	     
 	sendarray=deleteRow('hortable');
 	
@@ -165,7 +165,7 @@ $(document).ready(function(){
 		
 });//end action button
 	
-	$('#editmethodbutton').click(function(){
+	$('#editmethodbutton2').click(function(){
 	     
 	senddata=deleteOneRow('hortable');
 	recdata=0;

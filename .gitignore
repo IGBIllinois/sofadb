@@ -5,3 +5,4 @@
 ._*
 .DS_Store
 error_log
+*php_errors.log

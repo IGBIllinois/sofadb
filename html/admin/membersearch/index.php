@@ -1,60 +1,10 @@
 <?php
 
- require('../../include/session_admin.php') ;
+ require_once('../../include/header_admin.php') ;
 
 
 ?>
 
-
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Member Search</title>
-<link href="../../css/styleTemplate.css" rel="stylesheet" type="text/css" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <script type='text/javascript' src='gen_validatorv4.js'></script>
-
-
-
-
-<!-- // Load Javascipt -->
-</head>
-
-<body>
-<div id="top">
-<div id="header"><a href="#"><img src="../../images/customLogo.gif" width="351" height="147" /></a></div>
-
-<div id="title">
-<h1>Forensic Case Database</h1>
-</div>
-
-<div id="hline">
-<hr size="3" />
-</div>
-
-<div id="navbar">
-  <ul>
-    <li><a href="../../">Home</a></li>
-    <li><a href="../">My Account</a></li>
-    <li><a href="../../logout.php">Logout</a></li>
-    <li><a href="../../contact/">Contact Us</a></li>
-  </ul>
-</div>
-<div id="templatecontainer"><h1 style="text-align:center">Admin Tools</h1>
-  <div id="leftnav"><h2 style="color:#00C ;font-weight: bold;font-size: 16pt;">Control Panel</h2>
-  <ul>
-    <li><a href="../activate/index.php">Activate Members</a></li>
-    <li><a href="../">Member List</a></li>
-    <li><a href="./?search=1">Search Members</a></li>
-    <li><a href="../editprofile/">Edit Member Profiles</a></li>
-    <li><a href="../editcase/">Edit Case Data</a></li>
-    <li><a href="../searchdb/">Search Database</a></li>
-    
-    
-  </ul>
-    </div>
   <div id="memberregion"> <h2 style="text-align:center">Search List of Members</h2> 
  
  
@@ -70,7 +20,6 @@
   
   if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 	  
-	 require_once($_SERVER['DOCUMENT_ROOT'].'/mysqli_connect.php');
 	 
 	 	if (!empty($_GET['mID'])) 
 		{

@@ -1,4 +1,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?php
+
+
+  if(isset($_SESSION['loggedin']))
+  {
+     require_once("../include/session_user.php"); 
+  } else {
+       session_start();
+  }
+    require_once("../../conf/settings.inc.php");
+
+?>
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -28,9 +41,17 @@
 <div id="navbar">
   <ul>
     <li><a href="../">Home</a></li>
+<?php
+    if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1) {
+?>
+    
     <li><a href="../">My Account</a></li>
     <li><a href="../logout.php">Logout</a></li>
     <li><a href="../contact/">Contact Us</a></li>
+<?php
+
+    }
+?>
   </ul>
 </div>
 
@@ -43,9 +64,11 @@
   <?php 
    if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-	 $admin_email="hughesc@illinois.edu";
+	 //$admin_email="hughesc@illinois.edu";
+       $admin_email = ADMIN_EMAIL;
     $to = $admin_email;
-  $from = "admin@sofainc.org";
+    $from = FROM_EMAIL;
+  //$from = "admin@sofainc.org";
    $subject = "SOFA DB ADMIN ALERT: Comments and Questions";
    $message = $_POST['emailmessage']."\n From email:A ".$_POST['emailentry']."and Name: A ".$_POST['nameentry'];
    $header = "From:".$from."\r\n";

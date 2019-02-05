@@ -1,4 +1,6 @@
-<?php ob_start();
+<?php 
+require_once("../../conf/settings.inc.php");
+require_once("../include/main.inc.php");
 $admin_email = ADMIN_EMAIL;
         ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -39,7 +41,6 @@ $admin_email = ADMIN_EMAIL;
   <h1 class="cntr">Membership Registration</h1>
   
   <?php
-require($_SERVER['DOCUMENT_ROOT'].'/mysqli_connect.php'); // Connect to the database.
 // This code inserts a record into the users table
 // Has the form been submitted?
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
