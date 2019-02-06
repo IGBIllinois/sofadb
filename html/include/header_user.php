@@ -1,5 +1,9 @@
 <?php 
+if(file_exists('../../../conf/settings.inc.php')) {
 require_once('../../../conf/settings.inc.php');
+} else if('../../conf/settings.inc.php') {
+    require_once('../../conf/settings.inc.php');
+}
 require_once('session_user.php') ;
 require_once('main.inc.php');
 
