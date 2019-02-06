@@ -135,9 +135,9 @@ while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 	<td><a href="../viewcase.php?id=' . $row['id'] . '">View</a></td>';
 	
 	echo '<td>
-	<form action="index.php" method="post" id="deletedata">
+	<form action="index.php" method="post" id="deletedata" onsubmit="return confirm(\'Do you really want to delete this case?\')">
 	<input name="delid" type="hidden" value="'.$row['id'].'"/>
-	<input name="delsubmit" type="submit" value="Delete"/> </form>
+	<input name="delsubmit" type="submit" value="Delete" /> </form>
 	</td>';
 	
 	
