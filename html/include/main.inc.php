@@ -5,9 +5,14 @@ ini_set('display_errors',1);
 set_include_path(get_include_path().";../libs;../conf;");
 
 function my_autoloader($class_name) {
-	if(file_exists("../../libs/" . $class_name . ".class.inc.php")) {
-		require_once "../../libs/" .$class_name . '.class.inc.php';
+
+    $paths = array("../libs/", "../../libs/");
+
+    foreach($paths as $path)
+	if(file_exists($path . $class_name . ".class.inc.php")) {
+		require_once $path .$class_name . '.class.inc.php';
 	}
+
 
 }
 spl_autoload_register('my_autoloader');
@@ -24,6 +29,6 @@ mysqli_set_charset($dbcon, 'utf8');
 ini_set('session.cache_limiter','public');
 session_cache_limiter(false);
 
-$pagerows = 20;
+$pagerows = PAGEROWS;
 
 ?>
