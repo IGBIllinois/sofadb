@@ -675,7 +675,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     </div>
     <fieldset class="methodinfobox"><legend class="boldlegend">Remove Methods</legend>
-    <input type="button" value="Remove Method" id="removemethodbutton2"  /> 
+    <input type="button" value="Remove Method" id="removemethodbutton"  /> 
                <!--     	<input type="button" value="Edit Method" id="editmethodbutton"  />-->
                          
 					(Select a method in the table above to remove.)
@@ -712,7 +712,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <img alt="Please Wait" src="ajax-loader.gif"/>
     </span>
     <span id="result_3" style="display: none;"></span></p>
-           <p>  <input type="button" class="showybutton" id="addmethodbutton2" value="Add Method to List" ></p>
+           <p>  <input type="button" class="showybutton" id="addmethodbutton" value="Add Method to List" ></p>
              </div>
               <span name="savebutton" class="bigsavebutton">
     <input name="savecase" type="image" id="savecase" src="../../images/bigsave.png" alt="Save Case" width="90"/></span>

@@ -20,24 +20,31 @@ unset($_GET['id']);
 $q="SELECT * FROM cases WHERE id=$caseeditid AND memberid=$userid";
 
 $mresult=mysqli_query($dbcon,$q);
+
+$case = new sofa_case($dbcon, $caseeditid);
 if(!$mresult)
 {echo 'Could not load user data from database';exit();}
 
 $casedata=mysqli_fetch_array($mresult);}
 elseif(!isset($_SESSION['caseid']))
-{ header ("location: ../index.php"); exit();}
+{ 
+    header ("location: ../index.php"); exit();
+    
+}
 elseif(isset($_SESSION['caseid']))
 {
 	$caseeditid=$_SESSION['caseid'];
 	$q="SELECT * FROM cases WHERE id=$caseeditid";
 
-$mresult=mysqli_query($dbcon,$q);
-if(!$mresult)
-{echo 'Could not load case data from database';exit();}
+    $mresult=mysqli_query($dbcon,$q);
+    if(!$mresult)
+    {echo 'Could not load case data from database';exit();}
 
-$casedata=mysqli_fetch_array($mresult);
-	
-	}
+    $casedata=mysqli_fetch_array($mresult);
+    $case = new sofa_case($dbcon, $caseeditid);
+
+
+}
 	
 	if(!isset($_SESSION['loadedmethods']))
 	{//Extract methods data
@@ -90,12 +97,12 @@ for ($i=1;$i<=$_SESSION['num_methods'];$i++)
     
     
   <fieldset class="caseinfobox"><legend class="boldlegend">General Case Information</legend>
-    <label class="label" for="caseyear">Case Year</label><input id="caseyear" type="text" name="caseyear" size="5" maxlength="4" value="<?php if (isset($casedata['caseyear'])) echo $casedata['caseyear']; ?>" readonly/> 
+    <label class="label" for="caseyear">Case Year</label><input id="caseyear" type="text" name="caseyear" size="5" maxlength="4" value="<?php if (null !== ($case->get_caseyear())) echo $case->get_caseyear(); ?>" readonly/> 
       <br />
-  <label class="label" for="casenumber">Case Number</label><input id="casenumber" type="text" name="casenumber" size="30" maxlength="30" value="<?php if (isset($casedata['casenumber'])) echo $casedata['casenumber']; ?>" readonly/>
+  <label class="label" for="casenumber">Case Number</label><input id="casenumber" type="text" name="casenumber" size="30" maxlength="30" value="<?php if (null !== ($case->get_casenumber())) echo $case->get_casenumber(); ?>" readonly/>
   <br />
     
-  <label class="label" for="caseagency">Case Agency</label><input id="caseagency" type="text" name="caseagency" size="30" maxlength="30" value="<?php if (isset($casedata['caseagency'])) echo $casedata['caseagency']; ?>" readonly/>
+  <label class="label" for="caseagency">Case Agency</label><input id="caseagency" type="text" name="caseagency" size="30" maxlength="30" value="<?php if (null !== ($case->get_caseagency())) echo $case->get_caseagency(); ?>" readonly/>
   <br />
     
  

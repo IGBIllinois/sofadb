@@ -1,4 +1,5 @@
 <?php 
+$addcase = 1;
 require('../../include/header_user.php') ;
  require_once('addcase_methodfix.php');
  
@@ -330,11 +331,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             {//The case has not been registered already 
 			// Make the query:
 		
-        	$q = "INSERT INTO cases (id,casename, 	casenumber,caseyear,memberid,caseagency,fasex,faage,faage2,faageunits,faageunits2,fastature,fastature2,fastatureunits,idsex,idage,idageunits,idstature,idstatureunits,idsource,casenotes,datestarted,datemodified,submissionstatus,faancestryas,faancestryeuro,faancestryaf,faancestryna,faancestryhi,faancestryot,faancestryottext,idraceas,idraceaf,idracewh,idracehi,idracena,idraceot,idraceottext,idancaddtext,nummethods) VALUES (' ', '$casenam','$casenum', '$caseyear','$memberid','$caseag','$fasex','$faage','$faage2','$faageunits','$faageunits2','$fastature','$fastature2','$fastatureunits','$idsex','$idage','$idageunits','$idstature','$idstatureunits','$idsource','$casenotes',NOW(),NOW(),'0','$faAs','$faWh','$faBl','$faNa','$faHi','$faOt','$faothertext','$idAs','$idBl','$idWh','$idHi','$idNa','$idOt','$idothertext','$idancaddtext','$numcasemethods')";	
-			$result = @mysqli_query ($dbcon, $q); // Run the query.
-		$inid=mysqli_insert_id($dbcon);
+        	//$q = "INSERT INTO cases (id,casename, 	casenumber,caseyear,memberid,caseagency,fasex,faage,faage2,faageunits,faageunits2,fastature,fastature2,fastatureunits,idsex,idage,idageunits,idstature,idstatureunits,idsource,casenotes,datestarted,datemodified,submissionstatus,faancestryas,faancestryeuro,faancestryaf,faancestryna,faancestryhi,faancestryot,faancestryottext,idraceas,idraceaf,idracewh,idracehi,idracena,idraceot,idraceottext,idancaddtext,nummethods) VALUES (' ', '$casenam','$casenum', '$caseyear','$memberid','$caseag','$fasex','$faage','$faage2','$faageunits','$faageunits2','$fastature','$fastature2','$fastatureunits','$idsex','$idage','$idageunits','$idstature','$idstatureunits','$idsource','$casenotes',NOW(),NOW(),'0','$faAs','$faWh','$faBl','$faNa','$faHi','$faOt','$faothertext','$idAs','$idBl','$idWh','$idHi','$idNa','$idOt','$idothertext','$idancaddtext','$numcasemethods')";	
+		//$result = @mysqli_query ($dbcon, $q); // Run the query.
+		//$inid=mysqli_insert_id($dbcon);
         
-        		if (!$result) 
+               
+                $data = array(
+                    
+                   "casename"=>$casenam,
+                   "casenum"=>$casenum,
+                   "caseyear"=>$caseyear,
+                   "memberid"=>$memberid,
+                   "caseag"=>$caseag,
+                   "fasex"=>$fasex,
+                   "faage"=>$faage,
+                   "faage2"=>$faage2,
+                   "faageunits"=>$faageunits,
+                   "faageunits2"=>$faageunits2,
+                   "fastature"=>$fastature,
+                    "fastature2"=>$fastature2,
+                    "fastatureunits"=>$fastatureunits,
+                    "idsex"=>$idsex,
+                    "idage"=>$idage,
+                    "idageunits"=>$idageunits,
+                    "idstature"=>$idstature,
+                    "idstatureunits"=>$idstatureunits,
+                    "idsource"=>$idsource,
+                    "casenotes"=>$casenotes,
+                    "faancestryas"=>$faAs,
+                    "faancestryeuro"=>$faWh,
+                    "faancestryaf"=>$faBl,
+                    "faancestryna"=>$faNa,
+                    "faancestryhi"=>$faHi,
+                    "faancestryot"=>$faOt,
+                    "faancestryottext"=>$faothertext,
+                    "idraceas"=>$idAs,
+                    "idraceaf"=>$idBl,
+                    "idracewh"=>$idWh,
+                    "idracehi"=>$idHi,
+                    "idracena"=>$idNa,
+                    "idraceot"=>$idOt,
+                    "idothertext"=>$idothertext,
+                    "idancaddtext"=>$idancaddtext,
+                    "numcasemethods"=>$numcasemethods);	
+
+                    
+                
+                
+                $result = sofa_case::add_case($dbcon, $data);
+                
+                if($result['RESULT'] == FALSE) {
+                    echo($result['MESSAGE']);
+                    exit();
+                }
+                $case_id = $result['id'];
+                $case =  new sofa_case($dbcon, $case_id);
+                /*
+        	if (!$result) 
                 { // If it ran OK.
                 // If it did not run OK
 				// Error message:
@@ -372,23 +425,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				<p class="error">Case number not linked with member number. We apologize for any inconvenience.</p>'; 
 				// Debugging message:
 				echo '<p>' . mysqli_error($dbcon) . '<br/><br/>Query: ' . $q . '</p>';exit();}
-        
-        		 for ($i=1;$i<=$numcasemethods;$i++){
+        */
+                
+        	for ($i=1;$i<=$numcasemethods;$i++){
                 
                 $methodidsave=$_SESSION['methodname'][$i-1];
                
                 $methodtypesave=$_SESSION['methodtype'][$i-1];
-				if($_SESSION['featurechosen'][$i-1]==1){
-				$methodfeatsave=$_SESSION['methodfeature'][$i-1];}
-				else $methodfeatsave=1;
+		
+                if($_SESSION['featurechosen'][$i-1]==1){
+                    $methodfeatsave=$_SESSION['methodfeature'][$i-1];
+                    
+                } else {
+                    $methodfeatsave=1;
+                }
 				
-	if($_SESSION['phasechosen'][$i-1]==1){
-				$methodphasesave=$_SESSION['methodphase'][$i-1];}
-				else $methodphasesave=127;
+                if($_SESSION['phasechosen'][$i-1]==1){
+                    $methodphasesave=$_SESSION['methodphase'][$i-1];
+                    
+                } else {
+                    $methodphasesave=127;
+                }
 	
-				
+		$case->add_case_method($methodidsave, $methodtypesave, $methodfeatsave, $methodphasesave);		
                 
-                
+                /*
                  $q="INSERT INTO tier2data (id,memberid,caseid,methodtype,methodid,featureid,phaseid) VALUES (' ','$memberid','$caseidx','$methodtypesave','$methodidsave','$methodfeatsave','$methodphasesave')";
                  $result4 = mysqli_query($dbcon,$q);
                   if (!$result4) 
@@ -401,7 +462,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				echo '<p>' . mysqli_error($dbcon) . '<br/><br/>Query: ' . $q . '</p>';
                 exit();
                 }
-                 
+                 */
                  
                  
                  
@@ -430,7 +491,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				  unset($_SESSION['methodphase']);
 				  unset($_SESSION['phasechosen']);
 				  unset($_SESSION['featurechosen']);
-                header ("location: ../index.php"); exit();
+                //header ("location: ../index.php"); exit();
                  
        	   mysqli_close($dbcon); // Close the database connection
 			// Include the footer and stop the script
