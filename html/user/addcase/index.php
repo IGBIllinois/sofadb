@@ -491,7 +491,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				  unset($_SESSION['methodphase']);
 				  unset($_SESSION['phasechosen']);
 				  unset($_SESSION['featurechosen']);
-                //header ("location: ../index.php"); exit();
+                header ("location: ../index.php"); exit();
                  
        	   mysqli_close($dbcon); // Close the database connection
 			// Include the footer and stop the script
