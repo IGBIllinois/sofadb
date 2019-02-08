@@ -1,4 +1,12 @@
 <?php 
+
+if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
+    $location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    header('HTTP/1.1 301 Moved Permanently');
+    header('Location: ' . $location);
+    exit;
+}
+
 if(file_exists('../../../conf/settings.inc.php')) {
 require_once('../../../conf/settings.inc.php');
 } else if('../../conf/settings.inc.php') {
@@ -26,8 +34,8 @@ require_once('main.inc.php');
   <script type='text/javascript' src='<?php echo(ROOT_URL) ?>/js/gen_validatorv4.js'></script>
    <script type="text/javascript" src="<?php echo(ROOT_URL) ?>/js/addrow.js"></script>
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 
 <script type="text/javascript" src="<?php echo(ROOT_URL) ?>/js/jquery.multiselect.js"></script>
 
