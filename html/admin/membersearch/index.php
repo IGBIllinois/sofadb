@@ -107,7 +107,7 @@ if(!$error){//if error start
 // This script retrieves all the records from the users table.
  // Connect to the database.
 //set the number of rows per display page
-$pagerows = 20;
+$pagerows = PAGEROWS;
 
 // Has the total number of pagess already been calculated?
 if (isset($_GET['p']) && is_numeric

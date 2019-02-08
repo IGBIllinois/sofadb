@@ -9,7 +9,7 @@
 require_once "../../include/header_admin.php";
 
 
-$pagerows = 20;
+$pagerows = PAGEROWS;
 
 // Has the total number of pagess already been calculated?
 if (isset($_GET['p']) && is_numeric

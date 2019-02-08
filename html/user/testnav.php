@@ -140,7 +140,7 @@ if (isset($_POST['delsubmit']))
 // This script retrieves all the records from the users table.
 require_once($_SERVER['DOCUMENT_ROOT'].'/mysqli_connect.php'); // Connect to the database.
 //set the number of rows per display page
-$pagerows = 20;
+$pagerows = PAGEROWS;
 
 
 // Has the total number of pagess already been calculated?

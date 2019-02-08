@@ -321,7 +321,7 @@ if(!$error){//if error start
 
 if (isset($_SESSION['searchstring']) && isset($_SESSION['searched'])){$searchstring=$_SESSION['searchstring'];}
 
-$pagerows = 20;
+$pagerows = PAGEROWS;
 
 // Has the total number of pagess already been calculated?
 if (isset($_GET['p']) && is_numeric
