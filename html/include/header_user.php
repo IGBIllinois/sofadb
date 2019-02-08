@@ -4,11 +4,12 @@ require_once('../../../conf/settings.inc.php');
 } else if('../../conf/settings.inc.php') {
     require_once('../../conf/settings.inc.php');
 }
-require_once('session_user.php') ;
+if(isset($addcase) && ($addcase == 1)) {
+    require_once('session_addcase.php');
+} else {
+    require_once('session_user.php') ;
+}
 require_once('main.inc.php');
-
-//echo("DIR = ".__DIR__."<BR>");
-//echo("DOC ROOT = ".$_SERVER['DOCUMENT_ROOT']."<BR>");
 
 ?>
 
@@ -22,7 +23,7 @@ require_once('main.inc.php');
 
 
 <!-- Javascript -->
-  <script type='text/javascript' src='gen_validatorv4.js'></script>
+  <script type='text/javascript' src='<?php echo(ROOT_URL) ?>/js/gen_validatorv4.js'></script>
    <script type="text/javascript" src="<?php echo(ROOT_URL) ?>/js/addrow.js"></script>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
