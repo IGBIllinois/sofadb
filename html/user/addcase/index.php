@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$casenam = mysqli_real_escape_string($dbcon, trim($_POST['casename']));
 	} 
     else {
-		$casenam=NULL;
+		$casenam="";
 	}
     
 	
@@ -329,11 +329,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			
             if (mysqli_num_rows($result) == 0)
             {//The case has not been registered already 
-			// Make the query:
-		
-        	//$q = "INSERT INTO cases (id,casename, 	casenumber,caseyear,memberid,caseagency,fasex,faage,faage2,faageunits,faageunits2,fastature,fastature2,fastatureunits,idsex,idage,idageunits,idstature,idstatureunits,idsource,casenotes,datestarted,datemodified,submissionstatus,faancestryas,faancestryeuro,faancestryaf,faancestryna,faancestryhi,faancestryot,faancestryottext,idraceas,idraceaf,idracewh,idracehi,idracena,idraceot,idraceottext,idancaddtext,nummethods) VALUES (' ', '$casenam','$casenum', '$caseyear','$memberid','$caseag','$fasex','$faage','$faage2','$faageunits','$faageunits2','$fastature','$fastature2','$fastatureunits','$idsex','$idage','$idageunits','$idstature','$idstatureunits','$idsource','$casenotes',NOW(),NOW(),'0','$faAs','$faWh','$faBl','$faNa','$faHi','$faOt','$faothertext','$idAs','$idBl','$idWh','$idHi','$idNa','$idOt','$idothertext','$idancaddtext','$numcasemethods')";	
-		//$result = @mysqli_query ($dbcon, $q); // Run the query.
-		//$inid=mysqli_insert_id($dbcon);
         
                
                 $data = array(
@@ -343,21 +338,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                    "caseyear"=>$caseyear,
                    "memberid"=>$memberid,
                    "caseag"=>$caseag,
+                    
                    "fasex"=>$fasex,
                    "faage"=>$faage,
                    "faage2"=>$faage2,
                    "faageunits"=>$faageunits,
                    "faageunits2"=>$faageunits2,
+                    
                    "fastature"=>$fastature,
                     "fastature2"=>$fastature2,
                     "fastatureunits"=>$fastatureunits,
                     "idsex"=>$idsex,
                     "idage"=>$idage,
+                    
                     "idageunits"=>$idageunits,
                     "idstature"=>$idstature,
                     "idstatureunits"=>$idstatureunits,
                     "idsource"=>$idsource,
                     "casenotes"=>$casenotes,
+                    
                     "faancestryas"=>$faAs,
                     "faancestryeuro"=>$faWh,
                     "faancestryaf"=>$faBl,
@@ -365,67 +364,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     "faancestryhi"=>$faHi,
                     "faancestryot"=>$faOt,
                     "faancestryottext"=>$faothertext,
+                    
                     "idraceas"=>$idAs,
                     "idraceaf"=>$idBl,
                     "idracewh"=>$idWh,
                     "idracehi"=>$idHi,
                     "idracena"=>$idNa,
+                    
                     "idraceot"=>$idOt,
-                    "idothertext"=>$idothertext,
+                    "idraceottext"=>$idothertext,
                     "idancaddtext"=>$idancaddtext,
                     "numcasemethods"=>$numcasemethods);	
 
                     
                 
                 
-                $result = sofa_case::add_case($dbcon, $data);
+                $result = sofa_case::add_case($db, $data);
                 
                 if($result['RESULT'] == FALSE) {
                     echo($result['MESSAGE']);
                     exit();
                 }
                 $case_id = $result['id'];
-                $case =  new sofa_case($dbcon, $case_id);
-                /*
-        	if (!$result) 
-                { // If it ran OK.
-                // If it did not run OK
-				// Error message:
-				echo '<h2>System Error</h2>
-				<p class="error">Did not save new case. We apologize for any inconvenience.</p>'; 
-				// Debugging message:
-				echo '<p>' . mysqli_error($dbcon) . '<br/><br/>Query: ' . $q . '</p>';
-                exit();
-                }
-                
-        
-       			 $result2 = mysqli_query($dbcon,"SELECT max(id) AS id FROM cases");
-		
-         			if (!$result2)
-                   { // If it ran OK.
-                // If it did not run OK
-				// Error message:
-				echo '<h2>System Error</h2>
-				<p class="error">Saving failed because of a system error. We apologize for any inconvenience.</p>'; 
-				// Debugging message:
-				echo '<p>' . mysqli_error($dbcon) . '<br/><br/>Query: ' . $q . '</p>';
-                exit();}
-					
-      
-       				 $row = mysqli_fetch_assoc( $result2 );
-                     $caseidx=$row['id'];
-       				
-      				
-        			 $q="INSERT INTO membercasetable (memberid,caseid) VALUES ('$memberid','$caseidx')";
-        			 $result3=mysqli_query($dbcon,$q);
-       				 if(!$result3)
-                     { // If it did not run OK
-				// Error message:
-				echo '<h2>System Error</h2>
-				<p class="error">Case number not linked with member number. We apologize for any inconvenience.</p>'; 
-				// Debugging message:
-				echo '<p>' . mysqli_error($dbcon) . '<br/><br/>Query: ' . $q . '</p>';exit();}
-        */
+                print_r($db);
+                $case =  new sofa_case($dbcon, $case_id, $db);
                 
         	for ($i=1;$i<=$numcasemethods;$i++){
                 
@@ -449,38 +411,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	
 		$case->add_case_method($methodidsave, $methodtypesave, $methodfeatsave, $methodphasesave);		
                 
-                /*
-                 $q="INSERT INTO tier2data (id,memberid,caseid,methodtype,methodid,featureid,phaseid) VALUES (' ','$memberid','$caseidx','$methodtypesave','$methodidsave','$methodfeatsave','$methodphasesave')";
-                 $result4 = mysqli_query($dbcon,$q);
-                  if (!$result4) 
-                { // If it ran OK.
-                // If it did not run OK
-				// Error message:
-				echo '<h2>System Error</h2>
-				<p class="error">Did not attach methods to case. We apologize for any inconvenience.</p>'; 
-				// Debugging message:
-				echo '<p>' . mysqli_error($dbcon) . '<br/><br/>Query: ' . $q . '</p>';
-                exit();
-                }
-                 */
                  
                  
                  
                  }
                  
-                 
-                $q="UPDATE members SET totalcases=totalcases + 1 WHERE id='$memberid'";
-				$result=mysqli_query ($dbcon, $q);
-				if(!$result){
-					echo '<h2>System Error</h2>
-				<p class="error">Did not increment number of cases. We apologize for any inconvenience.</p>'; 
-				// Debugging message:
-				echo '<p>' . mysqli_error($dbcon) . '<br/><br/>Query: ' . $q . '</p>';
-                exit();
-					
-					
-					}
-                 
+
                  
                  
        
@@ -500,13 +436,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		}
 	else
     	{//The cae  is already registered
-		echo	'<p class="error">The case name and number are not acceptable because it is already registered</p>';
+		echo	'<span style="padding-left:100px; 
+                display:block;"><p class="error">The case name and number are not acceptable because it is already registered</p></span>';
 		}//end already registered if
 	} 
     else
      { // Report the errors.
 		echo '<span style="padding-left:100px; 
-    display:block;"><h2>Error!</h2>
+                display:block;"><h2>Error!</h2>
 		<p class="error">The following error(s) occurred:<br/>';
 		foreach ($errors as $msg) 
         { // Print each error.

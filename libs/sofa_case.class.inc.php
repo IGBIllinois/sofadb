@@ -9,6 +9,7 @@
 class sofa_case {
     
     private $dbcon;
+    private $db;
     
     private $id;
     
@@ -64,168 +65,189 @@ class sofa_case {
     public function get_faage() { return $this->faage; }
     public function get_faage2() { return $this->faage2; }
     public function get_faageunits() { return $this->faageunits; }
-    public function get_faageunits2() { return $this->faageunits2; }                        
+    public function get_faageunits2() { return $this->faageunits2; }
+    public function get_fastature() { return $this->fastature; }
+    public function get_fastature2() { return $this->fastature2; }
+    public function get_fastatureunits() { return $this->fastatureunits; }
     
-    public function __construct($dbcon, $id = 0) {
+    public function get_idsex() { return $this->idsex; }
+    public function get_idage() { return $this->idage; }
+    public function get_idageunits() { return $this->idageunits; }
+    public function get_idstature() { return $this->idstature; }
+    public function get_idstatureunits() { return $this->idstatureunits; }
+    public function get_idsource() { return $this->idsource; }
+    public function get_casenotes() { return $this->casenots; }
+    public function get_datestarted() { return $this->datestarted; }
+    public function get_datemodified() { return $this->datemodified; }
+    public function get_datesubmitted() { return $this->datesubmitted; }
+    public function get_submissionstatus() { return $this->submissionstatus; }
+    public function get_faancestryas()  { return $this->faancestryas; }
+    public function get_faancestryeuro()  { return $this->faancestryeuro; }
+    public function get_faancestryaf()  { return $this->faancestryaf; }
+    public function get_faancestrywh()  { return $this->faancestrywh; }
+    public function get_faancestryhi()  { return $this->faancestryhi; }
+    public function get_faancestryna()  { return $this->faancestryna; }
+    public function get_faancestryot()  { return $this->faancestryot; }
+    public function get_faancestryottext()  { return $this->faancestryottext; }
+    public function get_idraceas()  { return $this->idraceas; }
+    public function get_idraceaf()  { return $this->idraceaf; }
+    public function get_idracewh()  { return $this->idracewh; }
+    public function get_idracehi()  { return $this->idracehi; }
+    public function get_idracena()  { return $this->idracena; }
+    public function get_idraceot()  { return $this->idraceot; }
+    public function get_idraceottext()  { return $this->idraceottext; }
+    public function get_idancaddtext() { return $this->idancaddtext; }
+    public function get_nummethods() { return $this->nummethods; }
+
+    public function __construct($dbcon, $id = 0, $db=null) {
         $this->dbcon = $dbcon;
+        if($db != null) {
+            $this->db = $db;
+        }
         if($id != 0) {
             $this->load_case($id);
         }
+        
     }
+    
     /**
      * 
      * @param type $dbcon Connection to database
      * @param type $data array of values. Using an array here since thera are so many
      */
-    public static function add_case($dbcon, $data) {
-        $casename = mysqli_real_escape_string($dbcon, $data['casename']);
-        $casenum = mysqli_real_escape_string($dbcon, $data['casenum']);
-        $caseyear = mysqli_real_escape_string($dbcon, $data['caseyear']);
-        $memberid = mysqli_real_escape_string($dbcon, $data['memberid']);
-        $caseag = mysqli_real_escape_string($dbcon, $data['caseag']);
-        $fasex = mysqli_real_escape_string($dbcon, $data['fasex']);
-        $faage = mysqli_real_escape_string($dbcon, $data['faage']);
-        $faage2 = mysqli_real_escape_string($dbcon, $data['faage2']);
-        $faageunits = mysqli_real_escape_string($dbcon, $data['faageunits']);
-        $faageunits2 = mysqli_real_escape_string($dbcon, $data['faageunits2']);
-        $fastature = mysqli_real_escape_string($dbcon, $data['fastature']);
-        $fastature2 = mysqli_real_escape_string($dbcon, $data['fastature2']);
-        $fastatureunits = mysqli_real_escape_string($dbcon, $data['fastatureunits']);
-        $idsex = mysqli_real_escape_string($dbcon, $data['idsex']);
-        $idage = mysqli_real_escape_string($dbcon, $data['idage']);
-        $idageunits = mysqli_real_escape_string($dbcon, $data['idageunits']);
-        $idstature = mysqli_real_escape_string($dbcon, $data['idstature']);
-        $idstatureunits = mysqli_real_escape_string($dbcon, $data['idstatureunits']);
-        $casenotes = mysqli_real_escape_string($dbcon, $data['casenotes']);
-        //$datestarted = mysqli_real_escape_string($dbcon, $data['datestarted']);
-        //$datemodified = mysqli_real_escape_string($dbcon, $data['datemodified']);
-        //$submissionstatus = mysqli_real_escape_string($dbcon, $data['submissionstatus']);
-        $faancestryas = mysqli_real_escape_string($dbcon, $data['faancestryas']);
-        $faancestryeuro = mysqli_real_escape_string($dbcon, $data['faancestryeuro']);
-        $faancestryaf = mysqli_real_escape_string($dbcon, $data['faancestryaf']);
-        $faancestryna = mysqli_real_escape_string($dbcon, $data['faancestryna']);
-        $faancestryhi = mysqli_real_escape_string($dbcon, $data['faancestryhi']);
-        $faancestryot = mysqli_real_escape_string($dbcon, $data['faancestryot']);
-        $faancestryottext = mysqli_real_escape_string($dbcon, $data['faancestryottext']);
-        $idraceas = mysqli_real_escape_string($dbcon, $data['idraceas']);
-        $idraceaf = mysqli_real_escape_string($dbcon, $data['idraceaf']);
-        $idracewh = mysqli_real_escape_string($dbcon, $data['idracewh']);
-        $idracehi = mysqli_real_escape_string($dbcon, $data['idracehi']);
-        $idracena = mysqli_real_escape_string($dbcon, $data['idracena']);
-        $idraceot = mysqli_real_escape_string($dbcon, $data['idraceot']);
-        $idraceottext = mysqli_real_escape_string($dbcon, $data['idothertext']);
-        $idancaddtext = mysqli_real_escape_string($dbcon, $data['idancaddtext']);
-        $nummethods = mysqli_real_escape_string($dbcon, $data['numcasemethods']);
-        
+    public static function add_case($db, $data) {
+
+                        
         $q = "INSERT INTO cases ("
-                . "casename, 	"
+                . "casename, "
                 . "casenumber,"
                 . "caseyear,"
                 . "memberid,"
                 . "caseagency,"
+                
                 . "fasex,"
                 . "faage,"
                 . "faage2,"
                 . "faageunits,"
                 . "faageunits2,"
+                
                 . "fastature,"
                 . "fastature2,"
                 . "fastatureunits,"
                 . "idsex,"
                 . "idage,"
+                
                 . "idageunits,"
                 . "idstature,"
                 . "idstatureunits,"
                 . "idsource,"
                 . "casenotes,"
+                
                 . "datestarted,"
                 . "datemodified,"
                 . "submissionstatus,"
                 . "faancestryas,"
                 . "faancestryeuro,"
+                
                 . "faancestryaf,"
                 . "faancestryna,"
                 . "faancestryhi,"
                 . "faancestryot,"
                 . "faancestryottext,"
+                
                 . "idraceas,"
                 . "idraceaf,"
                 . "idracewh,"
                 . "idracehi,"
                 . "idracena,"
+                
                 . "idraceot,"
                 . "idraceottext,"
                 . "idancaddtext,"
                 . "nummethods) "
+                
                 . "VALUES ("
-                    . "'$casename',"
-                    . "'$casenum',"
-                    . " '$caseyear',"
-                    . "'$memberid',"
-                    . "'$caseag',"
-                    . "'$fasex',"
-                    . "'$faage',"
-                    . "'$faage2',"
-                    . "'$faageunits',"
-                    . "'$faageunits2',"
-                    . "'$fastature',"
-                    . "'$fastature2',"
-                    . "'$fastatureunits',"
-                    . "'$idsex',"
-                    . "'$idage',"
-                    . "'$idageunits',"
-                    . "'$idstature',"
-                    . "'$idstatureunits',"
-                    . "'$idancaddtext',"
-                    . "'$casenotes',"
+                    . ":casename,"
+                    . ":casenum,"
+                    . ":caseyear,"
+                    . ":memberid,"
+                    . ":caseag,"
+                
+                    . ":fasex,"
+                    . ":faage,"
+                    . ":faage2,"
+                    . ":faageunits,"
+                    . ":faageunits2,"
+                
+                    . ":fastature,"
+                    . ":fastature2,"
+                    . ":fastatureunits,"
+                    . ":idsex,"
+                    . ":idage,"
+   
+                    . ":idageunits,"
+                    . ":idstature,"
+                    . ":idstatureunits,"
+                    . ":idsource,"
+                    . ":casenotes,"
+                
                     . "NOW(),"
                     . "NOW(),"
                     . "'0',"
-                    . "'$faancestryas',"
-                    . "'$faancestryeuro',"
-                    . "'$faancestryaf',"
-                    . "'$faancestryna',"
-                    . "'$faancestryhi',"
-                    . "'$faancestryot',"
-                    . "'$faancestryottext',"
-                    . "'$idraceas',"
-                    . "'$idraceaf',"
-                    . "'$idracewh',"
-                    . "'$idracehi',"
-                    . "'$idracena',"
-                    . "'$idraceot',"
-                    . "'$idraceottext',"
-                    . "'$idancaddtext',"
-                    . "'$nummethods')";	
+                    . ":faancestryas,"
+                    . ":faancestryeuro,"
+                
+                    . ":faancestryaf,"
+                    . ":faancestryna,"
+                    . ":faancestryhi,"
+                    . ":faancestryot,"
+                    . ":faancestryottext,"
+                
+                    . ":idraceas,"
+                    . ":idraceaf,"
+                    . ":idracewh,"
+                    . ":idracehi,"
+                    . ":idracena,"
+                
+                    . ":idraceot,"
+                    . ":idraceottext,"
+                    . ":idancaddtext,"
+                    . ":numcasemethods)";	
         
 
-		$result = @mysqli_query ($dbcon, $q); // Run the query.
-                $caseid=mysqli_insert_id($dbcon);
+                $caseid = $db->get_insert_result($q, $data);
+                
+
                 if($caseid == 0) {
                     return array("RESULT"=>FALSE,
                             "MESSAGE"=>"<h2>System Error</h2>
 				<p class='error'>Saving failed because of a system error. We apologize for any inconvenience.</p>
-				<p> ". mysqli_error($dbcon) . "<br/><br/>Query: " . $q . "</p>"
+				<p> " . $db->errorInfo()[2] ."<br/><br/>Query: " . $q . "</p>"
                         );
                 }
                 
                 
-                $q="INSERT INTO membercasetable (memberid,caseid) VALUES ('$memberid','$caseid')";
-                $result2 = @mysqli_query ($dbcon, $q); // Run the query.
-                if(!$result2) {
+                //$q="INSERT INTO membercasetable (memberid,caseid) VALUES ('$memberid','$caseid')";
+                //$result2 = @mysqli_query ($dbcon, $q); // Run the query.
+                $q = "INSERT INTO membercasetable (memberid,caseid) VALUES (:memberid,:caseid)";
+                $d = array("memberid"=>$data['memberid'], "caseid"=>$caseid);
+
+                $result2 = $db->get_insert_result($q, $d);
+
+                /*
+                if($result2 == 0) {
                     return array("RESULT"=>FALSE,
                                  "MESSAGE"=>"<h2>System Error</h2>
 				<p class='error'>Case number not linked with member number. We apologize for any inconvenience.</p>
-				<p>" . mysqli_error($dbcon) . "<br/><br/>Query: ". $q . "</p>"
+				<p>" . $db->errorInfo()[2] . "<br/><br/>Query: ". $q . "</p>"
                         );
                 }
-                
+                */
                 
 
                 return array("RESULT"=>TRUE,
                              "MESSAGE"=>"<h2>System Error</h2>
-				<p class='error'>Case number not linked with member number. We apologize for any inconvenience.</p>
-				<p>" . mysqli_error($dbcon) . "<br/><br/>Query: ". $q . "</p>",
+				<p class='error'>Case added successfully.</p>",
                              "id"=>$caseid
                               
                         );
@@ -258,9 +280,26 @@ class sofa_case {
                 . "'".mysqli_real_escape_string($this->dbcon,$phaseid)."')";
         
         
-                echo("add_case_method query = ".$q."<BR>");
-                 $result = mysqli_query($this->dbcon,$q);
+                $data = array("memberid"=>$this->memberid,
+                        "caseid"=>$this->id,
+                        "methodid"=>$methodid,
+                        "methodtype"=>$methodtype,
+                        "featureid"=>$featureid,
+                        "phaseid"=>$phaseid);
+                 
                  $casemethodid=mysqli_insert_id($this->dbcon);
+                 
+                 if($casemethodid > 0) {
+                     // everything went okay, update nummethods
+                     $q="UPDATE members SET totalcases=totalcases + 1 WHERE id='$this->memberid'";
+			$result=mysqli_query ($dbcon, $q);
+                        if(!$result){
+                                echo '<h2>System Error</h2>
+                        <p class="error">Did not increment number of cases. We apologize for any inconvenience.</p>'; 
+                        // Debugging message:
+                        echo '<p>' . mysqli_error($this->dbcon) . '<br/><br/>Query: ' . $q . '</p>';
+                        }
+                 }
                  
                  return $casemethodid;
       
@@ -271,7 +310,7 @@ class sofa_case {
         $result = @mysqli_query ($this->dbcon, $query); // Run the query.
         $methods = array();
         foreach($result as $id) {
-            $method = new method($this->dbcon, $id);
+            $method = new method($this->dbcon, $id['methodid']);
             $methods[] = $method;
         }
         return $methods;
@@ -279,15 +318,19 @@ class sofa_case {
     
     private function load_case($id) {
         
-        $query = "SELECT * from cases where id = '". mysqli_real_escape_string($this->dbcon, $id). "'";
+        //$query = "SELECT * from cases where id = '". mysqli_real_escape_string($this->dbcon, $id). "'";
+        $query = "SELECT * from cases where id = :id";
+        
 
-        $mresult=mysqli_query($this->dbcon,$query);
+        //$mresult=mysqli_query($this->dbcon,$query);
+        $mresult = $this->db->get_query_result($query, array("id"=>$id));
         if(!$mresult) {
-            echo 'Could not load user data from database';
+            echo 'Could not load data from database';
             return;
         }
 
-        $casedata=mysqli_fetch_array($mresult);
+        //$casedata=mysqli_fetch_array($mresult);
+        $casedata = $mresult[0];
         
         $this->id = $id;
         
