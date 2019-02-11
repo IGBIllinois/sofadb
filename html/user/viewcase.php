@@ -21,7 +21,7 @@ $q="SELECT * FROM cases WHERE id=$caseeditid AND memberid=$userid";
 
 $mresult=mysqli_query($dbcon,$q);
 
-$case = new sofa_case($dbcon, $caseeditid);
+$case = new sofa_case($dbcon, $caseeditid, $db);
 if(!$mresult)
 {echo 'Could not load user data from database';exit();}
 
@@ -41,12 +41,12 @@ elseif(isset($_SESSION['caseid']))
     {echo 'Could not load case data from database';exit();}
 
     $casedata=mysqli_fetch_array($mresult);
-    $case = new sofa_case($dbcon, $caseeditid);
+    $case = new sofa_case($dbcon, $caseeditid, $db);
 
 
 }
 	
-	if(!isset($_SESSION['loadedmethods']))
+if(!isset($_SESSION['loadedmethods']))
 	{//Extract methods data
 	$_SESSION['loadedmethods']=1;
  $_SESSION['num_methods']=$casedata['nummethods'];
@@ -115,40 +115,41 @@ for ($i=1;$i<=$_SESSION['num_methods'];$i++)
   <label class="label" for="fasex">Sex</label>
   <select name="fasex" disabled>
     <option value="">- Select -</option>
-    <option value="Female"<?php if (isset($casedata['fasex']) AND ($casedata['fasex'] == 'Female')) echo ' selected="selected"'; ?>>Female</option>
-    <option value="Probable Female"<?php if (isset($casedata['fasex']) AND ($casedata['fasex'] == 'Probable Female')) echo ' selected="selected"'; ?>>Probable Female</option>
-    <option value="Indeterminate"<?php if (isset($casedata['fasex']) AND ($casedata['fasex'] == 'Indeterminate')) echo ' selected="selected"'; ?>>Indeterminate</option>
-    <option value="Probable Male"<?php if (isset($casedata['fasex']) AND ($casedata['fasex'] == 'Probable Male')) echo ' selected="selected"'; ?>>Probable Male</option>
-    <option value="Male"<?php if (isset($casedata['fasex']) AND ($casedata['fasex'] == 'Male')) echo ' selected="selected"'; ?>>Male</option>
+    <option value="Female"<?php if ($case->get_fasex() == 'Female') echo ' selected="selected"'; ?>>Female</option>
+    <option value="Probable Female"<?php if ($case->get_fasex() == 'Probable Female') echo ' selected="selected"'; ?>>Probable Female</option>
+    <option value="Indeterminate"<?php if ($case->get_fasex() == 'Indeterminate') echo ' selected="selected"'; ?>>Indeterminate</option>
+    <option value="Probable Male"<?php if ($case->get_fasex() == 'Probable Male') echo ' selected="selected"'; ?>>Probable Male</option>
+    <option value="Male"<?php if ($case->get_fasex()  == 'Male') echo ' selected="selected"'; ?>>Male</option>
     </select>
     
     
     
-    <br/><label class="label" for="faage">Age</label><input id="faage" type="text" name="faage" size="5" maxlength="5" value="<?php if (isset($casedata['faage'])) echo $casedata['faage']; ?>"readonly/>
+    <br/><label class="label" for="faage">Age</label><input id="faage" type="text" name="faage" size="5" maxlength="5" value="<?php  echo $case->get_faage() ; ?>" readonly/>
     
     <select name="faageunits" disabled>
       <option value="years">years</option>
-      <option value="months"<?php if (isset($casedata['faageunits']) AND ($casedata['faageunits'] == 'months')) echo ' selected="selected"'; ?>>months</option>
-      <option value="fetalmonths"<?php if (isset($casedata['faageunits']) AND ($casedata['faageunits'] == 'fetalmonths')) echo ' selected="selected"'; ?>>fetal months</option>
+      <option value="months"<?php if ($case->get_faageunits()  == 'months') echo ' selected="selected"'; ?>>months</option>
+      <option value="fetalmonths"<?php if ($case->get_faageunits()  == 'fetalmonths') echo ' selected="selected"'; ?>>fetal months</option>
       </select>&nbsp; to &nbsp;
     
-    <input id="faage2" type="text" name="faage2" size="5" maxlength="5" value="<?php if (isset($casedata['faage2'])) echo $casedata['faage2']; ?>"readonly/>
+    <input id="faage2" type="text" name="faage2" size="5" maxlength="5" value="<?php  $case->get_faage2() ; ?>" readonly/>
     
     <select name="faageunits2" disabled>
       <option value="years">years</option>
-      <option value="months"<?php if (isset($casedata['faageunits2']) AND ($casedata['faageunits2'] == 'months')) echo ' selected="selected"'; ?>>months</option>
-      <option value="fetalmonths"<?php if (isset($casedata['faageunits2']) AND ($casedata['faageunits2'] == 'fetalmonths')) echo ' selected="selected"'; ?>>fetal months</option>
+      <option value="months"<?php if ($case->get_faageunits2()  == 'months') echo ' selected="selected"'; ?>>months</option>
+      <option value="fetalmonths"<?php if ($case->get_faageunits2()  == 'fetalmonths') echo ' selected="selected"'; ?>>fetal months</option>
       </select>
     
     
     
-    <br/><label class="label" for="faancestry">Ancestry</label><input id="farace_othertext" type="text" name="farace_othertext" size="60" maxlength="100" value="<?php if (isset($casedata['faancestryottext'])) echo $casedata['faancestryottext']; ?>"readonly/>
+    <br/><label class="label" for="faancestry">Ancestry</label><input id="farace_othertext" type="text" name="farace_othertext" size="60" maxlength="100" value="<?php echo $case->get_faancestryot(); ?>" readonly/>
     
     
     
-    <br/><label class="label" for="fastature">Stature</label><input id="fastature" type="text" name="fastature" size="6" maxlength="8" value="<?php if (isset($casedata['fastature'])) echo $casedata['fastature']; ?>"readonly/>  &nbsp; to &nbsp;
+    <br/><label class="label" for="fastature">Stature</label><input id="fastature" type="text" name="fastature" size="6" maxlength="8" value="<?php echo $case->get_fastature(); ?>" readonly/>  &nbsp; to &nbsp;
     
-    <input id="fastature2" type="text" name="fastature2" size="6" maxlength="8" value="<?php if (isset($casedata['fastature2'])) echo $casedata['fastature2']; ?>"readonly/>  <select name="fastatureunits" disabled>
+    <input id="fastature2" type="text" name="fastature2" size="6" maxlength="8" value="<?php echo $case->get_fastature2(); ?>" readonly/>  
+    <select name="fastatureunits" disabled>
       <option value="in">inches</option>
       </select>
     
@@ -160,16 +161,16 @@ for ($i=1;$i<=$_SESSION['num_methods'];$i++)
       <label class="label" for="idsex">Sex</label>
       <select name="idsex" disabled>
         <option value="">- Select -</option>
-        <option value="Female"<?php if (isset($casedata['idsex']) AND ($casedata['idsex'] == 'Female')) echo ' selected="selected"'; ?>>Female</option>
-        <option value="Male"<?php if (isset($casedata['idsex']) AND ($casedata['idsex'] == 'Male')) echo ' selected="selected"'; ?>>Male</option>
+        <option value="Female"<?php if ($case->get_idsex() == 'Female') echo ' selected="selected"'; ?>>Female</option>
+        <option value="Male"<?php if ($case->get_idsex() == 'Male') echo ' selected="selected"'; ?>>Male</option>
         </select>
       
       
-      <br/><label class="label" for="idage">Age</label><input id="idage" type="text" name="idage" size="5" maxlength="5" value="<?php if (isset($casedata['idage'])) echo $casedata['idage']; ?>"readonly/>
+      <br/><label class="label" for="idage">Age</label><input id="idage" type="text" name="idage" size="5" maxlength="5" value="<?php if (isset($casedata['idage'])) echo $casedata['idage']; ?>" readonly/>
       <select name="idageunits" disabled>
         <option value="years">years</option>
-        <option value="months"<?php if (isset($casedata['idageunits']) AND ($casedata['idageunits'] == 'months')) echo ' selected="selected"'; ?>>months</option>
-        <option value="fmonths"<?php if (isset($casedata['idageunits']) AND ($casedata['idageunits'] == 'fmonths')) echo ' selected="selected"'; ?>>fetal months</option>
+        <option value="months"<?php if ($case->get_idageunits() == 'months') echo ' selected="selected"'; ?>>months</option>
+        <option value="fmonths"<?php if ($case->get_idageunits() == 'fmonths') echo ' selected="selected"'; ?>>fetal months</option>
         </select> 
       
       
@@ -177,13 +178,16 @@ for ($i=1;$i<=$_SESSION['num_methods'];$i++)
       
       
       <br/><label class="label" for="idrace">Race/Ethnicity</label>
-      <input type="checkbox" name="race_asian" value="1" <?php if (isset($casedata['idraceas']) AND $casedata['idraceas'] == 1) echo ' checked'; ?> disabled/>Asian/Pacific Islander
-      <input type="checkbox" name="race_black" value="1" <?php if (isset($casedata['idraceaf'])  AND $casedata['idraceaf'] == 1) echo ' checked'; ?> disabled/>Black/African-American
-      <input type="checkbox" name="race_hispanic" value="1" <?php if (isset($casedata['idracehi']) AND $casedata['idracehi'] == 1) echo ' checked'; ?> disabled/>Hispanic<br />
+      <input type="checkbox" name="race_asian" value="1" <?php if ($case->get_idraceas() == 1) echo ' checked'; ?> disabled/>Asian/Pacific Islander
+      <input type="checkbox" name="race_black" value="1" <?php if ($case->get_idraceaf() == 1) echo ' checked'; ?> disabled/>Black/African-American
+      <input type="checkbox" name="race_hispanic" value="1" <?php if ($case->get_idracehi() == 1) echo ' checked'; ?> disabled/>Hispanic<br />
       <label class="label" for="idrace2"></label>
-      <input type="checkbox" name="race_native" value="1" <?php if (isset($casedata['idracena']) AND $casedata['idracena'] == 1) echo ' checked'; ?> disabled/>Native American
-      <input type="checkbox" name="race_white" value="1" <?php if (isset($casedata['idracewh']) AND $casedata['idracewh'] == 1) echo ' checked'; ?> disabled/>White
-      <input type="checkbox" name="race_other" value="1" <?php if (isset($casedata['idraceot']) AND $casedata['idraceot'] == 1) echo ' checked'; ?> disabled />Other: &nbsp; <input id="idrace_othertext" type="text" name="idrace_othertext" size="18" maxlength="30" value="<?php if (isset($casedata['idraceottext'])) echo $casedata['idraceottext']; ?>"readonly/>
+      <input type="checkbox" name="race_native" value="1" <?php if ($case->get_idracena() == 1) echo ' checked'; ?> disabled/>Native American
+      <input type="checkbox" name="race_white" value="1" <?php if ($case->get_idracewh() == 1) echo ' checked'; ?> disabled/>White
+      <input type="checkbox" name="race_other" value="1" <?php if ($case->get_idraceot() == 1) echo ' checked'; ?> disabled />Other: &nbsp; 
+      <input id="idrace_othertext" type="text" name="idrace_othertext" size="18" maxlength="30" 
+             value="<?php echo $case->get_idraceottext(); ?>"
+             readonly/>
         <br /><label class="label" for="idancaddtext">Race/Ethnicity Extra</label><input id="idancaddtext" type="text" name="idancaddtext" size="30" maxlength="300" value="<?php if (isset($casedata['idancaddtext'])) echo $casedata['idancaddtext']; ?>" readonly/><br>
       
       <br/><label class="label" for="idstature">Stature</label><input id="idstature" type="text" name="idstature" size="6" maxlength="8" value="<?php if (isset($casedata['idstature'])) echo $casedata['idstature']; ?>" readonly/>
@@ -225,22 +229,25 @@ for ($i=1;$i<=$_SESSION['num_methods'];$i++)
                   <tbody>
                     <tr>
                       <p>
-						
-						
-						 <th>
-						
-   Method Type
-					     </th>
-						 <th>
-							Method Name
-						 </th>
-							</p>
+			
+                <th>Method Type</th>
+                <th>Method Name</th>
+                    </p>
                     </tr>
-                    
-                 
-                    
+
                     <?php
-					for($i=1;$i<=$_SESSION['num_methods'];$i++)
+                    $methods = $case->get_case_methods();
+                    
+                    foreach($methods as $method) {
+                        echo("<tr><td>");
+                        echo($method->get_method_type());
+                        echo("</td><td>");
+                        echo($method->get_name());
+                        echo("</td></tr>");
+                        
+                    }
+                    /*
+			for($i=1;$i<=$_SESSION['num_methods'];$i++)
 					{
 					echo "<tr>
 					<td>". $_SESSION['methodtabletype'][$i-1]."</td>
@@ -250,12 +257,10 @@ for ($i=1;$i<=$_SESSION['num_methods'];$i++)
 					
 					
 					}
+                     * 
+                     */
 					
-					
-					
-	
-					
-					?>
+                    ?>
                     
                    
                     </tbody>
@@ -287,26 +292,6 @@ for ($i=1;$i<=$_SESSION['num_methods'];$i++)
     
     
 </div>
-  
-
-
-
-
-
-
- </div>
-
-
-
-
-
-
-<div id="footer">Copyright 2014 by <a href="http://www.sofainc.org/" target="_blank">SOFA</a>.</div>
-</div>
-
-
-
-
-</body>
-</html>
+<?php
+require_once("../include/footer.php");
 
