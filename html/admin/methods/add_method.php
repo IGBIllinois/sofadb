@@ -45,10 +45,10 @@ if(isset($_POST['features'])) {
 }
 if(isset($_POST['add_method_submit'])) {
 
-$id = method::create_method($dbcon, $name, $type_name, $type_id, $measurement_type, $description, $instructions);
+$id = method::create_method($db, $name, $type_name, $type_id, $measurement_type, $description, $instructions);
 
 if($id > 0) {
-$method = new method($dbcon, $id);
+$method = new method($db, $id);
 
 if(count($features) > 0) {
     $method->add_features($features);

@@ -15,7 +15,7 @@ require_once('func.php');
 
   <?php
 
-
+$casedata = null;
 if(isset($_GET['id'])) 
 {
     $caseeditid=$_GET['id'];
@@ -27,8 +27,8 @@ if(isset($_GET['id']))
     if(!$mresult)
     {echo 'Could not load user data from database';exit();}
 
-    $casedata=mysqli_fetch_array($mresult);
-
+    //$casedata=mysqli_fetch_array($mresult);
+    $casedata = new sofa_case($db, $caseeditid);
 }
 
 elseif(!isset($_SESSION['caseid']))
@@ -45,14 +45,15 @@ $mresult=mysqli_query($dbcon,$q);
 if(!$mresult)
 {echo 'Could not load case data from database';exit();}
 
-$casedata=mysqli_fetch_array($mresult);
-	
+//$casedata=mysqli_fetch_array($mresult);
+        $casedata = new sofa_case($db, $caseeditid);
 	}
 	
 if(!isset($_SESSION['loadedmethods']))
 	{//Extract methods data
 	$_SESSION['loadedmethods']=1;
- $_SESSION['num_methods']=$casedata['nummethods'];
+ //$_SESSION['num_methods']=$casedata['nummethods'];
+   $_SESSION['num_methods'] = $casedata->get_nummethods();     
  $q="SELECT methods.id as mid, methods.methodname as mname, methods.methodtype as mtype, methods.methodtypenum as mtypenum, feature.id as fid, feature.name as fname, phase.id as pid, phase.phasename as pname FROM tier2data t2 INNER JOIN methods ON t2.methodid=methods.id INNER JOIN feature ON t2.featureid=feature.id  INNER JOIN phase ON t2.phaseid=phase.id WHERE t2.caseid=$caseeditid";
  
  
@@ -94,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$errors[] = 'You must enter a case year to save.';
 	} 
     else {
-			$caseyear = mysqli_real_escape_string($dbcon, trim($_POST['caseyear']));
+			$caseyear = trim($_POST['caseyear']);
 	}
 
 	// Check for a casenumber:
@@ -102,11 +103,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$errors[] = 'You must enter a case number to save.';
 	} 
     else {
-		$casenum = mysqli_real_escape_string($dbcon, trim($_POST['casenumber']));
+		$casenum = trim($_POST['casenumber']);
 	}
 	// Check for a casename:
 	if (!empty($_POST['casename'])) {
-			$casenam = mysqli_real_escape_string($dbcon, trim($_POST['casename']));
+			$casenam = trim($_POST['casename']);
 	} 
     else {
 	$casenam=NULL;	
@@ -119,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
 	} 
     else {
-		$caseag = mysqli_real_escape_string($dbcon, trim($_POST['caseagency']));
+		$caseag = trim($_POST['caseagency']);
 	}
 	
     // Check for a FA sex
@@ -127,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$fasex=NULL;
 	} 
     else {
-		$fasex = mysqli_real_escape_string($dbcon, trim($_POST['fasex']));
+		$fasex = trim($_POST['fasex']);
 	}
 	
 	
@@ -139,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$faage2 = trim($_POST['faage2']);
-        $faageunits2 = mysqli_real_escape_string($dbcon, trim($_POST['faageunits2']));
+        $faageunits2 = trim($_POST['faageunits2']);
 	}
     
     
@@ -152,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$faage = trim($_POST['faage']);
-        $faageunits = mysqli_real_escape_string($dbcon, trim($_POST['faageunits']));
+        $faageunits = trim($_POST['faageunits']);
 	}
 
 	
@@ -175,7 +176,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$fastature = trim($_POST['fastature']);
-       // $fastatureunits = mysqli_real_escape_string($dbcon, trim($_POST['fastatureunits']));
+                $fastature2 = trim($_POST['fastature2']);
+                if(isset($_POST['fastatureunits'])) {
+                $fastatureunits = trim($_POST['fastatureunits']);
+                } else {
+                    $fastatureunits = "inches";
+                }
 	}
 
 
@@ -184,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$idsex=NULL;
 	} 
     else {
-		$idsex = mysqli_real_escape_string($dbcon, trim($_POST['idsex']));
+		$idsex = trim($_POST['idsex']);
 	}
 
 
@@ -196,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$idage = trim($_POST['idage']);
-        $idageunits = mysqli_real_escape_string($dbcon, trim($_POST['idageunits']));
+        $idageunits = trim($_POST['idageunits']);
 	}
 
 
@@ -208,7 +214,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$idstature = trim($_POST['idstature']);
-      //  $idstatureunits = mysqli_real_escape_string($dbcon, trim($_POST['idstatureunits']));
+          if(isset($_POST['idstatureunits'])) {
+                $idstatureunits = trim($_POST['idstatureunits']);
+                } else {
+                    $idstatureunits = "inches";
+                }
 	}
    
    
@@ -219,7 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		
-        $idsource = mysqli_real_escape_string($dbcon, trim($_POST['idsource']));
+        $idsource = trim($_POST['idsource']);
 	}
 	
 	
@@ -230,7 +240,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		
-        $idancaddtext = mysqli_real_escape_string($dbcon, trim($_POST['idancaddtext']));
+        $idancaddtext = trim($_POST['idancaddtext']);
 	}
     
     //check for a  casenotes
@@ -240,7 +250,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		
-        $casenotes = mysqli_real_escape_string($dbcon, trim($_POST['casenotes']));
+        $casenotes = trim($_POST['casenotes']);
 	}
 	
         if(isset($_POST['farace_asian']))
@@ -293,7 +303,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		
-        $faothertext = mysqli_real_escape_string($dbcon, trim($_POST['farace_othertext']));
+        $faothertext = trim($_POST['farace_othertext']);
 	}
     
    
@@ -377,19 +387,71 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$memberid=$_SESSION['id'];
 
       $caseeditid=$_SESSION['caseid'];
-		$q = "SELECT id FROM cases WHERE memberid='$memberid' AND caseyear='$caseyear' AND casenumber='$casenum' AND id!='$caseeditid'";
-		$result=mysqli_query ($dbcon, $q) ; 	
-			
-            if (mysqli_num_rows($result) == 0)
+		$q = "SELECT id FROM cases WHERE memberid=:memberid AND caseyear=:caseyear AND casenumber=:casenum AND id!=:caseeditid";
+                $params = array("memberid"=>$memberid,
+                                "caseyear"=>$caseyear,
+                                "casenum"=>$casenum,
+                                "caseeditid"=>$caseeditid);
+		//$result=mysqli_query ($dbcon, $q) ; 	
+		$result = $db->get_query_result($q, $params);	
+            if (count($result) == 0)
             {//The case has not been registered already 
 		// Make the query:
 		
-        	$q = "UPDATE cases SET casename='$casenam',caseyear='$caseyear',casenumber='$casenum',caseagency='$caseag',fasex='$fasex',faage='$faage',faage2='$faage2',faageunits='$faageunits', faageunits2='$faageunits2',fastature='$fastature',fastature2='$fastature2',fastatureunits='$fastatureunits',idsex='$idsex',idage='$idage',idageunits='$idageunits',idsource='$idsource',idstature='$idstature',idstatureunits='$idstatureunits',casenotes='$casenotes',datemodified=NOW(),faancestryas='$faAs',faancestryeuro='$faWh',faancestryaf='$faBl',faancestryna='$faNa',faancestryhi='$faHi',faancestryot='$faOt',faancestryottext='$faothertext',idraceas='$idAs',idraceaf='$idBl',idracewh='$idWh',idracehi='$idHi',idracena='$idNa',idraceot='$idOt',idraceottext='$idothertext',idancaddtext='$idancaddtext',nummethods='$numcasemethods' WHERE id='$caseeditid'";
+        	//$q = "UPDATE cases SET casename='$casenam',caseyear='$caseyear',casenumber='$casenum',caseagency='$caseag',fasex='$fasex',faage='$faage',faage2='$faage2',faageunits='$faageunits', faageunits2='$faageunits2',fastature='$fastature',fastature2='$fastature2',fastatureunits='$fastatureunits',idsex='$idsex',idage='$idage',idageunits='$idageunits',idsource='$idsource',idstature='$idstature',idstatureunits='$idstatureunits',casenotes='$casenotes',datemodified=NOW(),faancestryas='$faAs',faancestryeuro='$faWh',faancestryaf='$faBl',faancestryna='$faNa',faancestryhi='$faHi',faancestryot='$faOt',faancestryottext='$faothertext',idraceas='$idAs',idraceaf='$idBl',idracewh='$idWh',idracehi='$idHi',idracena='$idNa',idraceot='$idOt',idraceottext='$idothertext',idancaddtext='$idancaddtext',nummethods='$numcasemethods' WHERE id='$caseeditid'";
 				
-			$result = @mysqli_query ($dbcon, $q); // Run the query.
-		$inid=mysqli_insert_id($dbcon);
-     
-        		if (!$result) 
+		//$result = @mysqli_query ($dbcon, $q); // Run the query.
+		//$inid=mysqli_insert_id($dbcon);
+                $case = new sofa_case($db, $caseeditid);
+                $data = array(
+                    
+                   "casename"=>$casenam,
+                   "casenum"=>$casenum,
+                   "caseyear"=>$caseyear,
+                   "caseag"=>$caseag,
+                    
+                   "fasex"=>$fasex,
+                   "faage"=>$faage,
+                   "faage2"=>$faage2,
+                   "faageunits"=>$faageunits,
+                   "faageunits2"=>$faageunits2,
+                    
+                   "fastature"=>$fastature,
+                    "fastature2"=>$fastature2,
+                    "fastatureunits"=>$fastatureunits,
+                    "idsex"=>$idsex,
+                    "idage"=>$idage,
+                    
+                    "idageunits"=>$idageunits,
+                    "idstature"=>$idstature,
+                    "idstatureunits"=>$idstatureunits,
+                    "idsource"=>$idsource,
+                    "casenotes"=>$casenotes,
+                    
+                    "faancestryas"=>$faAs,
+                    "faancestryeuro"=>$faWh,
+                    "faancestryaf"=>$faBl,
+                    "faancestryna"=>$faNa,
+                    "faancestryhi"=>$faHi,
+                    "faancestryot"=>$faOt,
+                    "faancestryottext"=>$faothertext,
+                    
+                    "idraceas"=>$idAs,
+                    "idraceaf"=>$idBl,
+                    "idracewh"=>$idWh,
+                    "idracehi"=>$idHi,
+                    "idracena"=>$idNa,
+                    
+                    "idraceot"=>$idOt,
+                    "idraceottext"=>$idothertext,
+                    "idancaddtext"=>$idancaddtext,
+                    "numcasemethods"=>$numcasemethods,
+                                    
+                    "caseeditid"=>$caseeditid);
+                print_r($data);
+                                
+                $result = $case->edit_case($data);
+        	if ($result["RESULT"] == FALSE) 
                 { // If it ran OK.
                 // If it did not run OK
 				// Error message:
@@ -398,6 +460,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				// Debugging message:
 				echo '<p>' . mysqli_error($dbcon) . '<br/><br/>Query: ' . $q . '</p>';
                 exit();
+                } else {
+                    echo($result["MESSAGE"]);
                 }
                 
          
@@ -515,13 +579,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
   <fieldset class="caseinfobox"><legend class="boldlegend">General Case Information</legend>
     
-     <label class="label" for="caseyear">Case Year</label><input id="caseyear" type="text" name="caseyear" size="5" maxlength="4" value="<?php if (isset($casedata['caseyear'])) echo $casedata['caseyear']; ?>"/>
+     <label class="label" for="caseyear">Case Year</label><input id="caseyear" type="text" name="caseyear" size="5" maxlength="4" value="<?php  echo $casedata->get_caseyear();; ?>"/>
   <br />
     
-  <label class="label" for="casenumber">Case Number</label><input id="casenumber" type="text" name="casenumber" size="30" maxlength="30" value="<?php if (isset($casedata['casenumber'])) echo $casedata['casenumber']; ?>"/>
+  <label class="label" for="casenumber">Case Number</label><input id="casenumber" type="text" name="casenumber" size="30" maxlength="30" value="<?php echo $casedata->get_casenumber(); ?>"/>
   <br />
     
-  <label class="label" for="caseagency">Case Agency</label><input id="caseagency" type="text" name="caseagency" size="30" maxlength="30" value="<?php if (isset($casedata['caseagency'])) echo $casedata['caseagency']; ?>"/>
+  <label class="label" for="caseagency">Case Agency</label><input id="caseagency" type="text" name="caseagency" size="30" maxlength="30" value="<?php echo $casedata->get_caseagency(); ?>"/>
       
   <br/>
     <span name="savebutton" class="bigsavebutton">
@@ -534,40 +598,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <label class="label" for="fasex">Sex</label>
   <select name="fasex">
     <option value="">- Select -</option>
-    <option value="Female"<?php if (isset($casedata['fasex']) AND ($casedata['fasex'] == 'Female')) echo ' selected="selected"'; ?>>Female</option>
-    <option value="Probable Female"<?php if (isset($casedata['fasex']) AND ($casedata['fasex'] == 'Probable Female')) echo ' selected="selected"'; ?>>Probable Female</option>
-    <option value="Indeterminate"<?php if (isset($casedata['fasex']) AND ($casedata['fasex'] == 'Indeterminate')) echo ' selected="selected"'; ?>>Indeterminate</option>
-    <option value="Probable Male"<?php if (isset($casedata['fasex']) AND ($casedata['fasex'] == 'Probable Male')) echo ' selected="selected"'; ?>>Probable Male</option>
-    <option value="Male"<?php if (isset($casedata['fasex']) AND ($casedata['fasex'] == 'Male')) echo ' selected="selected"'; ?>>Male</option>
+    <option value="Female"<?php if ($casedata->get_fasex() == 'Female') echo ' selected="selected"'; ?>>Female</option>
+    <option value="Probable Female"<?php if ($casedata->get_fasex() == 'Probable Female') echo ' selected="selected"'; ?>>Probable Female</option>
+    <option value="Indeterminate"<?php if ($casedata->get_fasex() == 'Indeterminate') echo ' selected="selected"'; ?>>Indeterminate</option>
+    <option value="Probable Male"<?php if ($casedata->get_fasex() == 'Probable Male') echo ' selected="selected"'; ?>>Probable Male</option>
+    <option value="Male"<?php if ($casedata->get_fasex() == 'Male') echo ' selected="selected"'; ?>>Male</option>
     </select>
     
     
     
-    <br/><label class="label" for="faage">Age</label><input id="faage" type="text" name="faage" size="5" maxlength="5" value="<?php if (isset($casedata['faage'])) echo $casedata['faage']; ?>"/>
+    <br/><label class="label" for="faage">Age</label><input id="faage" type="text" name="faage" size="5" maxlength="5" value="<?php  echo $casedata->get_faage(); ?>"/>
     
     <select name="faageunits">
       <option value="years">years</option>
-      <option value="months"<?php if (isset($casedata['faageunits']) AND ($casedata['faageunits'] == 'months')) echo ' selected="selected"'; ?>>months</option>
-      <option value="fetalmonths"<?php if (isset($casedata['faageunits']) AND ($casedata['faageunits'] == 'fetalmonths')) echo ' selected="selected"'; ?>>fetal months</option>
+      <option value="months"<?php if($casedata->get_faageunits() == 'months') echo ' selected="selected"'; ?>>months</option>
+      <option value="fetalmonths"<?php if ($casedata->get_faageunits() == 'fetalmonths') echo ' selected="selected"'; ?>>fetal months</option>
       </select>&nbsp; to &nbsp;
     
-    <input id="faage2" type="text" name="faage2" size="5" maxlength="5" value="<?php if (isset($casedata['faage2'])) echo $casedata['faage2']; ?>"/>
+    <input id="faage2" type="text" name="faage2" size="5" maxlength="5" value="<?php echo $casedata->get_faage2(); ?>"/>
     
     <select name="faageunits2">
       <option value="years">years</option>
-      <option value="months"<?php if (isset($casedata['faageunits2']) AND ($casedata['faageunits2'] == 'months')) echo ' selected="selected"'; ?>>months</option>
-      <option value="fetalmonths"<?php if (isset($casedata['faageunits2']) AND ($casedata['faageunits2'] == 'fetalmonths')) echo ' selected="selected"'; ?>>fetal months</option>
+      <option value="months"<?php if ($casedata->get_faageunits2() == 'months') echo ' selected="selected"'; ?>>months</option>
+      <option value="fetalmonths"<?php if ($casedata->get_faageunits2() == 'fetalmonths') echo ' selected="selected"'; ?>>fetal months</option>
       </select>
     
     
     
-    <br/><label class="label" for="faancestry">Ancestry</label><input id="farace_othertext" type="text" name="farace_othertext" size="30" maxlength="100" value="<?php if (isset($casedata['faancestryottext'])) echo $casedata['faancestryottext']; ?>"/>
+    <br/><label class="label" for="faancestry">Ancestry</label><input id="farace_othertext" type="text" name="farace_othertext" size="30" maxlength="100" value="<?php  echo $casedata->get_faancestryottext(); ?>"/>
     
     
     
-    <br/><label class="label" for="fastature">Stature</label><input id="fastature" type="text" name="fastature" size="6" maxlength="8" value="<?php if (isset($casedata['fastature'])) echo $casedata['fastature']; ?>"/>  &nbsp; to &nbsp;
+    <br/><label class="label" for="fastature">Stature</label><input id="fastature" type="text" name="fastature" size="6" maxlength="8" value="<?php echo $casedata->get_fastature() ?>"/>  &nbsp; to &nbsp;
     
-    <input id="fastature2" type="text" name="fastature2" size="6" maxlength="8" value="<?php if (isset($casedata['fastature2'])) echo $casedata['fastature2']; ?>"/>  <select name="fastatureunits" disabled>
+    <input id="fastature2" type="text" name="fastature2" size="6" maxlength="8" value="<?php echo $casedata->get_fastature2(); ?>"/>  <select name="fastatureunits" disabled>
       <option value="in">inches</option>
       </select>
     
@@ -579,16 +643,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <label class="label" for="idsex">Sex</label>
       <select name="idsex">
         <option value="">- Select -</option>
-        <option value="Female"<?php if (isset($casedata['idsex']) AND ($casedata['idsex'] == 'Female')) echo ' selected="selected"'; ?>>Female</option>
-        <option value="Male"<?php if (isset($casedata['idsex']) AND ($casedata['idsex'] == 'Male')) echo ' selected="selected"'; ?>>Male</option>
+        <option value="Female"<?php if($casedata->get_idsex() == 'Female') echo ' selected="selected"'; ?>>Female</option>
+        <option value="Male"<?php if($casedata->get_idsex()  == 'Male') echo ' selected="selected"'; ?>>Male</option>
         </select>
       
       
-      <br/><label class="label" for="idage">Age</label><input id="idage" type="text" name="idage" size="5" maxlength="5" value="<?php if (isset($casedata['idage'])) echo $casedata['idage']; ?>"/>
+      <br/><label class="label" for="idage">Age</label><input id="idage" type="text" name="idage" size="5" maxlength="5" value="<?php echo $casedata->get_idage(); ?>"/>
       <select name="idageunits">
         <option value="years">years</option>
-        <option value="months"<?php if (isset($casedata['idageunits']) AND ($casedata['idageunits'] == 'months')) echo ' selected="selected"'; ?>>months</option>
-        <option value="fmonths"<?php if (isset($casedata['idageunits']) AND ($casedata['idageunits'] == 'fmonths')) echo ' selected="selected"'; ?>>fetal months</option>
+        <option value="months"<?php if ($casedata->get_idageunits() == 'months') echo ' selected="selected"'; ?>>months</option>
+        <option value="fmonths"<?php if ($casedata->get_idageunits() == 'fmonths') echo ' selected="selected"'; ?>>fetal months</option>
         </select> 
       
       
@@ -596,17 +660,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       
       
       <br/><label class="label" for="idrace">Race/Ethnicity</label>
-      <input type="checkbox" name="race_asian" value="1" <?php if (isset($casedata['idraceas']) AND $casedata['idraceas'] == 1) echo ' checked'; ?>/>Asian/Pacific Islander
-      <input type="checkbox" name="race_black" value="1" <?php if (isset($casedata['idraceaf'])  AND $casedata['idraceaf'] == 1) echo ' checked'; ?>/>Black/African-American
-      <input type="checkbox" name="race_hispanic" value="1" <?php if (isset($casedata['idracehi']) AND $casedata['idracehi'] == 1) echo ' checked'; ?>/>Hispanic<br />
+      <input type="checkbox" name="race_asian" value="1" <?php if ($casedata->get_idraceas() == 1) echo ' checked'; ?>/>Asian/Pacific Islander
+      <input type="checkbox" name="race_black" value="1" <?php if ($casedata->get_idraceaf() == 1) echo ' checked'; ?>/>Black/African-American
+      <input type="checkbox" name="race_hispanic" value="1" <?php if ($casedata->get_idracehi()  == 1) echo ' checked'; ?>/>Hispanic<br />
       <label class="label" for="idrace2"></label>
-      <input type="checkbox" name="race_native" value="1" <?php if (isset($casedata['idracena']) AND $casedata['idracena'] == 1) echo ' checked'; ?>/>Native American
-      <input type="checkbox" name="race_white" value="1" <?php if (isset($casedata['idracewh']) AND $casedata['idracewh'] == 1) echo ' checked'; ?>/>White
-      <input type="checkbox" name="race_other" value="1" <?php if (isset($casedata['idraceot']) AND $casedata['idraceot'] == 1) echo ' checked'; ?> />Other: &nbsp; <input id="idrace_othertext" type="text" name="idrace_othertext" size="18" maxlength="30" value="<?php if (isset($casedata['idraceottext'])) echo $casedata['idraceottext']; ?>"/>
-       <br /><label class="label" for="idancaddtext">Race/Ethnicity Notes</label><input id="idancaddtext" type="text" name="idancaddtext" size="30" maxlength="300" value="<?php if (isset($casedata['idancaddtext'])) echo $casedata['idancaddtext']; ?>" /><br>
+      <input type="checkbox" name="race_native" value="1" <?php if ($casedata->get_idracena() == 1) echo ' checked'; ?>/>Native American
+      <input type="checkbox" name="race_white" value="1" <?php if ($casedata->get_idracewh() == 1) echo ' checked'; ?>/>White
+      <input type="checkbox" name="race_other" value="1" <?php if ($casedata->get_idraceot() == 1) echo ' checked'; ?> />Other: &nbsp; <input id="idrace_othertext" type="text" name="idrace_othertext" size="18" maxlength="30" value="<?php echo $casedata->get_idraceottext(); ?>"/>
+      <br /><label class="label" for="idancaddtext">Race/Ethnicity Notes</label><input id="idancaddtext" type="text" name="idancaddtext" size="30" maxlength="300" value="<?php echo $casedata->get_idancaddtext(); ?>" /><br>
       
       
-      <br/><label class="label" for="idstature">Stature</label><input id="idstature" type="text" name="idstature" size="6" maxlength="8" value="<?php if (isset($casedata['idstature'])) echo $casedata['idstature']; ?>" />
+      <br/><label class="label" for="idstature">Stature</label><input id="idstature" type="text" name="idstature" size="6" maxlength="8" value="<?php echo $casedata->get_idstature(); ?>" />
       
       <select name="idstatureunits" disabled>
         <option value="in">inches</option>
@@ -614,12 +678,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       
       <br />
       
-      <br/><label class="label" for="idsource">Information Source</label><input id="idsource" type="text" name="idsource" size="30" maxlength="60" value="<?php if (isset($casedata['idsource'])) echo $casedata['idsource']; ?>" /><br />
+      <br/><label class="label" for="idsource">Information Source</label><input id="idsource" type="text" name="idsource" size="30" maxlength="60" value="<?php echo $casedata->get_idsource(); ?>" /><br />
       
   </fieldset>
     <fieldset class="caseinfobox"><legend class="boldlegend">Case Notes</legend>
       <label class="label" for="casenotes"></label>
-      <textarea name="casenotes" cols="55" rows="7"><?php if (isset($casedata['casenotes'])) echo $casedata['casenotes']; ?></textarea>
+      <textarea name="casenotes" cols="55" rows="7"><?php echo $casedata->get_casenotes(); ?></textarea>
       
       
      

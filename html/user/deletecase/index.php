@@ -13,16 +13,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 if (isset($_POST['delsubmit']))
 {
 	$deleteid=$_POST['delid'];
-	$q="UPDATE cases SET submissionstatus=-1 WHERE memberid=$memberid AND id=$deleteid";
-	$result = mysqli_query ($dbcon, $q);
-	  if (!$result) 
-                { // If it ran OK.
+	$q="UPDATE cases SET submissionstatus=-1 WHERE memberid=:memberid AND id=:deleteid";
+        $params = array("memberid"=>$memberid,
+                        "deleteid"=>$deleteid);
+        $result = $db->get_update_result($q, $params);
+	//$result = mysqli_query ($dbcon, $q);
+	  if (count($result) == 0) 
+                { 
                 // If it did not run OK
 				// Error message:
 				echo '<h2>System Error</h2>
 				<p class="error">Did not delete case. We apologize for any inconvenience.</p>'; 
 				// Debugging message:
-				echo '<p>' . mysqli_error($dbcon) . '<br/><br/>Query: ' . $q . '</p>';
+				echo '<p>' . $db->errorInfo[2] . '<br/><br/>Query: ' . $q . '</p>';
                 exit();
                 }
 }
@@ -37,10 +40,12 @@ $pages=$_GET['p'];
 }else{//use the next block of code to calculate the number of pages
 //First, check for the total number of records
 $q = "SELECT COUNT(id) FROM cases WHERE memberid=$memberid AND submissionstatus>=0";
-
-$result = @mysqli_query ($dbcon, $q);
-$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
-$records = $row[0];
+$params = array("memberid"=>$memberid);
+$result = $db->get_query_result($q, $params);
+$records = $result[0][0];
+//$result = @mysqli_query ($dbcon, $q);
+//$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
+//$records = $row[0];
 //Now calculate the number of pages
 if ($records > $pagerows){ //if the number of records will fill more than one page
 //Calculatethe number of pages and round the result up to the nearest integer
@@ -60,18 +65,37 @@ $start = 0;
 
 
 // Make the query:
-$q = "SELECT id, casename, caseyear, casenumber, caseagency,submissionstatus,  DATE_FORMAT(datemodified, '%M %d, %Y') AS moddat, DATE_FORMAT(datesubmitted, '%M %d, %Y') AS subdat FROM cases WHERE memberid=$memberid AND submissionstatus>=0 ORDER BY datemodified DESC LIMIT $start, $pagerows";		
+$q = "SELECT id, "
+        . "casename, "
+        . "caseyear, "
+        . "casenumber, "
+        . "caseagency,"
+        . "submissionstatus,  "
+        . "DATE_FORMAT(datemodified, '%M %d, %Y') AS moddat, "
+        . "DATE_FORMAT(datesubmitted, '%M %d, %Y') AS subdat "
+        . "FROM cases "
+        . "WHERE memberid=:memberid AND "
+        . "submissionstatus>=0 "
+        . "ORDER BY datemodified DESC LIMIT $start, $pagerows";
+
+$params = array("memberid"=>$memberid);
+
+$result = $db->get_query_result($q, $params);
+$members = count($result);
 
  
 
-$result = @mysqli_query ($dbcon, $q); // Run the query.
-$members = mysqli_num_rows($result);
-if ($result) { // If it ran OK, display the records.
+//$result = @mysqli_query ($dbcon, $q); // Run the query.
+//$members = mysqli_num_rows($result);
+if (count($result) > 0) { // If it ran OK, display the records.
 // Table header.
 
 $q = "SELECT COUNT(id) FROM cases WHERE memberid=$memberid AND submissionstatus>=0";
-$resultP = @mysqli_query ($dbcon, $q);
-$row = @mysqli_fetch_array ($resultP, MYSQLI_NUM);
+$params = array("memberid"=>$memberid);
+$resultP = $db->get_query_result($q, $params);
+$row = $resultP[0];
+//$resultP = @mysqli_query ($dbcon, $q);
+//$row = @mysqli_fetch_array ($resultP, MYSQLI_NUM);
 $cases = $row[0];
 
 $current_page = ($start/$pagerows) + 1;
@@ -130,7 +154,8 @@ echo '<div class="scroll"><table id="hortable" summary="List of cases">
 
 
 // Fetch and print all the records:
-while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+//while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+foreach($result as $row) {
 	echo '<tr>
 	<td><a href="../viewcase.php?id=' . $row['id'] . '">View</a></td>';
 	
@@ -156,16 +181,20 @@ while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 	</tr>';
 	}
 	echo '</tbody></table></div>'; // Close the table.
-	mysqli_free_result ($result); // Free up the resources.	
+	//mysqli_free_result ($result); // Free up the resources.	
 } else { // If it did not run OK.
 // Public message:
 	echo '<p class="error">The current record could not be retrieved. We apologize for any inconvenience.</p>';
 	// Debugging message:
-	echo '<p>' . mysqli_error($dbcon) . '<br><br>Query: ' . $q . '</p>';
+	echo '<p>' . $db->errorInfo[2] . '<br><br>Query: ' . $q . '</p>';
 } // End of if ($result). Now display the total number of records/members.
+
 $q = "SELECT COUNT(id) FROM cases WHERE memberid=$memberid AND submissionstatus>=0";
-$result = @mysqli_query ($dbcon, $q);
-$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
+$params = array("memberid"=>$memberid);
+$resultP = $db->get_query_result($q, $params);
+$row = $resultP[0];
+//$resultP = @mysqli_query ($dbcon, $q);
+//$row = @mysqli_fetch_array ($resultP, MYSQLI_NUM);
 $cases = $row[0];
 
 $current_page = ($start/$pagerows) + 1;
@@ -203,7 +232,7 @@ echo '&nbsp; &nbsp; &nbsp; &nbsp;';
 echo '</p>';
 }
 
-mysqli_close($dbcon); // Close the database connection.
+//mysqli_close($dbcon); // Close the database connection.
 
 require_once("../../include/footer.php");
 ?>

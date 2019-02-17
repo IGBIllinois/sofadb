@@ -16,10 +16,12 @@ class method {
     private $description;
     private $instructions;
     
-    private $dbcon;
+    private $db; // Database object
     
-    public function __construct($dbcon, $id = null) {
-        $this->dbcon = $dbcon;
+    public function __construct($db, $id = null) {
+
+        $this->db = $db;
+
         if($id != null) {
             $this->load_method($id);
             
@@ -61,37 +63,41 @@ class method {
     public function add_features($new_features) {
         foreach($new_features as $id=>$feature) {
             $query = "INSERT INTO methodfeature (methodid, featureid, measurementtype) VALUES(".
-                   "'". mysqli_real_escape_string($this->dbcon, $this->id). "' ,".
-                   "'". mysqli_real_escape_string($this->dbcon, $feature). "',"
+                   ":methodid ,".
+                   ":featureid,"
                     . "'')";
+            $params = array("methodid"=>$this->id, "featureid"=>$feature);
 
-            $result = $this->dbcon->query($query);
+            $result = $this->db->get_insert_result($query, $params);
         }
     }
     
     public function edit_features($new_features) {
         $curr_features = $this->get_features();
-        echo("features = ");
-        print_r($curr_features);
+
+        if($new_features != null) {
         foreach($new_features as $id) {
             if((count($curr_features) > 0) && !in_array($id, $curr_features)) {
             $query = "INSERT INTO methodfeature (methodid, featureid, measurementtype) VALUES(".
-                   "'". mysqli_real_escape_string($this->dbcon, $this->id). "' ,".
-                   "'". mysqli_real_escape_string($this->dbcon, $id). "',"
+                   ":methodid ,".
+                   ":featureid,"
                     . "'')";
+            $params = array("methodid"=>$this->id, "featureid"=>$id);
+            $result = $this->db->get_insert_result($query, $params);
 
-            $result = $this->dbcon->query($query);
+            //$result = $this->dbcon->query($query);
             }
+        }
         }
         // Remove old features
         foreach($curr_features as $feature_id) {
             if($feature_id != "" && !in_array($feature_id, $new_features)) {
             $query = "DELETE FROM methodfeature WHERE methodid = ".
-                   "'".mysqli_real_escape_string($this->dbcon, $this->id). "'".
+                   ":methodid".
                     " AND featureid = ".
-                   "'". mysqli_real_escape_string($this->dbcon, $feature_id). "'";
-
-            $result = $this->dbcon->query($query);
+                   ":featureid'";
+            $params = array("methodid"=>$this->id, "featureid"=>$feature_id);
+            $result = $this->db->get_query_result($query, $params);
             }
         }
         
@@ -105,16 +111,17 @@ class method {
     public function add_phases($feature, $new_phases) {
         foreach($new_phases as $phase) {
             $query = "INSERT INTO methodphase (methodid, featureid, $phaseid) VALUES(".
-                   "'". mysqli_real_escape_string($this->dbcon, $this->id). "' ,".
-                   "'". mysqli_real_escape_string($this->dbcon, $feature). "')";
+                   ":methodid ,".
+                   ":featureid)";
         }
     }
     
     public function get_features() {
-        $query = "SELECT featureid from methodfeature where methodid = '".mysqli_real_escape_string($this->dbcon, $this->id) ."'";
-        $result = $this->dbcon->query($query);
+        $query = "SELECT featureid from methodfeature where methodid = :id";
+        $params = array("id"=>$this->id);
+        $result = $this->db->get_query_result($query, $params);
         $features = array();
-        while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+        foreach($features as $row) {
             $features[] = $row['featureid'];
         }
         return $features;
@@ -122,7 +129,7 @@ class method {
     
     public function get_phases() {
         $query = "SELECT * from methodphase where methodid = '".mysqli_real_escape_string($this->dbcon, $this->id) ."'";
-        $result = $this->dbcon->query($query);
+        $result = $this->db->get_query_result($query);
         return mysqli_fetch_array($result,MYSQLI_ASSOC);
     
     }
@@ -134,17 +141,24 @@ class method {
             $measurement_type, 
             $description,
             $instructions) {
-                $query = "UPDATE method SET (".
-                    "methodname = '". mysqli_real_escape_string($this->dbcon, $name) ."',".
-                    " methodtype = '". mysqli_real_escape_string($this->dbcon, $type)."', ".
-                    " methodtypenum = '". mysqli_real_escape_string($this->dbcon, $type_num)."', ".
-                    " measurementtype = '". mysqli_real_escape_string($this->dbcon, $measurement_type)."', ".
-                    " description = '". mysqli_real_escape_string($this->dbcon, $description)."', ".
-                    " instructions = '". mysqli_real_escape_string($this->dbcon, $instructions)."') ";
-
-                $result = @mysqli_query ($this->dbcon, $query); // Run the query.
+                $query = "UPDATE methods SET ".
+                    "methodname = :methodname,".
+                    " methodtype = :methodtype, ".
+                    " methodtypenum = :methodtypenum, ".
+                    " measurementtype = :measurementtype, ".
+                    " description = :description, ".
+                    " instructions = :instructions where id = :id ";
+                $params = array("methodname"=>$name,
+                                "methodtype"=>$type,
+                                "methodtypenum"=>$type_num,
+                                "measurementtype"=>$measurement_type,
+                                "description"=>$description,
+                                "instructions"=>$instructions,
+                                "id"=>$this->id);
+                //$result = @mysqli_query ($this->dbcon, $query); // Run the query.
+                $result = $this->db->get_update_result($query, $params);
                 if ($result) { // If it ran OK.
-                        echo("Method $name updated successfully.<BR>");
+                        //echo("Method $name updated successfully.<BR>");
                 }
     }
     
@@ -152,11 +166,13 @@ class method {
      * 
      */
     public function get_method_data() {
-        $query = "SELECT * from methoddata where methodid = '".mysqli_real_escape_string($this->dbcon, $this->id) ."'";
-        $result = $this->dbcon->query($query);
+        $query = "SELECT * from methoddata where methodid = :methodid";
+        $params = array("methodid"=>$this->id);
+        //$result = $this->dbcon->query($query);
+        $result = $this->db->get_query_result($query, $params);
         $data = array();
-        while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-            $method_data = new methoddata($this->dbcon, $row['id']);
+        foreach($result as $row) {
+            $method_data = new methoddata($this->db, $row['id']);
             $data[] = $method_data;
         }
         return $data;
@@ -165,7 +181,7 @@ class method {
     // Static functions
     
     public static function create_method(
-            $dbcon,
+            $db,
             $name, 
             $type, 
             $type_num, 
@@ -181,23 +197,31 @@ class method {
             " description, ".
             " instructions)".
             " VALUES (".
-               "'". mysqli_real_escape_string($dbcon, $name) ."', ".
-               "'". mysqli_real_escape_string($dbcon, $type)."', ".
-               "'". mysqli_real_escape_string($dbcon, $type_num)."', ".
-               "'". mysqli_real_escape_string($dbcon, $measurement_type)."', ".
-               "'". mysqli_real_escape_string($dbcon, $description)."', ".
-               "'". mysqli_real_escape_string($dbcon, $instructions)."') ";
+               ":methodname, ".
+               ":methodtype, ".
+               ":methodtypenum, ".
+               ":measurementtype, ".
+               ":description, ".
+               ":instructions) ";
+        $params = array("methodname"=>$name,
+                                "methodtype"=>$type,
+                                "methodtypenum"=>$type_num,
+                                "measurementtype"=>$measurement_type,
+                                "description"=>$description,
+                                "instructions"=>$instructions);
+        
+        $result = $db->get_insert_result($query, $params);
 
-        $result = @mysqli_query ($dbcon, $query); // Run the query.
+        //$result = @mysqli_query ($dbcon, $query); // Run the query.
 
-	if ($result) { // If it ran OK.
-            $id = mysqli_insert_id($dbcon);
+	if ($result > 0) { // If it ran OK.
+            //$id = mysqli_insert_id($dbcon);
             echo("Method $name added successfully");
-            return $id;
+            return $result;
         }
     }
     
-    public static function get_methods($dbcon, $start = 0, $limit = 0) {
+    public static function get_methods($db, $start = 0, $limit = 0) {
         $query = "SELECT id from methods ";
         if(is_numeric($start)) {
             $query .= " LIMIT $start ";
@@ -205,11 +229,12 @@ class method {
                 $query .= ", $limit";
             }
         }
-        $result = mysqli_query ($dbcon, $query);
+        //$result = mysqli_query ($dbcon, $query);
+        $result = $db->get_query_result($query);
         $methods = array();
         foreach($result as $method) {
             $id = $method['id'];
-            $new_method = new method($dbcon, $id);
+            $new_method = new method($db, $id);
             $methods[] = $new_method;
         }
         return $methods;
@@ -222,9 +247,13 @@ class method {
       * @param int $id The id of the method to load
       */
      private function load_method($id) {
-         $query = "SELECT * from methods where id = '" . mysqli_real_escape_string($this->dbcon, $id) . "'";
-         $result = mysqli_query($this->dbcon,$query);
-         $data = mysqli_fetch_array($result, MYSQLI_ASSOC);
+         $query = "SELECT * from methods where id = :id";
+         $params = array("id"=>$id);
+         $result = $this->db->get_query_result($query, $params);
+         //$data = mysqli_fetch_array($result, MYSQLI_ASSOC);
+         if(count($result) > 0) {
+             $data = $result[0];
+         
          $this->id = $id;
          $this->method_name = $data['methodname'];
          $this->method_type = $data['methodtype'];
@@ -232,6 +261,7 @@ class method {
          $this->measurement_type = $data['measurementtype'];
          $this->description = $data['description'];
          $this->instructions = $data['instructions'];
+         }
          
      }
 }
@@ -243,10 +273,10 @@ class methoddata {
     private $data_name;
     private $data_type;
     
-    private $dbcon;
+    private $db;
     
-    public function __construct($dbcon, $id = 0) {
-        $this->dbcon = $dbcon;
+    public function __construct($db, $id = 0) {
+        $this->db = $db;
         if($id != 0) {
             $this->load_method_data($id);
         }
@@ -259,35 +289,42 @@ class methoddata {
     
     // Static functions
     
-    public static function add_method_data($dbcon, $method_id, $data_name, $data_type) {
+    public static function add_method_data($db, $method_id, $data_name, $data_type) {
         $query = "INSERT INTO methoddata (".
                 "methodid, ".
             " dataname, ".
             " datatype)".
             " VALUES (".
-               "'". mysqli_real_escape_string($dbcon, $method_id) ."', ".
-               "'". mysqli_real_escape_string($dbcon, $data_name)."', ".
-               "'". mysqli_real_escape_string($dbcon, $data_type)."') ";
-//echo("add method data query = $query<BR>");
-        $result = @mysqli_query ($dbcon, $query); // Run the query.
+               ":methodid, ".
+               ":dataname, ".
+               ":datatype) ";
+        $params = array("methodid"=>$method_id,
+                        "dataname"=>$data_name,
+                        "datatype"=>$data_type);
 
-	if ($result) { // If it ran OK.
-            $id = mysqli_insert_id($dbcon);
+        //$result = @mysqli_query ($dbcon, $query); // Run the query.
+        $result = $db->get_insert_result($query, $params);
+	if ($result > 0) { // If it ran OK.
+            //$id = mysqli_insert_id($dbcon);
             echo("Method Data $data_name added successfully");
-            return $id;
+            return $result;
         }
     }
     
     private function load_method_data($id) {
-       $query = "SELECT * from methoddata where id='".mysqli_escape_string($this->dbcon, $id). "'";
-       $result = mysqli_query($this->dbcon,$query);
-       $data = mysqli_fetch_array($result, MYSQLI_ASSOC);
+       $query = "SELECT * from methoddata where id=:id";
+       $params = array("id"=>$id);
+       $result = $this->db->get_query_result($query, $params);
+       //$result = mysqli_query($this->dbcon,$query);
+       //$data = mysqli_fetch_array($result, MYSQLI_ASSOC);
+       if(count($result) > 0) {
+           $data = $result[0];
        
        $this->id = $id;
         $this->method_id = $data['methodid'];
         $this->data_name = $data['dataname'];
         $this->data_type = $data['datatype'];
-       
+       }
     }
 }
             

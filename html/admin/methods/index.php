@@ -53,7 +53,7 @@ echo '<div class="scroll"><table id="hortable" summary="List of methods">
     </thead>
     <tbody>';
 
-$methods = method::get_methods($dbcon, $start, $pagerows);
+$methods = method::get_methods($db, $start, $pagerows);
 foreach($methods as $method) {
     echo("<tr>".
             "<td><a href='edit_method.php?id=". $method->get_id()."'>Edit</td>".

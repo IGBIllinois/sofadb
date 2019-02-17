@@ -23,7 +23,7 @@ if(!isset($_POST['id']) &&  !isset($_GET['id'])) {
     if(isset($_GET['id'])) {
         // showing form for first time
         $id = $_GET['id'];
-        $method = new method($dbcon, $id);
+        $method = new method($db, $id);
         
         $name = $method->get_name();
         $type_id = $method->get_method_type_num();
@@ -36,7 +36,7 @@ if(!isset($_POST['id']) &&  !isset($_GET['id'])) {
         
     } else {
         $id = ($_POST['id']);
-        $method = new method($dbcon, $id);
+        $method = new method($db, $id);
     }
     
     
@@ -78,9 +78,9 @@ if(isset($_POST['add_method_type_submit'])) {
     $method_data_type = $_POST['method_data_type'];
     $method_id = $_POST['id'];
     
-    $result = methoddata::add_method_data($dbcon, $method_id, $method_data_name, $method_data_type);
+    $result = methoddata::add_method_data($db, $method_id, $method_data_name, $method_data_type);
     if($result) {
-        echo("Method Data $method_data_name added successfully.<BR>");
+        echo("Method Data $method_data_name edited successfully.<BR>");
     }
     
 }
@@ -173,7 +173,7 @@ echo("</table>");
 echo("");
 echo('
     <input name="id" id="id" type="hidden" value="'.$method->get_id().'">
-        <BR><label class="label"><U>Add new method data:</U></label><BR>
+        <BR><label class="label"><U>Edit method data:</U></label><BR>
 <label class="label" for="mID">Method Data Name</label>
 <input id="method_data_name" type="text" name="method_data_name" size="100" maxlength="100" ><BR>
         <label class="label" for="mID">Method Data Type</label>

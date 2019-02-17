@@ -31,11 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$errors[] = 'You must enter a case number to save.';
 	} 
     else {
-		$casenum = mysqli_real_escape_string($dbcon, trim($_POST['casenumber']));
+		//$casenum = mysqli_real_escape_string($dbcon, trim($_POST['casenumber']));
+                $casenum = trim($_POST['casenumber']);
 	}
 	// Check for a casename:
 	if (!empty($_POST['casename'])) {
-			$casenam = mysqli_real_escape_string($dbcon, trim($_POST['casename']));
+			//$casenam = mysqli_real_escape_string($dbcon, trim($_POST['casename']));
+            $casename = trim($_POST['casename']);
 	} 
     else {
 		$casenam="";
@@ -46,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$errors[] = 'You must enter a case year to save.';
 	} 
     else {
-		$caseyear = mysqli_real_escape_string($dbcon, trim($_POST['caseyear']));
+		//$caseyear = mysqli_real_escape_string($dbcon, trim($_POST['caseyear']));
+        $caseyear = trim($_POST['caseyear']);
 	}
 	
     
@@ -56,7 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
 	} 
     else {
-		$caseag = mysqli_real_escape_string($dbcon, trim($_POST['caseagency']));
+		//$caseag = mysqli_real_escape_string($dbcon, trim($_POST['caseagency']));
+        $caseag = trim($_POST['caseagency']);
 	}
 	
     // Check for a FA sex
@@ -64,7 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$fasex=NULL;
 	} 
     else {
-		$fasex = mysqli_real_escape_string($dbcon, trim($_POST['fasex']));
+		//$fasex = mysqli_real_escape_string($dbcon, trim($_POST['fasex']));
+                $fasex = trim($_POST['fasex']);
 	}
 	
 	
@@ -76,7 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$faage2 = trim($_POST['faage2']);
-        $faageunits2 = mysqli_real_escape_string($dbcon, trim($_POST['faageunits2']));
+        //$faageunits2 = mysqli_real_escape_string($dbcon, trim($_POST['faageunits2']));
+                $faageunits = trim($_POST['faageunits2']);
 	}
     
     
@@ -89,7 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$faage = trim($_POST['faage']);
-        $faageunits = mysqli_real_escape_string($dbcon, trim($_POST['faageunits']));
+        //$faageunits = mysqli_real_escape_string($dbcon, trim($_POST['faageunits']));
+        $faageunits = trim($_POST['faageunits']);
 	}
 
 	
@@ -112,7 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$fastature = trim($_POST['fastature']);
-        $fastatureunits = mysqli_real_escape_string($dbcon, trim($_POST['fastatureunits']));
+        //$fastatureunits = mysqli_real_escape_string($dbcon, trim($_POST['fastatureunits']));
+                $fastatureunits = trim($_POST['fastatureunits']);
 	}
 
 
@@ -121,7 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$idsex=NULL;
 	} 
     else {
-		$idsex = mysqli_real_escape_string($dbcon, trim($_POST['idsex']));
+		//$idsex = mysqli_real_escape_string($dbcon, trim($_POST['idsex']));
+                $idsex = trim($_POST['idsex']);
 	}
 
 
@@ -133,7 +142,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$idage = trim($_POST['idage']);
-        $idageunits = mysqli_real_escape_string($dbcon, trim($_POST['idageunits']));
+        //$idageunits = mysqli_real_escape_string($dbcon, trim($_POST['idageunits']));
+                $idageunits = trim($_POST['idageunits']);
 	}
 
 
@@ -145,7 +155,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$idstature = trim($_POST['idstature']);
-        $idstatureunits = mysqli_real_escape_string($dbcon, trim($_POST['idstatureunits']));
+        //$idstatureunits = mysqli_real_escape_string($dbcon, trim($_POST['idstatureunits']));
+                $idstatureunits = trim($_POST['idstatureunits']);
 	}
    
    
@@ -156,7 +167,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		
-        $idsource = mysqli_real_escape_string($dbcon, trim($_POST['idsource']));
+        //$idsource = mysqli_real_escape_string($dbcon, trim($_POST['idsource']));
+        $idsource = trim($_POST['idsource']);
 	}
 	
 	 //check for a extra race/ethnicity info 
@@ -223,7 +235,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
     else {
 		
-        $casenotes = mysqli_real_escape_string($dbcon, trim($_POST['casenotes']));
+        //$casenotes = mysqli_real_escape_string($dbcon, trim($_POST['casenotes']));
+        $casenotes = trim($_POST['casenotes']);
 	}
 	
     
@@ -242,7 +255,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		
-        $faothertext = mysqli_real_escape_string($dbcon, trim($_POST['farace_othertext']));
+        //$faothertext = mysqli_real_escape_string($dbcon, trim($_POST['farace_othertext']));
+        $faothertext = trim($_POST['farace_othertext']);
 	}
     
     
@@ -301,7 +315,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$idOt=1;
-        $idothertext = mysqli_real_escape_string($dbcon, trim($_POST['idrace_othertext']));
+        //$idothertext = mysqli_real_escape_string($dbcon, trim($_POST['idrace_othertext']));
+                $idothertext = trim($_POST['idrace_othertext']);
 	}
     
     if(($idOt==0 && $idothertext)||($idOt==1 && !$idothertext))
@@ -324,10 +339,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$memberid=$_SESSION['id'];
 
 
-		$q = "SELECT id FROM cases WHERE memberid='$memberid' AND casename='$casenam' AND casenumber='$casenum'";
-		$result=mysqli_query ($dbcon, $q) ; 	
+		//$q = "SELECT id FROM cases WHERE memberid='$memberid' AND casename='$casenam' AND casenumber='$casenum'";
+                
+		//$result=mysqli_query ($dbcon, $q) ; 	
+                
+                $q = "SELECT id FROM cases WHERE memberid=:memberid AND casename=:casename AND casenumber=:casenum";
+                $params = array("memberid"=>$memberid,
+                                "casename"=>$casename,
+                                "casenum"=>$casenum);
+                
+                $result = $db->get_query_result($q, $params);
 			
-            if (mysqli_num_rows($result) == 0)
+            if (count($result) == 0)
             {//The case has not been registered already 
         
                
@@ -386,7 +409,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit();
                 }
                 $case_id = $result['id'];
-                print_r($db);
+
                 $case =  new sofa_case($dbcon, $case_id, $db);
                 
         	for ($i=1;$i<=$numcasemethods;$i++){

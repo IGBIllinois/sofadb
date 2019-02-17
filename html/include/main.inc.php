@@ -1,5 +1,11 @@
 <?php
 
+if(file_exists('../../../conf/settings.inc.php')) {
+require_once('../../../conf/settings.inc.php');
+} else if('../../conf/settings.inc.php') {
+    require_once('../../conf/settings.inc.php');
+}
+
 ini_set('display_errors',1);
 
 set_include_path(get_include_path().";../libs;../conf;");

@@ -8,7 +8,6 @@
 
 class sofa_case {
     
-    private $dbcon;
     private $db;
     
     private $id;
@@ -76,7 +75,7 @@ class sofa_case {
     public function get_idstature() { return $this->idstature; }
     public function get_idstatureunits() { return $this->idstatureunits; }
     public function get_idsource() { return $this->idsource; }
-    public function get_casenotes() { return $this->casenots; }
+    public function get_casenotes() { return $this->casenotes; }
     public function get_datestarted() { return $this->datestarted; }
     public function get_datemodified() { return $this->datemodified; }
     public function get_datesubmitted() { return $this->datesubmitted; }
@@ -99,11 +98,11 @@ class sofa_case {
     public function get_idancaddtext() { return $this->idancaddtext; }
     public function get_nummethods() { return $this->nummethods; }
 
-    public function __construct($dbcon, $id = 0, $db=null) {
-        $this->dbcon = $dbcon;
-        if($db != null) {
-            $this->db = $db;
-        }
+    public function __construct($db, $id = 0) {
+
+
+        $this->db = $db;
+
         if($id != 0) {
             $this->load_case($id);
         }
@@ -112,7 +111,7 @@ class sofa_case {
     
     /**
      * 
-     * @param type $dbcon Connection to database
+     * @param type $db Connection to database
      * @param type $data array of values. Using an array here since thera are so many
      */
     public static function add_case($db, $data) {
@@ -225,24 +224,11 @@ class sofa_case {
 				<p> " . $db->errorInfo()[2] ."<br/><br/>Query: " . $q . "</p>"
                         );
                 }
-                
-                
-                //$q="INSERT INTO membercasetable (memberid,caseid) VALUES ('$memberid','$caseid')";
-                //$result2 = @mysqli_query ($dbcon, $q); // Run the query.
+
                 $q = "INSERT INTO membercasetable (memberid,caseid) VALUES (:memberid,:caseid)";
                 $d = array("memberid"=>$data['memberid'], "caseid"=>$caseid);
 
                 $result2 = $db->get_insert_result($q, $d);
-
-                /*
-                if($result2 == 0) {
-                    return array("RESULT"=>FALSE,
-                                 "MESSAGE"=>"<h2>System Error</h2>
-				<p class='error'>Case number not linked with member number. We apologize for any inconvenience.</p>
-				<p>" . $db->errorInfo()[2] . "<br/><br/>Query: ". $q . "</p>"
-                        );
-                }
-                */
                 
 
                 return array("RESULT"=>TRUE,
@@ -272,12 +258,12 @@ class sofa_case {
                 . "featureid,"
                 . "phaseid) "
                 . "VALUES ("
-                . "'$this->memberid',"
-                . "'$this->id',"
-                . "'".mysqli_real_escape_string($this->dbcon,$methodtype)."',"
-                . "'".mysqli_real_escape_string($this->dbcon,$methodid)."',"
-                . "'".mysqli_real_escape_string($this->dbcon,$featureid)."',"
-                . "'".mysqli_real_escape_string($this->dbcon,$phaseid)."')";
+                . ":memberid,"
+                . ":caseid,"
+                . ":methodtype,"
+                . ":methodid,"
+                . ":featureid,"
+                . ":phaseid)";
         
         
                 $data = array("memberid"=>$this->memberid,
@@ -286,18 +272,19 @@ class sofa_case {
                         "methodtype"=>$methodtype,
                         "featureid"=>$featureid,
                         "phaseid"=>$phaseid);
-                 
-                 $casemethodid=mysqli_insert_id($this->dbcon);
+                
+                $casemethodid = $this->db->get_insert_result($q, $data);
                  
                  if($casemethodid > 0) {
                      // everything went okay, update nummethods
-                     $q="UPDATE members SET totalcases=totalcases + 1 WHERE id='$this->memberid'";
-			$result=mysqli_query ($dbcon, $q);
+                     $q="UPDATE members SET totalcases=totalcases + 1 WHERE id=:memberid";
+                     $data = array("id"=>$this->memberid);
+                     $result = $this->db->get_update_result($q, $data);
                         if(!$result){
                                 echo '<h2>System Error</h2>
                         <p class="error">Did not increment number of cases. We apologize for any inconvenience.</p>'; 
                         // Debugging message:
-                        echo '<p>' . mysqli_error($this->dbcon) . '<br/><br/>Query: ' . $q . '</p>';
+                        echo '<p>'. '<br/><br/>Query: ' . $q . '</p>';
                         }
                  }
                  
@@ -305,12 +292,67 @@ class sofa_case {
       
     }
     
+    public function edit_case($data) {
+        $q = "UPDATE cases SET "
+                . "casename=:casename,"
+                . "caseyear=:caseyear,"
+                . "casenumber=:casenum,"
+                . "caseagency=:caseag,"
+                . "fasex=:fasex,"
+                
+                . "faage=:faage,"
+                . "faage2=:faage2,"
+                . "faageunits=:faageunits, "
+                . "faageunits2=:faageunits2,"
+                . "fastature=:fastature,"
+                
+                . "fastature2=:fastature2,"
+                . "fastatureunits=:fastatureunits,"
+                . "idsex=:idsex,"
+                . "idage=:idage,"
+                . "idageunits=:idageunits,"
+                
+                . "idsource=:idsource,"
+                . "idstature=:idstature,"
+                . "idstatureunits=:idstatureunits,"
+                . "casenotes=:casenotes,"
+                . "datemodified=NOW(),"
+                
+                . "faancestryas=:faancestryas,"
+                . "faancestryeuro=:faancestryeuro,"
+                . "faancestryaf=:faancestryaf,"
+                . "faancestryna=:faancestryna,"
+                . "faancestryhi=:faancestryhi,"
+                . "faancestryot=:faancestryot,"
+                
+                . "faancestryottext=:faancestryottext,"
+                . "idraceas=:idraceas,"
+                . "idraceaf=:idraceaf,"
+                . "idracewh=:idracewh,"
+                . "idracehi=:idracehi,"
+                . "idracena=:idracena,"
+                . "idraceot=:idraceot,"
+                
+                . "idraceottext=:idraceottext,"
+                . "idancaddtext=:idancaddtext,"
+                . "nummethods=:numcasemethods "
+                . " WHERE id=:caseeditid";
+        
+        $this->db->get_update_result($q, $data);
+        return array("RESULT"=>TRUE,
+                    "MESSAGE"=>"Case ".$this->get_casename . " edited successfully.");
+				
+    }
+    
+    
+    
     public function get_case_methods() {
-        $query = "SELECT methodid from tier2data where caseid = ".$this->id;
-        $result = @mysqli_query ($this->dbcon, $query); // Run the query.
+        $query = "SELECT methodid from tier2data where caseid = :id";
+        $params = array("id"=>$this->id);
+        $result = $this->db->get_query_result($query, $params);
         $methods = array();
         foreach($result as $id) {
-            $method = new method($this->dbcon, $id['methodid']);
+            $method = new method($this->db, $id['methodid']);
             $methods[] = $method;
         }
         return $methods;
@@ -318,18 +360,14 @@ class sofa_case {
     
     private function load_case($id) {
         
-        //$query = "SELECT * from cases where id = '". mysqli_real_escape_string($this->dbcon, $id). "'";
         $query = "SELECT * from cases where id = :id";
-        
 
-        //$mresult=mysqli_query($this->dbcon,$query);
         $mresult = $this->db->get_query_result($query, array("id"=>$id));
         if(!$mresult) {
             echo 'Could not load data from database';
             return;
         }
 
-        //$casedata=mysqli_fetch_array($mresult);
         $casedata = $mresult[0];
         
         $this->id = $id;
