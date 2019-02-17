@@ -21,11 +21,13 @@ $q="SELECT * FROM cases WHERE id=$caseeditid AND memberid=$userid";
 
 $mresult=mysqli_query($dbcon,$q);
 
-$case = new sofa_case($dbcon, $caseeditid, $db);
+$case = new sofa_case($db, $caseeditid);
 if(!$mresult)
 {echo 'Could not load user data from database';exit();}
 
-$casedata=mysqli_fetch_array($mresult);}
+$casedata=mysqli_fetch_array($mresult);
+
+}
 elseif(!isset($_SESSION['caseid']))
 { 
     header ("location: ../index.php"); exit();

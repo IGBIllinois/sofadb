@@ -21,13 +21,7 @@ if(isset($_GET['id']))
     $caseeditid=$_GET['id'];
     $_SESSION['caseid']=$caseeditid;
     unset($_GET['id']);
-    $q="SELECT * FROM cases WHERE id=$caseeditid";
 
-    $mresult=mysqli_query($dbcon,$q);
-    if(!$mresult)
-    {echo 'Could not load user data from database';exit();}
-
-    //$casedata=mysqli_fetch_array($mresult);
     $casedata = new sofa_case($db, $caseeditid);
 }
 
@@ -39,9 +33,10 @@ elseif(!isset($_SESSION['caseid']))
 elseif(isset($_SESSION['caseid']))
 {
 	$caseeditid=$_SESSION['caseid'];
-	$q="SELECT * FROM cases WHERE id=$caseeditid";
+        $casedata = new sofa_case($db, $caseeditid);
+	//$q="SELECT * FROM cases WHERE id=$caseeditid";
 
-$mresult=mysqli_query($dbcon,$q);
+//$mresult=mysqli_query($dbcon,$q);
 if(!$mresult)
 {echo 'Could not load case data from database';exit();}
 
@@ -56,10 +51,10 @@ if(!isset($_SESSION['loadedmethods']))
    $_SESSION['num_methods'] = $casedata->get_nummethods();     
  $q="SELECT methods.id as mid, methods.methodname as mname, methods.methodtype as mtype, methods.methodtypenum as mtypenum, feature.id as fid, feature.name as fname, phase.id as pid, phase.phasename as pname FROM tier2data t2 INNER JOIN methods ON t2.methodid=methods.id INNER JOIN feature ON t2.featureid=feature.id  INNER JOIN phase ON t2.phaseid=phase.id WHERE t2.caseid=$caseeditid";
  
+ $methods = $casedata->get_case_methods();
  
- 
- $methresult=mysqli_query($dbcon,$q);
- if(!$methresult)
+ //$methresult=mysqli_query($dbcon,$q);
+ if(count($methods) > 0) 
  {echo 'Could not load method data from database';exit();}	
 
 for ($i=1;$i<=$_SESSION['num_methods'];$i++)
@@ -95,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$errors[] = 'You must enter a case year to save.';
 	} 
     else {
-			$caseyear = trim($_POST['caseyear']);
+		$caseyear = trim($_POST['caseyear']);
 	}
 
 	// Check for a casenumber:
@@ -398,10 +393,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             {//The case has not been registered already 
 		// Make the query:
 		
-        	//$q = "UPDATE cases SET casename='$casenam',caseyear='$caseyear',casenumber='$casenum',caseagency='$caseag',fasex='$fasex',faage='$faage',faage2='$faage2',faageunits='$faageunits', faageunits2='$faageunits2',fastature='$fastature',fastature2='$fastature2',fastatureunits='$fastatureunits',idsex='$idsex',idage='$idage',idageunits='$idageunits',idsource='$idsource',idstature='$idstature',idstatureunits='$idstatureunits',casenotes='$casenotes',datemodified=NOW(),faancestryas='$faAs',faancestryeuro='$faWh',faancestryaf='$faBl',faancestryna='$faNa',faancestryhi='$faHi',faancestryot='$faOt',faancestryottext='$faothertext',idraceas='$idAs',idraceaf='$idBl',idracewh='$idWh',idracehi='$idHi',idracena='$idNa',idraceot='$idOt',idraceottext='$idothertext',idancaddtext='$idancaddtext',nummethods='$numcasemethods' WHERE id='$caseeditid'";
-				
-		//$result = @mysqli_query ($dbcon, $q); // Run the query.
-		//$inid=mysqli_insert_id($dbcon);
                 $case = new sofa_case($db, $caseeditid);
                 $data = array(
                     
@@ -448,7 +439,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     "numcasemethods"=>$numcasemethods,
                                     
                     "caseeditid"=>$caseeditid);
-                print_r($data);
+
                                 
                 $result = $case->edit_case($data);
         	if ($result["RESULT"] == FALSE) 
@@ -458,7 +449,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				echo '<h2>System Error</h2>
 				<p class="error">Registration failed because of a system error. We apologize for any inconvenience.</p>'; 
 				// Debugging message:
-				echo '<p>' . mysqli_error($dbcon) . '<br/><br/>Query: ' . $q . '</p>';
+				echo '<p>' . $db->errorInfo()[2] . '<br/><br/>Query: ' . $q . '</p>';
                 exit();
                 } else {
                     echo($result["MESSAGE"]);
@@ -694,6 +685,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       </fieldset>
 	  </div>
 	     <div id="tabs-2">
+                 <!-- Method data -->
    <div class="scroll" name="methodtableholder" id="methodtableholder">
              
             
@@ -703,20 +695,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <tr>
                       <p>
 						
-						<th>Selected </th>
-						 <th>
+                        <th>Selected </th>
+                         <th>
 						
-   Method Type
-					     </th>
-						 <th>
-							Method Name
-						 </th>
-						 </p>
+                            Method Type
+                        </th>
+                            <th>
+                                   Method Name
+                            </th>
+                            </p>
                     </tr>
                     
                     <?php
-					for($i=1;$i<=$_SESSION['num_methods'];$i++)
-					{
+                    $methods = $casedata->get_case_methods();
+                    foreach($methods as $method) {
+                        echo("<tr><td><input type='checkbox' name='chk[]'  /></td>
+					<td>". $method->get_method_type()."</td>
+				<td>".$method->get_name()."</td>
+				</tr>
+				");
+                    }
+                    /*
+			for($i=1;$i<=$_SESSION['num_methods'];$i++) {
 					echo "<tr><td><input type='checkbox' name='chk[]'  /></td>
 					<td>". $_SESSION['methodtabletype'][$i-1]."</td>
 				<td>".$_SESSION['methodtablename'][$i-1]."</td>
@@ -725,7 +725,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 					
 					
 					}
-					
+					*/
 					
 					
 	

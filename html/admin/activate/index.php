@@ -12,19 +12,27 @@ if (isset($_GET['id']))
 { 
 $idactivate=intval($_GET['id']);
 
-$q="UPDATE members SET permissionstatus=1 WHERE id=$idactivate";
+$q="UPDATE members SET permissionstatus=1 WHERE id=:idactivate";
+$params = array("idactivate"=>$idactivate);
+//$result = @mysqli_query ($dbcon, $q);
+$result = $db->get_update_result($q, $params);
+if(count($result) == 0) 
+{
+    echo '<p class="error">Activation failed. We apologize for any inconvenience.</p>';
+    
+}
 
-$result = @mysqli_query ($dbcon, $q);
-if(!$result)
-{echo '<p class="error">Activation failed. We apologize for any inconvenience.</p>';}
+$q="SELECT * FROM members WHERE id=:idactivate";
+//$result=@mysqli_query($dbcon,$q);
+$result = $db->get_query_result($q, $params);
+if(count($result) == 0)
+{
+    echo '<p class="error">Activation email not sent, email not extracted from database. We apologize for any inconvenience.</p>';
+    
+}
 
-$q="SELECT * FROM members WHERE id=$idactivate";
-$result=@mysqli_query($dbcon,$q);
-if(!result)
-{echo '<p class="error">Activation email not sent, email not extracted from database. We apologize for any inconvenience.</p>';}
-
-$emailrow = mysqli_fetch_array($result, MYSQLI_ASSOC);
-
+//$emailrow = mysqli_fetch_array($result, MYSQLI_ASSOC);
+$emailrow = $result[0];
    //$admin_email="hughesc@illinois.edu";
    $to = $emailrow['uname'];
 $admin_email = ADMIN_EMAIL;
@@ -58,9 +66,11 @@ $pages=$_GET['p'];
 //First, check for the total number of records
 $q = "SELECT COUNT(id) FROM members WHERE permissionstatus=0";
 
-$result = @mysqli_query ($dbcon, $q);
-$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
-$records = $row[0];
+//$result = @mysqli_query ($dbcon, $q);
+$result = $db->get_query_result($q);
+$records = $result[0][0];
+//$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
+//$records = $row[0];
 
 //Now calculate the number of pages
 if ($records > $pagerows){ //if the number of records will fill more than one page
@@ -80,16 +90,11 @@ $start = 0;
 // Make the query:
 $q = "SELECT lastname, firstname, uname, institution, DATE_FORMAT(dateregistered, '%M %d, %Y') AS regdat, id  FROM members WHERE permissionstatus=0";		
 
- 
 
-$result = @mysqli_query ($dbcon, $q); // Run the query.
-$members = mysqli_num_rows($result);
-if ($result) { // If it ran OK, display the records.
+$result = $db->get_query_result($q);
+
+//if (count($result) > 0) { // If it ran OK, display the records.
 // Table header.
-
-
-
-
 
 echo '<div class="scroll"><table id="hortable" summary="List of members">
     <thead>
@@ -110,7 +115,8 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
 
 
 // Fetch and print all the records:
-while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+//while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+foreach($result as $row) {
 	echo '<tr>
 	<td><a href="index.php?id=' . $row['id'] . '">Activate</a></td>
 	
@@ -126,18 +132,21 @@ while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 	</tr>';
 	}
 	echo '</tbody></table></div>'; // Close the table.
-	mysqli_free_result ($result); // Free up the resources.	
-} else { // If it did not run OK.
+	//mysqli_free_result ($result); // Free up the resources.	
+//} else { // If it did not run OK.
 // Public message:
-	echo '<p class="error">The current record could not be retrieved. We apologize for any inconvenience.</p>';
+//	echo '<p class="error">The current record could not be retrieved. We apologize for any inconvenience.</p>';
 	// Debugging message:
-	echo '<p>' . mysqli_error($dbcon) . '<br><br>Query: ' . $q . '</p>';
-} // End of if ($result). Now display the total number of records/members.
+//	echo '<p>' . $db->errorInfo()[0] . '<br><br>Query: ' . $q . '</p>';
+//} // End of if ($result). Now display the total number of records/members.
+
 $q = "SELECT COUNT(id) FROM members WHERE permissionstatus=0";
-$result = @mysqli_query ($dbcon, $q);
-$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
-$members = $row[0];
-mysqli_close($dbcon); // Close the database connection.
+$result = $db->get_query_result($q);
+$members = $result[0][0];
+//$result = @mysqli_query ($dbcon, $q);
+//$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
+//$members = $row[0];
+//mysqli_close($dbcon); // Close the database connection.
 echo "<p>Total unactivated members: $members</p>";
 if ($pages > 1) {
 echo '<p>';

@@ -31,12 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$errors[] = 'You must enter a case number to save.';
 	} 
     else {
-		//$casenum = mysqli_real_escape_string($dbcon, trim($_POST['casenumber']));
                 $casenum = trim($_POST['casenumber']);
 	}
 	// Check for a casename:
 	if (!empty($_POST['casename'])) {
-			//$casenam = mysqli_real_escape_string($dbcon, trim($_POST['casename']));
             $casename = trim($_POST['casename']);
 	} 
     else {
@@ -48,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$errors[] = 'You must enter a case year to save.';
 	} 
     else {
-		//$caseyear = mysqli_real_escape_string($dbcon, trim($_POST['caseyear']));
         $caseyear = trim($_POST['caseyear']);
 	}
 	
@@ -59,7 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
 	} 
     else {
-		//$caseag = mysqli_real_escape_string($dbcon, trim($_POST['caseagency']));
         $caseag = trim($_POST['caseagency']);
 	}
 	
@@ -68,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$fasex=NULL;
 	} 
     else {
-		//$fasex = mysqli_real_escape_string($dbcon, trim($_POST['fasex']));
                 $fasex = trim($_POST['fasex']);
 	}
 	
@@ -81,7 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$faage2 = trim($_POST['faage2']);
-        //$faageunits2 = mysqli_real_escape_string($dbcon, trim($_POST['faageunits2']));
                 $faageunits = trim($_POST['faageunits2']);
 	}
     
@@ -95,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$faage = trim($_POST['faage']);
-        //$faageunits = mysqli_real_escape_string($dbcon, trim($_POST['faageunits']));
         $faageunits = trim($_POST['faageunits']);
 	}
 
@@ -119,7 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$fastature = trim($_POST['fastature']);
-        //$fastatureunits = mysqli_real_escape_string($dbcon, trim($_POST['fastatureunits']));
                 $fastatureunits = trim($_POST['fastatureunits']);
 	}
 
@@ -129,7 +121,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$idsex=NULL;
 	} 
     else {
-		//$idsex = mysqli_real_escape_string($dbcon, trim($_POST['idsex']));
                 $idsex = trim($_POST['idsex']);
 	}
 
@@ -142,7 +133,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$idage = trim($_POST['idage']);
-        //$idageunits = mysqli_real_escape_string($dbcon, trim($_POST['idageunits']));
                 $idageunits = trim($_POST['idageunits']);
 	}
 
@@ -155,7 +145,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$idstature = trim($_POST['idstature']);
-        //$idstatureunits = mysqli_real_escape_string($dbcon, trim($_POST['idstatureunits']));
                 $idstatureunits = trim($_POST['idstatureunits']);
 	}
    
@@ -167,7 +156,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		
-        //$idsource = mysqli_real_escape_string($dbcon, trim($_POST['idsource']));
         $idsource = trim($_POST['idsource']);
 	}
 	
@@ -178,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		
-        $idancaddtext = mysqli_real_escape_string($dbcon, trim($_POST['idancaddtext']));
+        $idancaddtext =  trim($_POST['idancaddtext']);
 	}
             if(isset($_POST['farace_asian']))
 	{
@@ -235,37 +223,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
     else {
 		
-        //$casenotes = mysqli_real_escape_string($dbcon, trim($_POST['casenotes']));
         $casenotes = trim($_POST['casenotes']);
 	}
-	
-    
-      
-        
-   
-  
-  
-   
-   
-  
-    
+
     if (empty($_POST['farace_othertext'])) {
 		$faothertext=NULL;
         
 	} 
     else {
 		
-        //$faothertext = mysqli_real_escape_string($dbcon, trim($_POST['farace_othertext']));
         $faothertext = trim($_POST['farace_othertext']);
 	}
-    
-    
-    
-    
-    
-    
-    
-      
+ 
     if(isset($_POST['race_asian']))
 	{
       $idAs=$_POST['race_asian'];
@@ -315,7 +284,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$idOt=1;
-        //$idothertext = mysqli_real_escape_string($dbcon, trim($_POST['idrace_othertext']));
                 $idothertext = trim($_POST['idrace_othertext']);
 	}
     
@@ -338,10 +306,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		//Determine whether the case has already been registered	
 		$memberid=$_SESSION['id'];
 
-
-		//$q = "SELECT id FROM cases WHERE memberid='$memberid' AND casename='$casenam' AND casenumber='$casenum'";
-                
-		//$result=mysqli_query ($dbcon, $q) ; 	
                 
                 $q = "SELECT id FROM cases WHERE memberid=:memberid AND casename=:casename AND casenumber=:casenum";
                 $params = array("memberid"=>$memberid,
@@ -452,7 +416,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				  unset($_SESSION['featurechosen']);
                 header ("location: ../index.php"); exit();
                  
-       	   mysqli_close($dbcon); // Close the database connection
 			// Include the footer and stop the script
 		  
 			exit();
