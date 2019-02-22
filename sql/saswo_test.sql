@@ -60,14 +60,14 @@ CREATE TABLE `cases` (
   PRIMARY KEY (`id`),
   KEY `memberid` (`memberid`),
   KEY `submissionstatus` (`submissionstatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=348 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 CREATE TABLE `contact` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 
@@ -76,7 +76,7 @@ CREATE TABLE `feature` (
   `name` text NOT NULL,
   `description` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `membercasetable` (
@@ -114,7 +114,7 @@ CREATE TABLE `members` (
   `dateregistered` date NOT NULL,
   `totalcases` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -124,7 +124,7 @@ CREATE TABLE `methoddata` (
   `dataname` text,
   `datatype` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -153,20 +153,20 @@ CREATE TABLE `methods` (
   `description` text,
   `instructions` text CHARACTER SET latin1,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `phase` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `phasename` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=128 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 
 CREATE TABLE `regions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 
 CREATE TABLE `simplecase` (
@@ -202,7 +202,7 @@ CREATE TABLE `testtable` (
   `name` text CHARACTER SET utf8 NOT NULL,
   `extra` text CHARACTER SET utf8,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `tier2data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -215,6 +215,25 @@ CREATE TABLE `tier2data` (
   PRIMARY KEY (`id`),
   KEY `memberid` (`memberid`,`caseid`,`methodid`,`featureid`,`phaseid`),
   KEY `methodtype` (`methodtype`)
-) ENGINE=InnoDB AUTO_INCREMENT=1696 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 
+CREATE TABLE `tier3data_age` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tier2id` int(11) DEFAULT NULL,
+  `caseid` int(11) DEFAULT NULL,
+  `methodid` int(11) DEFAULT NULL,
+  `methoddataid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+CREATE TABLE `age_method_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `methodid` int(11) NOT NULL,
+  `output_data` varchar(100) DEFAULT NULL,
+  `output_data_2` varchar(100) DEFAULT NULL,
+  `sex` varchar(100) DEFAULT NULL,
+  `age_range` varchar(100) DEFAULT NULL,
+  `user_interaction` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8
