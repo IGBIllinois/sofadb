@@ -272,23 +272,33 @@ class sofa_case {
                         "methodtype"=>$methodtype,
                         "featureid"=>$featureid,
                         "phaseid"=>$phaseid);
-                
+
                 $casemethodid = $this->db->get_insert_result($q, $data);
+                
                  
                  if($casemethodid > 0) {
                      // everything went okay, update nummethods
                      $q="UPDATE members SET totalcases=totalcases + 1 WHERE id=:memberid";
-                     $data = array("id"=>$this->memberid);
+                     $data = array("memberid"=>$this->memberid);
                      $result = $this->db->get_update_result($q, $data);
-                        if(!$result){
+                        if( count($result) == 0) {
                                 echo '<h2>System Error</h2>
                         <p class="error">Did not increment number of cases. We apologize for any inconvenience.</p>'; 
                         // Debugging message:
                         echo '<p>'. '<br/><br/>Query: ' . $q . '</p>';
+                        return array("RESULT"=>FALSE,
+                                    "MESSAGE"=>"Did not increment number of cases. We apologize for any inconvenience.");
+                        } else {
+                            // okay
+                            return array("RESULT"=>TRUE,
+                                    "MESSAGE"=>"Method case added successfully.",
+                                    "id"=>$casemethodid);
                         }
+                 } else {
+                     return array("RESULT"=>FALSE,
+                                    "MESSAGE"=>"Could not add method. We apologize for any inconvenience.");
                  }
                  
-                 return $casemethodid;
       
     }
     
@@ -340,23 +350,123 @@ class sofa_case {
         
         $this->db->get_update_result($q, $data);
         return array("RESULT"=>TRUE,
-                    "MESSAGE"=>"Case ".$this->get_casename . " edited successfully.");
+                    "MESSAGE"=>"Case ".$this->get_casename() . " edited successfully.");
 				
     }
     
     
     
     public function get_case_methods() {
-        $query = "SELECT methodid from tier2data where caseid = :id";
+        $query = "SELECT * from tier2data where caseid = :id";
         $params = array("id"=>$this->id);
         $result = $this->db->get_query_result($query, $params);
-        $methods = array();
+        $tier2s = array();
         foreach($result as $id) {
-            $method = new method($this->db, $id['methodid']);
-            $methods[] = $method;
+            $tier2 = new tier2data($this->db, $id['id']);
+            $tier2s[] = $tier2;
+            //$method = new method($this->db, $id['methodid']);
+            //$methods[] = $method;
         }
-        return $methods;
+        return $tier2s;
     }
+    
+    
+    public function add_method_data($caseid,
+                                    $methodid,
+                                    $method_data_id) {
+        
+        $case = new sofa_case($this->db, $caseid);
+        $method = new method($this->db, $methodid);
+        
+        if($method->get_type() == "Age") {
+            
+            age_method_data::add_method_data($db, $caseid, $methodid, $method_data_id);
+            
+        }
+        
+    }
+    
+    public function get_method_data($caseid,    
+                                    $methodid) {
+        
+        $case = new sofa_case($this->db, $caseid);
+        $method = new method($this->db, $methodid);
+        
+        if($method->get_type() == "Age") {
+            
+            $methoddata = new age_method_data($db);
+            $methoddataobjects = $methoddata->get_method_data($caseid, $methodid);
+            return $methoddataobjects;
+        }
+            
+    }
+    
+    public function add_tier3_age($methodid, $od1, $s, $tier2id) {
+        $info_query = "SELECT * from age_method_info where methodid = :methodid AND ".
+                " output_data = :od1 and sex = :s";
+        $info_params = array("methodid"=>$methodid,
+                            "od1"=>$od1,
+                            "s"=>$s);
+        $result = $this->db->get_query_result($info_query, $info_params);
+        if(count($result) == 0) {
+            return array("RESULT"=>FALSE,  
+                        "MESSAGE"=>"Could not find specified method data.");
+            
+        } else {
+            $methoddataid = $result[0]['id'];
+        
+            $q = "INSERT INTO tier3data_age(tier2id, methoddataid) VALUES ".
+                    "(:t2id, :methoddataid)";
+            $params = array("t2id"=>$tier2id,
+                            "methoddataid"=>$methoddataid);
+            $info_result = $this->db->get_insert_result($q, $params);
+            if($info_result > 0) {
+                return array("RESULT"=>TRUE,
+                            "MESSAGE"=>"Method data added successfully.");
+            }
+        }
+            
+    }
+    
+    public function get_tier3data_age($t2id) {
+        $query1 = "SELECT * from tier3data_age where tier2id = :t2id";
+        $params = array("t2id"=>$t2id);
+        
+        $result = $this->db->get_query_result($query1, $params);
+        
+        return $result;
+
+    }
+    
+    public function format_tier3data_age($tier2id) {
+        $result = $this->get_tier3data_age($t2id);
+        $output = "";
+        foreach($result as $data) {
+            $methoddataid = $data['methoddataid'];
+            $query = "SELECT * from age_method_info where id = :methoddataid";
+            $params = array("methoddataid"=>$methoddataid);
+            $result = $this->db->get_query_result($query, $params);
+            if(count($result) > 0) {
+                $output .= "(".$result[0]['output_data'].", ".$result[0]['sex'].") ";
+            }
+            
+        }
+        return $output;
+    
+    }
+    
+    public function remove_method_age($t2id) {
+        $query1 = "DELETE FROM tier2data where id = :t2id";
+        $params = array("t2id"=>$t2id);
+        
+        $result = $this->db->get_update_result($query1, $params);
+        
+        $query2 = "DELETE from tier3data_age where tier2id = :t2id";
+        $result2 = $this->db->get_update_result($query2, $params);
+    }
+
+    
+    // Private methods
     
     private function load_case($id) {
         

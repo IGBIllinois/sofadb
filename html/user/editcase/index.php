@@ -34,9 +34,9 @@ elseif(isset($_SESSION['caseid']))
 {
 	$caseeditid=$_SESSION['caseid'];
         $casedata = new sofa_case($db, $caseeditid);
-	//$q="SELECT * FROM cases WHERE id=$caseeditid";
+	$q="SELECT * FROM cases WHERE id=$caseeditid";
 
-//$mresult=mysqli_query($dbcon,$q);
+$mresult=mysqli_query($dbcon,$q);
 if(!$mresult)
 {echo 'Could not load case data from database';exit();}
 
@@ -49,17 +49,19 @@ if(!isset($_SESSION['loadedmethods']))
 	$_SESSION['loadedmethods']=1;
  //$_SESSION['num_methods']=$casedata['nummethods'];
    $_SESSION['num_methods'] = $casedata->get_nummethods();     
- $q="SELECT methods.id as mid, methods.methodname as mname, methods.methodtype as mtype, methods.methodtypenum as mtypenum, feature.id as fid, feature.name as fname, phase.id as pid, phase.phasename as pname FROM tier2data t2 INNER JOIN methods ON t2.methodid=methods.id INNER JOIN feature ON t2.featureid=feature.id  INNER JOIN phase ON t2.phaseid=phase.id WHERE t2.caseid=$caseeditid";
+
+ $q="SELECT t2.id as t2id, methods.id as mid, methods.methodname as mname, methods.methodtype as mtype, methods.methodtypenum as mtypenum, feature.id as fid, feature.name as fname, phase.id as pid, phase.phasename as pname FROM tier2data t2 INNER JOIN methods ON t2.methodid=methods.id INNER JOIN feature ON t2.featureid=feature.id  INNER JOIN phase ON t2.phaseid=phase.id WHERE t2.caseid=$caseeditid";
  
  $methods = $casedata->get_case_methods();
  
- //$methresult=mysqli_query($dbcon,$q);
- if(count($methods) > 0) 
- {echo 'Could not load method data from database';exit();}	
+ $methresult=mysqli_query($dbcon,$q);
+ //if(count($methods) > 0) 
+ //{echo 'Could not load method data from database';exit();}	
 
 for ($i=1;$i<=$_SESSION['num_methods'];$i++)
 {
 	$methodX=mysqli_fetch_assoc($methresult);
+        $_SESSION['t2id'][$i-1] = $methodX['t2id'];
 	$_SESSION['methodtype'][$i-1]=$methodX['mtypenum'];
 	
 	$_SESSION['methodname'][$i-1]=$methodX['mid'];
@@ -79,9 +81,11 @@ for ($i=1;$i<=$_SESSION['num_methods'];$i++)
 	else {$_SESSION['phasechosen'][$i-1]=0;}
 	
 }
+
 	}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
 
 	$errors = array(); // Start an array to hold the errors
 	
@@ -455,7 +459,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     echo($result["MESSAGE"]);
                 }
                 
-         
+         // mbach note: Interesting. It deletes ALL the tier2data for the case, then re-adds everything.
+                /*
 		 $q="DELETE FROM tier2data WHERE caseid=$caseeditid";
 		 $result3=mysqli_query($dbcon,$q);
 		  if (!$result3) 
@@ -469,27 +474,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 exit();
                 }
 		 
-		 
-		 for ($i=1;$i<=$numcasemethods;$i++){
+                 * 
+                 */
+                $curr_methods = array();
+		 $this_case = new sofa_case($db, $caseeditid);
+            $case_methods = $this_case->get_case_methods();
+            foreach($case_methods as $case_method) {
+                
+                $curr_methods[] = $case_method->get_id();
+            }
+	for ($i=1;$i<=$numcasemethods;$i++){
                 
                 $methodidsave=$_SESSION['methodname'][$i-1];
               
                 $methodtypesave=$_SESSION['methodtype'][$i-1];
-				
+		$t2id = $_SESSION['t2id'][$i-1];		
                 
-				if($_SESSION['featurechosen'][$i-1]==1){
-				$methodfeatsave=$_SESSION['methodfeature'][$i-1];}
-				else $methodfeatsave=1;
+		if($_SESSION['featurechosen'][$i-1]==1){
+                    $methodfeatsave=$_SESSION['methodfeature'][$i-1];
+                    
+                } else {
+                    $methodfeatsave=1;
+                }
 				
-	if($_SESSION['phasechosen'][$i-1]==1){
-				$methodphasesave=$_SESSION['methodphase'][$i-1];}
-				else $methodphasesave=127;
+            if($_SESSION['phasechosen'][$i-1]==1){
+				$methodphasesave=$_SESSION['methodphase'][$i-1];
+                                
+            } else {$methodphasesave=127;
 				
-                
-                 $q="INSERT INTO tier2data (id,memberid,caseid,methodtype,methodid,featureid,phaseid) VALUES (' ','$memberid','$caseeditid','$methodtypesave','$methodidsave','$methodfeatsave','$methodphasesave')";
-                 $result4 = mysqli_query($dbcon,$q);
-                  if (!$result4) 
-                { // If it ran OK.
+            }
+            
+            if($t2id < 0) {
+                // new, so add it.
+                 //$q="INSERT INTO tier2data (id,memberid,caseid,methodtype,methodid,featureid,phaseid) VALUES (' ','$memberid','$caseeditid','$methodtypesave','$methodidsave','$methodfeatsave','$methodphasesave')";
+                 //$result4 = mysqli_query($dbcon,$q);
+                $result = $this_case->add_case_method($methodidsave, $methodtypesave, $methodfeatsave, $methodphasesave);
+                  if ($result['RESULT'] == FALSE) 
+                { 
                 // If it did not run OK
 				// Error message:
 				echo '<h2>System Error</h2>
@@ -497,7 +518,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				// Debugging message:
 				echo '<p>' . mysqli_error($dbcon) . '<br/><br/>Query: ' . $q . '</p>';
                 exit();
+                } else {
+                    $added_id = $result['id'];
                 }
+                
+            }
+                // also add t3 data
+            echo("curr index = ".($i-1)."<BR>");
+            if(isset($_SESSION['methoddata'])) {
+                // add new ones
+            $methoddata = $_SESSION['methoddata'];
+                foreach($methoddata as $index=>$methodinfo) {
+                    echo("<BR>index = $index<BR>");
+                    if($methodtypesave == 2) {
+                        echo("  AGE<BR>");
+                    if($index == ($i-1)) {
+                        echo("      index matches<BR>");
+                        // this is the one
+                        $output_data_1 = $_SESSION['methoddata'][$i-1][$methodidsave]['od1'];
+                        //$od1_array = explode(",", $output_data_1);
+                        $sex = $_SESSION['methoddata'][$i-1][$methodidsave]['sex'];
+                        //$sex_data = explode(",", $sex);
+                        
+                        foreach($output_data_1 as $od1) {
+                            foreach($sex as $s) {
+                                echo("      Adding $od1, $s, to $methodidsave<BR><BR>");
+                                $this_case->add_tier3_age($methodidsave, $od1, $s, $added_id);
+                            }
+                        }
+                    }
+                    }
+                }
+            }
+                
                  
                  
                  
@@ -510,16 +563,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                  
                  
                 unset($_SESSION['loadedmethods']);
-       			unset($_SESSION['num_methods']);
+       		unset($_SESSION['num_methods']);
                 unset($_SESSION['methodtype']);
                 unset($_SESSION['methodname']);
                 unset($_SESSION['methodfeature']);
-				unset($_SESSION['methodphase']);
-       		    unset($_SESSION['phasechosen']);
-				unset($_SESSION['featurechosen']);
+		unset($_SESSION['methodphase']);
+       		unset($_SESSION['phasechosen']);
+		unset($_SESSION['featurechosen']);
+                unset($_SESSION['methoddata']);
+                
         		 
        
-       			unset($_SESSION['caseid']); 
+       		unset($_SESSION['caseid']); 
                 header ("location: ../index.php"); exit();
 				
                  
@@ -703,16 +758,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <th>
                                    Method Name
                             </th>
+                            <th>
+                                   Method Data
+                            </th>
                             </p>
                     </tr>
                     
                     <?php
-                    $methods = $casedata->get_case_methods();
-                    foreach($methods as $method) {
+                    $tier2s = $casedata->get_case_methods();
+                    
+                    
+                    foreach($tier2s as $tier2) {
+                        $method = new method($db, $tier2->get_methodid());
                         echo("<tr><td><input type='checkbox' name='chk[]'  /></td>
 					<td>". $method->get_method_type()."</td>
-				<td>".$method->get_name()."</td>
-				</tr>
+				<td>".$method->get_name()."</td>".
+                                "<td>".$tier2->format_tier3data()."</td>".
+				"</tr>
 				");
                     }
                     /*
@@ -770,13 +832,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <span id="wait_2" style="display: none;">
     <img alt="Please Wait" src="ajax-loader.gif"/>
     </span>
-    
+    <p>  <input type="button" class="showybutton" id="addmethodbutton" value="Add Method to List" ></p>
      <span id="result_2" style="display: none;"></span>
                               <span id="wait_3" style="display: none;">
     <img alt="Please Wait" src="ajax-loader.gif"/>
     </span>
     <span id="result_3" style="display: none;"></span></p>
-           <p>  <input type="button" class="showybutton" id="addmethodbutton" value="Add Method to List" ></p>
+           <!--<p>  <input type="button" class="showybutton" id="addmethodbutton" value="Add Method to List" ></p>-->
              </div>
               <span name="savebutton" class="bigsavebutton">
     <input name="savecase" type="image" id="savecase" src="../../images/bigsave.png" alt="Save Case" width="90"/></span>

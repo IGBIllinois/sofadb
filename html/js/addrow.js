@@ -30,6 +30,9 @@ function addRow(tableID,linkingID) {
 	var fChosen=parseInt(document.getElementById("fchoseninput").value);
 	var pChosen=parseInt(document.getElementById("pchoseninput").value);
 	
+        //var od1Chosen=parseInt(document.getElementById("odchosen").value);
+        //var sexChosen=parseInt(document.getElementById("sexchosen").value);
+        
 	if (!msieversion())
 	{
 	var table = document.getElementById(tableID);
@@ -66,7 +69,19 @@ function addRow(tableID,linkingID) {
 			{
 				var newcell=row.insertCell(i);
 				
-				//newcell.innerHTML='<a href="./viewdetails.php?id='+ linkingID + '\">Details</a>';
+
+                                dataoutput = "";
+                                od1 = $('#output_data_1').val();
+                                s = $('#sex').val();
+                                for(j = 0; j<od1.length; j++) {
+                                    for(k=0; k<s.length; k++) {
+                                        dataoutput += "("+od1[j]+", "+s[k]+") ";
+                                    }
+                                }
+                                
+                                newcell.innerHTML=dataoutput;
+
+                        } else if (i == 4) {
 			if (fChosen!=0 && pChosen!=0)
 			{newcell.innerHTML=$('#drop_3 option:selected').html().concat("|",$('#drop_4 option:selected').html());}
 			else if (fChosen!=0 && pChosen==0)
@@ -74,21 +89,13 @@ function addRow(tableID,linkingID) {
 			else if (fChosen==0) 
 			{newcell.innerHTML="None|No Measurement";}
 	
-			//	newcell.innerHTML='<a href="./#">Details</a>';	
-				//if ( $('#drop_3').val()=="")
-				//{
-				//newcell.innerHTML="";
-				//}
-				//else {newcell.innerHTML=$('#drop_3 option:selected').html();}
 				
 				
 				} 
 				else if (i>3)
 				{
 				var newcell=row.insertCell(i);
-				//newcell.innerHTML='<a href="./viewdetails.php?id='+ linkingID + '\">Details</a>';	
                                 newcell.innerHTML=$('#drop_3 option:selected').html();
-								//  newcell.innerHTML='<a href="./#">Details</a>';	
 				}
 			
 		}

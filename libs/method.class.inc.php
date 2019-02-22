@@ -16,6 +16,8 @@ class method {
     private $description;
     private $instructions;
     
+    private $tier2id;
+    
     private $db; // Database object
     
     public function __construct($db, $id = null) {
@@ -240,6 +242,18 @@ class method {
         return $methods;
     }
     
+    public static function get_methods_by_type($db, $type_id) {
+            $query = "SELECT methodname,id FROM methods WHERE methodtypenum=:methodtypenum Order by methodname ASC";
+            $params = array("methodtypenum"=>$type_id);
+            $result = $db->get_query_result($query, $params);
+            $methods = array();
+            foreach($result as $method) {
+                $curr_method = new method($db, $method['id']);
+                $methods[] = $curr_method;
+            }
+            return $methods;
+        }
+    
      // Private functions
 
      /** Loads database data into this method
@@ -265,6 +279,8 @@ class method {
          
      }
 }
+
+
 
 class methoddata {
     
@@ -324,6 +340,112 @@ class methoddata {
         $this->method_id = $data['methodid'];
         $this->data_name = $data['dataname'];
         $this->data_type = $data['datatype'];
+       }
+    }
+}
+
+/** Static data about age methods
+ * 
+ */
+class age_method_data extends methoddata {
+    
+    private $db;
+    private $id;
+    private $methodid;
+    private $methoddataid;
+    private $caseid;
+    
+    // meta data
+    private $output_data;
+    private $output_data_2;
+    private $sex;
+    
+    public function get_id() { return $this->id; }
+    public function get_method_id() { return $this->methodid; }
+    public function get_method_data_id() { return $this->methoddataid; }
+    
+    public function get_output_data() { return $this->output_data; }
+    public function get_output_data_2() { return $this->output_data_2; }
+    public function get_sex() { return $this->sex; }
+    
+        
+        public function get_method_data($caseid,    
+                                    $methodid) {
+            $method = new method($this->db, $methodid);
+            if($method->get_type() == "Age") {
+                $query = "SELECT * from age_method_info where caseid=:caseid AND ". 
+                        " methodid = :methodid";
+                $params = array("caseid"=>$caseid,
+                                "methodid"=>$methodid);
+                $result = $this->db->get_query_result($query, $params);
+                
+                if(count($result) > 0) {
+                    foreach($result as $methoddata) {
+                        $id = $methoddata['id'];
+                        $methoddata = new age_method_data($db, $id);
+                    }
+                }
+            }
+    }
+    
+    // Static functions
+    
+    public static function add_method_data($db,
+                                $caseid,
+                                $methodid,
+                                $method_data_id) {
+        
+        $case = new sofa_case($db, $caseid);
+        $method = new method($db, $methodid);
+        
+        if($method->get_type() == "Age") {
+            
+            $query = "INSERT INTO age_method_data (caseid, methodid, methoddataid) VALUES "
+                    . "(:caseid, :methodid, :methoddataid)";
+            $params = array("caseid"=>$caseid,
+                            "methodid"=>$methodid,
+                            "methoddataid"=>$methoddataid);
+            
+            $result = $db->get_insert_result($query, $params);
+            if($result > 0) {
+                return array("RESULT"=>TRUE,
+                            "MESSAGE"=>"Method data added successfully.");
+                
+            } else {
+                return array("RESULT"=>FALSE,
+                            "MESSAGE"=>"Method data not added.");
+            }
+            
+        }
+        }
+       
+        
+        // Private functions
+    
+    private function load_method_data($id) {
+       $query = "SELECT * from age_method_data where id=:id";
+       $params = array("id"=>$id);
+       $result = $this->db->get_query_result($query, $params);
+
+       if(count($result) > 0) {
+           $data = $result[0];
+       
+       $this->id = $id;
+        $this->caseid = $data['caseid'];
+        $this->methodid = $data['methodid'];
+        $this->methoddataid = $data['methoddataid'];
+       }
+       
+       // load meta data
+       $metadataquery = "SELECT * from age_method_info where id = :id";
+       $params = array("id"=>$methoddataid);
+       $result = $this->db->get_query_result($methoddataquery, $params);
+       
+       if(count($result) > 0) {
+           $data = $result[0];
+           $this->output_data = $data['output_data'];
+           $this->output_data_2 = $data['output_data_2'];
+           $this->sex = $data['sex'];
        }
     }
 }

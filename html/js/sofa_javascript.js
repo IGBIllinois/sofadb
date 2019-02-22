@@ -22,34 +22,41 @@ $(document).ready(function(){
 // user/addcase
 	$('#wait_1').hide();
 	
-    $('#addmethodbutton').hide();
-	
 	$('#addmethodbutton').click(function(){
+                
+            var od1Values = $('#output_data_1').val();
+            var sValues = $('#sex').val();
+
+                
 	$.get("func.php", {
-		savecase: "1"
-		}, function(response){
-			addRow('hortable',response);
-			$('#wait_1').hide();
-	$('#wait_2').hide();
-	$('#result_1').hide();
-	$('#result_2').hide();
-	$('#wait_3').hide();
-	$('#result_3').hide();
-	$('#drop_1').hide();
-	$('#drop_2').hide();
-	$('#drop_3').hide();
-	$('#drop_4').hide();
-	$('#fchoseninput').val('0');
-	$('#pchoseninput').val('0');
-	$('#methodtype').val("");
-	$('#addmethodbutton').hide();
-	$('hortable').show();
-			
-			
-			});//end get
-		
-
-
+		savecase: "1",
+                od1: od1Values,
+                sex: sValues,
+                drop_2: $('#drop_2').val()
+                
+		}, 
+        function(response){
+                addRow('hortable',response);
+                $('#odchosen').val('0');
+                $('#sexchosen').val('0');
+                $('#wait_1').hide();
+                $('#wait_2').hide();
+                $('#result_1').hide();
+                $('#result_2').hide();
+                $('#wait_3').hide();
+                $('#result_3').hide();
+                $('#drop_1').hide();
+                $('#drop_2').hide();
+                $('#drop_3').hide();
+                $('#drop_4').hide();
+                $('#fchoseninput').val('0');
+                $('#pchoseninput').val('0');
+                $('#methodtype').val("");
+                $('#addmethodbutton').hide();
+                $('hortable').show();
+	
+	}
+                );//end get
 
 });//end document ready functi
 	
@@ -58,7 +65,7 @@ $(document).ready(function(){
 		$('#removemethodbutton').click(function(){
 	     
 	sendarray=deleteRow('hortable');
-	
+
 	$.get("func.php",{delrow:"1",delmethods:JSON.stringify(sendarray)});
 	
 	
@@ -122,7 +129,7 @@ $(document).ready(function(){
     $('#addmethodbutton').hide();
 	
 	$('#addmethodbutton2').click(function(){
-            alert("TEST1");
+
 	$.get("func.php", {
 		savecase: "1"
 		//mtypenum : $('#methodtype').val(),

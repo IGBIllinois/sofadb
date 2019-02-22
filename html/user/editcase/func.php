@@ -1,4 +1,12 @@
 <?php
+
+if(file_exists('../../../include/main.inc.php')) {
+require_once('../../../include/main.inc.php');
+} else if('../../include/main.inc.php') {
+    require_once('../../include/main.inc.php');
+}
+
+
 if(!isset($_SESSION)){
 session_start();
 if(!isset($_SESSION['loggedin']))
@@ -33,39 +41,7 @@ if (isset($_GET['editrow']) && $_GET['editrow']!=0 && $_GET['delmethods']>=1)
 	unset($_GET['delmethods']);	 
 		
 		echo $mout;
-	
-	/*
-	     unset($_SESSION['methodtype'][$data]);
-		 unset($_SESSION['methodname'][$data]);
-		 unset($_SESSION['methodfeature'][$data]);
-    
-	$_SESSION['num_methods']=$_SESSION['num_methods']-1;
-	$_SESSION['methodtype']=array_values($_SESSION['methodtype']);
-	$_SESSION['methodname']=array_values($_SESSION['methodname']);
-    $_SESSION['methodfeature']=array_values($_SESSION['methodfeature']);
-	
-	include_once($_SERVER['DOCUMENT_ROOT'].'/mysqli_connect.php');
-	$result = mysqli_query($dbcon,"SELECT methodname,id FROM methods WHERE methodtypenum='$mtype' Order by methodname ASC") 
-	or die(mysql_error());
-	
-	$htmlout='<select name="drop_2" id="drop_2">
-	      <option value="" disabled="disabled" selected="selected">Choose method</option>';
-	
-	
-	
 
-		   while($drop_2 = mysqli_fetch_assoc( $result )) 
-			{
-			$htmlout=$htmlout . '<option value="'.$drop_2['id'].'">'.$drop_2['methodname'].'</option>';
-			}
-	
-	$htmlout=$htmlout.'</select>';
-	 echo '<script type="text/javascript"> $(\'#result_1\').html($htmlout);$(\'#result_1\').show();</script>';
-	*/
-	
-	
-		
-	
 }//end edit row
 
 
@@ -74,25 +50,36 @@ if (isset($_GET['editrow']) && $_GET['editrow']!=0 && $_GET['delmethods']>=1)
 //*****************
 if (isset($_GET['delrow']) && $_GET['delrow']==1) 
 {
-		
-	
+			
 	$data   =   $_GET['delmethods'];
     $data   =    json_decode("$data",true);
 	
-
-	
 	$num_deleted=intval($data[0]);
-	
-	
-	
-	
-	
-	
-	
+
+        $_SESSION["1"] = 1;
 	for ($i=1;$i<=$num_deleted;$i++)
 	{
+            
+            $meth_index=intval($data[$i])-1;
+            $_SESSION['HELP'.$meth_index] = "HELP".$meth_index;
+            echo("methindex = $meth_index<BR>");
+            $t2id = $_SESSION['t2id'][$meth_index];
+            $_SESSION['HELP-t2id'.$t2id] = "HELP-t2id".$t2id;
+            echo("t2id = $t2id<BR>");
+            $caseid = $_SESSION['caseid'];
+            if($t2id > 0) {
+                if(isset($_SESSION['methodtabletype'][$meth_index]) && $_SESSION['methodtabletype'][$meth_index] == "Age") {
+                    $_SESSION['IAMHERE0'.$t2id] = "IAMHERE:".$t2id;
+                    $tmpcase = new sofa_case($db, $caseid);
+                    $_SESSION['IAMHERE1'.$t2id] = "IAMHERE:".$caseid;
+                    $tmpcase->remove_method_age($t2id);
+                    $_SESSION['IAMHERE'.$t2id] = "IAMHERE:".$t2id;
+                }
+            }
 		 
-		 $meth_index=intval($data[$i])-1;
+                 
+		 unset($_SESSION['t2id'][$meth_index]);
+                 unset($_SESSION['methoddata'][$meth_index]);
 		 unset($_SESSION['methodtype'][$meth_index]);
 		 unset($_SESSION['methodname'][$meth_index]);
 		 unset($_SESSION['methodfeature'][$meth_index]);
@@ -101,10 +88,12 @@ if (isset($_GET['delrow']) && $_GET['delrow']==1)
 		 unset($_SESSION['phasechosen'][$meth_index]);
 		 
 	}
+        
 	
 
 	
 	$_SESSION['num_methods']=$_SESSION['num_methods']-$num_deleted;
+        $_SESSION['t2id']=array_values($_SESSION['t2id']);
 	$_SESSION['methodtype']=array_values($_SESSION['methodtype']);
 	$_SESSION['methodname']=array_values($_SESSION['methodname']);
     $_SESSION['methodfeature']=array_values($_SESSION['methodfeature']);
@@ -116,7 +105,7 @@ if (isset($_GET['delrow']) && $_GET['delrow']==1)
 	
 unset($_GET['delmethods']);	
 unset($_GET['delrow']);
-	
+
 }
 
 
@@ -133,9 +122,14 @@ unset($_GET['delrow']);
 if(isset($_GET['savecase']) && $_GET['savecase']==1  ) 
 {
 	
-	
+	$drop_2 = $_GET['drop_2'];
+        $_SESSION['TEST'] = "TEST";
+        $index = $_SESSION['num_methods'];
 	$_SESSION['num_methods']=$_SESSION['num_methods']+1;
-	
+        
+	$_SESSION['methoddata'][$index][$drop_2]['od1'] = $_GET['od1'];
+        $_SESSION['methoddata'][$index][$drop_2]['sex'] = $_GET['sex'];
+        $my_methoddata['methoddata'][$drop_2] = array($_GET['od1'], $_GET['sex']);
 		 
 	
     unset($_GET['savecase']);	
@@ -172,7 +166,8 @@ if(isset($_GET['func']) && $_GET['func'] == "drop_1"  ) {
    
    $methoddata['methodtype']=$_GET['drop_var'];
    
-   
+   // new one
+   $_SESSION['t2id'][$_SESSION['num_methods']] = -1;
    
    $_SESSION['methodtype'][$_SESSION['num_methods']]=$_GET['drop_var'];
    
@@ -182,15 +177,22 @@ if(isset($_GET['func']) && $_GET['func'] == "drop_1"  ) {
    
    drop_1($_GET['drop_var']); 
    
+} else if(isset($_GET['func']) && $_GET['func'] == "show_age_method_info"  ) { 
+    
+    $method_id = $_GET['method_id'];
+    show_age_method_info($method_id);
+    
 }
+   
 
 function drop_1($drop_var)
 {  
-    
+    global $db;
 	//include_once('db.php');
-	include_once($_SERVER['DOCUMENT_ROOT'].'/mysqli_connect.php');
-	$result = mysqli_query($dbcon,"SELECT methodname,id FROM methods WHERE methodtypenum='$drop_var' Order by methodname ASC") 
-	or die(mysql_error());
+	//include_once($_SERVER['DOCUMENT_ROOT'].'/mysqli_connect.php');
+	//$result = mysqli_query($dbcon,"SELECT methodname,id FROM methods WHERE methodtypenum='$drop_var' Order by methodname ASC") 
+	//or die(mysql_error());
+        $methods = method::get_methods_by_type($db,$drop_var);
 	
 	echo '<script type=\"text/javascript\">
 	 $(function(){
@@ -210,10 +212,10 @@ function drop_1($drop_var)
 	echo '<select name="drop_2" id="drop_2">
 	      <option value="" disabled="disabled" selected="selected">Choose method</option>';
 
-		   while($drop_2 = mysqli_fetch_assoc( $result )) 
-			{
-			  echo '<option value="'.$drop_2['id'].'">'.$drop_2['methodname'].'</option>';
-			}
+
+                foreach($methods as $method) {
+                    echo '<option value="'.$method->get_id().'">'.$method->get_name().'</option>';
+                }
 	
 	echo '</select>';
 	
@@ -229,8 +231,8 @@ $('#wait_2').hide();
 	$('#fchoseninput').val('0');
 	$('#pchoseninput').val('0');
       $.get(\"func.php\", {
-		func: \"drop_2\",
-		drop_var: $('#drop_2').val()
+		func: \"show_age_method_info\",
+		method_id: $('#drop_2').val()
       }, function(response){
         $('#result_2').fadeOut();
         setTimeout(\"finishAjax_tier_three('result_2', '\"+escape(response)+\"')\", 400);
@@ -254,109 +256,49 @@ if (isset($_GET['func']) && $_GET['func'] == "drop_2" ) {
   
 }
 
+function show_age_method_info($method_id) {
 
-
-
-
-
-
-/*not used anymore
-function drop_2($drop_var)
-{  
-   include_once($_SERVER['DOCUMENT_ROOT'].'/mysqli_connect.php');
-	
-	
-	$result = mysqli_query($dbcon,"SELECT name, id FROM feature INNER JOIN methodfeature ON featureid=feature.id WHERE  methodid='$drop_var' Order by name ASC") 
-	or die(mysql_error());
-	
-	echo '<select name="drop_3" id="drop_3">
-	      <option value="" disabled="disabled" selected="selected">Choose bone</option>';
-
-		   while($drop_3 = mysqli_fetch_assoc( $result )) 
-			{
-			  echo '<option value="'.$drop_3['id'].'">'.$drop_3['name'].'</option>';
-			}
-	
-	echo '</select>';
-	echo "<script type=\"text/javascript\">
-$('#wait_4').hide();
-	$('#drop_3').change(function(){
-	  $('#wait_3').show();
-	  $('#result_3').hide();
-	  $('#fchoseninput').val('1');
-	$('#pchoseninput').val('0');
-      $.get(\"func.php\", {
-		func: \"drop_3\",
-		drop_var: $('#drop_3').val(),
-		}, function(response){
-        $('#result_3').fadeOut();
-        setTimeout(\"finishAjax_tier_four('result_3', '\"+escape(response)+\"')\", 400);
-      });
-    	return false;
-	});
-</script>";
-	
-
-}
-
-if (isset($_GET['func']) && $_GET['func'] == "drop_3" ) { 
-   
-    $_SESSION['methodfeature'][$_SESSION['num_methods']]=$_GET['drop_var'];
-	$_SESSION['featurechosen'][$_SESSION['num_methods']]=1;
+     $_SESSION['methodname'][$_SESSION['num_methods']]=$method_id;
+ $_SESSION['featurechosen'][$_SESSION['num_methods']]=0;
    $_SESSION['phasechosen'][$_SESSION['num_methods']]=0;
    
-   drop_3($_GET['drop_var']); 
+    global $db;
+    require_once("../../include/main.inc.php");
+    echo("<BR>");
+    $query = "SELECT * from age_method_info where methodid = :method_id";
+    $output_data_1_query = "SELECT DISTINCT output_data from age_method_info where methodid = :method_id";
+    $select_sex_query = "SELECT DISTINCT sex from age_method_info where methodid = :method_id";
+    
+    $params = array("method_id"=>$method_id);
+    
+    $output_data_1_result = $db->get_query_result($output_data_1_query, $params);
+    $sex_result = $db->get_query_result($select_sex_query, $params);
+    $all_result = $db->get_query_result($query, $params);
+    
+    echo("<select id='output_data_1' style='width:200px;' multiple name=output_data_1[]>");
+    foreach($output_data_1_result as $od1_result) {
+        echo("<option value='".$od1_result['output_data']."'>".$od1_result['output_data']."</option>");
+        
+    }
+    echo("</select>");
+    
+    echo("<select id='sex' style='width:200px;' multiple name=sex[]>");
+    foreach($sex_result as $sex_option) {
+        echo("<option value='".$sex_option['sex']."'>".$sex_option['sex']."</option>");
+        
+    }
+    echo("</select>");
+    
+    echo("<BR><BR>Method Info<BR>");
+    echo("<table id='hortable'>");
+    echo("<tr><td>Output 1</td><td>Sex</td><td>Age range/formula</td></tr>");
+    foreach($all_result as $result) {
+        echo("<tr>");
+        echo("<td>".$result['output_data']."</td>");
+        echo("<td>".$result['sex']."</td>");
+        echo("<td>".$result['age_range']."</td>");
+        echo("</tr>");
+    }
+    echo("</table>");
+
 }
-
-
-function drop_3($drop_var)
-{  
-$methSID=$_SESSION['methodname'][$_SESSION['num_methods']];
-
-   include_once($_SERVER['DOCUMENT_ROOT'].'/mysqli_connect.php');
-	$result = mysqli_query($dbcon,"SELECT phasename, id FROM phase INNER JOIN methodphase ON phaseid=phase.id WHERE  methodid='$methSID' AND featureid='$drop_var' Order by phasename ASC") 
-	or die(mysql_error());
-	
-	echo '<select name="drop_4" id="drop_4">
-	      <option value="" disabled="disabled" selected="selected">Choose options</option>';
-
-		   while($drop_4 = mysqli_fetch_assoc( $result )) 
-			{
-			  echo '<option value="'.$drop_4['id'].'">'.$drop_4['phasename'].'</option>';
-			}
-	
-	echo '</select>';
-	
-	echo "<script type=\"text/javascript\">
-$('#wait_4').hide();
-	$('#drop_4').change(function(){
-	  $('#wait_4').show();
-	  $('#result_4').hide();
-	  
-	$('#pchoseninput').val('1');
-      $.get(\"func.php\", {
-		func: \"drop_4\",
-		drop_var: $('#drop_4').val()
-		}, function(response){
-        $('#result_4').fadeOut();
-        setTimeout(\"finishAjax_tier_four('result_4', '\"+escape(response)+\"')\", 400);
-      });
-    	return false;
-	});
-</script>";
-	
-	
-}
-
-if (isset($_GET['func']) && $_GET['func'] == "drop_4" ) { 
-   
-    $_SESSION['methodphase'][$_SESSION['num_methods']]=$_GET['drop_var'];
-	
-
-   $_SESSION['phasechosen'][$_SESSION['num_methods']]=1;
-   
-}
-
-
-?>
-*/
