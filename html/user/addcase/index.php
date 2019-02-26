@@ -396,6 +396,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $methodphasesave=127;
                 }
 	
+
 		$case->add_case_method($methodidsave, $methodtypesave, $methodfeatsave, $methodphasesave);		
                 
                  

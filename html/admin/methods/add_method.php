@@ -105,8 +105,10 @@ echo('<select name="features[]" size="5" multiple="multiple">');
 $query = "SELECT * from feature";
 $result = mysqli_query($dbcon, $query);
 
-foreach($result as $feature) {
-    echo("<option value='".$feature['id']."'>".$feature['name']."</option>");
+$features = feature::get_features($db);
+
+foreach($features as $feature) {
+    echo("<option value='".$feature->get_id()."'>".$feature->get_name()."</option>");
 }
 echo("</select>");
 echo("<BR></fieldset>");

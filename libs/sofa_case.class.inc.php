@@ -272,7 +272,8 @@ class sofa_case {
                         "methodtype"=>$methodtype,
                         "featureid"=>$featureid,
                         "phaseid"=>$phaseid);
-
+                echo("q = $q<BR>");
+                print_r($data);
                 $casemethodid = $this->db->get_insert_result($q, $data);
                 
                  
@@ -301,6 +302,33 @@ class sofa_case {
                  
       
     }
+
+public function submit_case($submitstatus) {
+
+	$q="UPDATE cases SET submissionstatus=:status,datesubmitted=NOW() WHERE id=:caseid";
+	$params = array("status"=>$submitstatus, $caseid=>$this->get_id());
+	$result = $this->db->get_update_result($q, $params);
+
+	if(count($result) == 0) {
+	return array("RESULT"=>FALSE,
+		"MESSAGE"=> 'System Error: Could not submit case, try again later.');
+	}
+	
+	$this_member = new member($this->db, $this->memberid);
+
+	$q="UPDATE members SET casessubmitted=casessubmitted+1 WHERE id='$memberid'";
+	$params = array("casessubmitted"=>($this->get_casessubmitted() + 1),
+			"memberid"=>$this->memberid);
+	$result = $this->db->get_update_result($q, $params);
+
+
+	if(count($result) == 0) {
+	return array("RESULT"=>FALSE,
+	"MESSAGE"=>'System Error: Could not update submit data.');
+	}
+}
+
+
     
     public function edit_case($data) {
         $q = "UPDATE cases SET "
@@ -464,6 +492,35 @@ class sofa_case {
         $query2 = "DELETE from tier3data_age where tier2id = :t2id";
         $result2 = $this->db->get_update_result($query2, $params);
     }
+
+
+public static function get_member_cases($db, $memberid, $start=-1, $pagerows=-1) {
+
+$q = "SELECT id, casename, casenumber, caseyear, caseagency,submissionstatus,  
+DATE_FORMAT(datemodified, '%M %d, %Y') AS moddat, 
+DATE_FORMAT(datesubmitted, '%M %d, %Y') AS subdat 
+FROM cases WHERE memberid=:memberid 
+AND submissionstatus>=0 
+ORDER BY datemodified DESC ";
+
+
+$params = array("memberid"=>$memberid);
+if($start >= 0) {
+	$q .= "LIMIT $start, $pagerows";
+
+}
+
+$result = $db->get_query_result($q, $params);
+
+$cases = array();
+foreach($result as $case) {
+	$newcase = new sofa_case($db, $case['id']);
+	$cases[] = $newcase;
+}
+
+return $cases;
+}
+
 
     
     // Private methods

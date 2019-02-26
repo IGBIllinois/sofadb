@@ -9,18 +9,16 @@ require_once('../include/header_admin.php') ;
 
 //set the number of rows per display page
 $pagerows = PAGEROWS;
+$all_members = member::get_members($db);
 
-// Has the total number of pagess already been calculated?
-if (isset($_GET['p']) && is_numeric
-($_GET['p'])) {//already been calculated
+// Has the total number of pages already been calculated?
+if (isset($_GET['p']) && is_numeric ($_GET['p'])) { //already been calculated
 $pages=$_GET['p'];
-}else{//use the next block of code to calculate the number of pages
+} else { //use the next block of code to calculate the number of pages
 //First, check for the total number of records
-$q = "SELECT COUNT(id) FROM members";
 
-$result = @mysqli_query ($dbcon, $q);
-$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
-$records = $row[0];
+$records = count($all_members);
+
 //Now calculate the number of pages
 if ($records > $pagerows){ //if the number of records will fill more than one page
 //Calculatethe number of pages and round the result up to the nearest integer
@@ -28,6 +26,7 @@ $pages = ceil ($records/$pagerows);
 }else{
 $pages = 1;
 }
+
 }//page check finished
 //Decalre which record to start with
 if (isset($_GET['s']) && is_numeric
@@ -39,11 +38,12 @@ $start = 0;
 // Make the query:
 $q = "SELECT lastname, firstname, uname, institution, DATE_FORMAT(dateregistered, '%M %d, %Y') AS regdat, DATE_FORMAT(lastlogin, '%M %d, %Y') AS logdat, permissionstatus, id, totalcases FROM members ORDER BY dateregistered DESC LIMIT $start, $pagerows";		
 
- 
+$all_members = member::get_members($db);
+$members = member::get_members($db, $start, $pagerows);
+$total_members = count($all_members);
 
-$result = @mysqli_query ($dbcon, $q); // Run the query.
-$members = mysqli_num_rows($result);
-if ($result) { // If it ran OK, display the records.
+
+if (count($members)>0)  { // If it ran OK, display the records.
 // Table header.
 
 
@@ -71,36 +71,33 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
 
 
 // Fetch and print all the records:
-while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+foreach($members as $member) {
 	echo '<tr>
-	<td><a href="edit_record.php?id=' . $row['id'] . '">Edit</a></td>
-	<td><a href="delete_record.php?id=' . $row['id'] . '">Delete</a></td>
-	<td>' . $row['lastname'] . '</td>
-	<td>' . $row['firstname'] . '</td>
-	<td>' . $row['uname'] . '</td>
-	<td>' . $row['institution'] . '</td>
-	<td>' . $row['regdat'] . '</td>
-	<td>' . $row['logdat'] . '</td>
-	<td>' . $row['permissionstatus'] . '</td>
-	<td>' . $row['totalcases'] . '</td>
+	<td><a href="edit_record.php?id=' . $member->get_id() . '">Edit</a></td>
+	<td><a href="delete_record.php?id=' . $member->get_id() . '">Delete</a></td>
+	<td>' . $member->get_lastname() . '</td>
+	<td>' . $member->get_firstname() . '</td>
+	<td>' . $member->get_uname() . '</td>
+	<td>' . $member->get_institution() . '</td>
+	<td>' . $member->get_dateregistered() . '</td>
+	<td>' . $member->get_lastlogin() . '</td>
+	<td>' . $member->get_permissionstatus() . '</td>
+	<td>' . $member->get_totalcases() . '</td>
 	
 
 	</tr>';
 	}
 	echo '</tbody></table></div>'; // Close the table.
-	mysqli_free_result ($result); // Free up the resources.	
 } else { // If it did not run OK.
 // Public message:
 	echo '<p class="error">The current record could not be retrieved. We apologize for any inconvenience.</p>';
 	// Debugging message:
-	echo '<p>' . mysqli_error($dbcon) . '<br><br>Query: ' . $q . '</p>';
+	echo '<p>' . $db->errorInfo[2]. '<br><br>Query: ' . $q . '</p>';
 } // End of if ($result). Now display the total number of records/members.
-$q = "SELECT COUNT(id) FROM members";
-$result = @mysqli_query ($dbcon, $q);
-$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
-$members = $row[0];
-mysqli_close($dbcon); // Close the database connection.
-echo "<p>Total membership: $members</p>";
+
+$total_members = count($all_members);
+
+echo "<p>Total membership: $total_members</p>";
 if ($pages > 1) {
 echo '<p>';
 //What number is the current page?

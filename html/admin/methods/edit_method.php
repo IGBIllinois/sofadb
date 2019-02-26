@@ -131,13 +131,12 @@ echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="round
 
 echo('<select name="features[]" size="5" multiple="multiple">');
 
-$query = "SELECT * from feature";
-$result = mysqli_query($dbcon, $query);
+$all_features = feature::get_features($db);
 
-foreach($result as $feature) {
-    echo("<option value='".$feature['id'] . "' ".
-            (in_array($feature['id'], $features) ? " SELECTED ": "" ) .
-            ">".$feature['name'].
+foreach($all_features as $feature) {
+    echo("<option value='".$feature->get_id() . "' ".
+            (in_array($feature->get_id(), $features) ? " SELECTED ": "" ) .
+            ">".$feature->get_name().
             "</option>");
 }
 echo("</select>");

@@ -1,5 +1,5 @@
 <?php 
-require_once('../include/header.php') ;
+require_once('../include/header_user.php') ;
 
 
 ?>
@@ -9,7 +9,7 @@ require_once('../include/header.php') ;
 // This script retrieves all the records from the users table.
 
 //set the number of rows per display page
-$pagerows = 20;
+$pagerows = PAGEROWS;
 $memberid=$_SESSION['id'];
 
 // Has the total number of pagess already been calculated?
@@ -44,30 +44,40 @@ if(isset($_GET['id']))
 	$casesubid=$_GET['id'];
 	$status=$_GET['status'];
 	
+	$this_case = new sofa_case($db, $casesubid);
+	
 	if($status==1)
 	{$status=0;}
 	else{$status=1;}
 	
 
-if($status==1)	
-{$q="UPDATE cases SET submissionstatus='$status',datesubmitted=NOW() WHERE id='$casesubid'";
-$result = @mysqli_query ($dbcon, $q);
-if(!$result)
-{echo 'System Error: Could not submit case, try again later.';}
+if($status==1)	{
 
-$q="UPDATE members SET casessubmitted=casessubmitted+1 WHERE id='$memberid'";
+	$this_case->submit_case($status);
 
-$result = @mysqli_query ($dbcon, $q);
-if(!$result)
-{echo 'System Error: Could not update submit data.';}
+//{$q="UPDATE cases SET submissionstatus='$status',datesubmitted=NOW() WHERE id='$casesubid'";
+//$result = @mysqli_query ($dbcon, $q);
+//if(!$result)
+//{echo 'System Error: Could not submit case, try again later.';}
+
+//$q="UPDATE members SET casessubmitted=casessubmitted+1 WHERE id='$memberid'";
+
+//$result = @mysqli_query ($dbcon, $q);
+//if(!$result)
+//{echo 'System Error: Could not update submit data.';}
 
 
 }
-else{$q="UPDATE cases SET submissionstatus='$status',datesubmitted=NULL WHERE id='$casesubid'";
-$result = @mysqli_query ($dbcon, $q);
-if(!$result)
-{echo 'System Error: Could not withdraw case, try again later.';
-}}
+else{
+	$this_case->submit_case(NULL);
+
+//$q="UPDATE cases SET submissionstatus='$status',datesubmitted=NULL WHERE id='$casesubid'";
+//$result = @mysqli_query ($dbcon, $q);
+//if(!$result)
+//{echo 'System Error: Could not withdraw case, try again later.';
+//}
+
+}
 
 
 unset($_GET['id']);
@@ -77,19 +87,21 @@ header('Location: ' . './index.php');exit();
 }
 
 // Make the query:
-$q = "SELECT id, casename, casenumber, caseyear, caseagency,submissionstatus,  DATE_FORMAT(datemodified, '%M %d, %Y') AS moddat, DATE_FORMAT(datesubmitted, '%M %d, %Y') AS subdat FROM cases WHERE memberid=$memberid AND submissionstatus>=0 ORDER BY datemodified DESC LIMIT $start, $pagerows";		
-
- 
+//$q = "SELECT id, casename, casenumber, caseyear, caseagency,submissionstatus,  DATE_FORMAT(datemodified, '%M %d, %Y') AS moddat, DATE_FORMAT(datesubmitted, '%M %d, %Y') AS subdat FROM cases WHERE memberid=$memberid AND submissionstatus>=0 ORDER BY datemodified DESC LIMIT $start, $pagerows";		
+$total_cases = sofa_case::get_member_cases($db, $memberid);
+$curr_cases = sofa_case::get_member_cases($db, $memberid, $start, $pagerows); 
+$num_cases = count($total_cases);
 
 $result = @mysqli_query ($dbcon, $q); // Run the query.
 $members = mysqli_num_rows($result);
 if ($result) { // If it ran OK, display the records.
 // Table header.
 
-$q = "SELECT COUNT(id) FROM cases WHERE memberid=$memberid AND submissionstatus>=0";
-$resultP = @mysqli_query ($dbcon, $q);
-$row = @mysqli_fetch_array ($resultP, MYSQLI_NUM);
-$cases = $row[0];
+/*
+//$q = "SELECT COUNT(id) FROM cases WHERE memberid=$memberid AND submissionstatus>=0";
+//$resultP = @mysqli_query ($dbcon, $q);
+//$row = @mysqli_fetch_array ($resultP, MYSQLI_NUM);
+//$cases = $row[0];
 $current_page = ($start/$pagerows) + 1;
 if ($pages==1)
 {if ($cases>0){$startingrecord=1;}
@@ -101,10 +113,31 @@ $endingrecord=($current_page)*$pagerows;}
 else
 {$startingrecord=($current_page-1)*$pagerows+1;
 $endingrecord=$cases;}
+*/
+
+$current_page = ($start/$pagerows) + 1;
+if ($pages==1) {
+	if ($num_cases>0){
+		$startingrecord=1;
+	}
+	else {
+		$startingrecord=0;
+	}
+	$endingrecord=$num_cases;
+}
+elseif (
+	$current_page!= $pages) {
+	$startingrecord=($current_page-1)*$pagerows+1;
+	$endingrecord=($current_page)*$pagerows;
+}
+else {
+	$startingrecord=($current_page-1)*$pagerows+1;
+	$endingrecord=$num_cases;
+}
 
 
 
-echo "<p class='dbresults'>Total number of cases: $cases. Showing records  $startingrecord - $endingrecord </p>";
+echo "<p class='dbresults'>Total number of cases: $num_cases. Showing records  $startingrecord - $endingrecord </p>";
 if ($pages > 1) {
 echo '<p>';
 //What number is the current page?
@@ -143,32 +176,32 @@ echo '<div class="scroll"><table id="hortable" summary="List of cases">
 
 
 // Fetch and print all the records:
-while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+//while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+foreach($curr_cases as $case) {
 	echo '<tr>
-	<td><a href="./viewcase.php?id=' . $row['id'] . '">View</a></td>';
+	<td><a href="./viewcase.php?id=' . $case->get_id() . '">View</a></td>';
 	
-	echo '<td><a href="./editcase/index.php?id=' . $row['id'] . '">Edit</a></td>';
+	echo '<td><a href="./editcase/index.php?id=' . $case->get_id()  . '">Edit</a></td>';
 	
 	
 	
-	if($row['submissionstatus']==1)
+	if($case->get_submissionstatus()==1)
 	{
-	echo '<td><a href="./index.php?id=' . $row['id'] . '&status=1">Withdraw</a></td>';
+	echo '<td><a href="./index.php?id=' . $case->get_id() . '&status=1">Withdraw</a></td>';
 	}
-	else{echo '<td><a href="./index.php?id=' . $row['id'] . '&status=0">Submit</a></td>';}
+	else{echo '<td><a href="./index.php?id=' . $case->get_id() . '&status=0">Submit</a></td>';}
 	
-	echo '<td>' . $row['caseyear'] . '</td>
-	<td>' . $row['casenumber'] . '</td>
-	<td>' . $row['caseagency'] . '</td>
-    <td>' . $row['moddat'] . '</td>
-	<td>' . $row['subdat'] . '</td>
+	echo '<td>' . $case->get_caseyear() . '</td>
+	<td>' . $case->get_casenumber() . '</td>
+	<td>' . $case->get_caseagency() . '</td>
+    <td>' . $case->get_datemodified() . '</td>
+	<td>' . $case->get_datesubmitted() . '</td>
 	
 	
 
 	</tr>';
 	}
 	echo '</tbody></table></div>'; // Close the table.
-	mysqli_free_result ($result); // Free up the resources.	
 } else { // If it did not run OK.
 // Public message:
 	echo '<p class="error">The current record could not be retrieved. We apologize for any inconvenience.</p>';
@@ -176,25 +209,28 @@ while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 	echo '<p>' . mysqli_error($dbcon) . '<br><br>Query: ' . $q . '</p>';
 } // End of if ($result). Now display the total number of records/members.
 
-$q = "SELECT COUNT(id) FROM cases WHERE memberid=$memberid AND submissionstatus>=0";
-$resultP = @mysqli_query ($dbcon, $q);
-$row = @mysqli_fetch_array ($resultP, MYSQLI_NUM);
-$cases = $row[0];
+
 $current_page = ($start/$pagerows) + 1;
-if ($pages==1)
-{if ($cases>0){$startingrecord=1;}
-else {$startingrecord=0;}
-$endingrecord=$cases;}
-elseif ($current_page!= $pages)
-{$startingrecord=($current_page-1)*$pagerows+1;
-$endingrecord=($current_page)*$pagerows;}
-else
-{$startingrecord=($current_page-1)*$pagerows+1;
-$endingrecord=$cases;}
+if ($pages==1) {
+	if ($num_cases>0){
+		$startingrecord=1;
+	}
+	else {
+		$startingrecord=0;
+	}
+	$endingrecord=$num_cases;
+}
+elseif (
+	$current_page!= $pages) {
+	$startingrecord=($current_page-1)*$pagerows+1;
+	$endingrecord=($current_page)*$pagerows;
+}
+else {
+	$startingrecord=($current_page-1)*$pagerows+1;
+	$endingrecord=$num_cases;
+}
 
-
-
-echo "<p class='dbresults'>Total number of cases: $cases. Showing records  $startingrecord - $endingrecord </p>";
+echo "<p class='dbresults'>Total number of cases: $num_cases. Showing records  $startingrecord - $endingrecord </p>";
 if ($pages > 1) {
 echo '<p>';
 //What number is the current page?
@@ -213,7 +249,7 @@ echo '</p>';
 
 
 
-mysqli_close($dbcon); // Close the database connection.
+//mysqli_close($dbcon); // Close the database connection.
 ?>
     
     

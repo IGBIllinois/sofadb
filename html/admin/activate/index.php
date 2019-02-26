@@ -11,34 +11,25 @@ require_once("../../include/header_admin.php");
 if (isset($_GET['id']))
 { 
 $idactivate=intval($_GET['id']);
+$member = new member($db, $idactivate);
+$result = $member->set_permission(1);
 
-$q="UPDATE members SET permissionstatus=1 WHERE id=:idactivate";
-$params = array("idactivate"=>$idactivate);
-//$result = @mysqli_query ($dbcon, $q);
-$result = $db->get_update_result($q, $params);
-if(count($result) == 0) 
+
+if($result['RESULT'] == FALSE) 
 {
     echo '<p class="error">Activation failed. We apologize for any inconvenience.</p>';
     
-}
+} else {
 
-$q="SELECT * FROM members WHERE id=:idactivate";
-//$result=@mysqli_query($dbcon,$q);
-$result = $db->get_query_result($q, $params);
-if(count($result) == 0)
-{
-    echo '<p class="error">Activation email not sent, email not extracted from database. We apologize for any inconvenience.</p>';
-    
-}
 
-//$emailrow = mysqli_fetch_array($result, MYSQLI_ASSOC);
-$emailrow = $result[0];
+
+//$emailrow = $result[0];
    //$admin_email="hughesc@illinois.edu";
    $to = $emailrow['uname'];
 $admin_email = ADMIN_EMAIL;
 
    $subject = "SOFA Database Account Activated";
-   $message = "Dear ".$emailrow['firstname']." ".$emailrow['lastname'].",\n Welcome to the SOFA Database. Your account is now activated and you can add cases, search the database, and download case information from the database.\n Best regards,\n SOFA DB ADMIN\n http://www.sofadb.org";
+   $message = "Dear ".$member->get_firstname()." ".$member->get_lastname.",\n Welcome to the SOFA Database. Your account is now activated and you can add cases, search the database, and download case information from the database.\n Best regards,\n SOFA DB ADMIN\n http://www.sofadb.org";
    $header = "From:".$admin_email."\r\n";
    $retval = mail ($to,$subject,$message,$header);
    if( $retval == true )  
@@ -53,6 +44,7 @@ $admin_email = ADMIN_EMAIL;
 
 
 }
+}
 
 
 //set the number of rows per display page
@@ -64,18 +56,14 @@ if (isset($_GET['p']) && is_numeric
 $pages=$_GET['p'];
 }else{//use the next block of code to calculate the number of pages
 //First, check for the total number of records
-$q = "SELECT COUNT(id) FROM members WHERE permissionstatus=0";
+    $inactive_members = member::get_members_permission($db, 0);
+    $num_inactive_members = count($inactive_members);
 
-//$result = @mysqli_query ($dbcon, $q);
-$result = $db->get_query_result($q);
-$records = $result[0][0];
-//$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
-//$records = $row[0];
 
 //Now calculate the number of pages
-if ($records > $pagerows){ //if the number of records will fill more than one page
+if ($num_inactive_members > $pagerows){ //if the number of records will fill more than one page
 //Calculatethe number of pages and round the result up to the nearest integer
-$pages = ceil ($records/$pagerows);
+$pages = ceil ($num_inactive_members/$pagerows);
 }else{
 $pages = 1;
 }
@@ -87,13 +75,7 @@ $start = $_GET['s'];
 }else{
 $start = 0;
 }
-// Make the query:
-$q = "SELECT lastname, firstname, uname, institution, DATE_FORMAT(dateregistered, '%M %d, %Y') AS regdat, id  FROM members WHERE permissionstatus=0";		
 
-
-$result = $db->get_query_result($q);
-
-//if (count($result) > 0) { // If it ran OK, display the records.
 // Table header.
 
 echo '<div class="scroll"><table id="hortable" summary="List of members">
@@ -115,16 +97,16 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
 
 
 // Fetch and print all the records:
-//while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-foreach($result as $row) {
+
+foreach($inactive_members as $inactive_member) {
 	echo '<tr>
-	<td><a href="index.php?id=' . $row['id'] . '">Activate</a></td>
+	<td><a href="index.php?id=' . $inactive_member->get_id() . '">Activate</a></td>
 	
-	<td>' . $row['lastname'] . '</td>
-	<td>' . $row['firstname'] . '</td>
-	<td>' . $row['uname'] . '</td>
-	<td>' . $row['institution'] . '</td>
-	<td>' . $row['regdat'] . '</td>
+	<td>' . $inactive_member->get_lastname() . '</td>
+	<td>' . $inactive_member->get_firstname() . '</td>
+	<td>' . $inactive_member->get_uname() . '</td>
+	<td>' . $inactive_member->get_institution() . '</td>
+	<td>' . $inactive_member->get_dateregistered() . '</td>
 	
 
 	
@@ -132,22 +114,10 @@ foreach($result as $row) {
 	</tr>';
 	}
 	echo '</tbody></table></div>'; // Close the table.
-	//mysqli_free_result ($result); // Free up the resources.	
-//} else { // If it did not run OK.
-// Public message:
-//	echo '<p class="error">The current record could not be retrieved. We apologize for any inconvenience.</p>';
-	// Debugging message:
-//	echo '<p>' . $db->errorInfo()[0] . '<br><br>Query: ' . $q . '</p>';
-//} // End of if ($result). Now display the total number of records/members.
 
-$q = "SELECT COUNT(id) FROM members WHERE permissionstatus=0";
-$result = $db->get_query_result($q);
-$members = $result[0][0];
-//$result = @mysqli_query ($dbcon, $q);
-//$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
-//$members = $row[0];
-//mysqli_close($dbcon); // Close the database connection.
-echo "<p>Total unactivated members: $members</p>";
+
+$num_inactive_members = count($inactive_members);
+echo "<p>Total unactivated members: $num_inactive_members</p>";
 if ($pages > 1) {
 echo '<p>';
 //What number is the current page?

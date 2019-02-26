@@ -17,14 +17,16 @@
   
   if (isset($_GET['search']))
   {unset($_SESSION['searched']);}
-  
+  $params = array();
   if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 	  
 	 
 	 	if (!empty($_GET['mID'])) 
 		{
-		$searchstring="id=".mysqli_real_escape_string($dbcon, trim($_GET['mID']));
+		//$searchstring="id=".mysqli_real_escape_string($dbcon, trim($_GET['mID']));
 		$fmID=$_GET['mID'];
+                $params['mID'] = "%".$fmID."%";
+                $searchstring=" id=:mid ";
 		} 
 	else {//else mID
 		$first=0;
@@ -35,9 +37,10 @@
 		if (!empty($_GET['fname'])) 
 		{
 			$first=1;
-		    $searchstring="firstname LIKE '%".mysqli_real_escape_string($dbcon, trim($_GET['fname'])) ."%'";
+		    $searchstring=" firstname LIKE :fname ";
 			
 			$ffname=$_GET['fname'];
+                        $params['fname'] = "%".$ffname."%";
 			
 		}
 	
@@ -45,27 +48,34 @@
 	if (!empty($_GET['lname'])) 
 		{
 			$flname=$_GET['lname'];
-			
-			if ($first==0)
-			{$first=1;
-		    $searchstring="lastname LIKE '%".mysqli_real_escape_string($dbcon, trim($_GET['lname'])) ."%'";}
-			else{
-				if ($_GET['andor']==1)
-				{$searchstring=$searchstring ." AND lastname LIKE '%".mysqli_real_escape_string($dbcon, trim($_GET['lname'])) ."%'";}
-				else{$searchstring=$searchstring ." OR lastname LIKE '%".mysqli_real_escape_string($dbcon, trim($_GET['lname'])) ."%'";}
+			$params['lname'] = "%".$flname."%";
+			if ($first==0) {
+                            $first=1;
+                            $searchstring="lastname LIKE :lname";
+                            
+                        } else {
+				if ($_GET['andor']==1) {
+                                    $searchstring=$searchstring ." AND lastname LIKE :lname";
+                                    
+                                } else {
+                                    $searchstring=$searchstring ." OR lastname LIKE :lname";}
 				
 				}
 			}
 		
 		if (!empty($_GET['email'])) 
 		{
-			if ($first==0)
-			{$first=1;
-		    $searchstring="uname LIKE '%".mysqli_real_escape_string($dbcon, trim($_GET['email'])) ."%'";}
+                    $email = $_GET['email'];
+                    $params['email'] = "%".$email."%";
+			if ($first==0){
+                            $first=1;
+                            $searchstring=" uname LIKE :email ";}
 			else{
 				if ($_GET['andor']==1)
-				{$searchstring=$searchstring ." AND uname LIKE '%".mysqli_real_escape_string($dbcon, trim($_GET['email'])) ."%'";}
-				else{$searchstring=$searchstring ." OR uname LIKE '%".mysqli_real_escape_string($dbcon, trim($_GET['email'])) ."%'";}
+				{
+                                    $searchstring=$searchstring ." AND uname LIKE :email";}
+				else{
+                                    $searchstring=$searchstring ." OR uname LIKE :email";}
 				
 				}
 			}
@@ -73,13 +83,17 @@
 		
 		if (!empty($_GET['institution'])) 
 		{
+                    $institution = $_GET['institution'];
+                    $params['institution'] = "%".$institution."%";
 			if ($first==0)
-			{$first=1;
-		    $searchstring="institution LIKE '%".mysqli_real_escape_string($dbcon, trim($_GET['institution'])) ."%'";}
+			{
+                            $first=1;
+                            
+                        $searchstring=" institution LIKE :institution ";}
 			else{
 				if ($_GET['andor']==1)
-				{$searchstring=$searchstring ." AND institution LIKE '%".mysqli_real_escape_string($dbcon, trim($_GET['institution'])) ."%'";}
-				else{$searchstring=$searchstring ." OR institution LIKE '%".mysqli_real_escape_string($dbcon, trim($_GET['institution'])) ."%'";}
+				{$searchstring=$searchstring ." AND institution LIKE :institution ";}
+				else{$searchstring=$searchstring ." OR institution LIKE :institution ";}
 				
 				}
 			}
@@ -87,13 +101,19 @@
 	
 	if (!empty($_GET['region'])) 
 		{
+                    $region = $_GET['region'];
+                    $params['region'] = "%".$region."%";
 			if ($first==0)
 			{$first=1;
-		    $searchstring="region=".mysqli_real_escape_string($dbcon, trim($_GET['region'])) ;}
+		    $searchstring="region= :region " ;
+                    
+                        }
 			else{
 				if ($_GET['andor']==1)
-				{$searchstring=$searchstring ." AND region=".mysqli_real_escape_string($dbcon, trim($_GET['region']));}
-				else{$searchstring=$searchstring ." OR region=".mysqli_real_escape_string($dbcon, trim($_GET['region']));}
+				{$searchstring=$searchstring ." AND region=:region " ;}
+				else{
+                                    $searchstring=$searchstring ." OR region= :region ";
+                                }
 				
 				}
 			}
@@ -115,15 +135,17 @@ if (isset($_GET['p']) && is_numeric
 $pages=$_GET['p'];
 }else{//use the next block of code to calculate the number of pages
 //First, check for the total number of records
-$q = "SELECT COUNT(id) FROM members WHERE $searchstring";
+//$q = "SELECT COUNT(id) FROM members WHERE $searchstring";
+    
+$query = "SELECT * from members WHERE $searchstring ";
 
-$result = @mysqli_query ($dbcon, $q);
-$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
-$records = $row[0];
+$found_members = member::search_members($db, $query, $params);
+$num_members = count($found_members);
+
 //Now calculate the number of pages
-if ($records > $pagerows){ //if the number of records will fill more than one page
+if ($num_members > $pagerows){ //if the number of records will fill more than one page
 //Calculatethe number of pages and round the result up to the nearest integer
-$pages = ceil ($records/$pagerows);
+$pages = ceil ($num_members/$pagerows);
 }else{
 $pages = 1;
 }
@@ -136,13 +158,8 @@ $start = $_GET['s'];
 $start = 0;
 }
 // Make the query:
-$q = "SELECT lastname, firstname, uname, institution, DATE_FORMAT(dateregistered, '%M %d, %Y') AS regdat, DATE_FORMAT(lastlogin, '%M %d, %Y') AS logdat, permissionstatus, id, totalcases FROM members WHERE $searchstring ORDER BY dateregistered DESC LIMIT $start, $pagerows";		
 
- 
-
-$result = @mysqli_query ($dbcon, $q); // Run the query.
-$members = mysqli_num_rows($result);
-if ($result && $members) { // If it ran OK, display the records.
+if ($num_members > -1) { // If it ran OK, display the records.
 // Table header.
 
 
@@ -170,24 +187,24 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
 
 
 // Fetch and print all the records:
-while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+//while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+foreach($found_members as $found_member) {
 	echo '<tr>
-	<td><a href="edit_record.php?id=' . $row['id'] . '">Edit</a></td>
-	<td><a href="delete_record.php?id=' . $row['id'] . '">Delete</a></td>
-	<td>' . $row['lastname'] . '</td>
-	<td>' . $row['firstname'] . '</td>
-	<td>' . $row['uname'] . '</td>
-	<td>' . $row['institution'] . '</td>
-	<td>' . $row['regdat'] . '</td>
-	<td>' . $row['logdat'] . '</td>
-	<td>' . $row['permissionstatus'] . '</td>
-	<td>' . $row['totalcases'] . '</td>
+	<td><a href="edit_record.php?id=' . $found_member->get_id() . '">Edit</a></td>
+	<td><a href="delete_record.php?id=' . $found_member->get_id() . '">Delete</a></td>
+	<td>' . $found_member->get_lastname() . '</td>
+	<td>' . $found_member->get_firstname(). '</td>
+	<td>' . $found_member->get_uname() . '</td>
+	<td>' . $found_member->get_institution(). '</td>
+	<td>' . $found_member->get_dateregistered() . '</td>
+	<td>' . $found_member->get_lastlogin() . '</td>
+	<td>' . $found_member->get_permissionstatus(). '</td>
+	<td>' . $found_member->get_totalcases() . '</td>
 	
 
 	</tr>';
 	}
 	echo '</tbody></table></div>'; // Close the table.
-	mysqli_free_result ($result); // Free up the resources.	
 } else { // If it did not run OK.
 // Public message:
 	echo '<p class="error">No records found.  </p>';
@@ -197,12 +214,8 @@ unset($_GET['search']);
 echo '<br/> <a href="index.php?search=1">Search Again</a>';
 exit();
 } // End of if ($result). Now display the total number of records/members.
-$q = "SELECT COUNT(id) FROM members WHERE $searchstring";
-$result = @mysqli_query ($dbcon, $q);
-$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
-$members = $row[0];
-mysqli_close($dbcon); // Close the database connection.
-echo "<p>Total number of search results: $members</p>";
+
+echo "<p>Total number of search results: $num_members</p>";
 if ($pages > 1) {
 echo '<p>';
 //What number is the current page?

@@ -82,7 +82,7 @@ class db {
 
     
 
-        public function get_query_result($query_string, $query_array) {
+        public function get_query_result($query_string, $query_array=null) {
             $statement = $this->get_link()->prepare($query_string, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
             $statement->execute($query_array);
             $result = $statement->fetchAll();
@@ -91,7 +91,7 @@ class db {
         }
 
 
-        public function get_update_result($query_string, $query_params) {
+        public function get_update_result($query_string, $query_params=null) {
             // Update queries should probably only update one record. This will ensure 
             // only one record gets updated in case of a malformed query.
             $query_string .= " LIMIT 1"; 
@@ -100,7 +100,7 @@ class db {
             return $result;
         }
 
-        public function get_insert_result($query_string, $query_array) {
+        public function get_insert_result($query_string, $query_array=null) {
 
             $statement = $this->get_link()->prepare($query_string, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
             $stmt = $statement->execute($query_array);

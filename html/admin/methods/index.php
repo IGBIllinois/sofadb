@@ -17,15 +17,14 @@ if (isset($_GET['p']) && is_numeric
 $pages=$_GET['p'];
 }else{//use the next block of code to calculate the number of pages
 //First, check for the total number of records
-$q = "SELECT COUNT(id) FROM methods";
+    
+    $all_methods = method::get_methods($db);
+    $num_methods = count($all_methods);
 
-$result = @mysqli_query ($dbcon, $q);
-$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
-$records = $row[0];
 //Now calculate the number of pages
-if ($records > $pagerows){ //if the number of records will fill more than one page
+if ($num_methods > $pagerows){ //if the number of records will fill more than one page
 //Calculatethe number of pages and round the result up to the nearest integer
-$pages = ceil ($records/$pagerows);
+$pages = ceil ($num_methods/$pagerows);
 }else{
 $pages = 1;
 }

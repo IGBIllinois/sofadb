@@ -1,4 +1,11 @@
 <?php
+
+if(file_exists('../../../include/main.inc.php')) {
+require_once('../../../include/main.inc.php');
+} else if('../../include/main.inc.php') {
+    require_once('../../include/main.inc.php');
+}
+
 if(!isset($_SESSION)){
 session_start();
 if(!isset($_SESSION['loggedin']))
@@ -32,39 +39,7 @@ if (isset($_GET['editrow']) && $_GET['editrow']!=0 && $_GET['delmethods']>=1)
 	unset($_GET['editrow']);
 	unset($_GET['delmethods']);	 
 		
-		echo $mout;
-	
-	/*
-	     unset($_SESSION['methodtype'][$data]);
-		 unset($_SESSION['methodname'][$data]);
-		 unset($_SESSION['methodfeature'][$data]);
-    
-	$_SESSION['num_methods']=$_SESSION['num_methods']-1;
-	$_SESSION['methodtype']=array_values($_SESSION['methodtype']);
-	$_SESSION['methodname']=array_values($_SESSION['methodname']);
-    $_SESSION['methodfeature']=array_values($_SESSION['methodfeature']);
-	
-	include_once($_SERVER['DOCUMENT_ROOT'].'/mysqli_connect.php');
-	$result = mysqli_query($dbcon,"SELECT methodname,id FROM methods WHERE methodtypenum='$mtype' Order by methodname ASC") 
-	or die(mysql_error());
-	
-	$htmlout='<select name="drop_2" id="drop_2">
-	      <option value="" disabled="disabled" selected="selected">Choose method</option>';
-	
-	
-	
-
-		   while($drop_2 = mysqli_fetch_assoc( $result )) 
-			{
-			$htmlout=$htmlout . '<option value="'.$drop_2['id'].'">'.$drop_2['methodname'].'</option>';
-			}
-	
-	$htmlout=$htmlout.'</select>';
-	 echo '<script type="text/javascript"> $(\'#result_1\').html($htmlout);$(\'#result_1\').show();</script>';
-	*/
-	
-	
-		
+	echo $mout;
 	
 }//end edit row
 
@@ -186,11 +161,12 @@ if(isset($_GET['func']) && $_GET['func'] == "drop_1"  ) {
 
 function drop_1($drop_var)
 {  
-    
-	//include_once('db.php');
-	include_once($_SERVER['DOCUMENT_ROOT'].'/mysqli_connect.php');
-	$result = mysqli_query($dbcon,"SELECT methodname,id FROM methods WHERE methodtypenum='$drop_var' Order by methodname ASC") 
-	or die(mysql_error());
+    global $db;
+
+        $query = "SELECT methodname,id FROM methods WHERE methodtypenum=:drop_var Order by methodname ASC";
+        $params = array("drop_var"=>$drop_var);
+        $result = $db->get_query_result($query, $params);
+	//or die(  );
 	
 	echo '<script type=\"text/javascript\">
 	 $(function(){
@@ -210,7 +186,7 @@ function drop_1($drop_var)
 	echo '<select name="drop_2" id="drop_2">
 	      <option value="" disabled="disabled" selected="selected">Choose method</option>';
 
-		   while($drop_2 = mysqli_fetch_assoc( $result )) 
+                    foreach($result as $drop_2)
 			{
 			  echo '<option value="'.$drop_2['id'].'">'.$drop_2['methodname'].'</option>';
 			}
@@ -218,6 +194,7 @@ function drop_1($drop_var)
 	echo '</select>';
 	
 	echo "<script type=\"text/javascript\">
+            
 $('#wait_2').hide();
 	$('#drop_2').change(function(){
 	  $('#wait_2').show();
@@ -240,6 +217,31 @@ $('#wait_2').hide();
 </script>";
 }
 
+function show_age_method_info($method_id) {
+    $query = "SELECT * from age_method_info where id = :id";
+    $output_data_1_query = "SELECT DISTINCT output_data from method_info where id = :id";
+    $select_sex_query = "SELECT DISTINCT sex from method_info where id = :id";
+    
+    $params = array("id"=>$id);
+    
+    $output_data_1_result = $db->get_query_result($output_data_1_query, $params);
+    $sex_result = $db->get_query_result($sex_query, $params);
+    
+    echo("<select multiple name=output_data_1[]>");
+    foreach($output_data_1_result as $od1_result) {
+        echo("<option value='".$od1_request['output_data']."'>".$odi_result['output_data']."</option");
+        
+    }
+    echo("</select>");
+    
+    echo("<select multiple name=sex[]>");
+    foreach($sex_result as $sex_option) {
+        echo("<option value='".$sex_option['sex']."'>".$sex_option['sex']."</option");
+        
+    }
+    echo("</select>");
+
+}
 
 //**************************************
 //     Second selection results     //
@@ -256,22 +258,26 @@ $_SESSION['featurechosen'][$_SESSION['num_methods']]=0;
 
 function drop_2($drop_var)
 {  
-   include_once($_SERVER['DOCUMENT_ROOT'].'/mysqli_connect.php');
+    global $db;
+
+	 show_age_method_info($drop_var);
 	
-	
-	$result = mysqli_query($dbcon,"SELECT name, id FROM feature INNER JOIN methodfeature ON featureid=feature.id WHERE  methodid='$drop_var' Order by name ASC") 
-	or die(mysql_error());
+         $query = "SELECT name, id FROM feature INNER JOIN methodfeature ON featureid=feature.id WHERE  methodid=:drop_var Order by name ASC";
+         $params = array("drop_var"=>$drop_var);
+
+         $result = $db->get_query_result($query, $params);
 	
 	echo '<select name="drop_3" id="drop_3">
 	      <option value="" disabled="disabled" selected="selected">Choose bone</option>';
 
-		   while($drop_3 = mysqli_fetch_assoc( $result )) 
-			{
-			  echo '<option value="'.$drop_3['id'].'">'.$drop_3['name'].'</option>';
-			}
+            foreach($result as $drop_3) 
+                    {
+                      echo '<option value="'.$drop_3['id'].'">'.$drop_3['name'].'</option>';
+                    }
 	
 	echo '</select>';
 	echo "<script type=\"text/javascript\">
+            
 $('#wait_4').hide();
 	$('#drop_3').change(function(){
 	  $('#wait_3').show();
@@ -306,14 +312,17 @@ function drop_3($drop_var)
 {  
 $methSID=$_SESSION['methodname'][$_SESSION['num_methods']];
 
-   include_once($_SERVER['DOCUMENT_ROOT'].'/mysqli_connect.php');
-	$result = mysqli_query($dbcon,"SELECT phasename, id FROM phase INNER JOIN methodphase ON phaseid=phase.id WHERE  methodid='$methSID' AND featureid='$drop_var' Order by phasename ASC") 
-	or die(mysql_error());
+    global $db;
+
+        $query = "SELECT phasename, id FROM phase INNER JOIN methodphase ON phaseid=phase.id WHERE  methodid=:methodid AND featureid=:featureid Order by phasename ASC";
+        $params = array("methodid"=>$methSID,
+                        "featureid"=>$drop_var);
+        $result = $db->get_query_result($query, $params);
 	
 	echo '<select name="drop_4" id="drop_4">
 	      <option value="" disabled="disabled" selected="selected">Choose options</option>';
 
-		   while($drop_4 = mysqli_fetch_assoc( $result )) 
+                   foreach($result as $drop_4)
 			{
 			  echo '<option value="'.$drop_4['id'].'">'.$drop_4['phasename'].'</option>';
 			}
