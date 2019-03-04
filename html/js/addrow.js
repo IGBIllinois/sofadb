@@ -44,11 +44,20 @@ function addRow(tableID,linkingID) {
 		
 		var row = table.insertRow(rowCount);
 		var colCount = table.rows[0].cells.length;
+                
 		for(var i=0; i<colCount; i++) {
 			if(i==0)
 			{var newcell = row.insertCell(i);
 			newcell.innerHTML = "<input type='checkbox' name='chk[]'  />";}
-			else if (i==1)
+                        else if(i==1) {
+                            var newCell = row.insertCell(i);
+                            newCell.innerHTML = "Edit";
+                            
+                        } else if(i==2) {
+                            var newCell = row.insertCell(i);
+                            newCell.innerHTML = "Delete";
+                        }   
+			else if (i==3)
 			{
 				var newcell=row.insertCell(i);
 				
@@ -56,7 +65,7 @@ function addRow(tableID,linkingID) {
 				
 				newcell.innerHTML=$('#methodtype option:selected').html();
 				}
-				else if (i==2)
+			else if (i==4)
 			{
 				var newcell=row.insertCell(i);
 				
@@ -65,23 +74,23 @@ function addRow(tableID,linkingID) {
 				newcell.innerHTML=$('#drop_2 option:selected').html();
 				}
 				
-				else if (i==3)
+			else if (i==5)
 			{
 				var newcell=row.insertCell(i);
 				
 
                                 dataoutput = "";
                                 od1 = $('#output_data_1').val();
-                                s = $('#sex').val();
+                                od2 = $('#output_data_2').val();
                                 for(j = 0; j<od1.length; j++) {
-                                    for(k=0; k<s.length; k++) {
-                                        dataoutput += "("+od1[j]+", "+s[k]+") ";
+                                    for(k=0; k<od2.length; k++) {
+                                        dataoutput += "("+od1[j]+", "+od2[k]+") ";
                                     }
                                 }
                                 
                                 newcell.innerHTML=dataoutput;
 
-                        } else if (i == 4) {
+                        } else if (i == 6) {
 			if (fChosen!=0 && pChosen!=0)
 			{newcell.innerHTML=$('#drop_3 option:selected').html().concat("|",$('#drop_4 option:selected').html());}
 			else if (fChosen!=0 && pChosen==0)

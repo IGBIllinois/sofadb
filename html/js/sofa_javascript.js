@@ -25,20 +25,18 @@ $(document).ready(function(){
 	$('#addmethodbutton').click(function(){
                 
             var od1Values = $('#output_data_1').val();
-            var sValues = $('#sex').val();
+            var od2Values = $('#output_data_2').val();
 
-                
 	$.get("func.php", {
 		savecase: "1",
                 od1: od1Values,
-                sex: sValues,
-                drop_2: $('#drop_2').val()
+                od2: od2Values,
+                drop_2: $('#drop_2').val(),
+                caseid: $('#caseid').val()
                 
 		}, 
         function(response){
                 addRow('hortable',response);
-                $('#odchosen').val('0');
-                $('#sexchosen').val('0');
                 $('#wait_1').hide();
                 $('#wait_2').hide();
                 $('#result_1').hide();

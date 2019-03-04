@@ -76,10 +76,13 @@ class method {
     
     public function edit_features($new_features) {
         $curr_features = $this->get_features();
-
+        $curr_feature_ids = array(); 
+        foreach($curr_features as $curr_feature) {
+            $curr_feature_ids[] = $curr_feature->get_id();
+        }
         if($new_features != null) {
         foreach($new_features as $id) {
-            if((count($curr_features) > 0) && !in_array($id, $curr_features)) {
+            if( !in_array($id, $curr_feature_ids)) {
             $query = "INSERT INTO methodfeature (methodid, featureid, measurementtype) VALUES(".
                    ":methodid ,".
                    ":featureid,"
@@ -87,19 +90,21 @@ class method {
             $params = array("methodid"=>$this->id, "featureid"=>$id);
             $result = $this->db->get_insert_result($query, $params);
 
-            //$result = $this->dbcon->query($query);
             }
         }
         }
         // Remove old features
-        foreach($curr_features as $feature_id) {
+        foreach($curr_features as $feature) {
+            $feature_id = $feature->get_id();
             if($feature_id != "" && !in_array($feature_id, $new_features)) {
             $query = "DELETE FROM methodfeature WHERE methodid = ".
                    ":methodid".
                     " AND featureid = ".
-                   ":featureid'";
+                   ":featureid";
             $params = array("methodid"=>$this->id, "featureid"=>$feature_id);
-            $result = $this->db->get_query_result($query, $params);
+
+            $result = $this->db->get_update_result($query, $params);
+            
             }
         }
         
@@ -123,8 +128,9 @@ class method {
         $params = array("id"=>$this->id);
         $result = $this->db->get_query_result($query, $params);
         $features = array();
-        foreach($features as $row) {
-            $features[] = $row['featureid'];
+        foreach($result as $row) {
+            //$features[] = $row['featureid'];
+            $features[] = new feature($this->db, $row['featureid']);
         }
         return $features;
     }
@@ -223,11 +229,11 @@ class method {
         }
     }
     
-    public static function get_methods($db, $start = 0, $limit = 0) {
+    public static function get_methods($db, $start = -1, $limit = -1) {
         $query = "SELECT id from methods ";
-        if(is_numeric($start)) {
+        if(is_numeric($start) && $start >= 0) {
             $query .= " LIMIT $start ";
-            if(is_numeric($limit)) {
+            if(is_numeric($limit) && $limit > 0) {
                 $query .= ", $limit";
             }
         }
@@ -356,17 +362,23 @@ class age_method_data extends methoddata {
     private $caseid;
     
     // meta data
-    private $output_data;
+    private $output_data_1;
     private $output_data_2;
-    private $sex;
+    
+    private $output_data_1_desc;
+    private $output_data_2_desc;
+    
+    private $age_range;
+    private $user_interaction;
+
     
     public function get_id() { return $this->id; }
     public function get_method_id() { return $this->methodid; }
     public function get_method_data_id() { return $this->methoddataid; }
     
-    public function get_output_data() { return $this->output_data; }
+    public function get_output_data_1() { return $this->output_data_1; }
     public function get_output_data_2() { return $this->output_data_2; }
-    public function get_sex() { return $this->sex; }
+
     
         
         public function get_method_data($caseid,    
@@ -443,9 +455,9 @@ class age_method_data extends methoddata {
        
        if(count($result) > 0) {
            $data = $result[0];
-           $this->output_data = $data['output_data'];
+           $this->output_data_1 = $data['output_data_1'];
            $this->output_data_2 = $data['output_data_2'];
-           $this->sex = $data['sex'];
+
        }
     }
 }

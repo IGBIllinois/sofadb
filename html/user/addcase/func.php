@@ -219,7 +219,7 @@ $('#wait_2').hide();
 
 function show_age_method_info($method_id) {
     $query = "SELECT * from age_method_info where id = :id";
-    $output_data_1_query = "SELECT DISTINCT output_data from method_info where id = :id";
+    $output_data_1_query = "SELECT DISTINCT output_data_1 from method_info where id = :id";
     $select_sex_query = "SELECT DISTINCT sex from method_info where id = :id";
     
     $params = array("id"=>$id);
@@ -229,7 +229,7 @@ function show_age_method_info($method_id) {
     
     echo("<select multiple name=output_data_1[]>");
     foreach($output_data_1_result as $od1_result) {
-        echo("<option value='".$od1_request['output_data']."'>".$odi_result['output_data']."</option");
+        echo("<option value='".$od1_request['output_data_1']."'>".$odi_result['output_data']."</option");
         
     }
     echo("</select>");
@@ -260,7 +260,6 @@ function drop_2($drop_var)
 {  
     global $db;
 
-	 show_age_method_info($drop_var);
 	
          $query = "SELECT name, id FROM feature INNER JOIN methodfeature ON featureid=feature.id WHERE  methodid=:drop_var Order by name ASC";
          $params = array("drop_var"=>$drop_var);

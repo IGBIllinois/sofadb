@@ -398,7 +398,7 @@ public function submit_case($submitstatus) {
         return $tier2s;
     }
     
-    
+    // Method data, (tier3data)
     public function add_method_data($caseid,
                                     $methodid,
                                     $method_data_id) {
@@ -429,12 +429,14 @@ public function submit_case($submitstatus) {
             
     }
     
-    public function add_tier3_age($methodid, $od1, $s, $tier2id) {
+    public function add_tier3_age($methodid, $od1, $od2, $tier2id) {
         $info_query = "SELECT * from age_method_info where methodid = :methodid AND ".
-                " output_data = :od1 and sex = :s";
+                " output_data_1 = :od1 and output_data_2 = :od2";
+        echo("query = $info_query");
         $info_params = array("methodid"=>$methodid,
                             "od1"=>$od1,
-                            "s"=>$s);
+                            "od2"=>$od2);
+        print_r($info_params);
         $result = $this->db->get_query_result($info_query, $info_params);
         if(count($result) == 0) {
             return array("RESULT"=>FALSE,  
@@ -475,7 +477,7 @@ public function submit_case($submitstatus) {
             $params = array("methoddataid"=>$methoddataid);
             $result = $this->db->get_query_result($query, $params);
             if(count($result) > 0) {
-                $output .= "(".$result[0]['output_data'].", ".$result[0]['sex'].") ";
+                $output .= "(".$result[0]['output_data_1'].", ".$result[0]['output_data_2'].") ";
             }
             
         }
@@ -519,6 +521,21 @@ foreach($result as $case) {
 }
 
 return $cases;
+}
+
+public static function case_exists($db, $caseid, $memberid, $caseyear, $casenum) {
+    $q = "SELECT id FROM cases WHERE memberid=:memberid AND caseyear=:caseyear AND casenumber=:casenum AND id!=:caseeditid";
+                $params = array("memberid"=>$memberid,
+                                "caseyear"=>$caseyear,
+                                "casenum"=>$casenum,
+                                "caseeditid"=>$caseid);
+                
+                $result = $db->get_query_result($q, $params);
+                if(count($result) > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
 }
 
 

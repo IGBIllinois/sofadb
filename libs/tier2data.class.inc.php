@@ -74,14 +74,14 @@ class tier2data {
         foreach($info as $tier_info) {
             if(count($tier_info) > 0) {
                 $method = new method($this->db, $this->get_methodid());
-                //$output .= "[type = ".$method->get_method_type()."]";
+
                 if($method->get_method_type() == "Age") {
                     $q = "SELECT * from age_method_info where id = :methoddataid";
                     $params = array("methoddataid"=>$tier_info['methoddataid']);
                     $result = $this->db->get_query_result($q, $params);
                     foreach($result as $tier3) {
-;
-                        $output .= "(".$tier3['output_data']. ", ".$tier3['sex'].") ";
+
+                        $output .= "(".$tier3['output_data_1']. ", ".$tier3['output_data_2'].") ";
                     }
                 }
             }
