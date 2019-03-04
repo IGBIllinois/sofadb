@@ -34,58 +34,35 @@ elseif(isset($_SESSION['caseid']))
 {
 	$caseeditid=$_SESSION['caseid'];
         $casedata = new sofa_case($db, $caseeditid);
-	$q="SELECT * FROM cases WHERE id=$caseeditid";
+	//$q="SELECT * FROM cases WHERE id=$caseeditid";
 
-$mresult=mysqli_query($dbcon,$q);
-if(!$mresult)
-{echo 'Could not load case data from database';exit();}
+//$mresult=mysqli_query($dbcon,$q);
+//if(!$mresult)
+//{echo 'Could not load case data from database';exit();}
 
 //$casedata=mysqli_fetch_array($mresult);
         $casedata = new sofa_case($db, $caseeditid);
-	}
+}
 	
-if(!isset($_SESSION['loadedmethods']))
-	{//Extract methods data
-	$_SESSION['loadedmethods']=1;
- //$_SESSION['num_methods']=$casedata['nummethods'];
-   $_SESSION['num_methods'] = $casedata->get_nummethods();     
-
- $q="SELECT t2.id as t2id, methods.id as mid, methods.methodname as mname, methods.methodtype as mtype, methods.methodtypenum as mtypenum, feature.id as fid, feature.name as fname, phase.id as pid, phase.phasename as pname FROM tier2data t2 INNER JOIN methods ON t2.methodid=methods.id INNER JOIN feature ON t2.featureid=feature.id  INNER JOIN phase ON t2.phaseid=phase.id WHERE t2.caseid=$caseeditid";
- 
  $methods = $casedata->get_case_methods();
  
- $methresult=mysqli_query($dbcon,$q);
- //if(count($methods) > 0) 
- //{echo 'Could not load method data from database';exit();}	
-
-for ($i=1;$i<=$_SESSION['num_methods'];$i++)
-{
-	$methodX=mysqli_fetch_assoc($methresult);
-        $_SESSION['t2id'][$i-1] = $methodX['t2id'];
-	$_SESSION['methodtype'][$i-1]=$methodX['mtypenum'];
-	
-	$_SESSION['methodname'][$i-1]=$methodX['mid'];
-	$_SESSION['methodfeature'][$i-1]=$methodX['fid'];
-	$_SESSION['methodphase'][$i-1]=$methodX['pid'];
-	$_SESSION['methodtabletype'][$i-1]=$methodX['mtype'];
-	$_SESSION['methodtablename'][$i-1]=$methodX['mname'];
-	$_SESSION['methodtablefeature'][$i-1]=$methodX['fname'];
-	$_SESSION['methodtablephase'][$i-1]=$methodX['pname'];
-	
-	if ($methodX['fid']>1){
-	$_SESSION['featurechosen'][$i-1]=1;}
-	else {$_SESSION['featurechosen'][$i-1]=0;}
-	
-	if ($methodX['pid']!=127){
-	$_SESSION['phasechosen'][$i-1]=1;}
-	else {$_SESSION['phasechosen'][$i-1]=0;}
-	
-}
-
-	}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+    
+    //remove method from case here, decrement total cases and numsubmitted from members.
+    if (isset($_POST['delsubmit']))
+    {
+            $deleteid=$_POST['delid'];
+            $tier2 = new tier2data($db, $deleteid);
+            $caseid = $tier2->get_caseid();
+            $this_case = new sofa_case($db, $caseid);
+            $this_case->remove_method_age($deleteid);
+                
+            //exit();
+    }
+    
+ else {
 
 	$errors = array(); // Start an array to hold the errors
 	
@@ -362,7 +339,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$idOt=1;
-        $idothertext = mysqli_real_escape_string($dbcon, trim($_POST['idrace_othertext']));
+        $idothertext = $_POST['idrace_othertext'];
 	
 	}
     
@@ -386,6 +363,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$memberid=$_SESSION['id'];
 
       $caseeditid=$_SESSION['caseid'];
+
 		$q = "SELECT id FROM cases WHERE memberid=:memberid AND caseyear=:caseyear AND casenumber=:casenum AND id!=:caseeditid";
                 $params = array("memberid"=>$memberid,
                                 "caseyear"=>$caseyear,
@@ -458,108 +436,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 } else {
                     echo($result["MESSAGE"]);
                 }
-                
-         // mbach note: Interesting. It deletes ALL the tier2data for the case, then re-adds everything.
-                /*
-		 $q="DELETE FROM tier2data WHERE caseid=$caseeditid";
-		 $result3=mysqli_query($dbcon,$q);
-		  if (!$result3) 
-                { // If it ran OK.
-                // If it did not run OK
-				// Error message:
-				echo '<h2>System Error</h2>
-				<p class="error">Did not properly remove/attach methods to case. We apologize for any inconvenience.</p>'; 
-				// Debugging message:
-				echo '<p>' . mysqli_error($dbcon) . '<br/><br/>Query: ' . $q . '</p>';
-                exit();
-                }
-		 
-                 * 
-                 */
-                $curr_methods = array();
-		 $this_case = new sofa_case($db, $caseeditid);
-            $case_methods = $this_case->get_case_methods();
-            foreach($case_methods as $case_method) {
-                
-                $curr_methods[] = $case_method->get_id();
-            }
-	for ($i=1;$i<=$numcasemethods;$i++){
-                
-                $methodidsave=$_SESSION['methodname'][$i-1];
-              
-                $methodtypesave=$_SESSION['methodtype'][$i-1];
-		$t2id = $_SESSION['t2id'][$i-1];		
-                
-		if($_SESSION['featurechosen'][$i-1]==1){
-                    $methodfeatsave=$_SESSION['methodfeature'][$i-1];
-                    
-                } else {
-                    $methodfeatsave=1;
-                }
-				
-            if($_SESSION['phasechosen'][$i-1]==1){
-				$methodphasesave=$_SESSION['methodphase'][$i-1];
-                                
-            } else {$methodphasesave=127;
-				
-            }
-            
-            if($t2id < 0) {
-                // new, so add it.
-                 //$q="INSERT INTO tier2data (id,memberid,caseid,methodtype,methodid,featureid,phaseid) VALUES (' ','$memberid','$caseeditid','$methodtypesave','$methodidsave','$methodfeatsave','$methodphasesave')";
-                 //$result4 = mysqli_query($dbcon,$q);
-                $result = $this_case->add_case_method($methodidsave, $methodtypesave, $methodfeatsave, $methodphasesave);
-                  if ($result['RESULT'] == FALSE) 
-                { 
-                // If it did not run OK
-				// Error message:
-				echo '<h2>System Error</h2>
-				<p class="error">Did not attach methods to case. We apologize for any inconvenience.</p>'; 
-				// Debugging message:
-				echo '<p>' . mysqli_error($dbcon) . '<br/><br/>Query: ' . $q . '</p>';
-                exit();
-                } else {
-                    $added_id = $result['id'];
-                }
-                
-            }
-                // also add t3 data
-            echo("curr index = ".($i-1)."<BR>");
-            if(isset($_SESSION['methoddata'])) {
-                // add new ones
-            $methoddata = $_SESSION['methoddata'];
-                foreach($methoddata as $index=>$methodinfo) {
-                    echo("<BR>index = $index<BR>");
-                    if($methodtypesave == 2) {
-                        echo("  AGE<BR>");
-                    if($index == ($i-1)) {
-                        echo("      index matches<BR>");
-                        // this is the one
-                        $output_data_1 = $_SESSION['methoddata'][$i-1][$methodidsave]['od1'];
-                        //$od1_array = explode(",", $output_data_1);
-                        $sex = $_SESSION['methoddata'][$i-1][$methodidsave]['sex'];
-                        //$sex_data = explode(",", $sex);
-                        
-                        foreach($output_data_1 as $od1) {
-                            foreach($sex as $s) {
-                                echo("      Adding $od1, $s, to $methodidsave<BR><BR>");
-                                $this_case->add_tier3_age($methodidsave, $od1, $s, $added_id);
-                            }
-                        }
-                    }
-                    }
-                }
-            }
-                
-                 
-                 
-                 
-                 
-                 }
-                 
-                 
-                
-                 
+
                  
                  
                 unset($_SESSION['loadedmethods']);
@@ -600,6 +477,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		echo '</p><h3>Please try again.</h3><p><br/></p></span>';
 	   }// End of else (empty($errors))
 } // End of the main Submit conditional.
+}
 ?>
   
 
@@ -610,7 +488,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    
   
     <form action="index.php" method="post" id="casedata">
-	
+        <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
 	<div id="tabs">
   <ul>
     <li><a href="#tabs-1">General Case Information</a></li>
@@ -740,6 +618,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       </fieldset>
 	  </div>
 	     <div id="tabs-2">
+                 
+                     <!-- Add Method box -->             
+    <fieldset class="methodinfobox"><legend class="boldlegend">Add Methods</legend>
+
+             <div name="methodholder" id="methodholder">
+             <p><select name="methodtype[]" id="methodtype">
+    
+                           <option value="" selected="selected" disabled="disabled">Add Method For</option>
+                           <option value="1" >Sex</option>
+                           <option value="2" >Age</option>
+                           <option value="3" >Ancestry</option>
+                           <option value="4" >Stature</option>
+                            </select>
+                            
+                             <span id="wait_1" style="display: none;">
+    <img alt="Please Wait" src="ajax-loader.gif"/>
+    </span>
+     <span id="result_1" style="display: none;"></span>
+    <span id="wait_2" style="display: none;">
+    <img alt="Please Wait" src="ajax-loader.gif"/>
+    </span>
+     
+     <input type="button" class="showybutton" id="addmethodbutton" value="Add Method" ><BR>
+     
+     <span id="result_2" style="display: none;"></span>
+                              <span id="wait_3" style="display: none;">
+    <img alt="Please Wait" src="ajax-loader.gif"/>
+    </span>
+    <span id="result_3" style="display: none;"></span></p>
+           <!--<p>  <input type="button" class="showybutton" id="addmethodbutton" value="Add Method to List" ></p>-->
+             </div>
+              <span name="savebutton" class="bigsavebutton">
+    <input name="savecase" type="image" id="savecase" src="../../images/bigsave.png" alt="Save Case" width="90"/></span>
+          <input name="fchoseninput" type="hidden" id="fchoseninput" value="0" />
+    <input name="pchoseninput" type="hidden" id="pchoseninput" value="0" />   
+   
+    
+    </fieldset>
+    <!-- End Add Method box -->
+    
                  <!-- Method data -->
    <div class="scroll" name="methodtableholder" id="methodtableholder">
              
@@ -751,6 +669,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                       <p>
 						
                         <th>Selected </th>
+                        <th>Edit</th>
+                        <th>Delete</th>
                          <th>
 						
                             Method Type
@@ -771,23 +691,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     foreach($tier2s as $tier2) {
                         $method = new method($db, $tier2->get_methodid());
                         echo("<tr><td><input type='checkbox' name='chk[]'  /></td>
-					<td>". $method->get_method_type()."</td>
+                            
+                        <td>Edit</td>");
+                        
+                        
+                        echo '<td>
+                            <form action="index.php" method="post" id="removedata" onsubmit="return confirm(\'Do you really want to remove this method from this case?\')">
+                            <input name="delid" type="hidden" value="'.$tier2->get_id().'"/>
+                            <input name="delsubmit" type="submit" value="Remove" /> </form>
+                            </td>';
+                        
+                        echo("<td>". $method->get_method_type()."</td>
 				<td>".$method->get_name()."</td>".
                                 "<td>".$tier2->format_tier3data()."</td>".
 				"</tr>
 				");
                     }
-                    /*
-			for($i=1;$i<=$_SESSION['num_methods'];$i++) {
-					echo "<tr><td><input type='checkbox' name='chk[]'  /></td>
-					<td>". $_SESSION['methodtabletype'][$i-1]."</td>
-				<td>".$_SESSION['methodtablename'][$i-1]."</td>
-				</tr>
-				";
-					
-					
-					}
-					*/
+
 					
 					
 	
@@ -807,47 +727,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 					(Select a method in the table above to remove.)
     
     </fieldset>
-    <fieldset class="methodinfobox"><legend class="boldlegend">Add Methods</legend>
-    
-    
-				
-					 
-					
-                  
-				
-             <div name="methodholder" id="methodholder">
-             <p><select name="methodtype[]" id="methodtype">
-    
-                           <option value="" selected="selected" disabled="disabled">Add Method For</option>
-                           <option value="1" >Sex</option>
-                           <option value="2" >Age</option>
-                           <option value="3" >Ancestry</option>
-                           <option value="4" >Stature</option>
-                            </select>
-                            
-                             <span id="wait_1" style="display: none;">
-    <img alt="Please Wait" src="ajax-loader.gif"/>
-    </span>
-     <span id="result_1" style="display: none;"></span>
-    <span id="wait_2" style="display: none;">
-    <img alt="Please Wait" src="ajax-loader.gif"/>
-    </span>
-    <p>  <input type="button" class="showybutton" id="addmethodbutton" value="Add Method to List" ></p>
-     <span id="result_2" style="display: none;"></span>
-                              <span id="wait_3" style="display: none;">
-    <img alt="Please Wait" src="ajax-loader.gif"/>
-    </span>
-    <span id="result_3" style="display: none;"></span></p>
-           <!--<p>  <input type="button" class="showybutton" id="addmethodbutton" value="Add Method to List" ></p>-->
-             </div>
-              <span name="savebutton" class="bigsavebutton">
-    <input name="savecase" type="image" id="savecase" src="../../images/bigsave.png" alt="Save Case" width="90"/></span>
-          <input name="fchoseninput" type="hidden" id="fchoseninput" value="0" />
-    <input name="pchoseninput" type="hidden" id="pchoseninput" value="0" />   
-   
-    
-    </fieldset>
-    
+                 
+
     
               
     

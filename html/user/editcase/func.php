@@ -122,18 +122,40 @@ unset($_GET['delrow']);
 if(isset($_GET['savecase']) && $_GET['savecase']==1  ) 
 {
 	
-	$drop_2 = $_GET['drop_2'];
-        $_SESSION['TEST'] = "TEST";
+	$method_id = $_GET['drop_2'];
+        $output_data_1 = $_GET['od1'];
+        $output_data_2 = $_GET['od2'];
+        $caseid = $_GET['caseid'];
+        
+        $this_case = new sofa_case($db, $caseid);
+        $method = new method($db, $method_id);
+        $result = $this_case->add_case_method($method_id, $method->get_method_type_num(), 0, 127);
+        
+        if($result['RESULT'] == TRUE) {
+            $method_case_id = $result['id'];
+            foreach($output_data_1 as $od1) {
+                foreach($output_data_2 as $od2) {
+                    echo("      Adding $od1, $od2, to $caseid<BR><BR>");
+                    $this_case->add_tier3_age($method_id, $od1, $od2, $method_case_id);
+                }
+            }
+        }
+        
+        //header ("location: ../index.php"); exit();
+        
+/*
         $index = $_SESSION['num_methods'];
 	$_SESSION['num_methods']=$_SESSION['num_methods']+1;
         
 	$_SESSION['methoddata'][$index][$drop_2]['od1'] = $_GET['od1'];
-        $_SESSION['methoddata'][$index][$drop_2]['sex'] = $_GET['sex'];
+        $_SESSION['methoddata'][$index][$drop_2]['od2'] = $_GET['od2'];
         $my_methoddata['methoddata'][$drop_2] = array($_GET['od1'], $_GET['sex']);
-		 
-	
+        
+
     unset($_GET['savecase']);	
-	echo $_SESSION['num_methods'];
+ * 
+ */
+	//echo $_SESSION['num_methods'];
 }
 
 
@@ -256,6 +278,7 @@ if (isset($_GET['func']) && $_GET['func'] == "drop_2" ) {
   
 }
 
+
 function show_age_method_info($method_id) {
 
      $_SESSION['methodname'][$_SESSION['num_methods']]=$method_id;
@@ -266,39 +289,29 @@ function show_age_method_info($method_id) {
     require_once("../../include/main.inc.php");
     echo("<BR>");
     $query = "SELECT * from age_method_info where methodid = :method_id";
-    $output_data_1_query = "SELECT DISTINCT output_data from age_method_info where methodid = :method_id";
-    $select_sex_query = "SELECT DISTINCT sex from age_method_info where methodid = :method_id";
+    $output_data_1_query = "SELECT DISTINCT output_data_1 from age_method_info where methodid = :method_id";
+    $output_data_2_query = "SELECT DISTINCT output_data_2 from age_method_info where methodid = :method_id";
     
     $params = array("method_id"=>$method_id);
     
     $output_data_1_result = $db->get_query_result($output_data_1_query, $params);
-    $sex_result = $db->get_query_result($select_sex_query, $params);
+    $output_data_2_result = $db->get_query_result($output_data_2_query, $params);
     $all_result = $db->get_query_result($query, $params);
-    
+    echo("<table><tr><th>Phase/Stage</th><th>Reference Sample</th></tr><tr><td>");
     echo("<select id='output_data_1' style='width:200px;' multiple name=output_data_1[]>");
     foreach($output_data_1_result as $od1_result) {
-        echo("<option value='".$od1_result['output_data']."'>".$od1_result['output_data']."</option>");
+        echo("<option value='".$od1_result['output_data_1']."'>".$od1_result['output_data_1']."</option>");
         
     }
     echo("</select>");
-    
-    echo("<select id='sex' style='width:200px;' multiple name=sex[]>");
-    foreach($sex_result as $sex_option) {
-        echo("<option value='".$sex_option['sex']."'>".$sex_option['sex']."</option>");
+    echo("</td><td>");
+    echo("<select id='output_data_2' style='width:200px;' multiple name=output_data_2[]>");
+    foreach($output_data_2_result as $od2_option) {
+        echo("<option value='".$od2_option['output_data_2']."'>".$od2_option['output_data_2']."</option>");
         
     }
     echo("</select>");
+    echo("</td></tr></table>");
     
-    echo("<BR><BR>Method Info<BR>");
-    echo("<table id='hortable'>");
-    echo("<tr><td>Output 1</td><td>Sex</td><td>Age range/formula</td></tr>");
-    foreach($all_result as $result) {
-        echo("<tr>");
-        echo("<td>".$result['output_data']."</td>");
-        echo("<td>".$result['sex']."</td>");
-        echo("<td>".$result['age_range']."</td>");
-        echo("</tr>");
-    }
-    echo("</table>");
 
 }
