@@ -649,8 +649,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <span id="result_3" style="display: none;"></span></p>
            <!--<p>  <input type="button" class="showybutton" id="addmethodbutton" value="Add Method to List" ></p>-->
              </div>
-              <span name="savebutton" class="bigsavebutton">
-    <input name="savecase" type="image" id="savecase" src="../../images/bigsave.png" alt="Save Case" width="90"/></span>
+
           <input name="fchoseninput" type="hidden" id="fchoseninput" value="0" />
     <input name="pchoseninput" type="hidden" id="pchoseninput" value="0" />   
    
