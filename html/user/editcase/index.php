@@ -487,8 +487,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   
    
   
-    <form action="index.php" method="post" id="casedata">
-        <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
+
 	<div id="tabs">
   <ul>
     <li><a href="#tabs-1">General Case Information</a></li>
@@ -500,8 +499,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
   <fieldset class="enclosefieldset">
     
-    
+    <form action="index.php" method="post" id="casedata">
+        <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
   <fieldset class="caseinfobox"><legend class="boldlegend">General Case Information</legend>
+      
+          
     
      <label class="label" for="caseyear">Case Year</label><input id="caseyear" type="text" name="caseyear" size="5" maxlength="4" value="<?php  echo $casedata->get_caseyear();; ?>"/>
   <br />
@@ -614,12 +616,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       
       
       
-      
       </fieldset>
+    </form>
 	  </div>
 	     <div id="tabs-2">
                  
-                     <!-- Add Method box -->             
+                     <!-- Add Method box -->    
+        <form action="index.php" method="post" id="casedata">
+        <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
     <fieldset class="methodinfobox"><legend class="boldlegend">Add Methods</legend>
 
              <div name="methodholder" id="methodholder">
@@ -655,6 +659,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    
     
     </fieldset>
+        </form>
     <!-- End Add Method box -->
     
                  <!-- Method data -->

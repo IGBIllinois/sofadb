@@ -33,7 +33,6 @@ $(document).ready(function(){
                 od2: od2Values,
                 drop_2: $('#drop_2').val(),
                 caseid: $('#caseid').val()
-                
 		}, 
         function(response){
                 addRow('hortable',response);

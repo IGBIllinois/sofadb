@@ -133,10 +133,12 @@ if(isset($_GET['savecase']) && $_GET['savecase']==1  )
         
         if($result['RESULT'] == TRUE) {
             $method_case_id = $result['id'];
+            // This echo command is what the javascript uses for its output response
+            echo($method_case_id);
             foreach($output_data_1 as $od1) {
                 foreach($output_data_2 as $od2) {
-                    echo("      Adding $od1, $od2, to $caseid<BR><BR>");
-                    $this_case->add_tier3_age($method_id, $od1, $od2, $method_case_id);
+                    $result = $this_case->add_tier3_age($method_id, $od1, $od2, $method_case_id);
+
                 }
             }
         }

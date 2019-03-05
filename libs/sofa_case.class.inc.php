@@ -272,8 +272,7 @@ class sofa_case {
                         "methodtype"=>$methodtype,
                         "featureid"=>$featureid,
                         "phaseid"=>$phaseid);
-                echo("q = $q<BR>");
-                print_r($data);
+
                 $casemethodid = $this->db->get_insert_result($q, $data);
                 
                  
@@ -432,11 +431,11 @@ public function submit_case($submitstatus) {
     public function add_tier3_age($methodid, $od1, $od2, $tier2id) {
         $info_query = "SELECT * from age_method_info where methodid = :methodid AND ".
                 " output_data_1 = :od1 and output_data_2 = :od2";
-        echo("query = $info_query");
+
         $info_params = array("methodid"=>$methodid,
                             "od1"=>$od1,
                             "od2"=>$od2);
-        print_r($info_params);
+
         $result = $this->db->get_query_result($info_query, $info_params);
         if(count($result) == 0) {
             return array("RESULT"=>FALSE,  
@@ -452,7 +451,8 @@ public function submit_case($submitstatus) {
             $info_result = $this->db->get_insert_result($q, $params);
             if($info_result > 0) {
                 return array("RESULT"=>TRUE,
-                            "MESSAGE"=>"Method data added successfully.");
+                            "MESSAGE"=>"Method data added successfully.",
+                            "id"=>$info_result);
             }
         }
             

@@ -29,9 +29,7 @@ function msieversion()
 function addRow(tableID,linkingID) {
 	var fChosen=parseInt(document.getElementById("fchoseninput").value);
 	var pChosen=parseInt(document.getElementById("pchoseninput").value);
-	
-        //var od1Chosen=parseInt(document.getElementById("odchosen").value);
-        //var sexChosen=parseInt(document.getElementById("sexchosen").value);
+
         
 	if (!msieversion())
 	{
@@ -55,7 +53,9 @@ function addRow(tableID,linkingID) {
                             
                         } else if(i==2) {
                             var newCell = row.insertCell(i);
-                            newCell.innerHTML = "Delete";
+                            newCell.innerHTML = '<form action="index.php" method="post" id="removedata" onsubmit="return confirm(\'Do you really want to remove this method from this case?\')"> <input name="delid" type="hidden" value="'+linkingID.trim()+'"/><input name="delsubmit" type="submit" value="Remove" /> </form>';
+
+                        
                         }   
 			else if (i==3)
 			{
