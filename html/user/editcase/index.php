@@ -58,7 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $caseid = $tier2->get_caseid();
             $this_case = new sofa_case($db, $caseid);
             $this_case->remove_method_age($deleteid);
-                
+            
+
             //exit();
     }
     
@@ -708,15 +709,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         echo("<td>". $method->get_method_type()."</td>
 				<td>".$method->get_name()."</td>".
                                 "<td>".$tier2->format_tier3data()."</td>".
-				"</tr>
-				");
+				"</tr>");
                     }
 
-					
-					
-	
-					
-					?>
+    ?>
                     
                    
                     </tbody>
@@ -724,18 +720,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				<div class="clear"></div>
     
     </div>
-    <fieldset class="methodinfobox"><legend class="boldlegend">Remove Methods</legend>
-    <input type="button" value="Remove Method" id="removemethodbutton"  /> 
-               <!--     	<input type="button" value="Edit Method" id="editmethodbutton"  />-->
-                         
-					(Select a method in the table above to remove.)
-    
-    </fieldset>
-                 
 
-    
-              
-    
     </div>
     
     

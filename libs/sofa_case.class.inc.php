@@ -407,13 +407,13 @@ public function submit_case($submitstatus) {
         
         if($method->get_type() == "Age") {
             
-            age_method_data::add_method_data($db, $caseid, $methodid, $method_data_id);
+            method_info::add_method_info($db, $caseid, $methodid, $method_data_id);
             
         }
         
     }
     
-    public function get_method_data($caseid,    
+    public function get_method_info($caseid,    
                                     $methodid) {
         
         $case = new sofa_case($this->db, $caseid);
@@ -421,7 +421,7 @@ public function submit_case($submitstatus) {
         
         if($method->get_type() == "Age") {
             
-            $methoddata = new age_method_data($db);
+            $methoddata = new method_info($db);
             $methoddataobjects = $methoddata->get_method_data($caseid, $methodid);
             return $methoddataobjects;
         }

@@ -229,6 +229,56 @@ class method {
         }
     }
     
+       /** Gets list of output_data_1 info for this method
+     * 
+     * @return type
+     */
+    public function get_data_1() {
+        $output_data_1_query = "SELECT DISTINCT output_data_1 from age_method_info where methodid = :method_id";
+        $params = array("method_id"=>$this->id);
+        $output_data_1_result = $this->db->get_query_result($output_data_1_query, $params);
+        
+        // just return array of text
+        return $output_data_1_result;
+    }
+    
+    /** Gets list of output_data_1 info for this method
+     * 
+     * @return type
+     */
+    public function get_data_2() {
+        $output_data_2_query = "SELECT DISTINCT output_data_2 from age_method_info where methodid = :method_id";
+        $params = array("method_id"=>$this->id);
+        $output_data_2_result = $this->db->get_query_result($output_data_2_query, $params);
+        
+        // just return array of text
+        return $output_data_2_result;
+    }
+    
+    public function get_header_1() {
+        $output_data_header_query = "SELECT DISTINCT output_data_1_description from age_method_info where methodid = :method_id";
+        $params = array("method_id"=>$this->id);
+        $output_data_header_result = $this->db->get_query_result($output_data_header_query, $params);
+        
+        if(count($output_data_header_result) > 0) {
+            return $output_data_header_result[0][0];
+        } else {
+            return "";
+        }
+    }
+
+        public function get_header_2() {
+        $output_data_header_query = "SELECT DISTINCT output_data_2_description from age_method_info where methodid = :method_id";
+        $params = array("method_id"=>$this->id);
+        $output_data_header_result = $this->db->get_query_result($output_data_header_query, $params);
+        
+        if(count($output_data_header_result) > 0) {
+            return $output_data_header_result[0][0];
+        } else {
+            return "";
+        }
+    }
+    
     public static function get_methods($db, $start = -1, $limit = -1) {
         $query = "SELECT id from methods ";
         if(is_numeric($start) && $start >= 0) {
@@ -287,7 +337,7 @@ class method {
 }
 
 
-
+/*
 class methoddata {
     
     private $id;
@@ -350,9 +400,8 @@ class methoddata {
     }
 }
 
-/** Static data about age methods
- * 
- */
+
+
 class age_method_data extends methoddata {
     
     private $db;
@@ -368,8 +417,6 @@ class age_method_data extends methoddata {
     private $output_data_1_desc;
     private $output_data_2_desc;
     
-    private $age_range;
-    private $user_interaction;
 
     
     public function get_id() { return $this->id; }
@@ -463,3 +510,4 @@ class age_method_data extends methoddata {
 }
             
     
+*/

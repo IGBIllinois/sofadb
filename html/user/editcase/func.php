@@ -142,22 +142,7 @@ if(isset($_GET['savecase']) && $_GET['savecase']==1  )
                 }
             }
         }
-        
-        //header ("location: ../index.php"); exit();
-        
-/*
-        $index = $_SESSION['num_methods'];
-	$_SESSION['num_methods']=$_SESSION['num_methods']+1;
-        
-	$_SESSION['methoddata'][$index][$drop_2]['od1'] = $_GET['od1'];
-        $_SESSION['methoddata'][$index][$drop_2]['od2'] = $_GET['od2'];
-        $my_methoddata['methoddata'][$drop_2] = array($_GET['od1'], $_GET['sex']);
-        
 
-    unset($_GET['savecase']);	
- * 
- */
-	//echo $_SESSION['num_methods'];
 }
 
 
@@ -290,16 +275,16 @@ function show_age_method_info($method_id) {
     global $db;
     require_once("../../include/main.inc.php");
     echo("<BR>");
-    $query = "SELECT * from age_method_info where methodid = :method_id";
-    $output_data_1_query = "SELECT DISTINCT output_data_1 from age_method_info where methodid = :method_id";
-    $output_data_2_query = "SELECT DISTINCT output_data_2 from age_method_info where methodid = :method_id";
     
-    $params = array("method_id"=>$method_id);
+    $method = new method($db, $method_id);
+    $output_data_1_result = $method->get_data_1();
+    $output_data_2_result = $method->get_data_2();   
     
-    $output_data_1_result = $db->get_query_result($output_data_1_query, $params);
-    $output_data_2_result = $db->get_query_result($output_data_2_query, $params);
-    $all_result = $db->get_query_result($query, $params);
-    echo("<table><tr><th>Phase/Stage</th><th>Reference Sample</th></tr><tr><td>");
+    $header1 = $method->get_header_1();
+    $header2 = $method->get_header_2();
+    
+    
+    echo("<table><tr><th>".$header1."</th><th>".$header2."</th></tr><tr><td>");
     echo("<select id='output_data_1' style='width:200px;' multiple name=output_data_1[]>");
     foreach($output_data_1_result as $od1_result) {
         echo("<option value='".$od1_result['output_data_1']."'>".$od1_result['output_data_1']."</option>");
