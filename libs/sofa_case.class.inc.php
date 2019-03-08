@@ -428,31 +428,66 @@ public function submit_case($submitstatus) {
             
     }
     
-    public function add_tier3_age($methodid, $od1, $od2, $tier2id) {
-        $info_query = "SELECT * from age_method_info where methodid = :methodid AND ".
-                " output_data_1 = :od1 and output_data_2 = :od2";
-
-        $info_params = array("methodid"=>$methodid,
-                            "od1"=>$od1,
-                            "od2"=>$od2);
+    public function add_tier3_age($methodid, $od1, $od2, $tier2id, $value=NULL, $interaction=NULL) {
+        if($interaction == null) {
+            // try od1 and od2
+            if($od2 != null) {
+            $info_query = "SELECT * from age_method_info where methodid = :methodid AND ".
+                    " output_data_1 = :od1 and output_data_2 = :od2";
+            $info_params = array("methodid"=>$methodid,
+                    "od1"=>$od1,
+                    "od2"=>$od2);
+            } else {
+                $info_query = "SELECT * from age_method_info where methodid = :methodid AND ".
+                        " output_data_1 = :od1";
+                $info_params = array("methodid"=>$methodid,
+                        "od1"=>$od1);    
+            }
+        } else if($interaction == USER_INTERACTION_INPUT_BOX) {
+            // try without od2 for now
+            $info_query = "SELECT * from age_method_info where methodid = :methodid AND ".
+                " output_data_1 = :od1";
+            $info_params = array("methodid"=>$methodid,
+                    "od1"=>$od1);
+        }
 
         $result = $this->db->get_query_result($info_query, $info_params);
         if(count($result) == 0) {
+
             return array("RESULT"=>FALSE,  
                         "MESSAGE"=>"Could not find specified method data.");
             
         } else {
+
             $methoddataid = $result[0]['id'];
-        
-            $q = "INSERT INTO tier3data_age(tier2id, methoddataid) VALUES ".
-                    "(:t2id, :methoddataid)";
-            $params = array("t2id"=>$tier2id,
-                            "methoddataid"=>$methoddataid);
-            $info_result = $this->db->get_insert_result($q, $params);
-            if($info_result > 0) {
-                return array("RESULT"=>TRUE,
-                            "MESSAGE"=>"Method data added successfully.",
-                            "id"=>$info_result);
+            $methoddata = new method_info($this->db, $methoddataid);
+            
+                if($methoddata->get_user_interaction() == USER_INTERACTION_MULTISELECT) {
+
+                $q = "INSERT INTO tier3data_age(tier2id, methoddataid) VALUES ".
+                        "(:t2id, :methoddataid)";
+                $params = array("t2id"=>$tier2id,
+                                "methoddataid"=>$methoddataid);
+                $info_result = $this->db->get_insert_result($q, $params);
+                if($info_result > 0) {
+                    return array("RESULT"=>TRUE,
+                                "MESSAGE"=>"Method data added successfully.",
+                                "id"=>$info_result);
+                }
+            } else if($methoddata->get_user_interaction() == USER_INTERACTION_INPUT_BOX) {
+
+                $q = "INSERT INTO tier3data_age(tier2id, methoddataid, value) VALUES ".
+                        "(:t2id, :methoddataid, :value)";
+                $params = array("t2id"=>$tier2id,
+                                "methoddataid"=>$methoddataid,
+                                "value"=>$value);
+
+                $info_result = $this->db->get_insert_result($q, $params);
+                if($info_result > 0) {
+                    return array("RESULT"=>TRUE,
+                                "MESSAGE"=>"Method data added successfully.",
+                                "id"=>$info_result);
+                }
             }
         }
             
@@ -468,22 +503,7 @@ public function submit_case($submitstatus) {
 
     }
     
-    public function format_tier3data_age($tier2id) {
-        $result = $this->get_tier3data_age($t2id);
-        $output = "";
-        foreach($result as $data) {
-            $methoddataid = $data['methoddataid'];
-            $query = "SELECT * from age_method_info where id = :methoddataid";
-            $params = array("methoddataid"=>$methoddataid);
-            $result = $this->db->get_query_result($query, $params);
-            if(count($result) > 0) {
-                $output .= "(".$result[0]['output_data_1'].", ".$result[0]['output_data_2'].") ";
-            }
-            
-        }
-        return $output;
     
-    }
     
     public function remove_method_age($t2id) {
         $query1 = "DELETE FROM tier2data where id = :t2id";

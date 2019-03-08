@@ -23,19 +23,29 @@ $(document).ready(function(){
 	$('#wait_1').hide();
 	
 	$('#addmethodbutton').click(function(){
-                
+                //var ser = $('#output_data_1').serializeArray();
+                //alert("ser = "+ser);
             var od1Values = $('#output_data_1').val();
             var od2Values = $('#output_data_2').val();
+            var od1Names;
+            if(od1Values === undefined) {
+                // get names and values for input boxes
+                od1Names = $("input[name^='output_data_1']").map(function(){return $(this).attr('id');}).get();
+                od1Values = $("input[name^='output_data_1']").map(function(){return $(this).val();}).get();
+
+            }
 
 	$.get("func.php", {
 		savecase: "1",
                 od1: od1Values,
+                od1Names: od1Names,
                 od2: od2Values,
                 drop_2: $('#drop_2').val(),
                 caseid: $('#caseid').val()
 		}, 
         function(response){
-                addRow('hortable',response);
+
+                //addRow('hortable',response);
                 $('#wait_1').hide();
                 $('#wait_2').hide();
                 $('#result_1').hide();
@@ -51,6 +61,7 @@ $(document).ready(function(){
                 $('#methodtype').val("");
                 $('#addmethodbutton').hide();
                 $('hortable').show();
+                location.reload(); 
 	
 	}
                 );//end get

@@ -76,18 +76,29 @@ class tier2data {
                 $method = new method($this->db, $this->get_methodid());
 
                 if($method->get_method_type() == "Age") {
-                    $q = "SELECT * from age_method_info where id = :methoddataid";
-                    $params = array("methoddataid"=>$tier_info['methoddataid']);
-                    $result = $this->db->get_query_result($q, $params);
-                    foreach($result as $tier3) {
+                    $method_info = new method_info($this->db, $tier_info['methoddataid']);
+                    //$q = "SELECT * from age_method_info where id = :methoddataid";
+                    //$params = array("methoddataid"=>$tier_info['methoddataid']);
+                    //$result = $this->db->get_query_result($q, $params);
+                    if($method_info->get_user_interaction() == USER_INTERACTION_MULTISELECT) {
+                        if($method_info->get_output_data_2() != null) {
+                            $output .= "(".$method_info->get_output_data_1(). ", ".$method_info->get_output_data_2().") ";
+                        } else {
+                            $output .= "(".$method_info->get_output_data_1().") ";
+                        }
 
-                        $output .= "(".$tier3['output_data_1']. ", ".$tier3['output_data_2'].") ";
+                    } else if($method_info->get_user_interaction() == USER_INTERACTION_INPUT_BOX) {
+                        $output .= "(".$method_info->get_output_data_1(). ", ".$tier_info['value'].") ";
                     }
+                    
+                    
                 }
             }
         }
         return $output;
     }
+    
+ 
     
     private function load_tier2data($id) {
        $query = "SELECT * from tier2data where id=:id";
