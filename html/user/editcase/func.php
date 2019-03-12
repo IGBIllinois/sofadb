@@ -59,7 +59,7 @@ if(isset($_GET['savecase']) && $_GET['savecase']==1  )
             echo("od2!!!");
             $output_data_2 = $_GET['od2'];
         }
-        print_r($output_data_2);
+
         $od1Names = isset($_GET['od1Names']) ? $_GET['od1Names'] : null;
         $caseid = $_GET['caseid'];
         
@@ -68,6 +68,14 @@ if(isset($_GET['savecase']) && $_GET['savecase']==1  )
         $result = $this_case->add_case_method($method_id, $method->get_method_type_num(), 0, 127);
         
         if($result['RESULT'] == TRUE) {
+            $method_case_id = $result['id'];
+            $this_case->add_all_tier3_data($method_id, 
+                    $method_case_id, 
+                    $output_data_1, 
+                    $output_data_2, 
+                    $od1Names);
+        }
+            /**
             $method_case_id = $result['id'];
             // This echo command is what the javascript uses for its output response
             echo($method_case_id);
@@ -108,6 +116,8 @@ if(isset($_GET['savecase']) && $_GET['savecase']==1  )
         } else {
             echo("Error, method not added.");
         }
+             *
+             */
 
 }
 
@@ -232,20 +242,36 @@ if (isset($_GET['func']) && $_GET['func'] == "drop_2" ) {
 }
 
 
-function show_age_method_info($method_id) {
+function show_age_method_info($method_id, $tier2id=null) {
 
-
-   
     global $db;
     require_once("../../include/main.inc.php");
+
+    
+   if($tier2id != null) {
+       $tier2 = new tier2data($db, $tier2id);
+       $tier3s = $tier2->get_tier3data();
+   }
+    
     echo("<BR>");
     
     $method = new method($db, $method_id);
+
     $output_data_1_result = $method->get_data_1();
     $output_data_2_result = $method->get_data_2();   
     
     $header1 = $method->get_header_1();
     $header2 = $method->get_header_2();
+    
+    if($tier2id != null) {
+        $tier2 = new tier2data($db, $tier2id);
+        $data = $tier2->get_tier3data();
+        $methodinfos = array();
+        foreach($data as $tier_info) {
+            $method_info = new method_info($db, $tier_info['methoddataid']);
+            $methodinfos[] = $method_info; 
+        }
+    }
     
     $method_info = method_info::get_data_for_method($db, $method_id, $method->get_method_type());
     if(count($method_info) > 0) {
@@ -257,16 +283,32 @@ function show_age_method_info($method_id) {
         echo("</tr><tr><td>");
         echo("<select id='output_data_1' style='width:200px;' multiple name=output_data_1[]>");
         foreach($output_data_1_result as $od1_result) {
-            echo("<option value='".$od1_result['output_data_1']."'>".$od1_result['output_data_1']."</option>");
+            $selected = false;
+            foreach($methodinfos as $method_info) {
+                if($method_info->get_output_data_1() == $od1_result['output_data_1']) {
+                    $selected = true;
+                    break;
+                }
+            }
+            echo("<option value='".$od1_result['output_data_1']."' ".($selected ? " selected=$selected " : "") .">".$od1_result['output_data_1']."</option>");
 
         }
         echo("</select>");
         echo("</td>");
         if($output_data_2_result[0] != NULL && $output_data_2_result[0] != "") {
             echo("<td>");
+            $selected = false;
+            
             echo("<select id='output_data_2' style='width:200px;' multiple name=output_data_2[]>");
             foreach($output_data_2_result as $od2_option) {
-                echo("<option value='".$od2_option['output_data_2']."'>".$od2_option['output_data_2']."</option>");
+                foreach($methodinfos as $method_info) {
+                    if($method_info->get_output_data_2() == $od2_option['output_data_2']) {
+                        $selected = true;
+                    } else {
+                        $selected = false;
+                    }
+                }
+                echo("<option value='".$od2_option['output_data_2']."' ".($selected ? " selected=$selected " : "") .">".$od2_option['output_data_2']."</option>");
 
             }
             echo("</select>");
@@ -274,12 +316,29 @@ function show_age_method_info($method_id) {
         echo("</td></tr></table>");
 
         } else if($method_info[0]->get_user_interaction() == USER_INTERACTION_INPUT_BOX) {
+            if($tier2id != null) {
+                $tier2 = new tier2data($db, $tier2id);
+                $data = $tier2->get_tier3data();
+                $this_method = new method($db, $tier2->get_methodid());
+                $this_method_info = $this_method->get_method_info();
+                $value = "";
+                foreach($this_method_info as $method_info) {
+                    $value = "";
+                    foreach($data as $tier3) {
+                        if($tier3['methoddataid'] == $method_info->get_id()) {
+                            $value = $tier3['value'];
+                        }
+                    }
+                    $name = $method_info->get_output_data_1();
+                    echo($name.": <input id='$name' name='output_data_1[$name]' value='$value'><BR>");
+                }
+         } else {
             foreach($output_data_1_result as $od1_result) {
                 $name = $od1_result['output_data_1'];
                 echo($name.": <input id='$name' name='output_data_1[$name]'><BR>");
+            }
         }
     }
     }
-    
 
 }

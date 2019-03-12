@@ -328,7 +328,16 @@ public function submit_case($submitstatus) {
 }
 
 
-    
+    /** Edits case data
+     * 
+     * @param array $data an array of case data in $key=>$value form
+     * @return array an array in the form
+     *  ("RESULT"=>$result,
+     *      "MESSAGE"=>$message)
+     * where "RESULT" is true if successful, else false, and "MESSAGE" is an
+     * output message
+     * 
+     */
     public function edit_case($data) {
         $q = "UPDATE cases SET "
                 . "casename=:casename,"
@@ -382,7 +391,11 @@ public function submit_case($submitstatus) {
     }
     
     
-    
+    /** Gets all the methods for this case
+     * 
+     * @return \tier2data An array of tier2data objects that represent
+     * the methods used in this case
+     */
     public function get_case_methods() {
         $query = "SELECT * from tier2data where caseid = :id";
         $params = array("id"=>$this->id);
@@ -391,28 +404,10 @@ public function submit_case($submitstatus) {
         foreach($result as $id) {
             $tier2 = new tier2data($this->db, $id['id']);
             $tier2s[] = $tier2;
-            //$method = new method($this->db, $id['methodid']);
-            //$methods[] = $method;
         }
         return $tier2s;
     }
-    
-    // Method data, (tier3data)
-    public function add_method_data($caseid,
-                                    $methodid,
-                                    $method_data_id) {
-        
-        $case = new sofa_case($this->db, $caseid);
-        $method = new method($this->db, $methodid);
-        
-        if($method->get_type() == "Age") {
-            
-            method_info::add_method_info($db, $caseid, $methodid, $method_data_id);
-            
-        }
-        
-    }
-    
+ 
     public function get_method_info($caseid,    
                                     $methodid) {
         
@@ -428,6 +423,67 @@ public function submit_case($submitstatus) {
             
     }
     
+    /**
+     * Adds multiple tier3 data
+     * 
+     * @param int $method_case_id ID of case method to update
+     * @param array $output_data_1 Array of output_data_1 values
+     * @param array $output_data_2, optional
+     * @param array $od1Names Array of output_data_1 names, used for INPUT_BOX type
+     */
+    public function add_all_tier3_data($method_id, $method_case_id, $output_data_1, $output_data_2=null, $od1Names=null) {
+                    
+            // This echo command is what the javascript uses for its output response
+            $method = new method($this->db, $method_id);
+            echo($method_case_id);
+            
+                $method_data = method_info::get_data_for_method($this->db, $method_id, $method->get_method_type());
+                
+                if(count($method_data) > 0) {
+
+                    $user_interaction = $method_data[0]->get_user_interaction();
+                    if($user_interaction == USER_INTERACTION_MULTISELECT) {
+                        if(count($output_data_2) > 0) {
+                            // do both
+
+                            foreach($output_data_1 as $od1) {
+                                foreach($output_data_2 as $od2) {
+                                    $result = $this->add_tier3_age($method_id, $od1, $od2, $method_case_id);
+
+                                }
+                            }
+                        } else {
+
+                            // just one
+                            foreach($output_data_1 as $od1) {
+                                $result = $this->add_tier3_age($method_id, $od1, null, $method_case_id);
+
+                            }
+                        }
+                    } else if($user_interaction == USER_INTERACTION_INPUT_BOX) {
+
+                        $i=0;
+                        foreach($output_data_1 as $value) {
+                            $name = $od1Names[$i];
+
+                                $result = $this->add_tier3_age($method_id, $name, null, $method_case_id, $value, $user_interaction);
+                                $i++;
+                            }
+                    }   
+
+                }
+    }
+    
+    /** Adds just one record to the tier3data_age table
+     * 
+     * @param type $methodid
+     * @param type $od1
+     * @param type $od2
+     * @param type $tier2id
+     * @param type $value
+     * @param type $interaction
+     * @return type
+     */
     public function add_tier3_age($methodid, $od1, $od2, $tier2id, $value=NULL, $interaction=NULL) {
         if($interaction == null) {
             // try od1 and od2
@@ -493,6 +549,58 @@ public function submit_case($submitstatus) {
             
     }
     
+    /** Adds a record to the tier3data_age table given a methoddataid id instead
+     * of output_data values
+     * 
+     * @param type $tier2id
+     * @param type $methoddataid
+     * @param type $value
+     * @return type
+     */
+    public function add_tier3_age_by_id($tier2id, $methoddataid, $value=null) {
+        if($value == null) {
+            $q = "INSERT INTO tier3data_age(tier2id, methoddataid) VALUES ".
+                        "(:t2id, :methoddataid)";
+                $params = array("t2id"=>$tier2id,
+                                "methoddataid"=>$methoddataid);
+                $info_result = $this->db->get_insert_result($q, $params);
+                if($info_result > 0) {
+                    return array("RESULT"=>TRUE,
+                                "MESSAGE"=>"Method data added successfully.",
+                                "id"=>$info_result);
+                }
+        } else {
+            $q = "INSERT INTO tier3data_age(tier2id, methoddataid, value) VALUES ".
+                        "(:t2id, :methoddataid, :value)";
+                $params = array("t2id"=>$tier2id,
+                                "methoddataid"=>$methoddataid,
+                                "value"=>$value);
+
+                $info_result = $this->db->get_insert_result($q, $params);
+                if($info_result > 0) {
+                    return array("RESULT"=>TRUE,
+                                "MESSAGE"=>"Method data added successfully.",
+                                "id"=>$info_result);
+                }
+        }
+    }
+    
+    
+    public function delete_tier3($t2id, $methoddataid) {
+        $query = "DELETE FROM tier3data_age where tier2id=:tier2id and methoddataid=:methoddataid";
+        $params = array("tier2id"=>$t2id,
+                        "methoddataid"=>$methoddataid);
+        $result = $this->db->get_update_result($query, $params);
+        if(count($result) > 0) {
+            return array("RESULT"=>TRUE,
+                                "MESSAGE"=>"Method data deleted successfully.");
+        } else {
+            return array("RESULT"=>FALSE,
+                                "MESSAGE"=>"Method data not deleted successfully.");
+        }
+        
+    }
+    
     public function get_tier3data_age($t2id) {
         $query1 = "SELECT * from tier3data_age where tier2id = :t2id";
         $params = array("t2id"=>$t2id);
@@ -501,6 +609,39 @@ public function submit_case($submitstatus) {
         
         return $result;
 
+    }
+    
+    /** Updates a tier3 data with a new value, or inserts it if it doesn't exist
+     * 
+     * @param type $t2id
+     * @param type $methoddataid
+     * @param type $new_value
+     * @return type
+     */
+    public function update_tier3($t2id, $methoddataid, $new_value){
+        $check_query = "SELECT * from tier3data_age where tier2id = :t2id and methoddataid = :methoddataid ";
+        $params = array("t2id"=>$t2id,
+                        "methoddataid"=>$methoddataid);
+        $check_result = $this->db->get_query_result($check_query, $params);
+        
+        if(count($check_result)>0) {
+            // it already exists, update
+            $update_query = "UPDATE tier3data_age set value=:new_value where tier2id=:t2id and methoddataid=:methoddataid";
+            $params = array("t2id"=>$t2id,
+                        "methoddataid"=>$methoddataid,
+                        "new_value"=>$new_value);
+            $result = $this->db->get_update_result($update_query, $params);
+            if(count($result) > 0) {
+                return array("RESULT"=>TRUE,
+                            "MESSAGE"=>"Tier 3 data updated successfully.");
+            } else {
+                return array("RESULT"=>FALSE,
+                            "MESSAGE"=>"Tier 3 data not updated successfully.");
+            }
+        } else {
+            // insert
+            $this->add_tier3_age_by_id($t2id, $methoddataid, $new_value);
+        }
     }
     
     

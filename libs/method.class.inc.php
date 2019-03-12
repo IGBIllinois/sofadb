@@ -229,7 +229,7 @@ class method {
         }
     }
     
-       /** Gets list of output_data_1 info for this method
+    /** Gets list of output_data_1 info for this method
      * 
      * @return type
      */
@@ -276,6 +276,20 @@ class method {
             return $output_data_header_result[0][0];
         } else {
             return "";
+        }
+    }
+    
+    public function get_method_info() {
+        $query = "SELECT id from age_method_info where methodid=:methodid";
+        $params = array("methodid"=>$this->id);
+        $result = $this->db->get_query_result($query, $params);
+        if(count($result) > 0) {
+            $infos = array();
+            foreach($result as $method_info) {
+                $new_method_info = new method_info($this->db, $method_info['id']);
+                $infos[] = $new_method_info;
+            }
+            return $infos;
         }
     }
     

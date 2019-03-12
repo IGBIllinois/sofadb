@@ -6,6 +6,9 @@
  * and open the template in the editor.
  */
 
+/** Static data for Tier3 information 
+ * 
+ */
 class method_info {
     
     private $id;
@@ -61,50 +64,34 @@ class method_info {
     public function get_user_interaction() {
         return $this->user_interaction;
     }
-    
-    public function get_od1s_for_method($methodid) {
-        $output_data_1_query = "SELECT DISTINCT output_data_1 from age_method_info where methodid = :method_id";
-        $params = array("methodid"=>$methodid);
-        $output_data_1_result = $db->get_query_result($output_data_1_query, $params);
-        
-        // just return array of text
-        return $output_data_1_result;
-    }
-    
-    public function get_od2s_for_method($methodid) {
-        $output_data_2_query = "SELECT DISTINCT output_data_2 from age_method_info where methodid = :method_id";
-        $params = array("methodid"=>$methodid);
-        $output_data_1_result = $db->get_query_result($output_data_2_query, $params);
-        
-        // just return array of text
-        return $output_data_2_result;
-    }
-        
-    
-//
-    public function get_method_info($caseid,    
-                                    $methodid) {
-        
-        $method = new method($this->db, $methodid);
-        if($method->get_type() == "Age") {
-            $query = "SELECT * from age_method_info where caseid=:caseid AND ". 
-                    " methodid = :methodid";
-            $params = array("caseid"=>$caseid,
-                            "methodid"=>$methodid);
-            $result = $this->db->get_query_result($query, $params);
 
-            if(count($result) > 0) {
-                foreach($result as $methoddata) {
-                    $id = $methoddata['id'];
-                    $methoddata = new method_info($db, $id);
+    
+    public function format_tier3data() {
+        $info = $this->get_tier3data();
+
+        $output = "";
+        foreach($info as $tier_info) {
+            if(count($tier_info) > 0) {
+                $method = new method($this->db, $this->get_methodid());
+
+                if($method->get_method_type() == "Age") {
+                    $q = "SELECT * from age_method_info where id = :methoddataid";
+                    $params = array("methoddataid"=>$tier_info['methoddataid']);
+                    $result = $this->db->get_query_result($q, $params);
+                    foreach($result as $tier3) {
+
+                        $output .= "(".$tier3['output_data_1']. ", ".$tier3['output_data_2'].") ";
+                    }
                 }
             }
         }
+        return $output;
     }
+    
     
     // Static functions
     
-    public static function add_method_info($db,
+        public static function add_method_data($db,
                                 $caseid,
                                 $methodid,
                                 $method_data_id) {
@@ -131,33 +118,7 @@ class method_info {
             }
             
         }
-        }
-
-    //
-    
-    public function format_tier3data() {
-        $info = $this->get_tier3data();
-
-        $output = "";
-        foreach($info as $tier_info) {
-            if(count($tier_info) > 0) {
-                $method = new method($this->db, $this->get_methodid());
-
-                if($method->get_method_type() == "Age") {
-                    $q = "SELECT * from age_method_info where id = :methoddataid";
-                    $params = array("methoddataid"=>$tier_info['methoddataid']);
-                    $result = $this->db->get_query_result($q, $params);
-                    foreach($result as $tier3) {
-
-                        $output .= "(".$tier3['output_data_1']. ", ".$tier3['output_data_2'].") ";
-                    }
-                }
-            }
-        }
-        return $output;
     }
-    
-    // Static functions
     
     public static function get_data_for_method($db, $methodid, $type="Age") {
         if($type == "Age") {
@@ -173,6 +134,27 @@ class method_info {
             }
             return $tier3s;
         }
+    }
+    
+    public static function get_one_method_info($db, $methodid, $od1, $od2=null) {
+
+            if($od2 != null) {
+                $query = "SELECT id from age_method_info where methodid=:methodid and output_data_1=:od1 and output_data_2=:od2";
+                $params = array("methodid"=>$methodid, 
+                                "od1"=>$od1,
+                                "od2"=>$od2);
+            } else {
+                $query = "SELECT id from age_method_info where methodid=:methodid and output_data_1=:od1";
+                $params = array("methodid"=>$methodid, 
+                                "od1"=>$od1);
+            }
+            
+            $result = $db->get_query_result($query, $params);
+            if(count($result) > 0) {
+                $id = $result[0]['id'];
+                $method_info = new method_info($db, $id);
+                return $method_info;
+            }
     }
     
     private function load_method_info($id, $method_type = "Age") {

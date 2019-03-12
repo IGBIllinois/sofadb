@@ -697,7 +697,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $method = new method($db, $tier2->get_methodid());
                         echo("<tr><td><input type='checkbox' name='chk[]'  /></td>
                             
-                        <td>Edit</td>");
+                        <td><a href=editmethods.php?id=".$caseeditid."&tier2id=".$tier2->get_id().">Edit</a></td>");
                         
                         
                         echo '<td>
