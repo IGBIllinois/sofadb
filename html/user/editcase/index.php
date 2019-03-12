@@ -673,7 +673,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <tr>
                       <p>
 						
-                        <th>Selected </th>
                         <th>Edit</th>
                         <th>Delete</th>
                          <th>
@@ -695,9 +694,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     
                     foreach($tier2s as $tier2) {
                         $method = new method($db, $tier2->get_methodid());
-                        echo("<tr><td><input type='checkbox' name='chk[]'  /></td>
+                        echo("<tr>
                             
-                        <td><a href=editmethods.php?id=".$caseeditid."&tier2id=".$tier2->get_id().">Edit</a></td>");
+                        <td><U><a href=editmethods.php?id=".$caseeditid."&tier2id=".$tier2->get_id().">Edit</a></U></td>");
                         
                         
                         echo '<td>
