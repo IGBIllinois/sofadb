@@ -276,12 +276,16 @@ function show_age_method_info($method_id, $tier2id=null) {
     $method_info = method_info::get_data_for_method($db, $method_id, $method->get_method_type());
     if(count($method_info) > 0) {
         if($method_info[0]->get_user_interaction() == USER_INTERACTION_MULTISELECT) {
+            
+            // Notes to user
+            echo("<legend><I>(hold CTL to select multiple)</I></legend>");
+            
         echo("<table><tr><th>".$header1."</th>");
-        if($output_data_2_result[0] != NULL && $output_data_2_result[0] != "") {
+        if($header2 != null) {
             echo("<th>".$header2."</th>");
         }
         echo("</tr><tr><td>");
-        echo("<select id='output_data_1' style='width:200px;' multiple name=output_data_1[]>");
+        echo("<select id='output_data_1' style='width:200px;' multiple name=output_data_1[] size=6>");
         foreach($output_data_1_result as $od1_result) {
             $selected = false;
             foreach($methodinfos as $method_info) {
@@ -295,11 +299,12 @@ function show_age_method_info($method_id, $tier2id=null) {
         }
         echo("</select>");
         echo("</td>");
-        if($output_data_2_result[0] != NULL && $output_data_2_result[0] != "") {
+
+        if($header2 != null) {
             echo("<td>");
             $selected = false;
             
-            echo("<select id='output_data_2' style='width:200px;' multiple name=output_data_2[]>");
+            echo("<select id='output_data_2' style='width:200px;' multiple name=output_data_2[] size=6>");
             foreach($output_data_2_result as $od2_option) {
                 foreach($methodinfos as $method_info) {
                     if($method_info->get_output_data_2() == $od2_option['output_data_2']) {
