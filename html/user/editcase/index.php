@@ -57,11 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $tier2 = new tier2data($db, $deleteid);
             $caseid = $tier2->get_caseid();
             $this_case = new sofa_case($db, $caseid);
-            $this_case->remove_method_age($deleteid);
+            $this_case->remove_method($deleteid);
             
 
             //exit();
-    }
+    } 
     
  else {
 

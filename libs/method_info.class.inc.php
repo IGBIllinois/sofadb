@@ -74,15 +74,15 @@ class method_info {
             if(count($tier_info) > 0) {
                 $method = new method($this->db, $this->get_methodid());
 
-                if($method->get_method_type() == "Age") {
-                    $q = "SELECT * from age_method_info where id = :methoddataid";
+
+                    $q = "SELECT * from method_info where id = :methoddataid";
                     $params = array("methoddataid"=>$tier_info['methoddataid']);
                     $result = $this->db->get_query_result($q, $params);
                     foreach($result as $tier3) {
 
                         $output .= "(".$tier3['output_data_1']. ", ".$tier3['output_data_2'].") ";
                     }
-                }
+                
             }
         }
         return $output;
@@ -99,9 +99,8 @@ class method_info {
         $case = new sofa_case($db, $caseid);
         $method = new method($db, $methodid);
         
-        if($method->get_type() == "Age") {
             
-            $query = "INSERT INTO age_method_data (caseid, methodid, methoddataid) VALUES "
+            $query = "INSERT INTO method_data (caseid, methodid, methoddataid) VALUES "
                     . "(:caseid, :methodid, :methoddataid)";
             $params = array("caseid"=>$caseid,
                             "methodid"=>$methodid,
@@ -117,12 +116,12 @@ class method_info {
                             "MESSAGE"=>"Method data not added.");
             }
             
-        }
+        
     }
     
-    public static function get_data_for_method($db, $methodid, $type="Age") {
-        if($type == "Age") {
-            $query = "SELECT id from age_method_info where methodid = :methodid";
+    public static function get_data_for_method($db, $methodid) {
+
+            $query = "SELECT id from method_info where methodid = :methodid";
             $params = array("methodid"=>$methodid);
             $result = $db->get_query_result($query, $params);
 
@@ -133,18 +132,18 @@ class method_info {
                 $tier3s[] = $new_tier3;
             }
             return $tier3s;
-        }
+        
     }
     
     public static function get_one_method_info($db, $methodid, $od1, $od2=null) {
 
             if($od2 != null) {
-                $query = "SELECT id from age_method_info where methodid=:methodid and output_data_1=:od1 and output_data_2=:od2";
+                $query = "SELECT id from method_info where methodid=:methodid and output_data_1=:od1 and output_data_2=:od2";
                 $params = array("methodid"=>$methodid, 
                                 "od1"=>$od1,
                                 "od2"=>$od2);
             } else {
-                $query = "SELECT id from age_method_info where methodid=:methodid and output_data_1=:od1";
+                $query = "SELECT id from method_info where methodid=:methodid and output_data_1=:od1";
                 $params = array("methodid"=>$methodid, 
                                 "od1"=>$od1);
             }
@@ -157,9 +156,9 @@ class method_info {
             }
     }
     
-    private function load_method_info($id, $method_type = "Age") {
-        if($method_type == "Age") {
-            $query = "SELECT * from age_method_info where id=:id";
+    private function load_method_info($id) {
+
+            $query = "SELECT * from method_info where id=:id";
             $params = array("id"=>$id);
             $result = $this->db->get_query_result($query, $params);
 
@@ -176,6 +175,5 @@ class method_info {
              $this->user_interaction = $data['user_interaction'];
             }
 
-         }
     }
 }

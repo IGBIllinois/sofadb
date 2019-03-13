@@ -217,8 +217,8 @@ $('#wait_2').hide();
 </script>";
 }
 
-function show_age_method_info($method_id) {
-    $query = "SELECT * from age_method_info where id = :id";
+function show_method_info($method_id) {
+    $query = "SELECT * from method_info where id = :id";
     $output_data_1_query = "SELECT DISTINCT output_data_1 from method_info where id = :id";
     $select_sex_query = "SELECT DISTINCT sex from method_info where id = :id";
     

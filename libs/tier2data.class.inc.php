@@ -58,13 +58,13 @@ class tier2data {
     }
     
     public function get_tier3data() {
-        if($this->methodtype = "Age") {
-            $query = "SELECT * from tier3data_age where tier2id = :id";
-            $params = array("id"=>$this->id);
-            $result = $this->db->get_query_result($query, $params);
 
-            return $result;
-        }
+        $query = "SELECT * from tier3data where tier2id = :id";
+        $params = array("id"=>$this->id);
+        $result = $this->db->get_query_result($query, $params);
+
+        return $result;
+
     }
     
     public function format_tier3data() {
@@ -75,11 +75,9 @@ class tier2data {
             if(count($tier_info) > 0) {
                 $method = new method($this->db, $this->get_methodid());
 
-                if($method->get_method_type() == "Age") {
+
                     $method_info = new method_info($this->db, $tier_info['methoddataid']);
-                    //$q = "SELECT * from age_method_info where id = :methoddataid";
-                    //$params = array("methoddataid"=>$tier_info['methoddataid']);
-                    //$result = $this->db->get_query_result($q, $params);
+
                     if($method_info->get_user_interaction() == USER_INTERACTION_MULTISELECT) {
                         if($method_info->get_output_data_2() != null) {
                             $output .= "(".$method_info->get_output_data_1(). ", ".$method_info->get_output_data_2().") ";
@@ -90,9 +88,7 @@ class tier2data {
                     } else if($method_info->get_user_interaction() == USER_INTERACTION_INPUT_BOX) {
                         $output .= "(".$method_info->get_output_data_1(). ", ".$tier_info['value'].") ";
                     }
-                    
-                    
-                }
+
             }
         }
         return $output;

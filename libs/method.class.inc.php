@@ -234,7 +234,7 @@ class method {
      * @return type
      */
     public function get_data_1() {
-        $output_data_1_query = "SELECT DISTINCT output_data_1 from age_method_info where methodid = :method_id";
+        $output_data_1_query = "SELECT DISTINCT output_data_1 from method_info where methodid = :method_id";
         $params = array("method_id"=>$this->id);
         $output_data_1_result = $this->db->get_query_result($output_data_1_query, $params);
         
@@ -251,7 +251,7 @@ class method {
      * @return type
      */
     public function get_data_2() {
-        $output_data_2_query = "SELECT DISTINCT output_data_2 from age_method_info where methodid = :method_id";
+        $output_data_2_query = "SELECT DISTINCT output_data_2 from method_info where methodid = :method_id";
         $params = array("method_id"=>$this->id);
         $output_data_2_result = $this->db->get_query_result($output_data_2_query, $params);
         
@@ -264,7 +264,7 @@ class method {
     }
     
     public function get_header_1() {
-        $output_data_header_query = "SELECT DISTINCT output_data_1_description from age_method_info where methodid = :method_id";
+        $output_data_header_query = "SELECT DISTINCT output_data_1_description from method_info where methodid = :method_id";
         $params = array("method_id"=>$this->id);
         $output_data_header_result = $this->db->get_query_result($output_data_header_query, $params);
         
@@ -276,7 +276,7 @@ class method {
     }
 
     public function get_header_2() {
-        $output_data_header_query = "SELECT DISTINCT output_data_2_description from age_method_info where methodid = :method_id";
+        $output_data_header_query = "SELECT DISTINCT output_data_2_description from method_info where methodid = :method_id";
         $params = array("method_id"=>$this->id);
         $output_data_header_result = $this->db->get_query_result($output_data_header_query, $params);
 
@@ -288,7 +288,7 @@ class method {
     }
     
     public function get_method_info() {
-        $query = "SELECT id from age_method_info where methodid=:methodid";
+        $query = "SELECT id from method_info where methodid=:methodid";
         $params = array("methodid"=>$this->id);
         $result = $this->db->get_query_result($query, $params);
         if(count($result) > 0) {
@@ -357,179 +357,3 @@ class method {
          
      }
 }
-
-
-/*
-class methoddata {
-    
-    private $id;
-    private $method_id;
-    private $data_name;
-    private $data_type;
-    
-    private $db;
-    
-    public function __construct($db, $id = 0) {
-        $this->db = $db;
-        if($id != 0) {
-            $this->load_method_data($id);
-        }
-    }
-    
-    public function get_id() { return $this->id; }
-    public function get_method_id() { return $this->method_id; }
-    public function get_name() { return $this->data_name; }
-    public function get_type() { return $this->data_type; }
-    
-    // Static functions
-    
-    public static function add_method_data($db, $method_id, $data_name, $data_type) {
-        $query = "INSERT INTO methoddata (".
-                "methodid, ".
-            " dataname, ".
-            " datatype)".
-            " VALUES (".
-               ":methodid, ".
-               ":dataname, ".
-               ":datatype) ";
-        $params = array("methodid"=>$method_id,
-                        "dataname"=>$data_name,
-                        "datatype"=>$data_type);
-
-        //$result = @mysqli_query ($dbcon, $query); // Run the query.
-        $result = $db->get_insert_result($query, $params);
-	if ($result > 0) { // If it ran OK.
-            //$id = mysqli_insert_id($dbcon);
-            echo("Method Data $data_name added successfully");
-            return $result;
-        }
-    }
-    
-    private function load_method_data($id) {
-       $query = "SELECT * from methoddata where id=:id";
-       $params = array("id"=>$id);
-       $result = $this->db->get_query_result($query, $params);
-       //$result = mysqli_query($this->dbcon,$query);
-       //$data = mysqli_fetch_array($result, MYSQLI_ASSOC);
-       if(count($result) > 0) {
-           $data = $result[0];
-       
-       $this->id = $id;
-        $this->method_id = $data['methodid'];
-        $this->data_name = $data['dataname'];
-        $this->data_type = $data['datatype'];
-       }
-    }
-}
-
-
-
-class age_method_data extends methoddata {
-    
-    private $db;
-    private $id;
-    private $methodid;
-    private $methoddataid;
-    private $caseid;
-    
-    // meta data
-    private $output_data_1;
-    private $output_data_2;
-    
-    private $output_data_1_desc;
-    private $output_data_2_desc;
-    
-
-    
-    public function get_id() { return $this->id; }
-    public function get_method_id() { return $this->methodid; }
-    public function get_method_data_id() { return $this->methoddataid; }
-    
-    public function get_output_data_1() { return $this->output_data_1; }
-    public function get_output_data_2() { return $this->output_data_2; }
-
-    
-        
-        public function get_method_data($caseid,    
-                                    $methodid) {
-            $method = new method($this->db, $methodid);
-            if($method->get_type() == "Age") {
-                $query = "SELECT * from age_method_info where caseid=:caseid AND ". 
-                        " methodid = :methodid";
-                $params = array("caseid"=>$caseid,
-                                "methodid"=>$methodid);
-                $result = $this->db->get_query_result($query, $params);
-                
-                if(count($result) > 0) {
-                    foreach($result as $methoddata) {
-                        $id = $methoddata['id'];
-                        $methoddata = new age_method_data($db, $id);
-                    }
-                }
-            }
-    }
-    
-    // Static functions
-    
-    public static function add_method_data($db,
-                                $caseid,
-                                $methodid,
-                                $method_data_id) {
-        
-        $case = new sofa_case($db, $caseid);
-        $method = new method($db, $methodid);
-        
-        if($method->get_type() == "Age") {
-            
-            $query = "INSERT INTO age_method_data (caseid, methodid, methoddataid) VALUES "
-                    . "(:caseid, :methodid, :methoddataid)";
-            $params = array("caseid"=>$caseid,
-                            "methodid"=>$methodid,
-                            "methoddataid"=>$methoddataid);
-            
-            $result = $db->get_insert_result($query, $params);
-            if($result > 0) {
-                return array("RESULT"=>TRUE,
-                            "MESSAGE"=>"Method data added successfully.");
-                
-            } else {
-                return array("RESULT"=>FALSE,
-                            "MESSAGE"=>"Method data not added.");
-            }
-            
-        }
-        }
-       
-        
-        // Private functions
-    
-    private function load_method_data($id) {
-       $query = "SELECT * from age_method_data where id=:id";
-       $params = array("id"=>$id);
-       $result = $this->db->get_query_result($query, $params);
-
-       if(count($result) > 0) {
-           $data = $result[0];
-       
-       $this->id = $id;
-        $this->caseid = $data['caseid'];
-        $this->methodid = $data['methodid'];
-        $this->methoddataid = $data['methoddataid'];
-       }
-       
-       // load meta data
-       $metadataquery = "SELECT * from age_method_info where id = :id";
-       $params = array("id"=>$methoddataid);
-       $result = $this->db->get_query_result($methoddataquery, $params);
-       
-       if(count($result) > 0) {
-           $data = $result[0];
-           $this->output_data_1 = $data['output_data_1'];
-           $this->output_data_2 = $data['output_data_2'];
-
-       }
-    }
-}
-            
-    
-*/

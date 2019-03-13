@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // if it's in the new ids, but not in the existing ids, add it
     foreach($new_ids as $new_id) {
         if(!in_array($new_id, $existing_ids)) {
-            $this_case->add_tier3_age_by_id($tier2id, $new_id);
+            $this_case->add_tier3_by_id($tier2id, $new_id);
         }
     }
     } else if($user_interaction == USER_INTERACTION_INPUT_BOX) {
@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <?php
         echo($method->get_name()."<BR>");
-            show_age_method_info($tier2->get_methodid(), $tier2->get_id());
+            show_method_info($tier2->get_methodid(), $tier2->get_id());
             
         ?>
              <div name="methodholder" id="methodholder">

@@ -75,54 +75,7 @@ if(isset($_GET['savecase']) && $_GET['savecase']==1  )
                     $output_data_2, 
                     $od1Names);
         }
-            /**
-            $method_case_id = $result['id'];
-            // This echo command is what the javascript uses for its output response
-            echo($method_case_id);
-                $method_data = method_info::get_data_for_method($db, $method_id, $method->get_method_type());
-                if(count($method_data) > 0) {
-
-                    $user_interaction = $method_data[0]->get_user_interaction();
-                    if($user_interaction == USER_INTERACTION_MULTISELECT) {
-                        if(count($output_data_2) > 0) {
-                            // do both
-
-                            foreach($output_data_1 as $od1) {
-                                foreach($output_data_2 as $od2) {
-                                    $result = $this_case->add_tier3_age($method_id, $od1, $od2, $method_case_id);
-
-                                }
-                            }
-                        } else {
-
-                            // just one
-                            foreach($output_data_1 as $od1) {
-                                $result = $this_case->add_tier3_age($method_id, $od1, null, $method_case_id);
-
-                            }
-                        }
-                    } else if($user_interaction == USER_INTERACTION_INPUT_BOX) {
-
-                        $i=0;
-                        foreach($output_data_1 as $value) {
-                            $name = $od1Names[$i];
-
-                                $result = $this_case->add_tier3_age($method_id, $name, null, $method_case_id, $value, $user_interaction);
-                                $i++;
-                            }
-                }
-
-            }
-        } else {
-            echo("Error, method not added.");
-        }
-             *
-             */
-
 }
-
-
-
 
 //**************************************
 //     Page load dropdown results     //
@@ -162,10 +115,10 @@ if(isset($_GET['func']) && $_GET['func'] == "drop_1"  ) {
    
    drop_1($_GET['drop_var']); 
    
-} else if(isset($_GET['func']) && $_GET['func'] == "show_age_method_info"  ) { 
+} else if(isset($_GET['func']) && $_GET['func'] == "show_method_info"  ) { 
     
     $method_id = $_GET['method_id'];
-    show_age_method_info($method_id);
+    show_method_info($method_id);
     
 }
    
@@ -216,7 +169,7 @@ $('#wait_2').hide();
 	$('#fchoseninput').val('0');
 	$('#pchoseninput').val('0');
       $.get(\"func.php\", {
-		func: \"show_age_method_info\",
+		func: \"show_method_info\",
 		method_id: $('#drop_2').val()
       }, function(response){
         $('#result_2').fadeOut();
@@ -242,7 +195,7 @@ if (isset($_GET['func']) && $_GET['func'] == "drop_2" ) {
 }
 
 
-function show_age_method_info($method_id, $tier2id=null) {
+function show_method_info($method_id, $tier2id=null) {
 
     global $db;
     require_once("../../include/main.inc.php");
@@ -273,7 +226,7 @@ function show_age_method_info($method_id, $tier2id=null) {
         }
     }
     
-    $method_info = method_info::get_data_for_method($db, $method_id, $method->get_method_type());
+    $method_info = method_info::get_data_for_method($db, $method_id);
     if(count($method_info) > 0) {
         if($method_info[0]->get_user_interaction() == USER_INTERACTION_MULTISELECT) {
             
@@ -321,13 +274,16 @@ function show_age_method_info($method_id, $tier2id=null) {
         echo("</td></tr></table>");
 
         } else if($method_info[0]->get_user_interaction() == USER_INTERACTION_INPUT_BOX) {
+            echo("<table>");
             if($tier2id != null) {
                 $tier2 = new tier2data($db, $tier2id);
                 $data = $tier2->get_tier3data();
                 $this_method = new method($db, $tier2->get_methodid());
                 $this_method_info = $this_method->get_method_info();
                 $value = "";
+                
                 foreach($this_method_info as $method_info) {
+                    
                     $value = "";
                     foreach($data as $tier3) {
                         if($tier3['methoddataid'] == $method_info->get_id()) {
@@ -335,14 +291,15 @@ function show_age_method_info($method_id, $tier2id=null) {
                         }
                     }
                     $name = $method_info->get_output_data_1();
-                    echo($name.": <input id='$name' name='output_data_1[$name]' value='$value'><BR>");
+                    echo("<tr><td>".$name.":</td><td> <input id='$name' name='output_data_1[$name]' value='$value'></td></tr>");
                 }
          } else {
             foreach($output_data_1_result as $od1_result) {
                 $name = $od1_result['output_data_1'];
-                echo($name.": <input id='$name' name='output_data_1[$name]'><BR>");
+                echo("<tr><td>".$name.":</td><td> <input id='$name' name='output_data_1[$name]'></td></tr>");
             }
         }
+        echo("</table>");
     }
     }
 
