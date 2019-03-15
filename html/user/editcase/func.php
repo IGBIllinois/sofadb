@@ -51,7 +51,7 @@ if (isset($_GET['editrow']) && $_GET['editrow']!=0 && $_GET['delmethods']>=1)
 //*****************
 if(isset($_GET['savecase']) && $_GET['savecase']==1  ) 
 {
-	
+	/*
 	$method_id = $_GET['drop_2'];
         $output_data_1 = $_GET['od1'];
         $output_data_2 = array();
@@ -75,6 +75,8 @@ if(isset($_GET['savecase']) && $_GET['savecase']==1  )
                     $output_data_2, 
                     $od1Names);
         }
+         * 
+         */
 }
 
 //**************************************
@@ -228,7 +230,8 @@ function show_method_info($method_id, $tier2id=null) {
     
     $method_info = method_info::get_data_for_method($db, $method_id);
     if(count($method_info) > 0) {
-        if($method_info[0]->get_user_interaction() == USER_INTERACTION_MULTISELECT) {
+        $user_interaction = $method_info[0]->get_user_interaction();
+        if($user_interaction == USER_INTERACTION_MULTISELECT) {
             
             // Notes to user
             echo("<legend><I>(hold CTL to select multiple)</I></legend>");
@@ -272,8 +275,63 @@ function show_method_info($method_id, $tier2id=null) {
             echo("</select>");
         }
         echo("</td></tr></table>");
+        
+        } else if($user_interaction == USER_INTERACTION_SELECT_RANGE) {
+            echo("<table  style='border-spacing:7px'><tr><th><U><B>".$header1."</B></U></th>");
+            echo("<th><U><B>".$header2."</B></U></th>");
 
-        } else if($method_info[0]->get_user_interaction() == USER_INTERACTION_INPUT_BOX) {
+            echo("</tr>");
+            $value = null;
+
+                $method = new method($db, $method_id);
+                $this_method_info = $method->get_method_info();
+                foreach($this_method_info as $method_info) {
+                    $value = null;
+                    if($tier2id != null) {
+                        // Find existing value
+                        $tier2 = new tier2data($db, $tier2id);
+                        $data = $tier2->get_tier3data();
+                        foreach($data as $tier3) {
+                            if($tier3['methoddataid'] == $method_info->get_id()) {
+                                $value = $tier3['value'];
+                            }
+                        }
+                    }
+                    
+                    $range = $method_info->get_output_data_2();
+
+                    $positive_start = strpos($range, "-");
+
+                    
+                    if($positive_start !== false && $positive_start == 0) {
+                        // first positition is a dash, negative start
+                        $range = substr($range, 1);
+                        $ranges = explode("-", $range);
+                        $ranges[0] = "-" . $ranges[0];
+                                
+                    } else {
+                        $ranges = explode("-", $range);
+                    }
+
+                    $name = $method_info->get_output_data_1();
+                    $selectbox = "<select style='width:100%' name=output_data_1[$name]>";
+
+                    for($curr_range = $ranges[0]; $curr_range <= $ranges[1]; $curr_range++) {
+                        $selectbox .= "<option  value='".$curr_range."'";
+                        if($value != null && $value == $curr_range) {
+                            $selectbox .= " selected=1 ";
+                        }
+                        $selectbox .= ">$curr_range</option>";                           
+                        
+                    }
+                    $selectbox .="</select>";
+                    
+                    echo("<tr><td>".$name.":</td><td> $selectbox </td></tr>");
+                    
+                    }
+                    echo("</table>");
+
+        } else if($user_interaction == USER_INTERACTION_INPUT_BOX) {
             echo("<table>");
             if($tier2id != null) {
                 $tier2 = new tier2data($db, $tier2id);

@@ -77,15 +77,19 @@ class tier2data {
 
 
                     $method_info = new method_info($this->db, $tier_info['methoddataid']);
-
-                    if($method_info->get_user_interaction() == USER_INTERACTION_MULTISELECT) {
+                    
+                    $interaction = $method_info->get_user_interaction();
+                    
+                    if($interaction == USER_INTERACTION_MULTISELECT) {
+                        
                         if($method_info->get_output_data_2() != null) {
                             $output .= "(".$method_info->get_output_data_1(). ", ".$method_info->get_output_data_2().") ";
                         } else {
                             $output .= "(".$method_info->get_output_data_1().") ";
                         }
 
-                    } else if($method_info->get_user_interaction() == USER_INTERACTION_INPUT_BOX) {
+                    } else if($interaction == USER_INTERACTION_INPUT_BOX ||
+                            $interaction == USER_INTERACTION_SELECT_RANGE) {
                         $output .= "(".$method_info->get_output_data_1(). ", ".$tier_info['value'].") ";
                     }
 

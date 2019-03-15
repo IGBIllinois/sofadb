@@ -106,7 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this_case->add_tier3_by_id($tier2id, $new_id);
         }
     }
-    } else if($user_interaction == USER_INTERACTION_INPUT_BOX) {
+    } else if($user_interaction == USER_INTERACTION_INPUT_BOX ||
+            $user_interaction == USER_INTERACTION_SELECT_RANGE) {
 
         foreach($output_data_1 as $name=>$od1_value) {
             $method_info = method_info::get_one_method_info($db, $method->get_id(), $name);

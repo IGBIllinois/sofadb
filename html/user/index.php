@@ -18,11 +18,9 @@ if (isset($_GET['p']) && is_numeric
 $pages=$_GET['p'];
 }else{//use the next block of code to calculate the number of pages
 //First, check for the total number of records
-$q = "SELECT COUNT(id) FROM cases WHERE memberid=$memberid AND submissionstatus>=0";
 
-$result = @mysqli_query ($dbcon, $q);
-$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
-$records = $row[0];
+$all_cases = sofa_case::get_member_cases($db, $memberid);
+$records = count($all_cases);
 //Now calculate the number of pages
 if ($records > $pagerows){ //if the number of records will fill more than one page
 //Calculatethe number of pages and round the result up to the nearest integer
@@ -55,27 +53,11 @@ if($status==1)	{
 
 	$this_case->submit_case($status);
 
-//{$q="UPDATE cases SET submissionstatus='$status',datesubmitted=NOW() WHERE id='$casesubid'";
-//$result = @mysqli_query ($dbcon, $q);
-//if(!$result)
-//{echo 'System Error: Could not submit case, try again later.';}
-
-//$q="UPDATE members SET casessubmitted=casessubmitted+1 WHERE id='$memberid'";
-
-//$result = @mysqli_query ($dbcon, $q);
-//if(!$result)
-//{echo 'System Error: Could not update submit data.';}
-
 
 }
 else{
 	$this_case->submit_case(NULL);
 
-//$q="UPDATE cases SET submissionstatus='$status',datesubmitted=NULL WHERE id='$casesubid'";
-//$result = @mysqli_query ($dbcon, $q);
-//if(!$result)
-//{echo 'System Error: Could not withdraw case, try again later.';
-//}
 
 }
 
@@ -86,34 +68,14 @@ unset($_GET['status']);
 header('Location: ' . './index.php');exit();
 }
 
-// Make the query:
-//$q = "SELECT id, casename, casenumber, caseyear, caseagency,submissionstatus,  DATE_FORMAT(datemodified, '%M %d, %Y') AS moddat, DATE_FORMAT(datesubmitted, '%M %d, %Y') AS subdat FROM cases WHERE memberid=$memberid AND submissionstatus>=0 ORDER BY datemodified DESC LIMIT $start, $pagerows";		
 $total_cases = sofa_case::get_member_cases($db, $memberid);
 $curr_cases = sofa_case::get_member_cases($db, $memberid, $start, $pagerows); 
 $num_cases = count($total_cases);
 
-$result = @mysqli_query ($dbcon, $q); // Run the query.
-$members = mysqli_num_rows($result);
-if ($result) { // If it ran OK, display the records.
+if ($num_cases >= 0) { // If it ran OK, display the records.
 // Table header.
 
-/*
-//$q = "SELECT COUNT(id) FROM cases WHERE memberid=$memberid AND submissionstatus>=0";
-//$resultP = @mysqli_query ($dbcon, $q);
-//$row = @mysqli_fetch_array ($resultP, MYSQLI_NUM);
-//$cases = $row[0];
-$current_page = ($start/$pagerows) + 1;
-if ($pages==1)
-{if ($cases>0){$startingrecord=1;}
-else {$startingrecord=0;}
-$endingrecord=$cases;}
-elseif ($current_page!= $pages)
-{$startingrecord=($current_page-1)*$pagerows+1;
-$endingrecord=($current_page)*$pagerows;}
-else
-{$startingrecord=($current_page-1)*$pagerows+1;
-$endingrecord=$cases;}
-*/
+
 
 $current_page = ($start/$pagerows) + 1;
 if ($pages==1) {
@@ -206,7 +168,7 @@ foreach($curr_cases as $case) {
 // Public message:
 	echo '<p class="error">The current record could not be retrieved. We apologize for any inconvenience.</p>';
 	// Debugging message:
-	echo '<p>' . mysqli_error($dbcon) . '<br><br>Query: ' . $q . '</p>';
+	echo '<p>' . $db->error_info()[2] . '<br><br>' .  '</p>';
 } // End of if ($result). Now display the total number of records/members.
 
 
@@ -251,28 +213,10 @@ echo '</p>';
 
 //mysqli_close($dbcon); // Close the database connection.
 ?>
-    
-    
-    
-    
-    
-    
+
     </div>
   
   
-  
-  
-  
-  
-  
-</div>
-<div id="footer">Copyright 2014 by <a href="http://www.sofainc.org/" target="_blank">SOFA</a>.</div>
-</div>
-
-
-
-
-</body>
-</html>
-
-<?php ob_end_flush(); ?>
+<?php
+require_once("../include/footer.php");
+?>

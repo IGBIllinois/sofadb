@@ -61,7 +61,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
 
             //exit();
-    } 
+    } else if(isset($_POST['add_method'])) {
+        	
+	$method_id = $_POST['drop_2'];
+        $output_data_1 = $_POST['output_data_1'];
+        $output_data_2 = array();
+
+
+        if(isset($_POST['output_data_2']) && $_POST['output_data_2'] != null &&  $_POST['output_data_2'] != "") {
+
+            $output_data_2 = $_POST['output_data_2'];
+        }
+
+        $od1Names = array_keys($output_data_1);
+
+        //$od1Names = isset($_GET['od1Names']) ? $_GET['od1Names'] : null;
+        $caseid = $_POST['caseid'];
+        
+        $this_case = new sofa_case($db, $caseid);
+        $method = new method($db, $method_id);
+        // Add the method
+        $result = $this_case->add_case_method($method_id, $method->get_method_type_num(), 0, 127);
+        
+        if($result['RESULT'] == TRUE) {
+            $method_case_id = $result['id'];
+            $this_case->add_all_tier3_data($method_id, 
+                    $method_case_id, 
+                    $output_data_1, 
+                    $output_data_2, 
+                    $od1Names);
+        }
+    }
     
  else {
 
@@ -623,7 +653,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	     <div id="tabs-2">
                  
                      <!-- Add Method box -->    
-        <form action="index.php" method="post" id="casedata">
+        <form action="index.php#tabs-2" method="post" id="casedata">
         <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
     <fieldset class="methodinfobox"><legend class="boldlegend">Add Methods</legend>
 
@@ -645,7 +675,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <img alt="Please Wait" src="ajax-loader.gif"/>
     </span>
      
-     <input type="button" class="showybutton" id="addmethodbutton" value="Add Method" ><BR>
+     <input type="submit" class="showybutton" id="addmethodbutton" name='add_method' value="Add Method" ><BR>
      
      <span id="result_2" style="display: none;"></span>
                               <span id="wait_3" style="display: none;">
