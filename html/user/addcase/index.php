@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $casename = trim($_POST['casename']);
 	} 
     else {
-		$casenam="";
+		$casename="";
 	}
     
 	
@@ -320,7 +320,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                
                 $data = array(
                     
-                   "casename"=>$casenam,
+                   "casename"=>$casename,
                    "casenum"=>$casenum,
                    "caseyear"=>$caseyear,
                    "memberid"=>$memberid,
@@ -374,7 +374,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
                 $case_id = $result['id'];
 
-                $case =  new sofa_case($dbcon, $case_id, $db);
+                $case =  new sofa_case($db, $case_id);
                 
         	for ($i=1;$i<=$numcasemethods;$i++){
                 
