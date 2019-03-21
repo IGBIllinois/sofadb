@@ -257,3 +257,7 @@ function finishAjax_tier_four(id, response) {
   $(function() {
     $( "#tabs" ).tabs();
   });
+  
+$('document').ready(function() {
+   $(window).scrollTop(0);
+});
