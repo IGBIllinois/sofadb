@@ -64,12 +64,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tier3s = $tier2->get_tier3data();
     $existing_ids = array();
     foreach($tier3s as $t3) {
-        $existing_ids[] = $t3['methoddataid'];
+        $existing_ids[] = $t3->get_methodinfoid();
     }
     $method = new method($db, $tier2->get_methodid());
     $method_info = $method->get_method_info();
-    $user_interaction = $method_info[0]->get_user_interaction();
-    $output_data_1 = $_POST['output_data_1'];
+    $user_interaction = "";
+    if(count($method_info) > 0) {
+        $user_interaction = $method_info[0]->get_user_interaction();
+    }
+    if(isset($_POST['output_data_1'])) {
+        $output_data_1 = $_POST['output_data_1'];
+    } else {
+        $output_data_1 = array();
+    }
     $output_data_2 = null;
     if(isset($_POST['output_data_2'])) {
         $output_data_2 = $_POST['output_data_2'];
@@ -96,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // if it's in the existing ids, but not in the new ids, delete it.
     foreach($existing_ids as $existing_id) {
         if(!in_array($existing_id, $new_ids)) {
-            $this_case->delete_tier3($tier2id, $existing_id);
+            tier3data::delete_tier3($db, $tier2id, $existing_id);
         }
     }
     
@@ -106,16 +113,107 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this_case->add_tier3_by_id($tier2id, $new_id);
         }
     }
-    } else if($user_interaction == USER_INTERACTION_INPUT_BOX ||
-            $user_interaction == USER_INTERACTION_SELECT_RANGE) {
+    } else if($user_interaction == USER_INTERACTION_SELECT_RANGE) {
+            // RANGE needs an output_data_1 and a value
+            foreach($tier3s as $tier3) {
+                // check existing tier3 data, to see if each submitted
+                // value already exists there.
+                $found = false;
+                $method_info_id = $tier3->get_methodinfoid();
+                $method_info = new method_info($db, $method_info_id);
+                $od1 = $method_info->get_output_data_1();
+                
+                // first delete data that doesn't appear in new data
+                foreach($output_data_1 as $name=>$values) {
+                    
+                    foreach($values as $value) {
+                        if($od1 == $name &&
+                           $tier3->get_value() == $value) {
+                            // data is still here
+                            $found = true;
+                        }
+                    }
+                }
+                if($found == false) {
+                    // not in new data; delete this tier3
+                    tier3data::delete_tier3_by_id($db, $tier3->get_id());
+                }
+            
+            }
+            
+            foreach($output_data_1 as $name=>$values) {
+                // add new ones    
+                $method_info_by_name = method_info::get_one_method_info($db, $method->get_id(), $name);
+                $curr_method_info_id = $method_info_by_name->get_id();
+                foreach($values as $value) {
+                    $found = false;
+                    foreach($tier3s as $tier3) {
+                        
+                        
+                        $method_info_id = $tier3->get_methodinfoid();
+                        $method_info = new method_info($db, $method_info_id);
+                        $curr_od1 = $method_info->get_output_data_1();
+                        $curr_value = $tier3->get_value();
+                        
+                        if($tier3->get_methodinfoid() == $curr_method_info_id &&
+                           $tier3->get_value() == $value) {
+                                $found = true;
+                        }
+                    }
+                    
+                    if($found == false) {
+                        // add it
+                        $this_case->add_tier3($tier2->get_methodid(), $name, null, $tier2id, $value);
+                    }
+                    }
+                }
+            
+        } else if($user_interaction == USER_INTERACTION_INPUT_BOX ||
+            $user_interaction == USER_INTERACTION_SELECT_EACH) {
 
-        foreach($output_data_1 as $name=>$od1_value) {
-            $method_info = method_info::get_one_method_info($db, $method->get_id(), $name);
-            $methoddataid = $method_info->get_id();
-            $this_case->update_tier3($tier2id, $methoddataid, $od1_value);
+            $new_ids = array();
+
+        
+            foreach($output_data_1 as $name=>$od1_value) {
+                $name = urldecode($name);
+                if(is_array($od1_value)) {
+                    foreach($od1_value as $od2) {
+                        $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od2);
+
+                        $id = $method_info->get_id();
+                        $new_ids[] = $id;
+                    }
+                } else {
+                    $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od1_value);
+                    $id = $method_info->get_id();
+                    $new_ids[] = $id;
+                }
+            }
+        
+        // if it's in the existing ids, but not in the new ids, delete it.
+        foreach($existing_ids as $existing_id) {
+            if(!in_array($existing_id, $new_ids)) {
+                tier3data::delete_tier3($db, $tier2id, $existing_id);
+            }
         }
-    }
-
+    
+        foreach($output_data_1 as $name=>$od1_value) {
+            $name = urldecode($name);
+            if(is_array($od1_value)) {
+                foreach($od1_value as $od2) {
+                    $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od2);
+                    $methoddataid = $method_info->get_id();
+                    $this_case->update_tier3($tier2id, $methoddataid, $name, $od2);
+                }
+            } else {
+                $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od1_value);
+                $methoddataid = $method_info->get_id();
+                $this_case->update_tier3($tier2id, $methoddataid, $od1_value);
+            }
+        }
+            }
+            
+        
     
 }
 ?>
@@ -146,7 +244,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <?php
         echo($method->get_name()."<BR>");
-            show_method_info($tier2->get_methodid(), $tier2->get_id());
+            method_info::show_method_info($db, $tier2->get_methodid(), $tier2->get_id());
             
         ?>
              <div name="methodholder" id="methodholder">

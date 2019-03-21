@@ -31,7 +31,7 @@ DEFINE ("METHOD_DATA_STATURE", "Stature");
 DEFINE ("USER_INTERACTION_MULTISELECT", "multiselect"); 
 
 // For each output_data_1, there is a multi-select box of choices
-DEFINE ("USER_INTERACTION_MULTISELECT_EACH", "multiselect_each");
+DEFINE ("USER_INTERACTION_SELECT_EACH", "select_each");
 
 // For each output_data_1, there is a single select from within a numerical range (e.g. "1-16")
 DEFINE ("USER_INTERACTION_SELECT_RANGE", "select_range");

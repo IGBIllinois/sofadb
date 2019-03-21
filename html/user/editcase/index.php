@@ -34,13 +34,7 @@ elseif(isset($_SESSION['caseid']))
 {
 	$caseeditid=$_SESSION['caseid'];
         $casedata = new sofa_case($db, $caseeditid);
-	//$q="SELECT * FROM cases WHERE id=$caseeditid";
 
-//$mresult=mysqli_query($dbcon,$q);
-//if(!$mresult)
-//{echo 'Could not load case data from database';exit();}
-
-//$casedata=mysqli_fetch_array($mresult);
         $casedata = new sofa_case($db, $caseeditid);
 }
 	
@@ -49,7 +43,6 @@ elseif(isset($_SESSION['caseid']))
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    
     //remove method from case here, decrement total cases and numsubmitted from members.
     if (isset($_POST['delsubmit']))
     {
@@ -64,7 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else if(isset($_POST['add_method'])) {
         	
 	$method_id = $_POST['drop_2'];
-        $output_data_1 = $_POST['output_data_1'];
+        if(isset($_POST['output_data_1'])) {
+            $output_data_1 = $_POST['output_data_1'];
+        } else {
+            $output_data_1 = array();
+        }
         $output_data_2 = array();
 
 
@@ -101,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if (empty($_POST['caseyear'])) {
 		$errors[] = 'You must enter a case year to save.';
 	} 
-    else {
+        else {
 		$caseyear = trim($_POST['caseyear']);
 	}
 
@@ -730,7 +727,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         
                         
                         echo '<td>
-                            <form action="index.php" method="post" id="removedata" onsubmit="return confirm(\'Do you really want to remove this method from this case?\')">
+                            <form action="index.php#tabs-2" method="post" id="removedata" onsubmit="return confirm(\'Do you really want to remove this method from this case?\')">
                             <input name="delid" type="hidden" value="'.$tier2->get_id().'"/>
                             <input name="delsubmit" type="submit" value="Remove" /> </form>
                             </td>';

@@ -237,10 +237,13 @@ class method {
         $output_data_1_query = "SELECT DISTINCT output_data_1 from method_info where methodid = :method_id";
         $params = array("method_id"=>$this->id);
         $output_data_1_result = $this->db->get_query_result($output_data_1_query, $params);
-        
-        // just return array of texts
-        if(($output_data_1_result[0]['output_data_1']) != null) {
-            return $output_data_1_result;
+        if(count($output_data_1_result) > 0) {
+            // just return array of texts
+            if(($output_data_1_result[0]['output_data_1']) != null) {
+                return $output_data_1_result;
+            } else {
+                return array();
+            }
         } else {
             return array();
         }
@@ -254,12 +257,25 @@ class method {
         $output_data_2_query = "SELECT DISTINCT output_data_2 from method_info where methodid = :method_id";
         $params = array("method_id"=>$this->id);
         $output_data_2_result = $this->db->get_query_result($output_data_2_query, $params);
-        
-        // just return array of texts
-        if(($output_data_2_result[0]['output_data_2']) != null) {
-            return $output_data_2_result;
+        if(count($output_data_2_result) > 0) {
+            // just return array of texts
+            if(($output_data_2_result[0]['output_data_2']) != null) {
+                return $output_data_2_result;
+            } else {
+                return array();
+            }
         } else {
             return array();
+        }
+    }
+    
+    public function get_od2_for_od1($od1) {
+        $query = "SELECT output_data_2 from method_info where methodid=:methodid and output_data_1=:od1";
+        $params = array("methodid"=>$this->id,
+                        "od1"=>$od1);
+        $result = $this->db->get_query_result($query, $params);
+        if(count($result > 0)) {
+            return $result;
         }
     }
     
@@ -267,9 +283,12 @@ class method {
         $output_data_header_query = "SELECT DISTINCT output_data_1_description from method_info where methodid = :method_id";
         $params = array("method_id"=>$this->id);
         $output_data_header_result = $this->db->get_query_result($output_data_header_query, $params);
-        
-        if(($output_data_header_result[0]['output_data_1_description']) != null) {
-            return $output_data_header_result[0]['output_data_1_description'];
+        if(count($output_data_header_result) > 0) {
+            if(($output_data_header_result[0]['output_data_1_description']) != null) {
+                return $output_data_header_result[0]['output_data_1_description'];
+            } else {
+                return null;
+            }
         } else {
             return null;
         }
@@ -279,9 +298,12 @@ class method {
         $output_data_header_query = "SELECT DISTINCT output_data_2_description from method_info where methodid = :method_id";
         $params = array("method_id"=>$this->id);
         $output_data_header_result = $this->db->get_query_result($output_data_header_query, $params);
-
-        if(($output_data_header_result[0]['output_data_2_description']) != null) {
-            return $output_data_header_result[0]['output_data_2_description'];
+        if(count($output_data_header_result) > 0) {
+            if(($output_data_header_result[0]['output_data_2_description']) != null) {
+                return $output_data_header_result[0]['output_data_2_description'];
+            } else {
+                return null;
+            }
         } else {
             return null;
         }

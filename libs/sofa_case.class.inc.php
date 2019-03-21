@@ -430,9 +430,8 @@ public function submit_case($submitstatus) {
      * @param array $od1Names Array of output_data_1 names, used for INPUT_BOX type
      */
     public function add_all_tier3_data($method_id, $method_case_id, $output_data_1, $output_data_2=null, $od1Names=null) {
-                    
+
             $method = new method($this->db, $method_id);
-            
             
                 $method_data = method_info::get_data_for_method($this->db, $method_id);
                 
@@ -458,12 +457,27 @@ public function submit_case($submitstatus) {
                             }
                         }
                     } else if($user_interaction == USER_INTERACTION_SELECT_RANGE ||
-                            $user_interaction == USER_INTERACTION_INPUT_BOX) {
+                            $user_interaction == USER_INTERACTION_INPUT_BOX||
+                            $user_interaction == USER_INTERACTION_SELECT_EACH) {
 
                         $i=0;
                         foreach($output_data_1 as $value) {
-                            $name = $od1Names[$i];
+                            $name = urldecode($od1Names[$i]);
+                            if(is_array($value)) {
+                                if($user_interaction == USER_INTERACTION_SELECT_RANGE) {
+                                    foreach($value as $arr_val) {
+                                        $result = $this->add_tier3($method_id, $name, null, $method_case_id, $arr_val, $user_interaction);
+                                    }
+                                } else if($user_interaction == USER_INTERACTION_SELECT_EACH) {
+                                    // array values are output_data_2 values
+                                    foreach($value as $arr_val) {
+                                        $result = $this->add_tier3($method_id, $name, $arr_val, $method_case_id, null, $user_interaction);
+                                    }
+                                   
+                                }
+                            } else {
                                 $result = $this->add_tier3($method_id, $name, null, $method_case_id, $value, $user_interaction);
+                            }
                                 $i++;
                             }
                     }   
@@ -482,14 +496,18 @@ public function submit_case($submitstatus) {
      * @return type
      */
     public function add_tier3($methodid, $od1, $od2, $tier2id, $value=NULL, $interaction=NULL) {
-        if($interaction == null) {
+        if($interaction == null ||
+                $interaction == USER_INTERACTION_MULTISELECT ||
+                $interaction == USER_INTERACTION_SELECT_EACH) {
             // try od1 and od2
             if($od2 != null) {
             $info_query = "SELECT * from method_info where methodid = :methodid AND ".
                     " output_data_1 = :od1 and output_data_2 = :od2";
+            
             $info_params = array("methodid"=>$methodid,
                     "od1"=>$od1,
                     "od2"=>$od2);
+            
             } else {
                 $info_query = "SELECT * from method_info where methodid = :methodid AND ".
                         " output_data_1 = :od1";
@@ -497,7 +515,7 @@ public function submit_case($submitstatus) {
                         "od1"=>$od1);    
             }
         } else if($interaction == USER_INTERACTION_SELECT_RANGE ||
-                $interaction == USER_INTERACTION_INPUT_BOX) {
+                $interaction == USER_INTERACTION_INPUT_BOX ) {
             // try without od2 for now
             $info_query = "SELECT * from method_info where methodid = :methodid AND ".
                 " output_data_1 = :od1";
@@ -513,16 +531,16 @@ public function submit_case($submitstatus) {
             
         } else {
 
-            $methoddataid = $result[0]['id'];
-            $methoddata = new method_info($this->db, $methoddataid);
+            $methodinfoid = $result[0]['id'];
+            $methoddata = new method_info($this->db, $methodinfoid);
             $interaction = $methoddata->get_user_interaction();
             
                 if($interaction == USER_INTERACTION_MULTISELECT) {
 
-                $q = "INSERT INTO tier3data(tier2id, methoddataid) VALUES ".
-                        "(:t2id, :methoddataid)";
+                $q = "INSERT INTO tier3data(tier2id, methodinfoid) VALUES ".
+                        "(:t2id, :methodinfoid)";
                 $params = array("t2id"=>$tier2id,
-                                "methoddataid"=>$methoddataid);
+                                "methodinfoid"=>$methodinfoid);
                 $info_result = $this->db->get_insert_result($q, $params);
                 if($info_result > 0) {
                     return array("RESULT"=>TRUE,
@@ -530,12 +548,13 @@ public function submit_case($submitstatus) {
                                 "id"=>$info_result);
                 }
             } else if($interaction == USER_INTERACTION_INPUT_BOX ||
-                        $interaction == USER_INTERACTION_SELECT_RANGE) {
+                        $interaction == USER_INTERACTION_SELECT_RANGE ||
+                        $interaction == USER_INTERACTION_SELECT_EACH) {
 
-                $q = "INSERT INTO tier3data(tier2id, methoddataid, value) VALUES ".
-                        "(:t2id, :methoddataid, :value)";
+                $q = "INSERT INTO tier3data(tier2id, methodinfoid, value) VALUES ".
+                        "(:t2id, :methodinfoid, :value)";
                 $params = array("t2id"=>$tier2id,
-                                "methoddataid"=>$methoddataid,
+                                "methodinfoid"=>$methodinfoid,
                                 "value"=>$value);
 
                 $info_result = $this->db->get_insert_result($q, $params);
@@ -549,20 +568,20 @@ public function submit_case($submitstatus) {
             
     }
     
-    /** Adds a record to the tier3data table given a methoddataid id instead
+    /** Adds a record to the tier3data table given a methodinfoid id instead
      * of output_data values
      * 
      * @param type $tier2id
-     * @param type $methoddataid
+     * @param type $methodinfoid
      * @param type $value
      * @return type
      */
-    public function add_tier3_by_id($tier2id, $methoddataid, $value=null) {
+    public function add_tier3_by_id($tier2id, $methodinfoid, $value=null) {
         if($value == null) {
-            $q = "INSERT INTO tier3data(tier2id, methoddataid) VALUES ".
-                        "(:t2id, :methoddataid)";
+            $q = "INSERT INTO tier3data(tier2id, methodinfoid) VALUES ".
+                        "(:t2id, :methodinfoid)";
                 $params = array("t2id"=>$tier2id,
-                                "methoddataid"=>$methoddataid);
+                                "methodinfoid"=>$methodinfoid);
                 $info_result = $this->db->get_insert_result($q, $params);
                 if($info_result > 0) {
                     return array("RESULT"=>TRUE,
@@ -570,10 +589,10 @@ public function submit_case($submitstatus) {
                                 "id"=>$info_result);
                 }
         } else {
-            $q = "INSERT INTO tier3data(tier2id, methoddataid, value) VALUES ".
-                        "(:t2id, :methoddataid, :value)";
+            $q = "INSERT INTO tier3data(tier2id, methodinfoid, value) VALUES ".
+                        "(:t2id, :methodinfoid, :value)";
                 $params = array("t2id"=>$tier2id,
-                                "methoddataid"=>$methoddataid,
+                                "methodinfoid"=>$methodinfoid,
                                 "value"=>$value);
 
                 $info_result = $this->db->get_insert_result($q, $params);
@@ -586,12 +605,21 @@ public function submit_case($submitstatus) {
     }
     
     
-    public function delete_tier3($t2id, $methoddataid) {
-        $query = "DELETE FROM tier3data where tier2id=:tier2id and methoddataid=:methoddataid";
+    /** Deletes Tier 3 data for a givet Tier 2 id and method_info id
+     * 
+     * @param int $t2id Tier 2 ID
+     * @param int $methodinfoid method_info id
+     * @return type
+     */
+    public function delete_tier3($t2id, $methodinfoid) {
+
+        // TODO: Delete all data. Right now, only deletes one, but there may be several
+        $query = "DELETE FROM tier3data where tier2id=:tier2id and methodinfoid=:methodinfoid";
         $params = array("tier2id"=>$t2id,
-                        "methoddataid"=>$methoddataid);
+                        "methodinfoid"=>$methodinfoid);
         $result = $this->db->get_update_result($query, $params);
-        if(count($result) > 0) {
+
+        if($result > 0) {
             return array("RESULT"=>TRUE,
                                 "MESSAGE"=>"Method data deleted successfully.");
         } else {
@@ -601,6 +629,33 @@ public function submit_case($submitstatus) {
         
     }
     
+        /** Deletes Tier 3 data for a given its id
+     * 
+     * @param int $t3id the Tier 3 database id
+     * @return type
+     */
+    public function delete_tier3_by_id($t3id) {
+
+        // TODO: Delete all data. Right now, only deletes one, but there may be several
+        $query = "DELETE FROM tier3data where id=:t3id";
+        $params = array("t3id"=>$t3id);
+        $result = $this->db->get_update_result($query, $params);
+
+        if($result > 0) {
+            return array("RESULT"=>TRUE,
+                                "MESSAGE"=>"Method data deleted successfully.");
+        } else {
+            return array("RESULT"=>FALSE,
+                                "MESSAGE"=>"Method data not deleted successfully.");
+        }
+        
+    }
+    
+    /** Gets all the Tier 3 data for a Tier 2 id
+     * 
+     * @param int  $t2id ID of the Tier 2 data
+     * @return array Array of Tier 3 data
+     */
     public function get_tier3data($t2id) {
         $query1 = "SELECT * from tier3data where tier2id = :t2id";
         $params = array("t2id"=>$t2id);
@@ -611,24 +666,25 @@ public function submit_case($submitstatus) {
 
     }
     
+    
     /** Updates a tier3 data with a new value, or inserts it if it doesn't exist
      * 
      * @param type $t2id
-     * @param type $methoddataid
+     * @param type $methodinfoid
      * @param type $new_value
      * @return type
      */
-    public function update_tier3($t2id, $methoddataid, $new_value){
-        $check_query = "SELECT * from tier3data where tier2id = :t2id and methoddataid = :methoddataid ";
+    public function update_tier3($t2id, $methodinfoid, $new_value){
+        $check_query = "SELECT * from tier3data where tier2id = :t2id and methodinfoid = :methodinfoid ";
         $params = array("t2id"=>$t2id,
-                        "methoddataid"=>$methoddataid);
+                        "methodinfoid"=>$methodinfoid);
         $check_result = $this->db->get_query_result($check_query, $params);
         
         if(count($check_result)>0) {
             // it already exists, update
-            $update_query = "UPDATE tier3data set value=:new_value where tier2id=:t2id and methoddataid=:methoddataid";
+            $update_query = "UPDATE tier3data set value=:new_value where tier2id=:t2id and methodinfoid=:methodinfoid";
             $params = array("t2id"=>$t2id,
-                        "methoddataid"=>$methoddataid,
+                        "methodinfoid"=>$methodinfoid,
                         "new_value"=>$new_value);
             $result = $this->db->get_update_result($update_query, $params);
             if(count($result) > 0) {
@@ -640,7 +696,7 @@ public function submit_case($submitstatus) {
             }
         } else {
             // insert
-            $this->add_tier3_by_id($t2id, $methoddataid, $new_value);
+            $this->add_tier3_by_id($t2id, $methodinfoid, $new_value);
         }
     }
     

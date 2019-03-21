@@ -62,8 +62,14 @@ class tier2data {
         $query = "SELECT * from tier3data where tier2id = :id";
         $params = array("id"=>$this->id);
         $result = $this->db->get_query_result($query, $params);
-
-        return $result;
+        $tier3s = array();
+        foreach($result as $tier3) {
+            $id = $tier3['id'];
+            $tier3data = new tier3data($this->db, $id);
+            $tier3s[] = $tier3data;
+            
+        }
+        return $tier3s;
 
     }
     
@@ -76,11 +82,12 @@ class tier2data {
                 $method = new method($this->db, $this->get_methodid());
 
 
-                    $method_info = new method_info($this->db, $tier_info['methoddataid']);
+                    $method_info = new method_info($this->db, $tier_info->get_methodinfoid());
                     
                     $interaction = $method_info->get_user_interaction();
                     
-                    if($interaction == USER_INTERACTION_MULTISELECT) {
+                    if($interaction == USER_INTERACTION_MULTISELECT||
+                            $interaction == USER_INTERACTION_SELECT_EACH) {
                         
                         if($method_info->get_output_data_2() != null) {
                             $output .= "(".$method_info->get_output_data_1(). ", ".$method_info->get_output_data_2().") ";
@@ -89,8 +96,8 @@ class tier2data {
                         }
 
                     } else if($interaction == USER_INTERACTION_INPUT_BOX ||
-                            $interaction == USER_INTERACTION_SELECT_RANGE) {
-                        $output .= "(".$method_info->get_output_data_1(). ", ".$tier_info['value'].") ";
+                            $interaction == USER_INTERACTION_SELECT_RANGE ) {
+                        $output .= "(".$method_info->get_output_data_1(). ", ".$tier_info->get_value().") ";
                     }
 
             }
