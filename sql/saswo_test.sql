@@ -197,13 +197,6 @@ CREATE TABLE `simplecase` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `testtable` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` text CHARACTER SET utf8 NOT NULL,
-  `extra` text CHARACTER SET utf8,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 CREATE TABLE `tier2data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `memberid` int(11) NOT NULL,
@@ -218,22 +211,23 @@ CREATE TABLE `tier2data` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 
-CREATE TABLE `tier3data_age` (
+CREATE TABLE `tier3data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tier2id` int(11) DEFAULT NULL,
   `caseid` int(11) DEFAULT NULL,
   `methodid` int(11) DEFAULT NULL,
-  `methoddataid` int(11) DEFAULT NULL,
+  `methodinfoid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
-CREATE TABLE `age_method_info` (
+CREATE TABLE `method_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `methodid` int(11) NOT NULL,
-  `output_data` varchar(100) DEFAULT NULL,
+  `output_data_1` varchar(100) DEFAULT NULL,
   `output_data_2` varchar(100) DEFAULT NULL,
-  `sex` varchar(100) DEFAULT NULL,
+  `output_data_1_description` varchar(100) DEFAULT NULL,
+  `output_data_2_description` varchar(100) DEFAULT NULL,
   `age_range` varchar(100) DEFAULT NULL,
   `user_interaction` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
