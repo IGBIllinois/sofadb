@@ -217,32 +217,6 @@ $('#wait_2').hide();
 </script>";
 }
 
-function show_method_info($method_id) {
-    $query = "SELECT * from method_info where id = :id";
-    $output_data_1_query = "SELECT DISTINCT output_data_1 from method_info where id = :id";
-    $select_sex_query = "SELECT DISTINCT sex from method_info where id = :id";
-    
-    $params = array("id"=>$id);
-    
-    $output_data_1_result = $db->get_query_result($output_data_1_query, $params);
-    $sex_result = $db->get_query_result($sex_query, $params);
-    
-    echo("<select multiple name=output_data_1[]>");
-    foreach($output_data_1_result as $od1_result) {
-        echo("<option value='".$od1_request['output_data_1']."'>".$odi_result['output_data']."</option");
-        
-    }
-    echo("</select>");
-    
-    echo("<select multiple name=sex[]>");
-    foreach($sex_result as $sex_option) {
-        echo("<option value='".$sex_option['sex']."'>".$sex_option['sex']."</option");
-        
-    }
-    echo("</select>");
-
-}
-
 //**************************************
 //     Second selection results     //
 //**************************************
