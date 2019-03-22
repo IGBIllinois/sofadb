@@ -212,7 +212,7 @@ class method_info {
                echo("<legend><I>(hold CTL to select multiple)</I></legend>");
 
            echo("<table><tr><th>".$header1."</th>");
-           if($header2 != null) {
+           if(count($output_data_2_result) > 0) {
                echo("<th>".$header2."</th>");
            }
            echo("</tr><tr><td>");
@@ -231,7 +231,7 @@ class method_info {
            echo("</select>");
            echo("</td>");
 
-           if($header2 != null) {
+           if(count($output_data_2_result) > 0) {
                echo("<td>");
                $selected = false;
 
