@@ -38,3 +38,6 @@ DEFINE ("USER_INTERACTION_SELECT_RANGE", "select_range");
 
 // A single input box where a user enters the data
 DEFINE ("USER_INTERACTION_INPUT_BOX", "user_input_box");
+
+// A single input box where a user enters the data
+DEFINE ("USER_INTERACTION_NUMERIC_ENTRY", "numeric_entry");

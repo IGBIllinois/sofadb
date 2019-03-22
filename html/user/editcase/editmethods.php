@@ -169,6 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             
         } else if($user_interaction == USER_INTERACTION_INPUT_BOX ||
+                $user_interaction == USER_INTERACTION_NUMERIC_ENTRY ||
             $user_interaction == USER_INTERACTION_SELECT_EACH) {
 
             $new_ids = array();
@@ -176,6 +177,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
             foreach($output_data_1 as $name=>$od1_value) {
                 $name = urldecode($name);
+                echo("name = $name<BR>");
+                print_r($od1_value);
                 if(is_array($od1_value)) {
                     foreach($od1_value as $od2) {
                         $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od2);
@@ -184,7 +187,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $new_ids[] = $id;
                     }
                 } else {
-                    $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od1_value);
+                    if($user_interaction == USER_INTERACTION_NUMERIC_ENTRY) {
+                        // just use output_data_name for numeric entry
+                        $method_info = method_info::get_one_method_info($db, $method->get_id(), $name);
+                    } else {
+                        $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od1_value);
+                    }
                     $id = $method_info->get_id();
                     $new_ids[] = $id;
                 }
@@ -206,7 +214,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $this_case->update_tier3($tier2id, $methoddataid, $name, $od2);
                 }
             } else {
-                $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od1_value);
+                if($user_interaction == USER_INTERACTION_NUMERIC_ENTRY) {
+                    // just use output_data_name for numeric entry
+                    $method_info = method_info::get_one_method_info($db, $method->get_id(), $name);
+                } else {
+                    $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od1_value);
+                }
                 $methoddataid = $method_info->get_id();
                 $this_case->update_tier3($tier2id, $methoddataid, $od1_value);
             }

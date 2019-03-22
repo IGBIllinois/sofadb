@@ -96,6 +96,7 @@ class tier2data {
                         }
 
                     } else if($interaction == USER_INTERACTION_INPUT_BOX ||
+                            $interaction == USER_INTERACTION_NUMERIC_ENTRY ||
                             $interaction == USER_INTERACTION_SELECT_RANGE ) {
                         $output .= "(".$method_info->get_output_data_1(). ", ".$tier_info->get_value().") ";
                     }

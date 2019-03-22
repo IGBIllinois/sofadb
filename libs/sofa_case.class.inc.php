@@ -427,7 +427,7 @@ public function submit_case($submitstatus) {
      * @param int $method_case_id ID of case method to update
      * @param array $output_data_1 Array of output_data_1 values
      * @param array $output_data_2, optional
-     * @param array $od1Names Array of output_data_1 names, used for INPUT_BOX type
+     * @param array $od1Names Array of output_data_1 names, used for INPUT_BOX, NUMERIC_ENTRY type
      */
     public function add_all_tier3_data($method_id, $method_case_id, $output_data_1, $output_data_2=null, $od1Names=null) {
 
@@ -457,7 +457,8 @@ public function submit_case($submitstatus) {
                             }
                         }
                     } else if($user_interaction == USER_INTERACTION_SELECT_RANGE ||
-                            $user_interaction == USER_INTERACTION_INPUT_BOX||
+                            $user_interaction == USER_INTERACTION_INPUT_BOX ||
+                            $user_interaction == USER_INTERACTION_NUMERIC_ENTRY ||
                             $user_interaction == USER_INTERACTION_SELECT_EACH) {
 
                         $i=0;
@@ -515,7 +516,8 @@ public function submit_case($submitstatus) {
                         "od1"=>$od1);    
             }
         } else if($interaction == USER_INTERACTION_SELECT_RANGE ||
-                $interaction == USER_INTERACTION_INPUT_BOX ) {
+                $interaction == USER_INTERACTION_INPUT_BOX ||
+                $interaction == USER_INTERACTION_NUMERIC_ENTRY) {
             // try without od2 for now
             $info_query = "SELECT * from method_info where methodid = :methodid AND ".
                 " output_data_1 = :od1";
@@ -548,6 +550,7 @@ public function submit_case($submitstatus) {
                                 "id"=>$info_result);
                 }
             } else if($interaction == USER_INTERACTION_INPUT_BOX ||
+                    $interaction == USER_INTERACTION_NUMERIC_ENTRY ||
                         $interaction == USER_INTERACTION_SELECT_RANGE ||
                         $interaction == USER_INTERACTION_SELECT_EACH) {
 

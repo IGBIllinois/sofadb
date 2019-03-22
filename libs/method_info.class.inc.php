@@ -157,7 +157,7 @@ class method_info {
                 $params = array("methodid"=>$methodid, 
                                 "od1"=>$od1);
             }
-            
+
             $result = $db->get_query_result($query, $params);
 
             if(count($result) > 0) {
@@ -355,7 +355,7 @@ class method_info {
                    foreach($od2_data as $od2) {
                        $od2 = $od2['output_data_2'];
                        $selected = false;
-                       if($tier2 != null) {
+                       if($tier2id != null) {
                            foreach($methodinfos as $method_info) {
                                    if($method_info->get_output_data_1() == $name &&
                                       $method_info->get_output_data_2() == $od2) {
@@ -378,7 +378,8 @@ class method_info {
 
                        echo("</table>");
 
-           } else if($user_interaction == USER_INTERACTION_INPUT_BOX) {
+           } else if($user_interaction == USER_INTERACTION_INPUT_BOX ||
+                   $user_interaction == USER_INTERACTION_NUMERIC_ENTRY) {
                echo("<table>");
                if($tier2id != null) {
                    $tier2 = new tier2data($db, $tier2id);
