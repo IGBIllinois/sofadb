@@ -17,15 +17,12 @@ if(isset($_GET['id']))
 $_SESSION['caseid']=$caseeditid;
 $userid=$_SESSION['id'];
 unset($_GET['id']);
-$q="SELECT * FROM cases WHERE id=$caseeditid AND memberid=$userid";
-
-$mresult=mysqli_query($dbcon,$q);
 
 $case = new sofa_case($db, $caseeditid);
-if(!$mresult)
-{echo 'Could not load user data from database';exit();}
+if($case == null) {
+    echo 'Could not load user data from database';exit();
+}
 
-$casedata=mysqli_fetch_array($mresult);
 
 }
 elseif(!isset($_SESSION['caseid']))
@@ -36,67 +33,31 @@ elseif(!isset($_SESSION['caseid']))
 elseif(isset($_SESSION['caseid']))
 {
 	$caseeditid=$_SESSION['caseid'];
-	$q="SELECT * FROM cases WHERE id=$caseeditid";
 
-    $mresult=mysqli_query($dbcon,$q);
-    if(!$mresult)
-    {echo 'Could not load case data from database';exit();}
-
-    $casedata=mysqli_fetch_array($mresult);
-    $case = new sofa_case($dbcon, $caseeditid, $db);
-
+        $case = new sofa_case($db, $caseeditid);
+if($case == null) {
+    echo 'Could not load case data from database';exit();
+}
 
 }
 	
 if(!isset($_SESSION['loadedmethods']))
-	{//Extract methods data
-	$_SESSION['loadedmethods']=1;
- $_SESSION['num_methods']=$casedata['nummethods'];
- $q="SELECT methods.id as mid, methods.methodname as mname, methods.methodtype as mtype, methods.methodtypenum as mtypenum, feature.id as fid, feature.name as fname, phase.id as pid, phase.phasename as pname FROM tier2data t2 INNER JOIN methods ON t2.methodid=methods.id INNER JOIN feature ON t2.featureid=feature.id  INNER JOIN phase ON t2.phaseid=phase.id WHERE t2.caseid=$caseeditid";
- $methresult=mysqli_query($dbcon,$q);
- if(!$methresult)
- {echo 'Could not load method data from database';exit();}	
-
-for ($i=1;$i<=$_SESSION['num_methods'];$i++)
 {
-	$methodX=mysqli_fetch_assoc($methresult);
-	$_SESSION['methodtype'][$i-1]=$methodX['mtypenum'];
+//Extract methods data
+	$_SESSION['loadedmethods']=1;
+ $_SESSION['num_methods']=$case->get_nummethods();
 	
-	$_SESSION['methodname'][$i-1]=$methodX['mid'];
-	$_SESSION['methodfeature'][$i-1]=$methodX['fid'];
-	$_SESSION['methodphase'][$i-1]=$methodX['pid'];
-	$_SESSION['methodtabletype'][$i-1]=$methodX['mtype'];
-	$_SESSION['methodtablename'][$i-1]=$methodX['mname'];
-	$_SESSION['methodtablefeature'][$i-1]=$methodX['fname'];
-	$_SESSION['methodtablephase'][$i-1]=$methodX['pname'];
-	
-}
+
 	}
 
                  
                
 ?>
-  
-
-
 
   <div id="caseform">
-  
-   
-  
-    <form action="index.php" method="post" id="casedata">
-	
-	<div id="tabs">
- <!-- <ul>
-    <li><a href="#tabs-1">General Case Information</a></li>
-    <li><a href="#tabs-2">Methods Used</a></li>
- 
-  </ul>-->
-<div id="tabs-1">
-    
-    
+
   <fieldset class="enclosefieldset">
-    
+        <form action="index.php" method="post" id="casedata">
     
   <fieldset class="caseinfobox"><legend class="boldlegend">General Case Information</legend>
     <label class="label" for="caseyear">Case Year</label><input id="caseyear" type="text" name="caseyear" size="5" maxlength="4" value="<?php if (null !== ($case->get_caseyear())) echo $case->get_caseyear(); ?>" readonly/> 
@@ -223,7 +184,7 @@ for ($i=1;$i<=$_SESSION['num_methods'];$i++)
   
     
     
-              <div class="scroll" name="methodtableholder" id="methodtableholder">
+<div class="scroll" name="methodtableholder" id="methodtableholder">
              
             
              
@@ -231,55 +192,47 @@ for ($i=1;$i<=$_SESSION['num_methods'];$i++)
                   <tbody>
                     <tr>
                       <p>
-			
-                <th>Method Type</th>
-                <th>Method Name</th>
-                    </p>
+                         <th>
+						
+                            Method Type
+                        </th>
+                            <th>
+                                   Method Name
+                            </th>
+                            <th>
+                                   Method Data
+                            </th>
+                            </p>
                     </tr>
-
-                    <?php
-                    $methods = $case->get_case_methods();
                     
-                    foreach($methods as $method) {
-                        echo("<tr><td>");
-                        echo($method->get_method_type());
-                        echo("</td><td>");
-                        echo($method->get_name());
-                        echo("</td></tr>");
+                    <?php
+                    $tier2s = $case->get_case_methods();
+                    
+                    
+                    foreach($tier2s as $tier2) {
+                        $method = new method($db, $tier2->get_methodid());
+                        echo("<tr>");
                         
+                       
+                        
+                        echo("<td>". $method->get_method_type()."</td>
+				<td>".$method->get_name()."</td>".
+                                "<td>".$tier2->format_tier3data()."</td>".
+				"</tr>");
                     }
-                    /*
-			for($i=1;$i<=$_SESSION['num_methods'];$i++)
-					{
-					echo "<tr>
-					<td>". $_SESSION['methodtabletype'][$i-1]."</td>
-				<td>".$_SESSION['methodtablename'][$i-1]."</td>
-				</tr>
-				";
-					
-					
-					}
-                     * 
-                     */
-					
-                    ?>
+
+    ?>
                     
                    
                     </tbody>
                 </table>
-                
-                <!-- </fieldset>-->
 				<div class="clear"></div>
     
     </div>
     
     </div>
       </fieldset>
-	  </div>
-	    
-    
-    
-   </div></div>
+        </div>
 	  
 	  
    
