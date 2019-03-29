@@ -5,7 +5,7 @@ require_once('../../include/header_user.php');
   <?php 
 
 $memberid=$_SESSION['id'];
-
+$member = new member($db, $memberid);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -13,11 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 if (isset($_POST['delsubmit']))
 {
 	$deleteid=$_POST['delid'];
-	$q="UPDATE cases SET submissionstatus=-1 WHERE memberid=:memberid AND id=:deleteid";
-        $params = array("memberid"=>$memberid,
-                        "deleteid"=>$deleteid);
-        $result = $db->get_update_result($q, $params);
-	  if (count($result) == 0) 
+        $del_case = new sofa_case($db, $deleteid);
+        $result = $del_case->delete_case();
+
+	  if ($result['RESULT'] == FALSE) 
                 { 
                 // If it did not run OK
 				// Error message:
@@ -38,10 +37,8 @@ if (isset($_GET['p']) && is_numeric
 $pages=$_GET['p'];
 }else{//use the next block of code to calculate the number of pages
 //First, check for the total number of records
-$q = "SELECT COUNT(id) FROM cases WHERE memberid=$memberid AND submissionstatus>=0";
-$params = array("memberid"=>$memberid);
-$result = $db->get_query_result($q, $params);
-$records = $result[0][0];
+
+$records = $member->get_num_active_cases();
 
 //Now calculate the number of pages
 if ($records > $pagerows){ //if the number of records will fill more than one page
@@ -62,6 +59,7 @@ $start = 0;
 
 
 // Make the query:
+/*
 $q = "SELECT id, "
         . "casename, "
         . "caseyear, "
@@ -78,34 +76,38 @@ $q = "SELECT id, "
 $params = array("memberid"=>$memberid);
 
 $result = $db->get_query_result($q, $params);
-$members = count($result);
+*/
+$all_cases = sofa_case::get_member_cases($db, $memberid);
 
 
-if (count($result) > 0) { // If it ran OK, display the records.
+
+if (count($all_cases) > 0) { // If it ran OK, display the records.
 // Table header.
 
-$q = "SELECT COUNT(id) FROM cases WHERE memberid=$memberid AND submissionstatus>=0";
-$params = array("memberid"=>$memberid);
-$resultP = $db->get_query_result($q, $params);
-$row = $resultP[0];
-
-$cases = $row[0];
+$num_cases = count($all_cases);
 
 $current_page = ($start/$pagerows) + 1;
-if ($pages==1)
-{if ($cases>0){$startingrecord=1;}
-else {$startingrecord=0;}
-$endingrecord=$cases;}
-elseif ($current_page!= $pages)
-{$startingrecord=($current_page-1)*$pagerows+1;
-$endingrecord=($current_page)*$pagerows;}
-else
-{$startingrecord=($current_page-1)*$pagerows+1;
-$endingrecord=$cases;}
+if ($pages==1) {
+    if ($num_cases>0){
+        $startingrecord=1;      
+    } else {
+        $startingrecord=0;
+    }
+    $endingrecord=$num_cases;
+    
+} elseif ($current_page!= $pages) {
+    $startingrecord=($current_page-1)*$pagerows+1;
+    $endingrecord=($current_page)*$pagerows;
+    
+} else {
+    $startingrecord=($current_page-1)*$pagerows+1;
+    $endingrecord=$num_cases;
+
+}
 
 
 
-echo "<p class='dbresults'>Total number of cases: $cases. Showing records  $startingrecord - $endingrecord </p>";
+echo "<p class='dbresults'>Total number of cases: $num_cases. Showing records  $startingrecord - $endingrecord </p>";
 
 
 
@@ -145,15 +147,15 @@ echo '<div class="scroll"><table id="hortable" summary="List of cases">
     <tbody>';
     	
 
-
+$cases = sofa_case::get_member_cases($db, $memberid, $start, $pagerows);
 // Fetch and print all the records:
-foreach($result as $row) {
+foreach($cases as $case) {
 	echo '<tr>
-	<td><a href="../viewcase.php?id=' . $row['id'] . '">View</a></td>';
+	<td><a href="../viewcase.php?id=' . $case->get_id() . '">View</a></td>';
 	
 	echo '<td>
 	<form action="index.php" method="post" id="deletedata" onsubmit="return confirm(\'Do you really want to delete this case?\')">
-	<input name="delid" type="hidden" value="'.$row['id'].'"/>
+	<input name="delid" type="hidden" value="'.$case->get_id().'"/>
 	<input name="delsubmit" type="submit" value="Delete" /> </form>
 	</td>';
 	
@@ -162,11 +164,11 @@ foreach($result as $row) {
 	
 	
 	echo 
-	'<td>' . $row['caseyear'] . '</td> 
-	<td>' . $row['casenumber'] . '</td>
-	<td>' . $row['caseagency'] . '</td>
-    <td>' . $row['moddat'] . '</td>
-	<td>' . $row['subdat'] . '</td>
+	'<td>' . $case->get_caseyear() . '</td> 
+	<td>' .  $case->get_casenumber() . '</td>
+	<td>' . $case->get_caseagency() . '</td>
+    <td>' . $case->get_datemodified() . '</td>
+	<td>' . $case->get_datesubmitted() . '</td>
 	
 	
 
@@ -177,9 +179,9 @@ foreach($result as $row) {
 // Public message:
 	echo '<p class="error">The current record could not be retrieved. We apologize for any inconvenience.</p>';
 	// Debugging message:
-	echo '<p>' . $db->errorInfo[2] . '<br><br>Query: ' . $q . '</p>';
+	echo '<p>' . $db->errorInfo[2] . '<br></p>';
 } // End of if ($result). Now display the total number of records/members.
-
+/*
 $q = "SELECT COUNT(id) FROM cases WHERE memberid=$memberid AND submissionstatus>=0";
 $params = array("memberid"=>$memberid);
 $resultP = $db->get_query_result($q, $params);
@@ -198,10 +200,10 @@ $endingrecord=($current_page)*$pagerows;}
 else
 {$startingrecord=($current_page-1)*$pagerows+1;
 $endingrecord=$cases;}
+*/
 
 
-
-echo "<p class='dbresults'>Total number of cases: $cases. Showing records  $startingrecord - $endingrecord </p>";
+echo "<p class='dbresults'>Total number of cases: $num_cases. Showing records  $startingrecord - $endingrecord </p>";
 
 
 

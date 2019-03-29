@@ -67,6 +67,19 @@ public function get_dateregistered() { return $this->dateregistered; }
 public function get_lastlogin() { return $this->lastlogin; }
 public function get_permissionstatus() { return $this->permissionstatus; }
 
+/** Sets this user's permission status
+ * 
+ * @param int $status The users new status 
+ * ('0' for not yet approved,
+ *  '1' for regular user,
+ *  '2' for admin
+ * @return array An array of the form:
+ *  ("RESULT"=>TRUE|FALSE,
+ *   "MESSAGE"=>$message)
+ * where "RESULT" is true if the change was successful, else false,
+ * and "MESSAGE" is an output message.
+ * 
+ */
 public function set_permission($status) {
     $q="UPDATE members SET permissionstatus=:status WHERE id=:idactivate";
     $params = array("status"=>$status,
@@ -79,12 +92,65 @@ public function set_permission($status) {
     } else {
             return array("RESULT"=>FALSE,
                 "MESSAGE"=>"Error: Member ".$this->get_uname(). " not updated.");
+    }
+    
+}
 
+/** Gets tne number of active (not deleted) cases for this user
+ * 
+ * @return int the number of active (not deleted) cases for this user
+ * 
+ */
+public function get_num_active_cases() {
+    $q = "SELECT COUNT(id) as count FROM cases WHERE memberid=:memberid AND submissionstatus>=0";
+    $params = array("memberid"=>$this->id);
+    $result = $this->db->get_query_result($q, $params);
+    if(count($result)> 0) {
+        return $result[0]['count'];
     }
     
 }
 
 
+public function load_info_by_name($name, $hash_pass) {
+    $query = "SELECT id from members where uname=:name and pwd=:pwd";
+    $params = array("name"=>$name,
+                    "pwd"=>$hash_pass);
+    
+    $result = $this->db->get_query_result($query, $params);
+    if(count($result) > 0) {
+        $id = $result[0]['id'];
+        $this->load_member($id);
+        return array("RESULT"=>TRUE,
+                        "MESSAGE"=>"Member loaded successfully.");
+    } else {
+        return array("RESULT"=>FALSE,
+                        "MESSAGE"=>"Member not loaded successfully.");
+    }
+    
+}
+
+public function update_login_time() {
+    $q = "UPDATE members SET lastlogin=NOW() WHERE id=:id";
+    $params = array("id"=>$this->id);
+    $result = $this->db->get_update_result($q, $params);
+    if($result > 0) {
+        return array("RESULT"=>TRUE,
+                        "MESSAGE"=>"Member updated successfully.");
+    } else {
+        return array("RESULT"=>FALSE,
+                        "MESSAGE"=>"Member not updated successfully.");
+    }
+}
+
+// Static functions
+/** Gets a list of database members
+ * 
+ * @param db $db The database object
+ * @param int $start
+ * @param int $pagerows
+ * @return \member
+ */
 public static function get_members($db, $start=-1, $pagerows=-1) {
 	
 $q = "SELECT id, lastname, firstname, uname, institution, 
@@ -117,6 +183,8 @@ public static function search_members($db, $query, $params) {
     return $found_members;
 }
 
+
+
 public static function get_members_permission($db, $permission_status) {
     $q = "SELECT id, lastname, firstname, uname, institution, DATE_FORMAT(dateregistered, '%M %d, %Y') AS regdat, id  FROM members WHERE permissionstatus=:permissionstatus";
     $params = array("permissionstatus"=>$permission_status);
@@ -132,6 +200,81 @@ public static function get_members_permission($db, $permission_status) {
     
     return $members;
 }
+
+public static function add_member($db, $params) {
+    $q = "INSERT INTO members ("
+            . "uname, "
+            . "pwd,"
+            . "firstname,"
+            . "lastname,"
+            . "title,"
+            . "degree,"
+            . "degreeyear,"
+            . "fieldofstudy,"
+            . "aafsstatus,"
+            . "institution,"
+            . "yearsexperience,"
+            . "caseperyear,"
+            . "region,"
+            . "mailaddress,"
+            . "mailaddress2,"
+            . "city,"
+            . "state,"
+            . "zip,"
+            . "phone,"
+            . "permissionstatus,"
+            . "dateregistered,"
+            . "casessubmitted,"
+            . "caseswithdrawn,"
+            . "totalcases) VALUES ("
+                . ":uname, "
+                . ":pwd, "
+                . ":firstname, "
+                . ":lastname, "
+                . ":title, "
+                . ":degree, "
+                . ":degreeyear,"
+                . ":fieldofstudy,"
+                . ":aafsstatus,"
+                . ":institution,"
+                . ":yearsexperience,"
+                . ":caseperyear,"
+                . ":region,"
+                . ":mailaddress1,"
+                . ":mailaddress2,"
+                . ":city,"
+                . ":state,"
+                . ":zip,"
+                . ":phone,"
+                . "'0', "
+                . "NOW(), "
+                . "'0', "
+                . "'0', "
+                . "'0')";		
+    $result = $db->get_insert_result($q, $params);
+    if($result > 0) {
+        return array("RESULT"=>TRUE,
+                    "MESSAGE"=>"User added successfully.",
+                    "id"=>$result);
+    } else {
+        return array("RESULT"=>FALSE,
+                    "MESSAGE"=>"An error occurred. User not added.");
+    }
+
+}
+
+    public static function member_exists($db, $uname) {
+        $query = "SELECT id from members where uname=:uname";
+        $params = array("uname"=>$uname);
+        $result = $db->get_query_result($query, $params);
+        
+
+        if(count($result) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
      
     // Private functions;

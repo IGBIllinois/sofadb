@@ -699,12 +699,17 @@ public function submit_case($submitstatus) {
             }
         } else {
             // insert
-            $this->add_tier3_by_id($t2id, $methodinfoid, $new_value);
+            $result = $this->add_tier3_by_id($t2id, $methodinfoid, $new_value);
+            return $result;
         }
     }
     
     
-   
+   /** Remove a method from a case
+    *  (Note: This will completely delete the tier2 and tier3 data from
+    *  the database. There will be no getting it back.
+    * @param int $t2id ID of the tier2 method to delete from this case
+    */
     public function remove_method($t2id) {
         $query1 = "DELETE FROM tier2data where id = :t2id";
         $params = array("t2id"=>$t2id);
@@ -713,6 +718,22 @@ public function submit_case($submitstatus) {
         
         $query2 = "DELETE from tier3data where tier2id = :t2id";
         $result2 = $this->db->get_update_result($query2, $params);
+    }
+    
+    public function delete_case() {
+        $memberid = $this->memberid;
+        $deleteid = $this->id;
+        $q="UPDATE cases SET submissionstatus=-1 WHERE memberid=:memberid AND id=:deleteid";
+        $params = array("memberid"=>$memberid,
+                        "deleteid"=>$deleteid);
+        $result = $this->db->get_update_result($q, $params);
+        if(count($result) > 0) {
+            return array("RESULT"=>TRUE,
+                        "MESSAGE"=>"Case deleted successfully.");
+        } else {
+            return array("RESULT"=>FALSE,
+                        "MESSAGE"=>"There was an error deleting the case. Please check your information and try again.");
+        }
     }
 
 
