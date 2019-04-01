@@ -147,46 +147,140 @@ public function update_login_time() {
 /** Gets a list of database members
  * 
  * @param db $db The database object
- * @param int $start
- * @param int $pagerows
- * @return \member
+ * @param int $start Starting index (optional)
+ * @param int $pagerows Number of records to display (optional)
+ * @return \member An array of member objects
  */
 public static function get_members($db, $start=-1, $pagerows=-1) {
 	
-$q = "SELECT id, lastname, firstname, uname, institution, 
-DATE_FORMAT(dateregistered, '%M %d, %Y') AS regdat, 
-DATE_FORMAT(lastlogin, '%M %d, %Y') AS logdat, 
-permissionstatus, id, totalcases FROM members
- ORDER BY dateregistered DESC ";
+    $q = "SELECT id, lastname, firstname, uname, institution, 
+    DATE_FORMAT(dateregistered, '%M %d, %Y') AS regdat, 
+    DATE_FORMAT(lastlogin, '%M %d, %Y') AS logdat, 
+    permissionstatus, id, totalcases FROM members
+     ORDER BY dateregistered DESC ";
 
-if($start > -1) {
-	$q .= " LIMIT $start, $pagerows";	
-}
-
-$result = $db->get_query_result($q);
-
-$members = array();
-foreach($result as $member) {
-	$newmember = new member($db, $member['id']);
-	$members[] = $newmember;
-}
-return $members;
-}
-
-public static function search_members($db, $query, $params) {
-    $result = $db->get_query_result($query, $params);
-    $found_members = array();
-    foreach($result as $member) {
-        $this_member = new member($db, $member['id']);
-        $found_members[] = $this_member;
+    if($start > -1) {
+            $q .= " LIMIT $start, $pagerows";	
     }
-    return $found_members;
+
+    $result = $db->get_query_result($q);
+
+    $members = array();
+    foreach($result as $member) {
+            $newmember = new member($db, $member['id']);
+            $members[] = $newmember;
+    }
+    return $members;
 }
 
 
+/**
+ * Search members given certain parameters
+ * 
+ * @param db $db
+ * @param int $id
+ * @param string $first_name Member's first name, or part of it to search for
+ * @param string $last_name Member's last name, or part of it to search for
+ * @param string $email Member's email (username), or part of it to search for
+ * @param string $institution Member's institution, or part of it to search for
+ * @param string $region Member's region (from dropdown list)
+ * @param string $andor Joining type ("AND" or "OR" depending on how to join parts)
+ * 
+ * @return \member A list of member objects that fit the given criteria
+ */
+public static function search_members(
+        $db,
+        $id,
+        $first_name,
+        $last_name,
+        $email,
+        $institution,
+        $region,
+        $andor
+        
+        ) {
+      
+        $searchstring = "";
+        $params = array();
+        
+        if($id != null) {
+            // search by id. 
+        
+            $searchstring=" id=:mid ";
+            $params['mid'] = $id;
+            
+        } else {
+            
+        
+        if($first_name != null) {
+            // search by params
+            if($first_name != null) {
+               $searchstring=" (firstname LIKE :fname) ";
+               $params['fname'] = "%".$first_name."%";                   
+            }
+        }
+            if($last_name != null) {
+                if($searchstring != null) {
+                    $searchstring .= " $andor ";
+                }
+            
+               $searchstring .= " (lastname LIKE :lname) ";
+               $params['lname'] = "%".$last_name."%";      
 
+            }
+            
+            if($email != null) {
+                if($searchstring != null) {
+                    $searchstring .= " $andor ";
+                }
+            
+               $searchstring .= " (uname LIKE :email) ";
+               $params['email'] = "%".$email."%";                      
+            }
+            
+            if($institution != null) {
+                if($searchstring != null) {
+                    $searchstring .= " $andor ";
+                }
+            
+               $searchstring .= " (institution LIKE :institution) ";
+               $params['institution'] = "%".$institution."%";                      
+            }
+            
+            if($region != null) {
+                if($searchstring != null) {
+                    $searchstring .= " $andor ";
+                }
+            
+               $searchstring .= " (region LIKE :region) ";
+               $params['region'] = "%".$region."%";                      
+            }
+
+        }
+        
+        $query = "SELECT id from members WHERE $searchstring ";
+        
+        $result = $db->get_query_result($query, $params);
+        $found_members = array();
+        foreach($result as $member) {
+            $this_member = new member($db, $member['id']);
+            $found_members[] = $this_member;
+        }
+        return $found_members;
+       
+}
+
+
+/** 
+ * Gets a list of members with a given permission status
+ * 
+ * @param db $db The database object
+ * @param int $permission_status (0 = not registered, 1 = regular user, 2 = admin)
+ * @return \member An array of members with the given permission status
+ */
 public static function get_members_permission($db, $permission_status) {
-    $q = "SELECT id, lastname, firstname, uname, institution, DATE_FORMAT(dateregistered, '%M %d, %Y') AS regdat, id  FROM members WHERE permissionstatus=:permissionstatus";
+    $q = "SELECT id FROM members WHERE permissionstatus=:permissionstatus";
+    
     $params = array("permissionstatus"=>$permission_status);
     
     $result = $db->get_query_result($q, $params);
@@ -201,6 +295,18 @@ public static function get_members_permission($db, $permission_status) {
     return $members;
 }
 
+/** Add s new member to the database
+ * 
+ * @param db $db
+ * @param array $params An array of parameters in $name=>$value form
+ * @return array An array of the form 
+ * ("RESULT"=>TRUE|FALSE,
+ *   "MESSAGE"=>$message,
+ *   "id"=>$id)
+ * where "RESULT" is true if completed successfully, else false, 
+ * "MESSAGE" is an output message,
+ * and $id is the id of the newly created user, if successful.
+ */
 public static function add_member($db, $params) {
     $q = "INSERT INTO members ("
             . "uname, "
@@ -263,6 +369,12 @@ public static function add_member($db, $params) {
 
 }
 
+/** Determines if a given member name exists
+ * 
+ * @param db $db The database object
+ * @param type $uname User name (email) to check
+ * @return boolean TRUE if the user exists in the database, else false.
+ */
     public static function member_exists($db, $uname) {
         $query = "SELECT id from members where uname=:uname";
         $params = array("uname"=>$uname);
@@ -278,6 +390,10 @@ public static function add_member($db, $params) {
 
      
     // Private functions;
+    /** Loads member data from the database into this member object
+     * 
+     * @param int $id ID of the member to get data for
+     */
     private function load_member($id) {
         $query = "SELECT * from members where id = :id";
         $params = array("id"=>$id);

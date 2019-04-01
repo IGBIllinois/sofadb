@@ -13,133 +13,59 @@
 
 <div name="searchresults">
  <?php 
+ 
+$id=null;
+$first_name = null;
+$last_name = null;
+$email = null;
+$institution = null;
+$region = null;
+$andor = " AND ";
+
   $error=0;
   
   if (isset($_GET['search']))
   {unset($_SESSION['searched']);}
   $params = array();
-  if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+  
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && !empty($_GET['regsubmit']) ) {
+      // new params
+      $search_values = array();
+
+$id = (empty($_GET['mID']) ? null : $_GET['mID']);
+$first_name = (empty($_GET['fname']) ? null : $_GET['fname']);
+$last_name = (empty($_GET['lname']) ? null : $_GET['lname']);
+$email = (empty($_GET['email']) ? null : $_GET['email']);
+$institution = (empty($_GET['institution']) ? null : $_GET['institution']);
+$region = (empty($_GET['region']) ? null : $_GET['region']);
+$andor = ($_GET['andor'] == 1) ? " AND " : " OR ";
+
+	if ($id == null &&
+                $first_name == null &&
+                $last_name == null &&
+                $email == null &&
+                $institution == null &&
+                $region == null)
+	{
+            echo 'Please enter at least one search criterion';
+            $error=1;
+            
+        }
 	  
-	 
-	 	if (!empty($_GET['mID'])) 
-		{
-		//$searchstring="id=".mysqli_real_escape_string($dbcon, trim($_GET['mID']));
-		$fmID=$_GET['mID'];
-                $params['mID'] = "%".$fmID."%";
-                $searchstring=" id=:mid ";
-		} 
-	else {//else mID
-		$first=0;
-	
-	
-	
-	
-		if (!empty($_GET['fname'])) 
-		{
-			$first=1;
-		    $searchstring=" firstname LIKE :fname ";
-			
-			$ffname=$_GET['fname'];
-                        $params['fname'] = "%".$ffname."%";
-			
-		}
-	
-	
-	if (!empty($_GET['lname'])) 
-		{
-			$flname=$_GET['lname'];
-			$params['lname'] = "%".$flname."%";
-			if ($first==0) {
-                            $first=1;
-                            $searchstring="lastname LIKE :lname";
-                            
-                        } else {
-				if ($_GET['andor']==1) {
-                                    $searchstring=$searchstring ." AND lastname LIKE :lname";
-                                    
-                                } else {
-                                    $searchstring=$searchstring ." OR lastname LIKE :lname";}
-				
-				}
-			}
-		
-		if (!empty($_GET['email'])) 
-		{
-                    $email = $_GET['email'];
-                    $params['email'] = "%".$email."%";
-			if ($first==0){
-                            $first=1;
-                            $searchstring=" uname LIKE :email ";}
-			else{
-				if ($_GET['andor']==1)
-				{
-                                    $searchstring=$searchstring ." AND uname LIKE :email";}
-				else{
-                                    $searchstring=$searchstring ." OR uname LIKE :email";}
-				
-				}
-			}
-		
-		
-		if (!empty($_GET['institution'])) 
-		{
-                    $institution = $_GET['institution'];
-                    $params['institution'] = "%".$institution."%";
-			if ($first==0)
-			{
-                            $first=1;
-                            
-                        $searchstring=" institution LIKE :institution ";}
-			else{
-				if ($_GET['andor']==1)
-				{$searchstring=$searchstring ." AND institution LIKE :institution ";}
-				else{$searchstring=$searchstring ." OR institution LIKE :institution ";}
-				
-				}
-			}
-	
-	
-	if (!empty($_GET['region'])) 
-		{
-                    $region = $_GET['region'];
-                    $params['region'] = "%".$region."%";
-			if ($first==0)
-			{$first=1;
-		    $searchstring="region= :region " ;
-                    
-                        }
-			else{
-				if ($_GET['andor']==1)
-				{$searchstring=$searchstring ." AND region=:region " ;}
-				else{
-                                    $searchstring=$searchstring ." OR region= :region ";
-                                }
-				
-				}
-			}
-	
-	if ($first==0)
-	{echo 'Please enter at least one search criterion';$error=1;}
-	  
-	}//end of mID else
 	  
 if(!$error){//if error start	  
 // This script retrieves all the records from the users table.
- // Connect to the database.
+
 //set the number of rows per display page
 $pagerows = PAGEROWS;
 
 // Has the total number of pagess already been calculated?
-if (isset($_GET['p']) && is_numeric
-($_GET['p'])) {//already been calculated
-$pages=$_GET['p'];
-}else{//use the next block of code to calculate the number of pages
-//First, check for the total number of records
-//$q = "SELECT COUNT(id) FROM members WHERE $searchstring";
-    
-$query = "SELECT * from members WHERE $searchstring ";
+if (isset($_GET['p']) && is_numeric($_GET['p'])) {//already been calculated
+    $pages=$_GET['p'];
+} else {
+if($error == 0) {
+$found_members = member::search_members($db, $id, $first_name, $last_name, $email, $institution, $region, $andor);
 
-$found_members = member::search_members($db, $query, $params);
 $num_members = count($found_members);
 
 //Now calculate the number of pages
@@ -162,10 +88,6 @@ $start = 0;
 if ($num_members > -1) { // If it ran OK, display the records.
 // Table header.
 
-
-
-
-
 echo '<div class="scroll"><table id="hortable" summary="List of members">
     <thead>
     	<tr>
@@ -187,7 +109,6 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
 
 
 // Fetch and print all the records:
-//while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 foreach($found_members as $found_member) {
 	echo '<tr>
 	<td><a href="edit_record.php?id=' . $found_member->get_id() . '">Edit</a></td>
@@ -235,7 +156,8 @@ $_SESSION['searched']=1;
 unset($_GET['search']);
 echo '<br/> <a href="index.php?search=1">Search Again</a>';
   }//end on error
-  }//end main submit
+}
+}
 ?>
 
 
