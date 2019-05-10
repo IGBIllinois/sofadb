@@ -102,9 +102,6 @@ echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="round
 
 echo('<select name="features[]" size="5" multiple="multiple">');
 
-$query = "SELECT * from feature";
-$result = mysqli_query($dbcon, $query);
-
 $features = feature::get_features($db);
 
 foreach($features as $feature) {

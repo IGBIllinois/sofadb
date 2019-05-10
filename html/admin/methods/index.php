@@ -28,10 +28,11 @@ $pages = ceil ($num_methods/$pagerows);
 }else{
 $pages = 1;
 }
-}//page check finished
+}
+
+////page check finished
 //Decalre which record to start with
-if (isset($_GET['s']) && is_numeric
-($_GET['s'])) {//already been calculated
+if (isset($_GET['s']) && is_numeric($_GET['s'])) {//already been calculated
 $start = $_GET['s'];
 }else{
 $start = 0;

@@ -33,7 +33,7 @@ if(!isset($_POST['id']) &&  !isset($_GET['id'])) {
         $instructions = $method->get_instructions();
     
         $features = $method->get_features();
-        
+
     } else {
         $id = ($_POST['id']);
         $method = new method($db, $id);
@@ -64,11 +64,14 @@ if(isset($_POST['edit_method_submit'])) {
     }
 
     if(isset($_POST['features'])) {
-        $features = $_POST['features'];
+        $new_features = $_POST['features'];
+
+    } else {
+        $new_features = array();
     }
     $method->update_method($name, $type_name, $type_id, $measurement_type, $description, $instructions);
 
-    $method->edit_features($features);
+    $method->edit_features($new_features);
 
 echo ("Method $name edited successfully.<BR>");
 }
@@ -132,10 +135,15 @@ echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="round
 echo('<select name="features[]" size="5" multiple="multiple">');
 
 $all_features = feature::get_features($db);
+$feature_ids = array();
+$features = $method->get_features();
+foreach($features as $curr_feature) {
+    $feature_ids[] = $curr_feature->get_id();
+}
 
 foreach($all_features as $feature) {
     echo("<option value='".$feature->get_id() . "' ".
-            (in_array($feature->get_id(), $features) ? " SELECTED ": "" ) .
+            (in_array($feature->get_id(), array_values($feature_ids)) ? " SELECTED ": "" ) .
             ">".$feature->get_name().
             "</option>");
 }
