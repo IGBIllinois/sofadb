@@ -53,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this_case->remove_method($deleteid);
             
 
-            //exit();
     } else if(isset($_POST['add_method'])) {
         	
 	$method_id = $_POST['drop_2'];
@@ -397,7 +396,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 "caseyear"=>$caseyear,
                                 "casenum"=>$casenum,
                                 "caseeditid"=>$caseeditid);
-		//$result=mysqli_query ($dbcon, $q) ; 	
+
 		$result = $db->get_query_result($q, $params);	
             if (count($result) == 0)
             {//The case has not been registered already 
@@ -481,9 +480,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
        
        		unset($_SESSION['caseid']); 
                 header ("location: ../index.php"); exit();
-				
-                 
-       	   mysqli_close($dbcon); // Close the database connection
+
 			// Include the footer and stop the script
 		  
 			exit();
@@ -638,12 +635,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <fieldset class="caseinfobox"><legend class="boldlegend">Case Notes</legend>
       <label class="label" for="casenotes"></label>
       <textarea name="casenotes" cols="55" rows="7"><?php echo $casedata->get_casenotes(); ?></textarea>
-      
-      
-     
-      
-      
-      
+
       </fieldset>
     </form>
 	  </div>
@@ -805,27 +797,7 @@ frmvalidator.addValidation("farace_othertext","req","Please fill-in the Other An
 	
 	//]]></script>
     
-</div>
-  
-
-
-
-
-
-
- </div>
-
-
-
-
-
-
-<div id="footer">Copyright 2014 by <a href="http://www.sofainc.org/" target="_blank">SOFA</a>.</div>
-</div>
-
-
-
-
-</body>
-</html>
+<?php
+    require_once("../../include/footer.php");
+?>
 

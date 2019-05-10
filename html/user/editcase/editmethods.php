@@ -50,7 +50,8 @@ elseif(isset($_SESSION['caseid']))
  
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
+    //echo("POST=");
+//print_r($_POST);
     if(isset($_POST['tier2id'])) {
         //$method_info = new method_info($db, $_GET['methodid']);
         $tier2id = $_POST['tier2id'];
@@ -58,7 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $method = new method($db, $tier2->get_methodid());
         
     }
-    
+    $result = null;
+    $errors = 0;
     // make changes
     $this_case = new sofa_case($db, $caseeditid);
     $tier3s = $tier2->get_tier3data();
@@ -70,6 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $method_info = $method->get_method_info();
     $user_interaction = "";
     if(count($method_info) > 0) {
+        $user_interactions = $method_info[0]->get_user_interactions();
+        //print_r($user_interactions);
         $user_interaction = $method_info[0]->get_user_interaction();
     }
     if(isset($_POST['output_data_1'])) {
@@ -110,7 +114,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // if it's in the new ids, but not in the existing ids, add it
     foreach($new_ids as $new_id) {
         if(!in_array($new_id, $existing_ids)) {
-            $this_case->add_tier3_by_id($tier2id, $new_id);
+            $curr_result = $this_case->add_tier3_by_id($tier2id, $new_id);
+            if($curr_result['RESULT'] == FALSE) {
+                $errors++;
+                $result[] = $curr_result;        
+            }
         }
     }
     } else if($user_interaction == USER_INTERACTION_SELECT_RANGE) {
@@ -136,7 +144,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
                 if($found == false) {
                     // not in new data; delete this tier3
-                    tier3data::delete_tier3_by_id($db, $tier3->get_id());
+                    $curr_result = tier3data::delete_tier3_by_id($db, $tier3->get_id());
+                    if($curr_result['RESULT'] == FALSE) {
+                        $errors++;
+                        $result[] = $curr_result;
+                    }
+            
                 }
             
             }
@@ -163,7 +176,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     
                     if($found == false) {
                         // add it
-                        $this_case->add_tier3($tier2->get_methodid(), $name, null, $tier2id, $value);
+                        $curr_result = $this_case->add_tier3($tier2->get_methodid(), $name, null, $tier2id, $value);
+                        if($curr_result['RESULT'] == FALSE) {
+                            $errors++;
+                            $result[] = $curr_result;        
+                        }
                     }
                     }
                 }
@@ -177,8 +194,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
             foreach($output_data_1 as $name=>$od1_value) {
                 $name = urldecode($name);
-                echo("name = $name<BR>");
-                print_r($od1_value);
                 if(is_array($od1_value)) {
                     foreach($od1_value as $od2) {
                         $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od2);
@@ -201,7 +216,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // if it's in the existing ids, but not in the new ids, delete it.
         foreach($existing_ids as $existing_id) {
             if(!in_array($existing_id, $new_ids)) {
-                tier3data::delete_tier3($db, $tier2id, $existing_id);
+                $curr_result = tier3data::delete_tier3($db, $tier2id, $existing_id);
+                if($curr_result['RESULT'] == FALSE) {
+                    $errors++;
+                    $result[] = $curr_result;        
+                }
             }
         }
     
@@ -221,10 +240,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od1_value);
                 }
                 $methoddataid = $method_info->get_id();
-                $this_case->update_tier3($tier2id, $methoddataid, $od1_value);
+                $curr_result = $this_case->update_tier3($tier2id, $methoddataid, $od1_value);
+                if($curr_result['RESULT'] == FALSE) {
+                    $errors++;
+                    $result[] = $curr_result;        
+                }
             }
         }
-            }
+    }
+    echo("<div id='caseform'>");
+    if($errors == 0) {
+        echo("Method info updated successfully.");
+    } else {
+        foreach($result as $error_result) {
+            echo($error_result['MESSAGE']. "<BR>");
+        }
+    }
+    echo("</div>");
             
         
     
@@ -266,7 +298,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
      
-     <input type="submit" class="showybutton" id="editmethoddatabutton" value="Edit Method Data" ><BR><BR>
+     <input type="submit" class="showybutton" id="editmethoddatabutton" value="Save Edits" ><BR><BR>
                  
              <U><a href="index.php?id=<?php echo $caseeditid; ?>">Back to Case</a></U>
      
@@ -356,67 +388,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   </form>
     
     
-    <script language="JavaScript" type="text/javascript"
-    xml:space="preserve">//<![CDATA[
-//You should create the validator only after the definition of the HTML form
-  var frmvalidator  = new Validator("casedata");
-  
-  frmvalidator.EnableOnPageErrorDisplaySingleBox();
-   frmvalidator.EnableMsgsTogether();
- 
- 
-  frmvalidator.addValidation("casenumber","req","You must provide a case number");
- 
- frmvalidator.addValidation("caseyear","req","You must provide a year for the case");
-  frmvalidator.addValidation("caseyear","gt=1900","Case Year must be post-1900");
- 
-  frmvalidator.addValidation("caseyear","maxlen=4","Year must be entered in YYYY format");
-  frmvalidator.addValidation("caseyear","numeric","Year must be entered in YYYY format");
-//  frmvalidator.addValidation("casename","req","You must provide a nickname for the case");
-
-  
-   frmvalidator.addValidation("faage","numeric","Ages must be entered as a number");
-   
-  frmvalidator.addValidation("faage2","numeric","Ages must be entered as a number");
-  
-   frmvalidator.addValidation("fastature","numeric","Statures must be entered as a number");
-   
-  frmvalidator.addValidation("fastature2","numeric","Statures must be entered as a number");
-  
-  frmvalidator.addValidation("idage","numeric","Ages must be entered as a number");
-   
-  frmvalidator.addValidation("idstature","numeric","Statures must be entered as a number");
     
-	 frmvalidator.addValidation("idrace_othertext","req","Please fill-in the  Other Race/Ethinicity textbox",
-        "VWZ_IsChecked(document.forms['casedata'].elements['race_other'],'1')");
-		
-frmvalidator.addValidation("farace_othertext","req","Please fill-in the Other Ancestry textbox",
-        "VWZ_IsChecked(document.forms['casedata'].elements['farace_other'],'1')");
-
-	
-	//]]></script>
-    
-</div>
-  
-
-
-
-
-
-
- </div>
-
-
-
-
-
-
-<div id="footer">Copyright 2014 by <a href="http://www.sofainc.org/" target="_blank">SOFA</a>.</div>
-</div>
-
-
-
-
-</body>
-</html>
+<?php
+    require_once("../../include/footer.php");
+?>
 
