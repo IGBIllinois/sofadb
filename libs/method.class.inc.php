@@ -163,7 +163,7 @@ class method {
                                 "description"=>$description,
                                 "instructions"=>$instructions,
                                 "id"=>$this->id);
-                //$result = @mysqli_query ($this->dbcon, $query); // Run the query.
+
                 $result = $this->db->get_update_result($query, $params);
                 if ($result) { // If it ran OK.
                         //echo("Method $name updated successfully.<BR>");
@@ -220,10 +220,7 @@ class method {
         
         $result = $db->get_insert_result($query, $params);
 
-        //$result = @mysqli_query ($dbcon, $query); // Run the query.
-
 	if ($result > 0) { // If it ran OK.
-            //$id = mysqli_insert_id($dbcon);
             echo("Method $name added successfully");
             return $result;
         }
@@ -231,11 +228,14 @@ class method {
     
     /** Gets list of output_data_1 info for this method
      * 
-     * @return type
+     * @return array An array of strings that are the output_data_1 for this method_info
      */
-    public function get_data_1() {
-        $output_data_1_query = "SELECT DISTINCT output_data_1 from method_info where methodid = :method_id";
+    public function get_data_1($user_interaction = null) {
+        $output_data_1_query = "SELECT DISTINCT output_data_1 from method_info where methodid = :method_id".(($user_interaction == null) ? "" : " and user_interaction = :user_interaction");
         $params = array("method_id"=>$this->id);
+        if($user_interaction != null) {
+            $params["user_interaction"] = $user_interaction;
+        }
         $output_data_1_result = $this->db->get_query_result($output_data_1_query, $params);
         if(count($output_data_1_result) > 0) {
             // just return array of texts
@@ -249,13 +249,16 @@ class method {
         }
     }
     
-    /** Gets list of output_data_1 info for this method
+    /** Gets list of output_data_2 info for this method
      * 
-     * @return type
+     * @return array An array of strings that are the output_data_2 for this method_info
      */
-    public function get_data_2() {
-        $output_data_2_query = "SELECT DISTINCT output_data_2 from method_info where methodid = :method_id";
+    public function get_data_2($user_interaction = null) {
+        $output_data_2_query = "SELECT DISTINCT output_data_2 from method_info where methodid = :method_id".(($user_interaction == null) ? "" : " and user_interaction = :user_interaction");
         $params = array("method_id"=>$this->id);
+        if($user_interaction != null) {
+            $params["user_interaction"] = $user_interaction;
+        }
         $output_data_2_result = $this->db->get_query_result($output_data_2_query, $params);
         if(count($output_data_2_result) > 0) {
             // just return array of texts
@@ -269,8 +272,8 @@ class method {
         }
     }
     
-    public function get_od2_for_od1($od1) {
-        $query = "SELECT output_data_2 from method_info where methodid=:methodid and output_data_1=:od1";
+    public function get_od2_for_od1($od1, $distinct = 0) {
+        $query = "SELECT ".($distinct ? " DISTINCT " : "" ). " output_data_2 from method_info where methodid=:methodid and output_data_1=:od1";
         $params = array("methodid"=>$this->id,
                         "od1"=>$od1);
         $result = $this->db->get_query_result($query, $params);
@@ -279,9 +282,38 @@ class method {
         }
     }
     
-    public function get_header_1() {
-        $output_data_header_query = "SELECT DISTINCT output_data_1_description from method_info where methodid = :method_id";
+    public function get_output_data_3($od1, $od2) {
+        $query = "SELECT output_data_3 from method_info where output_data_1=:od1 and output_data_2=:od2 and methodid=:methodid";
+        $params = array("od1"=>$od1,
+                        "od2"=>$od2,
+                        "methodid"=>$this->id);
+
+        $result = $this->db->get_query_result($query, $params);
+        if(count($result > 0)) {
+            return $result;
+        }
+    }
+    
+    public function get_output_data_4($od1, $od2) {
+        $query = "SELECT output_data_4 from method_info where output_data_1=:od1 and output_data_2=:od2 and methodid=:methodid";
+        $params = array("od1"=>$od1,
+                        "od2"=>$od2,
+                        "methodid"=>$this->id);
+
+        $result = $this->db->get_query_result($query, $params);
+        if(count($result > 0)) {
+            return $result;
+        }
+    }
+    
+    
+    public function get_header_1($method_info_id=null) {
+        $output_data_header_query = "SELECT DISTINCT output_data_1_description from method_info where methodid = :method_id ";
         $params = array("method_id"=>$this->id);
+        if($method_info_id != null) {
+            $output_data_header_query .= " AND id = :method_info_id";
+            $params['method_info_id'] = $method_info_id;
+        }
         $output_data_header_result = $this->db->get_query_result($output_data_header_query, $params);
         if(count($output_data_header_result) > 0) {
             if(($output_data_header_result[0]['output_data_1_description']) != null) {
@@ -294,9 +326,13 @@ class method {
         }
     }
 
-    public function get_header_2() {
-        $output_data_header_query = "SELECT DISTINCT output_data_2_description from method_info where methodid = :method_id";
+    public function get_header_2($method_info_id=null) {
+        $output_data_header_query = "SELECT DISTINCT output_data_2_description from method_info where methodid = :method_id ";
         $params = array("method_id"=>$this->id);
+        if($method_info_id != null) {
+            $output_data_header_query .= " AND id = :method_info_id";
+            $params['method_info_id'] = $method_info_id;
+        }
         $output_data_header_result = $this->db->get_query_result($output_data_header_query, $params);
         if(count($output_data_header_result) > 0) {
             if(($output_data_header_result[0]['output_data_2_description']) != null) {
@@ -309,9 +345,67 @@ class method {
         }
     }
     
+    public function get_header_3() {
+        $output_data_header_query = "SELECT DISTINCT output_data_3_description from method_info where methodid = :method_id";
+        $params = array("method_id"=>$this->id);
+        $output_data_header_result = $this->db->get_query_result($output_data_header_query, $params);
+        if(count($output_data_header_result) > 0) {
+            if(($output_data_header_result[0]['output_data_3_description']) != null) {
+                return $output_data_header_result[0]['output_data_3_description'];
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+    
+    public function get_header_4() {
+        $output_data_header_query = "SELECT DISTINCT output_data_4_description from method_info where methodid = :method_id";
+        $params = array("method_id"=>$this->id);
+        $output_data_header_result = $this->db->get_query_result($output_data_header_query, $params);
+        if(count($output_data_header_result) > 0) {
+            if(($output_data_header_result[0]['output_data_4_description']) != null) {
+                return $output_data_header_result[0]['output_data_4_description'];
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+    
     public function get_method_info() {
         $query = "SELECT id from method_info where methodid=:methodid";
         $params = array("methodid"=>$this->id);
+        $result = $this->db->get_query_result($query, $params);
+        if(count($result) > 0) {
+            $infos = array();
+            foreach($result as $method_info) {
+                $new_method_info = new method_info($this->db, $method_info['id']);
+                $infos[] = $new_method_info;
+            }
+            return $infos;
+        }
+    }
+    
+    public function get_method_info_by_type($user_interaction) {
+        $query = "SELECT id from method_info where methodid=:methodid and user_interaction = :user_interaction";
+        $params = array("methodid"=>$this->id, "user_interaction"=>$user_interaction);
+        $result = $this->db->get_query_result($query, $params);
+        if(count($result) > 0) {
+            $infos = array();
+            foreach($result as $method_info) {
+                $new_method_info = new method_info($this->db, $method_info['id']);
+                $infos[] = $new_method_info;
+            }
+            return $infos;
+        }
+    }
+    
+    public function get_method_info_by_od1($od1) {
+        $query = "SELECT id from method_info where methodid=:methodid and output_data_1 = :od1";
+        $params = array("methodid"=>$this->id, "od1"=>$od1);
         $result = $this->db->get_query_result($query, $params);
         if(count($result) > 0) {
             $infos = array();

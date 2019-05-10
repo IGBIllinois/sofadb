@@ -73,6 +73,13 @@ class tier2data {
 
     }
     
+    /** Formats Tier3 data for display in the table, in the form:
+     *  ($output_data_1, $value), for each $output_data_1 for this Tier2 data.
+     *  $value may either be an $output_data_2, a value within a range, or a 
+     *  user-specified value, depending on the user_interaction type.
+     * 
+     * @return string A string representing the Tier3 data for this Tier2 object
+     */
     public function format_tier3data() {
         $info = $this->get_tier3data();
 
@@ -97,8 +104,11 @@ class tier2data {
 
                     } else if($interaction == USER_INTERACTION_INPUT_BOX ||
                             $interaction == USER_INTERACTION_NUMERIC_ENTRY ||
-                            $interaction == USER_INTERACTION_SELECT_RANGE ) {
+                            $interaction == USER_INTERACTION_SELECT_RANGE) {
+                             
                         $output .= "(".$method_info->get_output_data_1(). ", ".$tier_info->get_value().") ";
+                    } else if($interaction == USER_INTERACTION_3_COL_W_REF) {
+                        $output .= "(".$method_info->get_output_data_1().", ".$method_info->get_output_data_2(). ", ".$method_info->get_output_data_3().") ";
                     }
 
             }
