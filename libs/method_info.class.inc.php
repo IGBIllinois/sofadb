@@ -21,6 +21,7 @@ class method_info {
     private $output_data_2_description;
     private $output_data_3_description;
     private $output_data_4_description;
+    private $reference_list;
     private $age_range;
     private $user_interaction;
     
@@ -131,6 +132,15 @@ class method_info {
         $query = "SELECT distinct user_interaction from method_info where methodid = :methodid order by field(user_interaction, '".USER_INTERACTION_INPUT_BOX."') DESC";
         $params = array("methodid"=>$this->methodid);
         $result = $this->db->get_query_result($query, $params);
+        return $result;
+    }
+    
+    public function get_references() {
+        $ref_array = explode(",",$this->reference_list);
+        $in  = str_repeat('?,', count($ref_array) - 1) . '?';
+        $query = "SELECT * from reference where id in ($in)";
+        $result = $this->db->get_query_result($query, $ref_array);
+
         return $result;
     }
     
@@ -254,14 +264,7 @@ class method_info {
             }
     }
     
-    public static function get_references($db, $ref_list) {
-        $ref_array = explode(",",$ref_list);
-        $in  = str_repeat('?,', count($ref_array) - 1) . '?';
-        $query = "SELECT * from reference where id in ($in)";
-        $result = $db->get_query_result($query, $ref_array);
-
-        return $result;
-    }
+    
     
     /** Shows the method info selection boxes based on a method id and (optionally)
     * a tier2 id if the data already exists (for editing)
@@ -311,130 +314,197 @@ class method_info {
                
                $user_interaction = $user_interaction[0];
                //echo("user interaction = $user_interaction<BR>");
-           if($user_interaction == USER_INTERACTION_MULTISELECT) {
-
-               // Notes to user
-               echo("<legend><I>(hold CTL to select multiple)</I></legend>");
-               $output_data_1_result_sel = $method->get_data_1($user_interaction);
-               $output_data_2_result_sel = $method->get_data_2($user_interaction);
-               $method_info = $method->get_method_info_by_type($user_interaction);
-               $header1 = $method_info[0]->get_output_data_1_description();
+           if($user_interaction == USER_INTERACTION_MULTISELECT ||
+                   $user_interaction == USER_INTERACTION_SINGLE_SELECT) {
                
-           echo("<table><tr><th>".$header1."</th>");
-           if(count($output_data_2_result_sel) > 0) {
-               $header2 = $method_info[0]->get_output_data_2_description();
-               echo("<th>".$header2."</th>");
-           }
-           echo("</tr><tr><td>");
-           echo("<select id='output_data_1' style='width:200px;' multiple name=output_data_1[] size=6>");
-           
-           foreach($output_data_1_result_sel as $od1_result) {
-               $selected = false;
-               foreach($methodinfos as $method_info) {
-                   if($method_info->get_output_data_1() == $od1_result['output_data_1']) {
-                       $selected = true;
-                       break;
-                   }
-               }
-               echo("<option value='".$od1_result['output_data_1']."' ".($selected ? " selected=$selected " : "") .">".$od1_result['output_data_1']."</option>");
+               method_info::show_method_info_multiselect($method, $user_interaction);
 
+           } else if($user_interaction == USER_INTERACTION_SELECT_RANGE) {
+               
+               method_info::show_method_info_select_range($method, $tier2id);
+               
+           } else if($user_interaction == USER_INTERACTION_SELECT_EACH) {
+               
+               method_info::show_method_info_select_each($method, $tier2id);
+
+           } else if($user_interaction == USER_INTERACTION_INPUT_BOX ||
+                   $user_interaction == USER_INTERACTION_NUMERIC_ENTRY) {
+
+               method_info::show_method_info_input($method, $tier2id, $user_interaction);
+               
+            } else if($user_interaction == USER_INTERACTION_3_COL_W_REF) {
+                
+                method_info::show_method_info_3_col_with_ref($db, $method, $tier2id);
+
+            } else if($user_interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
+                
+                method_info::show_method_info_user_input_with_dropdown($db, $method, $tier2id);
+            }
            }
-           echo("</select>");
+       echo("</td>");
+       }
+       echo("</tr></table>");
+   
+   }
+   
+   /** Show the two columns for selecting tier3 data for a 
+    *  one or two-columned multiselect method
+    * 
+    * @param type $method The method object to draw inputs for
+    */
+   public static function show_method_info_multiselect($method, $user_interaction = null) {
+            // Notes to user
+            //$user_interaction = USER_INTERACTION_MULTISELECT;
+       $multiple = 1;
+
+       if($user_interaction == USER_INTERACTION_SINGLE_SELECT) {
+
+           $multiple = 0;
+
+       }
+       if($user_interaction == USER_INTERACTION_MULTISELECT) {
+            echo("<legend><I>(hold CTL to select multiple)</I></legend>");
+       }
+            $output_data_1_result_sel = $method->get_data_1($user_interaction);
+            $output_data_2_result_sel = $method->get_data_2($user_interaction);
+            $method_info = $method->get_method_info_by_type($user_interaction);
+            $header1 = $method_info[0]->get_output_data_1_description();
+               
+           echo("<table>");
+
+           echo("<tr><td>");
+
+           echo("<select id='output_data_1' style='width:200px;' ". (($multiple == 1) ? " multiple size=6 " : "" ) ." name=output_data_1[] >");
+
+                foreach($output_data_1_result_sel as $od1_result) {
+                    $selected = false;
+                    foreach($methodinfos as $method_info) {
+                        if($method_info->get_output_data_1() == $od1_result['output_data_1']) {
+                            $selected = true;
+                            break;
+                        }
+                    }
+                    echo("<option value='".$od1_result['output_data_1']."' ".($selected ? " selected=$selected " : "") .">".$od1_result['output_data_1']."</option>");
+
+                }
+                echo("</select>");
+            
            echo("</td>");
 
            if(count($output_data_2_result_sel) > 0) {
                echo("<td>");
                $selected = false;
 
-               echo("<select id='output_data_2' style='width:200px;' multiple name=output_data_2[] size=6>");
-               foreach($output_data_2_result_sel as $od2_option) {
-                   foreach($methodinfos as $method_info) {
-                       if($method_info->get_output_data_2() == $od2_option['output_data_2']) {
-                           $selected = true;
-                       } else {
-                           $selected = false;
-                       }
-                   }
-                   echo("<option value='".$od2_option['output_data_2']."' ".($selected ? " selected=$selected " : "") .">".$od2_option['output_data_2']."</option>");
+                   // output a select box
+                echo("<select id='output_data_2' style='width:200px;'". (($multiple == 1) ? " multiple size=6 " : "" ) ." name=output_data_2[] >");
+                foreach($output_data_2_result_sel as $od2_option) {
+                    foreach($methodinfos as $method_info) {
+                        if($method_info->get_output_data_2() == $od2_option['output_data_2']) {
+                            $selected = true;
+                        } else {
+                            $selected = false;
+                        }
+                    }
+                    echo("<option value='".$od2_option['output_data_2']."' ".($selected ? " selected=$selected " : "") .">".$od2_option['output_data_2']."</option>");
 
-               }
-               echo("</select>");
+                }
+                echo("</select>");
+               
            }
            echo("</td></tr></table>");
+       
+   }
+   
+   /** Shows HTML method_info input for a "select_range" method_info
+    * 
+    * @param method $method The method object
+    * @param int $tier2id Existing info, if editing
+    */
+   public static function show_method_info_select_range($method, $tier2id=null) {
+       
+       $header1 = $method->get_header_1();
+       $header2 = $method->get_header_2();
+       $user_interaction = USER_INTERACTION_SELECT_RANGE;
+    echo("<legend><I>(hold CTL to select multiple)</I></legend>");
+    echo("<table  style='border-spacing:7px'><tr><th><U><B>".$header1."</B></U></th>");
+    echo("<th><U><B>".$header2."</B></U></th>");
 
-           } else if($user_interaction == USER_INTERACTION_SELECT_RANGE) {
-               echo("<legend><I>(hold CTL to select multiple)</I></legend>");
-               echo("<table  style='border-spacing:7px'><tr><th><U><B>".$header1."</B></U></th>");
-               echo("<th><U><B>".$header2."</B></U></th>");
+    echo("</tr>");
+    $value = null;
 
-               echo("</tr>");
-               $value = null;
+        //$method = new method($db, $method_id);
+        $this_method_info = $method->get_method_info();
+        foreach($this_method_info as $method_info) {
+            $value = null;
+            if($tier2id != null) {
+                // Find existing value
+                $tier2 = new tier2data($db, $tier2id);
+                $data = $tier2->get_tier3data();
+                foreach($data as $tier3) {
+                    if($tier3->get_methodinfoid() == $method_info->get_id()) {
+                        $value = $tier3->get_value();
+                    }
+                }
+            }
 
-                   $method = new method($db, $method_id);
-                   $this_method_info = $method->get_method_info();
-                   foreach($this_method_info as $method_info) {
-                       $value = null;
-                       if($tier2id != null) {
-                           // Find existing value
-                           $tier2 = new tier2data($db, $tier2id);
-                           $data = $tier2->get_tier3data();
-                           foreach($data as $tier3) {
-                               if($tier3->get_methodinfoid() == $method_info->get_id()) {
-                                   $value = $tier3->get_value();
-                               }
-                           }
-                       }
+            $range = $method_info->get_output_data_2();
 
-                       $range = $method_info->get_output_data_2();
-
-                       $positive_start = strpos($range, "-");
+            $positive_start = strpos($range, "-");
 
 
-                       if($positive_start !== false && $positive_start == 0) {
-                           // first positition is a dash, negative start
-                           $range = substr($range, 1);
-                           $ranges = explode("-", $range);
-                           $ranges[0] = "-" . $ranges[0];
+            if($positive_start !== false && $positive_start == 0) {
+                // first positition is a dash, negative start
+                $range = substr($range, 1);
+                $ranges = explode("-", $range);
+                $ranges[0] = "-" . $ranges[0];
 
-                       } else {
-                           $ranges = explode("-", $range);
-                       }
+            } else {
+                $ranges = explode("-", $range);
+            }
 
-                       $name = $method_info->get_output_data_1();
-                       //In case name has spaces, encode it
-                       $outputname = urlencode($name);
-                       $selectbox = "<select style='width:100%' name=output_data_1[$outputname][] multiple>";
+            $name = $method_info->get_output_data_1();
+            //In case name has spaces, encode it
+            $outputname = urlencode($name);
+            $selectbox = "<select style='width:100%' name=output_data_1[$outputname][] multiple>";
 
-                       for($curr_range = $ranges[0]; $curr_range <= $ranges[1]; $curr_range++) {
-                           $selected = false;
-                           if($tier2id != null) {
-                               foreach($tier3s as $tier3) {
-                                   $method_info_id = $tier3->get_methodinfoid();
-                                   $value = $tier3->get_value();
-                                   if($method_info_id == $method_info->get_id() &&
-                                           $value == $curr_range) {
-                                       $selected = true;
-                                       break;
-                                   }
-                               }
-                           }
+            for($curr_range = $ranges[0]; $curr_range <= $ranges[1]; $curr_range++) {
+                $selected = false;
+                if($tier2id != null) {
+                    foreach($tier3s as $tier3) {
+                        $method_info_id = $tier3->get_methodinfoid();
+                        $value = $tier3->get_value();
+                        if($method_info_id == $method_info->get_id() &&
+                                $value == $curr_range) {
+                            $selected = true;
+                            break;
+                        }
+                    }
+                }
 
-                           $selectbox .= "<option  value='".$curr_range."'";
-                           if($selected == true) {
-                               $selectbox .= " selected=1 ";
-                           }
-                           $selectbox .= ">$curr_range</option>";                           
+                $selectbox .= "<option  value='".$curr_range."'";
+                if($selected == true) {
+                    $selectbox .= " selected=1 ";
+                }
+                $selectbox .= ">$curr_range</option>";                           
 
-                       }
-                       $selectbox .="</select>";
+            }
+            $selectbox .="</select>";
 
-                       echo("<tr><td>".$name.":</td><td> $selectbox </td></tr>");
+            echo("<tr><td>".$name.":</td><td> $selectbox </td></tr>");
 
-                       }
-                       echo("</table>");
+            }
+            echo("</table>");
 
-           } else if($user_interaction == USER_INTERACTION_SELECT_EACH) {
-               $methodinfos = array();
+   }
+   
+      /** Shows HTML method_info input for a "select_each" method_info
+    * 
+    * @param method $method The method object
+    * @param int $tier2id Existing info, if editing
+    */
+   public static function show_method_info_select_each($method, $tier2id) {
+       $user_interaction = USER_INTERACTION_SELECT_EACH;
+       $methodinfos = array();
                if($tier2id != null) {
                    $tier2 = new tier2data($db, $tier2id);
                    $data = $tier2->get_tier3data();
@@ -495,40 +565,60 @@ class method_info {
                }
 
                        echo("</table>");
+   }
+   
+      /** Shows HTML method_info input for a "user_input" method_info
+    * 
+    * @param method $method The method object
+    * @param int $tier2id Existing info, if editing
+    * @param string $user_interaction The user_interaction type
+    */
+   public static function show_method_info_input($method, $tier2id, $user_interaction) {
+       
+        $output_data_1_result_sel = $method->get_data_1($user_interaction);
+        echo("<table>");
+        if($tier2id != null) {
+            $tier2 = new tier2data($db, $tier2id);
+            $data = $tier2->get_tier3data();
+            $this_method = new method($db, $tier2->get_methodid());
+            $this_method_info = $this_method->get_method_info();
+            $value = "";
 
-           } else if($user_interaction == USER_INTERACTION_INPUT_BOX ||
-                   $user_interaction == USER_INTERACTION_NUMERIC_ENTRY) {
-               $output_data_1_result_sel = $method->get_data_1($user_interaction);
-               echo("<table>");
-               if($tier2id != null) {
-                   $tier2 = new tier2data($db, $tier2id);
-                   $data = $tier2->get_tier3data();
-                   $this_method = new method($db, $tier2->get_methodid());
-                   $this_method_info = $this_method->get_method_info();
-                   $value = "";
+            foreach($this_method_info as $method_info) {
 
-                   foreach($this_method_info as $method_info) {
-
-                       $value = "";
-                       foreach($data as $tier3) {
-                           if($tier3->get_methodinfoid() == $method_info->get_id()) {
-                               $value = $tier3->get_value();
-                           }
-                       }
-                       $name = $method_info->get_output_data_1();
-                       echo("<tr><td>".$name.":</td><td> <input id='$name' name='output_data_1[$name]' value='$value'></td></tr>");
-                   }
-            } else {
-               foreach($output_data_1_result_sel as $od1_result) {
-                   $name = $od1_result['output_data_1'];
-                   echo("<tr><td>".$name.":</td><td> <input id='$name' name='output_data_1[$name]'></td></tr>");
-               }
-           }
-           echo("</table>");
-       }
-       else if($user_interaction == USER_INTERACTION_3_COL_W_REF) {
-
-           $methodinfos = array();
+                $value = "";
+                foreach($data as $tier3) {
+                    if($tier3->get_methodinfoid() == $method_info->get_id()) {
+                        $value = $tier3->get_value();
+                    }
+                }
+                $name = $method_info->get_output_data_1();
+                echo("<tr><td>".$name.":</td><td> <input id='$name' name='output_data_1[$name]' value='$value'></td></tr>");
+            }
+     } else {
+        foreach($output_data_1_result_sel as $od1_result) {
+            $name = $od1_result['output_data_1'];
+            echo("<tr><td>".$name.":</td><td> <input id='$name' name='output_data_1[$name]'></td></tr>");
+        }
+    }
+    echo("</table>");
+   }
+   
+      /** Shows HTML method_info input for a "3_col_with_ref" method_info
+    * 
+    * @param db $db The database object
+    * @param method $method The method object
+    * @param int $tier2id Existing info, if editing
+    */
+   public static function show_method_info_3_col_with_ref($db, $method, $tier2id=null) {
+       
+       $header1 = $method->get_header_1();
+       $header2 = $method->get_header_2();
+       
+       $output_data_1_result = $method->get_data_1();
+       $output_data_2_result = $method->get_data_2(); 
+       
+       $methodinfos = array();
             if($tier2id != null) {
                    $tier2 = new tier2data($db, $tier2id);
                    $data = $tier2->get_tier3data();
@@ -544,12 +634,11 @@ class method_info {
 
                echo("<table  style='border-spacing:7px'><tr><th><U><B>".$header1."</B></U></th>");
                echo("<th><U><B>".$header2."/".$header3."</B></U></th>");
-               //echo("<th><U><B>".$header3."</B></U></th>");
-               //echo("<th><U><B>".$header4."</B></U></th>");
+
                echo("</tr>");
                $value = null;
 
-                           // Notes to user
+               // Notes to user
                //echo("<legend><I>(hold CTL to select multiple)</I></legend>");
 
 
@@ -580,9 +669,12 @@ class method_info {
                    }
                    $od3 .="</select>";
                    $od3 .="</td><td>";
-                   $ref_text = "<select style='width:100%'>";
-                   $references = $method->get_output_data_4($name, $od2)[0];
-                   $reference_data = method_info::get_references($db, $references['output_data_4']);
+                   $ref_text = "<select name=references[$outputname][$od2_encode][] style='width:100%'>";
+                   //$references = $method->get_references($name, $od2)[0];
+                   //$reference_data = method_info::get_references($db, $references['reference_list']);
+                   $method_infos = $method->get_method_info_by_od1($name, $od2);
+                   $first_method_info = $method_infos[0];
+                   $reference_data = $first_method_info->get_references();
                    $ref_text .= "<option value=''></option>";
                    foreach($reference_data as $ref) {
                        $ref_text .= "<option  value='".$ref['id']."'";
@@ -600,11 +692,66 @@ class method_info {
                    $od3 .="</table>";
                echo("<tr><td>".$name.":</td><td> $od3 </td></tr>");
        }
+   }
+   
+      /** Shows HTML method_info input for a "select_range" method_info
+    * 
+    * @paramd db $db The database object
+    * @param method $method The method object
+    * @param int $tier2id Existing info, if editing
+    */
+   public static function show_method_info_user_input_with_dropdown($db, $method, $tier2id) {
+       $user_interaction = USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN;
+       $od1s = $method->get_data_1($user_interaction);
+       //print_r($od1s);
+       foreach($od1s as $id=>$name) {
+           $name = $name[0];
+
+       $method_infos = $method->get_method_info_by_od1($name);
+       $method_info = $method_infos[0];
+       $output_data_1_result_sel = $method->get_data_1($user_interaction);
+        echo("<table>");
+        if($tier2id != null) {
+            /*
+            $tier2 = new tier2data($db, $tier2id);
+            $data = $tier2->get_tier3data();
+            $this_method = new method($db, $tier2->get_methodid());
+            $this_method_info = $this_method->get_method_info();
+            $value = "";
+
+            foreach($this_method_info as $method_info) {
+
+                $value = "";
+                foreach($data as $tier3) {
+                    if($tier3->get_methodinfoid() == $method_info->get_id()) {
+                        $value = $tier3->get_value();
+                    }
+                }
+                $name = $method_info->get_output_data_1();
+                echo("<tr><td>".$name.":</td><td> <input id='$name' name='output_data_1[$name]' value='$value'></td></tr>");
+            }
+             * 
+             */
+     } else {
+
+            echo("<tr><td>".$name.":</td><td> <input id='$name' name='output_data_1[$name]'></td>");
+            $od2s = $method_info->get_od2_for_od1($name);
+            if(count($od2s) > 0) {
+                echo("<td><select name=output_data_2[$name]>");
+            
+                foreach($od2s as $od2) {
+                    $od2_name = $od2[0];
+                    echo("<option name='$od2_name]'>$od2_name</option>");
+                }
+                echo("</select></td></tr>");
+                
+            }
+
+    }
        }
-       }
-       echo("</td>");
-       }
-       echo("</tr></table>");
+    echo("</table>");
+       
+       
    }
     
     private function load_method_info($id) {
@@ -626,6 +773,7 @@ class method_info {
              $this->output_data_2_description = $data['output_data_2_description'];
              $this->output_data_3_description = $data['output_data_3_description'];
              $this->output_data_4_description = $data['output_data_4_description'];
+             $this->reference_list = $data['reference_list'];
              $this->age_range = $data['age_range'];
              $this->user_interaction = $data['user_interaction'];
             }
