@@ -69,6 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $output_data_2 = $_POST['output_data_2'];
         }
 
+        $references = null;
+        if(isset($_POST['references']) && $_POST['references'] != null &&  $_POST['references'] != "") {
+
+            $references = $_POST['references'];
+        }
+        
         $od1Names = array_keys($output_data_1);
 
         //$od1Names = isset($_GET['od1Names']) ? $_GET['od1Names'] : null;
@@ -85,7 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $method_case_id, 
                     $output_data_1, 
                     $output_data_2, 
-                    $od1Names);
+                    $od1Names,
+                    $references);
         }
     }
     
@@ -683,10 +690,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- End Add Method box -->
     
                  <!-- Method data -->
-   <div class="scroll" name="methodtableholder" id="methodtableholder">
-             
-            
-             
+                 <fieldset class="methodinfobox"><legend class="boldlegend">Currently Added Methods</legend>
+   <div name="methodtableholder" id="methodtableholder">
+
                <table id="hortable" border="1">
                   <tbody>
                     <tr>
@@ -738,7 +744,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				<div class="clear"></div>
     
     </div>
-
+    </fieldset>
     </div>
     
     
