@@ -18,7 +18,7 @@ $(document).ready(function(){
     $(this).animate({"opacity": "1"}, "slow");
     });
     
-
+        
 // user/addcase
 	$('#wait_1').hide();
 	
@@ -108,6 +108,7 @@ $(document).ready(function(){
 	
 	
 	$('#methodtype').change(function(){
+
 	  $('#wait_1').show();
 	  $('#result_1').hide();
 	  $('#wait_2').hide();
@@ -131,8 +132,15 @@ $(document).ready(function(){
 	});//end method type change
         
         
+        
+        
+
+
+
+        
+        
     //user/editmethod    
-	$('#wait_1').hide();
+    $('#wait_1').hide();
 	
     $('#addmethodbutton').hide();
 	
@@ -202,31 +210,9 @@ $(document).ready(function(){
 	
 		
 });//end action button
-	
-	
-	
-	
-	
-	$('#methodtype').change(function(){
-	  $('#wait_1').show();
-	  $('#result_1').hide();
-	  $('#result_2').hide();
-	$('#wait_3').hide();
-	$('#result_3').hide();
-	$('#drop_1').hide();
-	$('#drop_2').hide();
-	$('#drop_3').hide();
-	$('#drop_4').hide();
-	  
-      $.get("func.php", {
-		func: "drop_1",
-		drop_var: $('#methodtype').val()
-      }, function(response){
-        $('#result_1').fadeOut();
-        setTimeout("finishAjax('result_1', '"+escape(response)+"')", 400);
-      });//end get
-    	return false;
-	});//end method type change
+
+
+
 });
 
 // user/addcase
@@ -252,7 +238,26 @@ function finishAjax_tier_four(id, response) {
   $('#'+id).fadeIn();
 }
 
+function show_category() {
+        // spradley jantz method category change
+            
 
+$.get("func.php", {
+		func: 'spradley_jantz', 
+                method_id: $('#method_id').val(),
+                category: $('#category').val()
+
+		}, 
+        function(response){
+            $('#result_3').html(response);
+                //addRow('hortable',response);
+                $('#wait_3').hide();
+
+                $('#result_3').show();
+	
+	}
+                );//end get
+}
 
   $(function() {
     $( "#tabs" ).tabs();
@@ -261,3 +266,4 @@ function finishAjax_tier_four(id, response) {
 $('document').ready(function() {
    $(window).scrollTop(0);
 });
+

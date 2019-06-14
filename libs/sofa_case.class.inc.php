@@ -426,17 +426,21 @@ public function submit_case($submitstatus) {
      * 
      * @param int $method_case_id ID of case method to update
      * @param array $output_data_1 Array of output_data_1 values
-     * @param array $output_data_2, optional
+     * @param array $output_data_2 Array of output_data_2 values, optional
      * @param array $od1Names Array of output_data_1 names, used for INPUT_BOX, NUMERIC_ENTRY type
      */
-    public function add_all_tier3_data($method_id, $method_case_id, $output_data_1, $output_data_2=null, $od1Names=null) {
-
+    public function add_all_tier3_data($method_id, $method_case_id, $output_data_1, $output_data_2=null, $od1Names=null, $references = null) {
+        //echo("ADDING ALL:");
+        //print_r($output_data_1);
+        //print_r($output_data_2);
             $method = new method($this->db, $method_id);
             
                 $method_data = method_info::get_data_for_method($this->db, $method_id);
-                
+                //echo("METHOD_DATA");
+                //print_r($method_data);
                 if(count($method_data) > 0) {
-
+                    
+                    $user_interactions = $method_data[0]->get_user_interactions();
                     $user_interaction = $method_data[0]->get_user_interaction();
                     if($user_interaction == USER_INTERACTION_MULTISELECT) {
                         if(count($output_data_2) > 0) {
@@ -463,6 +467,7 @@ public function submit_case($submitstatus) {
 
                         $i=0;
                         foreach($output_data_1 as $value) {
+                            
                             $name = urldecode($od1Names[$i]);
                             if(is_array($value)) {
                                 if($user_interaction == USER_INTERACTION_SELECT_RANGE) {
@@ -474,12 +479,42 @@ public function submit_case($submitstatus) {
                                     foreach($value as $arr_val) {
                                         $result = $this->add_tier3($method_id, $name, $arr_val, $method_case_id, null, $user_interaction);
                                     }
+                                    
                                    
-                                }
+                                } else {
+
+                                $result = $this->add_tier3($method_id, $name, null, $method_case_id, $value, $user_interaction);
+                            }
                             } else {
+
                                 $result = $this->add_tier3($method_id, $name, null, $method_case_id, $value, $user_interaction);
                             }
                                 $i++;
+                            }
+                    } else if($user_interaction == USER_INTERACTION_3_COL_W_REF) {
+                        //echo("3_COL_W_REF");
+                        foreach($output_data_1 as $od1=>$data) {
+                                
+                                foreach($data as $od2=>$result) {
+                                    $result = $result[0];
+                                    if($result != null && $result != "") {
+                                        $curr_references = $references[$od1][$od2];
+                                        print_r($curr_references);
+                                        $od1 = urldecode($od1);
+                                        $od2 = urldecode($od2);
+                                        //echo("SELECTED: ($od1, $od2) = $result<BR>");
+                                        $reflist = "";
+                                        foreach($curr_references as $ref) {
+                                            if($reflist == "") {
+                                                $reflist .= $ref;
+                                            } else {
+                                                $reflist .= ", $ref ";
+                                            }
+                                        }
+                                        $insert_result = $this->add_tier3($method_id, $od1, $od2, $method_case_id, $result, $user_interaction, $reflist);
+                                    }
+
+                                }
                             }
                     }   
 
@@ -488,15 +523,19 @@ public function submit_case($submitstatus) {
     
     /** Adds just one record to the tier3data table
      * 
-     * @param type $methodid
-     * @param type $od1
-     * @param type $od2
-     * @param type $tier2id
-     * @param type $value
-     * @param type $interaction
-     * @return type
+     * @param int $methodid Method ID
+     * @param string $od1 output_data_1 value
+     * @param string $od2 output_data_2 value (can be null)
+     * @param id $tier2id ID of the tier2 data to use
+     * @param string $value String value for user input (optional depending on type)
+     * @param string $interaction user_interaction type (optional)
+     * @return array an array in the form
+     *  ("RESULT"=>$result,
+     *      "MESSAGE"=>$message)
+     * where "RESULT" is true if successful, else false, and "MESSAGE" is an
+     * output message
      */
-    public function add_tier3($methodid, $od1, $od2, $tier2id, $value=NULL, $interaction=NULL) {
+    public function add_tier3($methodid, $od1, $od2, $tier2id, $value=NULL, $interaction=NULL, $references = null) {
         if($interaction == null ||
                 $interaction == USER_INTERACTION_MULTISELECT ||
                 $interaction == USER_INTERACTION_SELECT_EACH) {
@@ -523,6 +562,15 @@ public function submit_case($submitstatus) {
                 " output_data_1 = :od1";
             $info_params = array("methodid"=>$methodid,
                     "od1"=>$od1);
+        } else if($interaction == USER_INTERACTION_3_COL_W_REF) {
+            $info_query = "SELECT * from method_info where methodid = :methodid AND ".
+                    "output_data_1 = :od1 and " .
+                    "output_data_2 = :od2 and " .
+                    "output_data_3 = :od3";
+            $info_params = array("methodid"=>$methodid,
+                            "od1"=>$od1,
+                            "od2"=>$od2,
+                            "od3"=>$value);
         }
 
         $result = $this->db->get_query_result($info_query, $info_params);
@@ -537,13 +585,26 @@ public function submit_case($submitstatus) {
             $methoddata = new method_info($this->db, $methodinfoid);
             $interaction = $methoddata->get_user_interaction();
             
-                if($interaction == USER_INTERACTION_MULTISELECT) {
+                if($interaction == USER_INTERACTION_MULTISELECT ||
+                        $interaction == USER_INTERACTION_3_COL_W_REF) {
 
                 $q = "INSERT INTO tier3data(tier2id, methodinfoid) VALUES ".
                         "(:t2id, :methodinfoid)";
                 $params = array("t2id"=>$tier2id,
                                 "methodinfoid"=>$methodinfoid);
+                
+                // add references
+                if($references != null) {
+                    $q = "INSERT INTO tier3data(tier2id, methodinfoid, references) VALUES ".
+                        "(:t2id, :methodinfoid, :reference)";
+                    $params = array("t2id"=>$tier2id,
+                                "methodinfoid"=>$methodinfoid,
+                                "references"=>$references);
+                    
+                }
+                
                 $info_result = $this->db->get_insert_result($q, $params);
+                
                 if($info_result > 0) {
                     return array("RESULT"=>TRUE,
                                 "MESSAGE"=>"Method data added successfully.",
@@ -574,10 +635,14 @@ public function submit_case($submitstatus) {
     /** Adds a record to the tier3data table given a methodinfoid id instead
      * of output_data values
      * 
-     * @param type $tier2id
-     * @param type $methodinfoid
-     * @param type $value
-     * @return type
+     * @param int $tier2id Tier2 ID
+     * @param int $methodinfoid ID of the method_info
+     * @param string $value Value to add (optional, only for certain user_interaction types)
+     * @return array an array in the form
+     *  ("RESULT"=>$result,
+     *      "MESSAGE"=>$message)
+     * where "RESULT" is true if successful, else false, and "MESSAGE" is an
+     * output message
      */
     public function add_tier3_by_id($tier2id, $methodinfoid, $value=null) {
         if($value == null) {
@@ -612,7 +677,11 @@ public function submit_case($submitstatus) {
      * 
      * @param int $t2id Tier 2 ID
      * @param int $methodinfoid method_info id
-     * @return type
+     * @return array an array in the form
+     *  ("RESULT"=>$result,
+     *      "MESSAGE"=>$message)
+     * where "RESULT" is true if successful, else false, and "MESSAGE" is an
+     * output message
      */
     public function delete_tier3($t2id, $methodinfoid) {
 
@@ -635,7 +704,11 @@ public function submit_case($submitstatus) {
         /** Deletes Tier 3 data for a given its id
      * 
      * @param int $t3id the Tier 3 database id
-     * @return type
+     * @return array an array in the form
+     *  ("RESULT"=>$result,
+     *      "MESSAGE"=>$message)
+     * where "RESULT" is true if successful, else false, and "MESSAGE" is an
+     * output message
      */
     public function delete_tier3_by_id($t3id) {
 
@@ -675,7 +748,11 @@ public function submit_case($submitstatus) {
      * @param type $t2id
      * @param type $methodinfoid
      * @param type $new_value
-     * @return type
+     * @return array an array in the form
+     *  ("RESULT"=>$result,
+     *      "MESSAGE"=>$message)
+     * where "RESULT" is true if successful, else false, and "MESSAGE" is an
+     * output message
      */
     public function update_tier3($t2id, $methodinfoid, $new_value){
         $check_query = "SELECT * from tier3data where tier2id = :t2id and methodinfoid = :methodinfoid ";
@@ -720,6 +797,14 @@ public function submit_case($submitstatus) {
         $result2 = $this->db->get_update_result($query2, $params);
     }
     
+    /** Permanently deletes a case from the database
+     * 
+     * @return array an array in the form
+     *  ("RESULT"=>$result,
+     *      "MESSAGE"=>$message)
+     * where "RESULT" is true if successful, else false, and "MESSAGE" is an
+     * output message
+     */
     public function delete_case() {
         $memberid = $this->memberid;
         $deleteid = $this->id;
@@ -737,47 +822,68 @@ public function submit_case($submitstatus) {
     }
 
 
-public static function get_member_cases($db, $memberid, $start=-1, $pagerows=-1) {
+    // Static functions
+    
+    /** Gets the cases for a member
+     * 
+     * @param db $db The database object
+     * @param id $memberid ID of the member to get cases for
+     * @param int $start Starting index to get cases from (optional)
+     * @param int $pagerows Number of cases to retrieve (optional)
+     * @return \sofa_case An array of sofa_case objects for the given member
+     */
+    public static function get_member_cases($db, $memberid, $start=-1, $pagerows=-1) {
 
-$q = "SELECT id, casename, casenumber, caseyear, caseagency,submissionstatus,  
-DATE_FORMAT(datemodified, '%M %d, %Y') AS moddat, 
-DATE_FORMAT(datesubmitted, '%M %d, %Y') AS subdat 
-FROM cases WHERE memberid=:memberid 
-AND submissionstatus>=0 
-ORDER BY datemodified DESC ";
+        $q = "SELECT id, casename, casenumber, caseyear, caseagency,submissionstatus,  
+        DATE_FORMAT(datemodified, '%M %d, %Y') AS moddat, 
+        DATE_FORMAT(datesubmitted, '%M %d, %Y') AS subdat 
+        FROM cases WHERE memberid=:memberid 
+        AND submissionstatus>=0 
+        ORDER BY datemodified DESC ";
 
 
-$params = array("memberid"=>$memberid);
-if($start >= 0) {
-	$q .= "LIMIT $start, $pagerows";
+        $params = array("memberid"=>$memberid);
+        if($start >= 0) {
+                $q .= "LIMIT $start, $pagerows";
 
-}
+        }
 
-$result = $db->get_query_result($q, $params);
+        $result = $db->get_query_result($q, $params);
 
-$cases = array();
-foreach($result as $case) {
-	$newcase = new sofa_case($db, $case['id']);
-	$cases[] = $newcase;
-}
+        $cases = array();
+        foreach($result as $case) {
+                $newcase = new sofa_case($db, $case['id']);
+                $cases[] = $newcase;
+        }
 
-return $cases;
-}
+        return $cases;
+    }
 
-public static function case_exists($db, $caseid, $memberid, $caseyear, $casenum) {
-    $q = "SELECT id FROM cases WHERE memberid=:memberid AND caseyear=:caseyear AND casenumber=:casenum AND id!=:caseeditid";
-                $params = array("memberid"=>$memberid,
-                                "caseyear"=>$caseyear,
-                                "casenum"=>$casenum,
-                                "caseeditid"=>$caseid);
-                
-                $result = $db->get_query_result($q, $params);
-                if(count($result) > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-}
+    
+    /** Determines if a case exists, given the case name 
+     * 
+     * 
+     * @param db $db The database object
+     * @param int $caseid Case ID to check against. Used when re-naming an existing case
+     * @param int $memberid ID of the member whose case this is
+     * @param string $caseyear Case year to search for
+     * @param string $casenum
+     * @return boolean
+     */
+    public static function case_exists($db, $caseid, $memberid, $caseyear, $casenum) {
+        $q = "SELECT id FROM cases WHERE memberid=:memberid AND caseyear=:caseyear AND casenumber=:casenum AND id!=:caseeditid";
+                    $params = array("memberid"=>$memberid,
+                                    "caseyear"=>$caseyear,
+                                    "casenum"=>$casenum,
+                                    "caseeditid"=>$caseid);
+
+                    $result = $db->get_query_result($q, $params);
+                    if(count($result) > 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+    }
 
 
     

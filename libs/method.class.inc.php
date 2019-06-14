@@ -15,6 +15,7 @@ class method {
     private $measurement_type;
     private $description;
     private $instructions;
+    private $methodinfotype;
     
     private $tier2id;
     
@@ -56,6 +57,10 @@ class method {
     
     public function get_instructions() {
         return $this->instructions;
+    }
+    
+    public function get_method_info_type() {
+        return $this->methodinfotype;
     }
     
     /** Add a list of features to this Method
@@ -230,12 +235,23 @@ class method {
      * 
      * @return array An array of strings that are the output_data_1 for this method_info
      */
-    public function get_data_1($user_interaction = null) {
-        $output_data_1_query = "SELECT DISTINCT output_data_1 from method_info where methodid = :method_id".(($user_interaction == null) ? "" : " and user_interaction = :user_interaction");
+    public function get_data_1($user_interaction = null, $category = null, $subcategory=null) {
+        
+        $output_data_1_query = "SELECT DISTINCT output_data_1 from method_info where methodid = :method_id".
+                (($user_interaction == null) ? "" : " and user_interaction = :user_interaction");
         $params = array("method_id"=>$this->id);
         if($user_interaction != null) {
             $params["user_interaction"] = $user_interaction;
         }
+        if($category != null) {
+            $output_data_1_query .= " AND output_data_3 = :category";
+            $params['category'] = $category;
+        }
+        if($subcategory != null) {
+            $output_data_1_query .= " AND output_data_4 = :subcategory";
+            $params['subcategory'] = $subcategory;
+        }
+        
         $output_data_1_result = $this->db->get_query_result($output_data_1_query, $params);
         if(count($output_data_1_result) > 0) {
             // just return array of texts
@@ -253,11 +269,19 @@ class method {
      * 
      * @return array An array of strings that are the output_data_2 for this method_info
      */
-    public function get_data_2($user_interaction = null) {
+    public function get_data_2($user_interaction = null, $category = null, $subcategory=null) {
         $output_data_2_query = "SELECT DISTINCT output_data_2 from method_info where methodid = :method_id".(($user_interaction == null) ? "" : " and user_interaction = :user_interaction");
         $params = array("method_id"=>$this->id);
         if($user_interaction != null) {
             $params["user_interaction"] = $user_interaction;
+        }
+        if($category != null) {
+            $output_data_2_query .= " AND output_data_3 = :category";
+            $params['category'] = $category;
+        }
+        if($subcategory != null) {
+            $output_data_2_query .= " AND output_data_4 = :subcategory";
+            $params['subcategory'] = $category;
         }
         $output_data_2_result = $this->db->get_query_result($output_data_2_query, $params);
         if(count($output_data_2_result) > 0) {
@@ -296,6 +320,18 @@ class method {
     
     public function get_output_data_4($od1, $od2) {
         $query = "SELECT output_data_4 from method_info where output_data_1=:od1 and output_data_2=:od2 and methodid=:methodid";
+        $params = array("od1"=>$od1,
+                        "od2"=>$od2,
+                        "methodid"=>$this->id);
+
+        $result = $this->db->get_query_result($query, $params);
+        if(count($result > 0)) {
+            return $result;
+        }
+    }
+    
+    public function get_reference_list($od1, $od2) {
+        $query = "SELECT reference_listt from method_info where output_data_1=:od1 and output_data_2=:od2 and methodid=:methodid";
         $params = array("od1"=>$od1,
                         "od2"=>$od2,
                         "methodid"=>$this->id);
@@ -403,9 +439,22 @@ class method {
         }
     }
     
-    public function get_method_info_by_od1($od1) {
+    public function get_method_info_by_od1($od1, $od2 = null, $od3 = null, $od4=null) {
         $query = "SELECT id from method_info where methodid=:methodid and output_data_1 = :od1";
         $params = array("methodid"=>$this->id, "od1"=>$od1);
+
+         if($od2 != null) {
+            $query .= " AND output_data_2 = :od2 ";
+            $params["od2"] = $od2;
+        }
+        if($od3 != null) {
+            $query .= " AND output_data_3 = :od3 ";
+            $params["od3"] = $od3;
+        }
+        if($od4 != null) {
+            $query .= " AND output_data_4 = :od4 ";
+            $params["od4"] = $od4;
+        }
         $result = $this->db->get_query_result($query, $params);
         if(count($result) > 0) {
             $infos = array();
@@ -458,7 +507,7 @@ class method {
          $query = "SELECT * from methods where id = :id";
          $params = array("id"=>$id);
          $result = $this->db->get_query_result($query, $params);
-         //$data = mysqli_fetch_array($result, MYSQLI_ASSOC);
+
          if(count($result) > 0) {
              $data = $result[0];
          
@@ -469,6 +518,7 @@ class method {
          $this->measurement_type = $data['measurementtype'];
          $this->description = $data['description'];
          $this->instructions = $data['instructions'];
+         $this->methodinfotype = $data['methodinfotype'];
          }
          
      }

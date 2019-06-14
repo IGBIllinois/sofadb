@@ -72,12 +72,21 @@ if(isset($_GET['func']) && $_GET['func'] == "drop_1"  ) {
    
    functions::drop_1($_GET['drop_var']); 
    
+   
 } else if(isset($_GET['func']) && $_GET['func'] == "show_method_info"  ) { 
-    
+
     $method_id = $_GET['method_id'];
     method_info::show_method_info($db, $method_id);
     
-}
+}  else if(isset($_GET['func']) && $_GET['func'] == "spradley_jantz"  ) { 
+
+    $category = $_GET['category'];
+    $method_id = $_GET['method_id'];
+
+    $method = new method($db, $method_id);
+    method_info::show_method_info_spradley_jantz($db, $method, null, $category);
+    
+} 
    
 
 
