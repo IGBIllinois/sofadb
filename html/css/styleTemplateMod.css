@@ -228,7 +228,7 @@ body {
 	float: left;
 	margin-right: 15px;
 	margin-left: 200px;
-	width: 70%	
+	width: 80%	
 }
 
 #memberregion {
@@ -293,7 +293,8 @@ body {
 	clear:both;
 }
 #methodholder {
-	height: 200px;
+	min-height: 200px;
+        height: auto;
 }
 .userheading {
 	font-weight: bolder;
@@ -320,6 +321,7 @@ body {
 	padding-right: 20px;
 	border: solid 1px #000000;
 	overflow: auto;
+        padding-bottom: 20px;
 	
 	
 }
@@ -377,8 +379,8 @@ body {
 
 /* Typography
 ------------------------------------- */
-@charset "UTF-8";
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+//@charset "UTF-8";
+//@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
 
 /*body {
 	  font-family: 'Open Sans', sans-serif;
@@ -639,3 +641,72 @@ a:hover { text-decoration: none; }
 	}
 
 }
+
+.td_spaced {
+    padding:3px;
+}
+
+.table_padded {
+    border-spacing:7px;
+}
+
+.table_full {
+    width:100%;
+}
+
+.align_top {
+    vertical-align: top;
+}
+
+.align_right {
+    text-align:right;
+}
+
+.width_250px {
+    width:250px;
+}
+
+// Checkbox dropdown
+
+.multiselect {
+  //width: 100%;
+}
+
+.selectBox {
+  position: relative;
+}
+
+.selectBox select {
+  //width: 100%;
+}
+
+.overSelect {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.checkboxes {
+  display: none;
+  //border: 1px #dadada solid;
+  position: absolute;
+  border-style: solid;
+  border-width:thin;
+  z-index: 100;
+  background:white;
+  
+  
+}
+
+.checkboxes label {
+  display: block;
+}
+
+.checkboxes label:hover {
+  background-color: #1e90ff;
+}
+
+// end checkbox dropdown
+

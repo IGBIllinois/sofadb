@@ -267,3 +267,25 @@ $('document').ready(function() {
    $(window).scrollTop(0);
 });
 
+// checkbox dropdown
+var expanded = false;
+
+function showCheckboxes(elementId) {
+    //alert('elementId = '+elementId);
+    //alert('elementName = '+elementName);
+  //var checkboxes = document.getElementById(elementId);
+  checkboxes = elementId;
+  //alert('checkboxes 0= '+checkboxes);
+  //elementName = "checkboxes_humerus_composite_distal_epiphysis_to_shaft";
+  //var checkboxes = document.getElementsByName(elementName);
+  //checkboxes = checkboxes[0];
+  //alert('checkboxes 1= '+checkboxes);
+  if (!expanded) {
+    checkboxes.style.display = "block";
+    expanded = true;
+  } else {
+    checkboxes.style.display = "none";
+    expanded = false;
+  }
+}
+// end checkbox dropdown

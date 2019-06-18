@@ -342,9 +342,9 @@ class method_info {
        if(count($method_info) > 0) {
            //$user_interaction = $method_info[0]->get_user_interaction();
            $interactions = $method_info[0]->get_user_interactions();
-           echo("<table><tr>");
+           echo("<table class='table_full'><tr>");
            foreach($interactions as $user_interaction) {
-               echo("<td style='vertical-align:top'>");
+               echo("<td class='align_top'>");
                
                $user_interaction = $user_interaction[0];
                //echo("user interaction = $user_interaction<BR>");
@@ -409,18 +409,18 @@ class method_info {
 
                
            echo("<table>");
-           echo("<tr><th><B><U>".$header1."</U></B></th>");
+           echo("<tr><th class='td_spaced'><B><U>".$header1."</U></B></th>");
            
            if(count($output_data_2_result_sel) > 0) {
-               echo("<th><B><U>".$header2."</U></B></th>");
+               echo("<th class='td_spaced'><B><U>".$header2."</U></B></th>");
            }
            echo("</tr>");
            
-           echo("<tr><td style='vertical-align:top'>");
+           echo("<tr><td class='td_spaced align_top'>");
 
            
            $size = count($output_data_1_result_sel);
-           echo("<select id='output_data_1' style='width:200px;' ". (($multiple == 1) ? " multiple size=$size " : "" ) ." name=output_data_1[] >");
+           echo("<select id='output_data_1' ". (($multiple == 1) ? " multiple size=$size " : "" ) ." name=output_data_1[] >");
 
                 foreach($output_data_1_result_sel as $od1_result) {
                     $selected = false;
@@ -438,11 +438,11 @@ class method_info {
            echo("</td>");
 
            if(count($output_data_2_result_sel) > 0) {
-               echo("<td style='vertical-align:top'>");
+               echo("<td class='td_spaced align_top'>");
                $selected = false;
                $size2 = count($output_data_2_result_sel);
                    // output a select box
-                echo("<select id='output_data_2' style='width:200px;'". (($multiple == 1) ? " multiple size=$size2 " : "" ) ." name=output_data_2[] >");
+                echo("<select id='output_data_2' ". (($multiple == 1) ? " multiple size=$size2 " : "" ) ." name=output_data_2[] >");
                 foreach($output_data_2_result_sel as $od2_option) {
                     foreach($methodinfos as $method_info) {
                         if($method_info->get_output_data_2() == $od2_option['output_data_2']) {
@@ -485,8 +485,8 @@ class method_info {
                 $html .="</tr><tr>";
                 $i=0;
             }
-            echo("<td style='vertical-align:top'>");
-            echo("<table  style='border-spacing:7px'><tr><th width=50% style='text-align:right;vertical-align:top'><U><B>".$header1."</B></U></th>");
+            echo("<td class='align_top'>");
+            echo("<table class='table_padded'><tr><th width=50% class='align_right align_top'><U><B>".$header1."</B></U></th>");
             echo("<th><U><B>".$header2."</B></U></th>");
 
             echo("</tr>");
@@ -521,7 +521,7 @@ class method_info {
             //In case name has spaces, encode it
             $outputname = urlencode($name);
             $size = $ranges[1] - $ranges[0] +1;
-            $selectbox = "<select style='width:100%' size=$size name=output_data_1[$outputname][] multiple>";
+            $selectbox = "<select class='table_full' size=$size name=output_data_1[$outputname][] multiple>";
 
             for($curr_range = $ranges[0]; $curr_range <= $ranges[1]; $curr_range++) {
                 $selected = false;
@@ -546,7 +546,7 @@ class method_info {
             }
             $selectbox .="</select>";
 
-            echo("<tr><td style='text-align:right;vertical-align:top'>".$name.":</td><td style='vertical-align:top'> $selectbox </td></tr>");
+            echo("<tr><td class='align_right align_top'>".$name.":</td><td class='align_top'> $selectbox </td></tr>");
             echo("</table>");
             echo("</td>");
             $i++;
@@ -607,8 +607,8 @@ class method_info {
                     
                     $curr_method_info = $method->get_method_info_by_od1($name);
                     $header1 = $curr_method_info[0]->get_output_data_1_description();
-                    echo("<td  style='vertical-align:top'>");
-                    echo("<table  style='border-spacing:7px'><tr><th width=50% style='text-align:right;vertical-align:top'><U><B>".$header1."</B></U></th>");
+                    echo("<td  class='align_top'>");
+                    echo("<table  class='td_spaced'><tr><th width=50% class='align_right align_top'><U><B>".$header1."</B></U></th>");
                     echo("<th><U><B>".$header2."</B></U></th>");
 
                     echo("</tr>");
@@ -619,7 +619,7 @@ class method_info {
                    
 
                    $size = count($od2_data);
-                   $selectbox = "<select style='width:100%' size=$size name=output_data_1[$outputname][] multiple>";
+                   $selectbox = "<select class='table_full' size=$size name=output_data_1[$outputname][] multiple>";
 
                    foreach($od2_data as $od2) {
                        $od2 = $od2['output_data_2'];
@@ -642,7 +642,7 @@ class method_info {
 
                    $selectbox .="</select>";
 
-               echo("<tr><td style='text-align:right;vertical-align:top'>".$name.":</td><td style='text-align:right;vertical-align:top'> $selectbox </td></tr>");
+               echo("<tr><td class='align_right align_top'>".$name.":</td><td class='align_right align_top'> $selectbox </td></tr>");
                
                 echo("</table>");
                 echo("</td>");
@@ -717,7 +717,7 @@ class method_info {
                     $header3 = $method->get_header_3();
                     $header4 = $method->get_header_4();
 
-               echo("<table  style='border-spacing:7px'><tr><th><U><B>".$header1."</B></U></th>");
+               echo("<table  style='table_full table_padded'><tr><th><U><B>".$header1."</B></U></th>");
                echo("<th><U><B>".$header2."/".$header3."</B></U></th>");
 
                echo("</tr>");
@@ -731,13 +731,13 @@ class method_info {
                    $od2_data = $method->get_od2_for_od1($name, 1);
                    $selected = false;
                    $od3 = "";
-                   $od3 .= "<table>";
+                   $od3 .= "<table >";
                    foreach($od2_data as $od2) {
                        $od2 = $od2['output_data_2'];
 
                    $od3_data = $method->get_output_data_3($name, $od2);
                    $od2_encode = urlencode($od2);
-                   $od3 .="<tr><td style='width:40%'>$od2</td>";
+                   $od3 .="<tr><td class='width_250px'>$od2</td>";
                    $od3 .= "<td><select name=output_data_1[$outputname][$od2_encode][]>";
                    $od3 .= "<option value=''></option>";
                    foreach($od3_data as $output_data_3) {
@@ -750,6 +750,8 @@ class method_info {
                    }
                    $od3 .="</select>";
                    $od3 .="</td><td>";
+                   
+                   /*
                    $ref_text = "<select name=references[$outputname][$od2_encode][] style='width:100%'>";
                    //$references = $method->get_references($name, $od2)[0];
                    //$reference_data = method_info::get_references($db, $references['reference_list']);
@@ -766,8 +768,35 @@ class method_info {
                            $ref_text .= ">".$ref['reference_name']."</option>";    
                    }
                    $ref_text .= "</select><BR>";
-                   
-                   $od3 .= $ref_text;
+                   */
+                   $method_infos = $method->get_method_info_by_od1($name, $od2);
+
+
+                   $first_method_info = $method_infos[0];
+
+                   if($first_method_info != null) {
+                    $reference_data = $first_method_info->get_references();
+                    $elementId = "checkboxes_".$outputname."_".str_replace(" ", "_",$od2);
+                    $ref_text = '<div class="multiselect table_full" >';
+                    $ref_text .= '<div class="selectBox" onclick="showCheckboxes('.$elementId.')">';
+                    $ref_text .= "<select name=references[$outputname][$od2_encode][] class='table_full'>";
+                    $ref_text .= '<option>Select an option</option>';
+                    $ref_text .= '</select>';
+                    $ref_text .= '<div class="overSelect"></div>';
+                    $ref_text .= '</div>';
+                    $ref_text.= '<div class="checkboxes" id="'.$elementId.'">';
+                    
+                    foreach($reference_data as $ref) {
+                        $refid = $elementId ."[".$ref['id']."]";
+                        $refname = $ref['reference_name'];
+                        $ref_text .= ("<label for='$refid'>");
+                        $ref_text .= ("<input type='checkbox' id='$refid' />$refname</label>");
+                    }
+                    
+                    $ref_text .= "</div></div>";
+                   }
+              
+                    $od3 .= $ref_text;
                    $od3 .= "</td></tr>";
                    }
                    $od3 .="</table>";
@@ -874,7 +903,7 @@ class method_info {
            echo("<legend class='boldlegend'>".$subcategory."</legend> ");
            echo("<table ><tr>");
            foreach($interactions as $user_interaction) {
-               echo("<td style='vertical-align:top'>");
+               echo("<td class='align_top'>");
                
                $user_interaction = $user_interaction[0];
                //echo("user interaction = $user_interaction<BR>");
