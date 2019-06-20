@@ -654,6 +654,14 @@ a:hover { text-decoration: none; }
     width:100%;
 }
 
+.width_33 {
+    width:33%;
+}
+
+.width_20 {
+    width:20%;
+}
+
 .align_top {
     vertical-align: top;
 }
@@ -662,8 +670,16 @@ a:hover { text-decoration: none; }
     text-align:right;
 }
 
+.align_left {
+    text-align:left;
+}
+
 .width_250px {
     width:250px;
+}
+
+.no_wrap {
+    white-space:nowrap;
 }
 
 // Checkbox dropdown

@@ -596,9 +596,20 @@ class method_info {
                $output_data_1_result_sel = $method->get_data_1($user_interaction, $category, $subcategory);
                $output_data_2_result_sel = $method->get_data_2($user_interaction, $category, $subcategory);
                
-
+               $maxCols = MAXCOLS;
                foreach($output_data_1_result_sel as $od1_result) {
-                    if($i >= MAXCOLS) {
+                   $length = strlen($od1_result[0]);
+
+                   if($length > 50) {
+                       // for long names, separate into their own columns vertically
+                       $maxCols = 1;
+                       break;
+                   }
+               }
+
+               
+               foreach($output_data_1_result_sel as $od1_result) {
+                    if($i >= $maxCols) {
                         echo "</tr><tr>";
                         $i=0;
                     }
@@ -607,8 +618,8 @@ class method_info {
                     
                     $curr_method_info = $method->get_method_info_by_od1($name);
                     $header1 = $curr_method_info[0]->get_output_data_1_description();
-                    echo("<td  class='align_top'>");
-                    echo("<table  class='td_spaced'><tr><th width=50% class='align_right align_top'><U><B>".$header1."</B></U></th>");
+                    echo("<td  class='align_top td_spaced'>");
+                    echo("<table  class='td_spaced table_full'><tr><th width=50% class='align_right align_top td_spaced'><U><B>".$header1."</B></U></th>");
                     echo("<th><U><B>".$header2."</B></U></th>");
 
                     echo("</tr>");
@@ -619,7 +630,7 @@ class method_info {
                    
 
                    $size = count($od2_data);
-                   $selectbox = "<select class='table_full' size=$size name=output_data_1[$outputname][] multiple>";
+                   $selectbox = "<select class='align_left' size=$size name=output_data_1[$outputname][] multiple>";
 
                    foreach($od2_data as $od2) {
                        $od2 = $od2['output_data_2'];
@@ -642,7 +653,7 @@ class method_info {
 
                    $selectbox .="</select>";
 
-               echo("<tr><td class='align_right align_top'>".$name.":</td><td class='align_right align_top'> $selectbox </td></tr>");
+               echo("<tr><td class='align_right align_top td_spaced'>".$name.":</td><td class='align_left align_top td_spaced'> $selectbox </td></tr>");
                
                 echo("</table>");
                 echo("</td>");
@@ -661,7 +672,7 @@ class method_info {
    public static function show_method_info_input($method, $tier2id, $user_interaction, $category=null) {
        
         $output_data_1_result_sel = $method->get_data_1($user_interaction, $category);
-        echo("<table>");
+        echo("<table >");
         if($tier2id != null) {
             $tier2 = new tier2data($db, $tier2id);
             $data = $tier2->get_tier3data();
@@ -678,12 +689,12 @@ class method_info {
                     }
                 }
                 $name = $method_info->get_output_data_1();
-                echo("<tr><td>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name]' value='$value'></td></tr>");
+                echo("<tr><td class='no_wrap'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name]' value='$value'></td></tr>");
             }
      } else {
         foreach($output_data_1_result_sel as $od1_result) {
             $name = $od1_result['output_data_1'];
-            echo("<tr><td>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name]'></td></tr>");
+            echo("<tr><td class='no_wrap'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name]'></td></tr>");
         }
     }
     echo("</table>");
@@ -738,7 +749,7 @@ class method_info {
                    $od3_data = $method->get_output_data_3($name, $od2);
                    $od2_encode = urlencode($od2);
                    $od3 .="<tr><td class='width_250px'>$od2</td>";
-                   $od3 .= "<td><select name=output_data_1[$outputname][$od2_encode][]>";
+                   $od3 .= "<td ><select name=output_data_1[$outputname][$od2_encode][]>";
                    $od3 .= "<option value=''></option>";
                    foreach($od3_data as $output_data_3) {
                        $od3 .= "<option  value='".$output_data_3['output_data_3']."'";
@@ -800,7 +811,7 @@ class method_info {
                    $od3 .= "</td></tr>";
                    }
                    $od3 .="</table>";
-               echo("<tr><td>".$name.":</td><td> $od3 </td></tr>");
+               echo("<tr><td class='align_top td_spaced'>".$name.":</td><td class='td_spaced'> $od3 </td></tr>");
        }
    }
    
@@ -821,7 +832,7 @@ class method_info {
        $method_infos = $method->get_method_info_by_od1($name);
        $method_info = $method_infos[0];
        $output_data_1_result_sel = $method->get_data_1($user_interaction, $category, $subcategory);
-        echo("<table>");
+        echo("<table class='td_spaced'>");
         if($tier2id != null) {
             /*
             $tier2 = new tier2data($db, $tier2id);
@@ -845,7 +856,7 @@ class method_info {
              */
      } else {
 
-            echo("<tr><td>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name]'></td>");
+            echo("<tr><td class='width_33'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name]'></td>");
             $od2s = $method_info->get_od2_for_od1($name, $category, $subcategory);
             if(count($od2s) > 0) {
                 echo("<td><select name=output_data_2[$name]>");
@@ -901,7 +912,7 @@ class method_info {
            $interactions = $method_info[0]->get_user_interactions();
            echo("<fieldset class='methodinfobox'>");
            echo("<legend class='boldlegend'>".$subcategory."</legend> ");
-           echo("<table ><tr>");
+           echo("<table class='table_padded'><tr>");
            foreach($interactions as $user_interaction) {
                echo("<td class='align_top'>");
                
