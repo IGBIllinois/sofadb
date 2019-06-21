@@ -595,14 +595,15 @@ public function submit_case($submitstatus) {
                 
                 // add references
                 if($references != null) {
-                    $q = "INSERT INTO tier3data(tier2id, methodinfoid, references) VALUES ".
+                    // temp
+                    $references = null;
+                    $q = "INSERT INTO tier3data(tier2id, methodinfoid, reference) VALUES ".
                         "(:t2id, :methodinfoid, :reference)";
                     $params = array("t2id"=>$tier2id,
                                 "methodinfoid"=>$methodinfoid,
-                                "references"=>$references);
+                                "reference"=>$references);
                     
                 }
-                
                 $info_result = $this->db->get_insert_result($q, $params);
                 
                 if($info_result > 0) {
