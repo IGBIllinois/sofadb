@@ -662,6 +662,10 @@ a:hover { text-decoration: none; }
     width:20%;
 }
 
+.width_75 {
+    width:75%;
+}
+
 .align_top {
     vertical-align: top;
 }

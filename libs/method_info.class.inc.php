@@ -298,6 +298,7 @@ class method_info {
 
        $method = new method($db, $method_id);
 
+
        $output_data_1_result = $method->get_data_1();
        $output_data_2_result = $method->get_data_2();   
 
@@ -307,7 +308,7 @@ class method_info {
        if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
            
            //method_info::show_method_info_spradley_jantz($db, $method, $tier2id, $category);
-           
+           //echo("method_id = $method_id<BR>");
             $category_query = "SELECT DISTINCT output_data_3, output_data_3_description from method_info where methodid = :methodid";
             $params = array("methodid"=>$method->get_id());
             echo("<input type=hidden id='method_id' name='method_id' value='$method_id'>");
@@ -337,7 +338,6 @@ class method_info {
        }
        
        $method_info = method_info::get_data_for_method($db, $method_id);
-       //print_r($method_info);
        
        if(count($method_info) > 0) {
            //$user_interaction = $method_info[0]->get_user_interaction();
@@ -359,12 +359,12 @@ class method_info {
                
            } else if($user_interaction == USER_INTERACTION_SELECT_EACH) {
                
-               method_info::show_method_info_select_each($method, $tier2id);
+               method_info::show_method_info_select_each($db, $method, $tier2id);
 
            } else if($user_interaction == USER_INTERACTION_INPUT_BOX ||
                    $user_interaction == USER_INTERACTION_NUMERIC_ENTRY) {
 
-               method_info::show_method_info_input($method, $tier2id, $user_interaction);
+               method_info::show_method_info_input($db, $method, $tier2id, $user_interaction);
                
             } else if($user_interaction == USER_INTERACTION_3_COL_W_REF) {
                 
@@ -485,7 +485,7 @@ class method_info {
                 $html .="</tr><tr>";
                 $i=0;
             }
-            echo("<td class='align_top'>");
+            echo("<td class='align_top width_20'>");
             echo("<table class='table_padded'><tr><th width=50% class='align_right align_top'><U><B>".$header1."</B></U></th>");
             echo("<th><U><B>".$header2."</B></U></th>");
 
@@ -521,7 +521,7 @@ class method_info {
             //In case name has spaces, encode it
             $outputname = urlencode($name);
             $size = $ranges[1] - $ranges[0] +1;
-            $selectbox = "<select class='table_full' size=$size name=output_data_1[$outputname][] multiple>";
+            $selectbox = "<select size=$size name=output_data_1[$outputname][] multiple>";
 
             for($curr_range = $ranges[0]; $curr_range <= $ranges[1]; $curr_range++) {
                 $selected = false;
@@ -561,7 +561,7 @@ class method_info {
     * @param method $method The method object
     * @param int $tier2id Existing info, if editing
     */
-   public static function show_method_info_select_each($method, $tier2id, $category=null, $subcategory=null) {
+   public static function show_method_info_select_each($db, $method, $tier2id, $category=null, $subcategory=null) {
        $user_interaction = USER_INTERACTION_SELECT_EACH;
        $header1 = $method->get_header_1();
        $header2 = $method->get_header_2();
@@ -599,10 +599,11 @@ class method_info {
                $maxCols = MAXCOLS;
                foreach($output_data_1_result_sel as $od1_result) {
                    $length = strlen($od1_result[0]);
-
+                   $width_class ="";
                    if($length > 50) {
                        // for long names, separate into their own columns vertically
                        $maxCols = 1;
+                       $width_class = " width_75 ";
                        break;
                    }
                }
@@ -653,7 +654,7 @@ class method_info {
 
                    $selectbox .="</select>";
 
-               echo("<tr><td class='align_right align_top td_spaced'>".$name.":</td><td class='align_left align_top td_spaced'> $selectbox </td></tr>");
+               echo("<tr><td class='align_right align_top td_spaced $width_class'>".$name.":</td><td class='align_left align_top td_spaced'> $selectbox </td></tr>");
                
                 echo("</table>");
                 echo("</td>");
@@ -669,7 +670,7 @@ class method_info {
     * @param int $tier2id Existing info, if editing
     * @param string $user_interaction The user_interaction type
     */
-   public static function show_method_info_input($method, $tier2id, $user_interaction, $category=null) {
+   public static function show_method_info_input($db, $method, $tier2id, $user_interaction, $category=null) {
        
         $output_data_1_result_sel = $method->get_data_1($user_interaction, $category);
         echo("<table >");
@@ -677,7 +678,7 @@ class method_info {
             $tier2 = new tier2data($db, $tier2id);
             $data = $tier2->get_tier3data();
             $this_method = new method($db, $tier2->get_methodid());
-            $this_method_info = $this_method->get_method_info();
+            $this_method_info = $this_method->get_method_info_by_type($user_interaction);
             $value = "";
 
             foreach($this_method_info as $method_info) {
@@ -825,12 +826,14 @@ class method_info {
 
        $user_interaction = USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN;
        $od1s = $method->get_data_1($user_interaction, $category, $subcategory);
-
+       
        foreach($od1s as $id=>$name) {
            $name = $name[0];
 
        $method_infos = $method->get_method_info_by_od1($name);
        $method_info = $method_infos[0];
+       $method_info_id = $method_info->get_id();
+
        $output_data_1_result_sel = $method->get_data_1($user_interaction, $category, $subcategory);
         echo("<table class='td_spaced'>");
         if($tier2id != null) {
@@ -858,12 +861,14 @@ class method_info {
 
             echo("<tr><td class='width_33'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name]'></td>");
             $od2s = $method_info->get_od2_for_od1($name, $category, $subcategory);
+            $urlName = urlencode($name);
             if(count($od2s) > 0) {
-                echo("<td><select name=output_data_2[$name]>");
+                echo("<td><select name=output_data_2[$urlName]>");
             
                 foreach($od2s as $od2) {
                     $od2_name = $od2[0];
-                    echo("<option name='$od2_name]'>$od2_name</option>");
+                    $url_od2 = urlencode($od2_name);
+                    echo("<option name='$url_od2'>$od2_name</option>");
                 }
                 echo("</select></td></tr>");
                 
@@ -925,7 +930,7 @@ class method_info {
                
             } else if($user_interaction == USER_INTERACTION_SELECT_EACH) {
                
-               method_info::show_method_info_select_each($method, $tier2id, $category, $subcategory);
+               method_info::show_method_info_select_each($db, $method, $tier2id, $category, $subcategory);
 
            }else if($user_interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
                 

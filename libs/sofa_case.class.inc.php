@@ -433,11 +433,56 @@ public function submit_case($submitstatus) {
         //echo("ADDING ALL:");
         //print_r($output_data_1);
         //print_r($output_data_2);
+        //print_r($od1Names);
             $method = new method($this->db, $method_id);
             
                 $method_data = method_info::get_data_for_method($this->db, $method_id);
-                //echo("METHOD_DATA");
-                //print_r($method_data);
+                
+                $method_info_type = $method->get_method_info_type();
+                if($method_info_type == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
+                    //echo("SPRADJANTZ<BR>");
+                    //echo("OD1s<BR>");
+                    //print_r($output_data_1);
+                    //echo("OD2s<BR>");
+                    //print_r($output_data_2);
+                    
+                    foreach($output_data_1 as $od1=>$value) {
+                        if(is_array($value)) {
+                            $decode_od1 = urldecode($od1);
+                            $od2 = $value[0];
+                            $od2 = urldecode($od2);
+                            //echo("od1 = $decode_od1, od2 = $od2<BR>");
+                            $method_info_arr = $method->get_method_info_by_od1($decode_od1, $od2);
+                            if(count($method_info_arr) > 0) {
+                                $method_info = $method_info_arr[0];
+                            
+                                $result = $this->add_tier3($method_id, $decode_od1, $od2, $method_case_id, null, $method_info->get_user_interaction() );
+                            }else {
+                                echo("method_info not found<BR>");
+                            }
+                            
+                        } else {
+                            $encode_od1 = urlencode($od1);
+                            $od2 = $output_data_2[$encode_od1];
+                            $od2 = urldecode($od2);
+                            //echo("od1 = $od1, od2 = $od2<BR>");
+                            $method_info_arr = $method->get_method_info_by_od1($od1, $od2);
+                            if(count($method_info_arr) > 0) {
+                                $method_info = $method_info_arr[0];
+                                //echo("<BR>method_info = ".$method_info->get_id());
+                                //echo("<BR>type = ".$method_info->get_user_interaction());
+                                //echo("<BR>value = $value");
+                                $result = $this->add_tier3($method_id, $od1, $od2, $method_case_id, $value, $method_info->get_user_interaction());
+                            } else {
+                                echo("<BR>method_info not found<BR>");
+                            }
+                        }
+                        
+
+                  
+
+                    }
+                } else {
                 if(count($method_data) > 0) {
                     
                     $user_interactions = $method_data[0]->get_user_interactions();
@@ -520,6 +565,7 @@ public function submit_case($submitstatus) {
 
                 }
     }
+    }
     
     /** Adds just one record to the tier3data table
      * 
@@ -538,7 +584,8 @@ public function submit_case($submitstatus) {
     public function add_tier3($methodid, $od1, $od2, $tier2id, $value=NULL, $interaction=NULL, $references = null) {
         if($interaction == null ||
                 $interaction == USER_INTERACTION_MULTISELECT ||
-                $interaction == USER_INTERACTION_SELECT_EACH) {
+                $interaction == USER_INTERACTION_SELECT_EACH  ||
+                $interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
             // try od1 and od2
             if($od2 != null) {
             $info_query = "SELECT * from method_info where methodid = :methodid AND ".
@@ -614,7 +661,8 @@ public function submit_case($submitstatus) {
             } else if($interaction == USER_INTERACTION_INPUT_BOX ||
                     $interaction == USER_INTERACTION_NUMERIC_ENTRY ||
                         $interaction == USER_INTERACTION_SELECT_RANGE ||
-                        $interaction == USER_INTERACTION_SELECT_EACH) {
+                        $interaction == USER_INTERACTION_SELECT_EACH ||
+                        $interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
 
                 $q = "INSERT INTO tier3data(tier2id, methodinfoid, value) VALUES ".
                         "(:t2id, :methodinfoid, :value)";
@@ -628,7 +676,7 @@ public function submit_case($submitstatus) {
                                 "MESSAGE"=>"Method data added successfully.",
                                 "id"=>$info_result);
                 }
-            }
+            } 
         }
             
     }

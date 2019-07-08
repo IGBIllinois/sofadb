@@ -455,6 +455,7 @@ class method {
             $query .= " AND output_data_4 = :od4 ";
             $params["od4"] = $od4;
         }
+
         $result = $this->db->get_query_result($query, $params);
         if(count($result) > 0) {
             $infos = array();
