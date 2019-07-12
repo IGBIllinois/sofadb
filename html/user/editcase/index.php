@@ -145,53 +145,54 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
        	//check for a FA age 2 first!
 	if (empty($_POST['faage2'])) {
-		$faage2=NULL;
-        $faageunits2=NULL;
+            $faage2=NULL;
+            $faageunits2=NULL;
 	} 
-    else {
-		$faage2 = trim($_POST['faage2']);
-        $faageunits2 = trim($_POST['faageunits2']);
-	}
+        else {
+            $faage2 = trim($_POST['faage2']);
+            $faageunits2 = trim($_POST['faageunits2']);
+        }
     
     
     //check for a FA age 1
 	if (empty($_POST['faage'])) {
-		$faage=NULL;
-        $faageunits=NULL;
-        $faage2=NULL;
-        $faageunits2=NULL;
+            $faage=NULL;
+            $faageunits=NULL;
+            $faage2=NULL;
+            $faageunits2=NULL;
 	} 
     else {
-		$faage = trim($_POST['faage']);
-        $faageunits = trim($_POST['faageunits']);
+            $faage = trim($_POST['faage']);
+            $faageunits = trim($_POST['faageunits']);
 	}
 
 	
   //check for a FA stature 2 first 
 	if (empty($_POST['fastature2'])) {
 		
-        $fastature2=NULL;
+            $fastature2=NULL;
 	} 
     else {
-		$fastature2 = trim($_POST['fastature2']);
+            $fastature2 = trim($_POST['fastature2']);
         
 	}
 
 
 	//check for a FA stature
 	if (empty($_POST['fastature'])) {
-		$fastature=NULL;
-        $fastature2=NULL;
-        $fastatureunits=NULL;
+            $fastature=NULL;
+            $fastature2=NULL;
+            $fastatureunits=NULL;
 	} 
     else {
-		$fastature = trim($_POST['fastature']);
-                $fastature2 = trim($_POST['fastature2']);
-                if(isset($_POST['fastatureunits'])) {
+            $fastature = trim($_POST['fastature']);
+            $fastature2 = trim($_POST['fastature2']);
+            
+            if(isset($_POST['fastatureunits'])) {
                 $fastatureunits = trim($_POST['fastatureunits']);
-                } else {
-                    $fastatureunits = "inches";
-                }
+            } else {
+                $fastatureunits = "inches";
+            }
 	}
 
 
@@ -315,13 +316,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		
         $faothertext = trim($_POST['farace_othertext']);
 	}
-    
-   
-    
-    
-    
-    
-    
+
       
     if(isset($_POST['race_asian']))
 	{
@@ -387,25 +382,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     }
     else{ $numcasemethods=0;}
-	
-	
+
     
-    
-		if (empty($errors)) 
+    if (empty($errors)) 
         { // If there were no errors
 		//Determine whether the case has already been registered	
 		$memberid=$_SESSION['id'];
 
       $caseeditid=$_SESSION['caseid'];
+      
+      $case_exists = sofa_case::case_exists($db, $memberid, $caseyear, $casenum, $caseeditid);
 
-		$q = "SELECT id FROM cases WHERE memberid=:memberid AND caseyear=:caseyear AND casenumber=:casenum AND id!=:caseeditid";
-                $params = array("memberid"=>$memberid,
-                                "caseyear"=>$caseyear,
-                                "casenum"=>$casenum,
-                                "caseeditid"=>$caseeditid);
-
-		$result = $db->get_query_result($q, $params);	
-            if (count($result) == 0)
+            if ($case_exists == false)
             {//The case has not been registered already 
 		// Make the query:
 		
@@ -500,7 +488,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     else
      { // Report the errors.
 		echo '<span style="padding-left:100px; 
-    display:block;"><h2>Error!</h2>
+                    display:block;"><h2>Error!</h2>
 		<p class="error">The following error(s) occurred:<br/>';
 		foreach ($errors as $msg) 
         { // Print each error.
@@ -653,7 +641,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
     <fieldset class="methodinfobox"><legend class="boldlegend">Add Methods</legend>
 
-             <div name="methodholder" id="methodholder">
+    <div name="methodholder" id="methodholder">
              <p><select name="methodtype[]" id="methodtype">
     
                            <option value="" selected="selected" disabled="disabled">Add Method For</option>
@@ -674,12 +662,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
      <input type="submit" class="showybutton" id="addmethodbutton" name='add_method' value="Add Method" ><BR>
      
      <span id="result_2" style="display: none;"></span>
-                              <span id="wait_3" style="display: none;">
-    <img alt="Please Wait" src="ajax-loader.gif"/>
+    <span id="wait_3" style="display: none;">
+        <img alt="Please Wait" src="ajax-loader.gif"/>
     </span>
-    <span id="result_3" style="display: none;"></span></p>
+     <span id="result_3" style="display: none;">
+         
+     </span></p>
+             
            <!--<p>  <input type="button" class="showybutton" id="addmethodbutton" value="Add Method to List" ></p>-->
-             </div>
+    </div>
 
           <input name="fchoseninput" type="hidden" id="fchoseninput" value="0" />
     <input name="pchoseninput" type="hidden" id="pchoseninput" value="0" />   
