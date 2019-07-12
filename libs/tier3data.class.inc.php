@@ -46,6 +46,13 @@ class tier3data {
     // static functions
     
     
+    /** Gets a Tier 3 data by its method_info and value
+     * 
+     * @param type $db The database object
+     * @param type $methodinfoid The method_info id
+     * @param type $value The value for the Tier 3 data
+     * @return \tier3data|null The Tier 3 data if it exists, else null
+     */
     public static function get_tier3_by_value($db, $methodinfoid, $value) {
         $query = "SELECT id from tier3data where methodinfoid=:methodinfoid and value=:value";
         $params = array("methodinfoid"=>$methodinfoid,
@@ -57,11 +64,14 @@ class tier3data {
             return null;
         }
     }
-        /** Deletes Tier 3 data for a givet Tier 2 id and method_info id
+    
+    /** Deletes Tier 3 data for a givet Tier 2 id and method_info id
      * 
      * @param int $t2id Tier 2 ID
      * @param int $methoddataid method_info id
-     * @return type
+     * @return array An array of the format ("RESULT"=>TRUE|FALSE, "MESSAGE"=>$message)
+     *  where RESULT is true if the Tier3 was deleted successfully, and "MESSAGE"
+     * is an output message.
      */
     public static function delete_tier3($db, $t2id, $methodinfoid) {
 
@@ -85,7 +95,9 @@ class tier3data {
      * 
      * @param int $t2id Tier 2 ID
      * @param int $methoddataid method_info id
-     * @return type
+     * @return array An array of the format ("RESULT"=>TRUE|FALSE, "MESSAGE"=>$message)
+     *  where RESULT is true if the Tier3 was deleted successfully, and "MESSAGE"
+     * is an output message.
      */
     public static function delete_tier3_by_id($db, $t3id) {
 

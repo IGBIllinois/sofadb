@@ -92,23 +92,26 @@ class tier2data {
                     $method_info = new method_info($this->db, $tier_info->get_methodinfoid());
                     
                     $interaction = $method_info->get_user_interaction();
-                    
+
                     if($interaction == USER_INTERACTION_MULTISELECT||
                             $interaction == USER_INTERACTION_SELECT_EACH) {
                         
                         if($method_info->get_output_data_2() != null) {
-                            $output .= "(".$method_info->get_output_data_1(). ", ".$method_info->get_output_data_2().") ";
+                            $output .= "(".$method_info->get_output_data_1(). ", ".$method_info->get_output_data_2().")<BR>";
                         } else {
-                            $output .= "(".$method_info->get_output_data_1().") ";
+                            $output .= "(".$method_info->get_output_data_1().")<BR>";
                         }
 
                     } else if($interaction == USER_INTERACTION_INPUT_BOX ||
                             $interaction == USER_INTERACTION_NUMERIC_ENTRY ||
                             $interaction == USER_INTERACTION_SELECT_RANGE) {
                              
-                        $output .= "(".$method_info->get_output_data_1(). ", ".$tier_info->get_value().") ";
+                        $output .= "(".$method_info->get_output_data_1(). ", ".$tier_info->get_value().")<BR> ";
                     } else if($interaction == USER_INTERACTION_3_COL_W_REF) {
-                        $output .= "(".$method_info->get_output_data_1().", ".$method_info->get_output_data_2(). ", ".$method_info->get_output_data_3().") ";
+                        $output .= "(".$method_info->get_output_data_1().", ".$method_info->get_output_data_2(). ", ".$method_info->get_output_data_3().")<BR> ";
+                    } else if($interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
+                        
+                        $output .= "( ".$method_info->get_output_data_1().", ".$method_info->get_output_data_2(). ", " . $tier_info->get_value(). ")<BR> ";
                     }
 
             }
