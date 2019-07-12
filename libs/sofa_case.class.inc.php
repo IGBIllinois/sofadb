@@ -537,25 +537,28 @@ public function submit_case($submitstatus) {
                                 $i++;
                             }
                     } else if($user_interaction == USER_INTERACTION_3_COL_W_REF) {
-                        //echo("3_COL_W_REF");
+
                         foreach($output_data_1 as $od1=>$data) {
                                 
                                 foreach($data as $od2=>$result) {
                                     $result = $result[0];
                                     if($result != null && $result != "") {
                                         $curr_references = $references[$od1][$od2];
-                                        print_r($curr_references);
+
                                         $od1 = urldecode($od1);
                                         $od2 = urldecode($od2);
                                         //echo("SELECTED: ($od1, $od2) = $result<BR>");
                                         $reflist = "";
-                                        foreach($curr_references as $ref) {
+                                        foreach($curr_references as $id=>$ref) {
+                                            if($id != "0") {
                                             if($reflist == "") {
-                                                $reflist .= $ref;
+                                                $reflist .= $id;
                                             } else {
-                                                $reflist .= ", $ref ";
+                                                $reflist .= ", $id ";
+                                            }
                                             }
                                         }
+
                                         $insert_result = $this->add_tier3($method_id, $od1, $od2, $method_case_id, $result, $user_interaction, $reflist);
                                     }
 
@@ -643,7 +646,7 @@ public function submit_case($submitstatus) {
                 // add references
                 if($references != null) {
                     // temp
-                    $references = null;
+                    //$references = null;
                     $q = "INSERT INTO tier3data(tier2id, methodinfoid, reference) VALUES ".
                         "(:t2id, :methodinfoid, :reference)";
                     $params = array("t2id"=>$tier2id,
@@ -815,6 +818,7 @@ public function submit_case($submitstatus) {
             $params = array("t2id"=>$t2id,
                         "methodinfoid"=>$methodinfoid,
                         "new_value"=>$new_value);
+
             $result = $this->db->get_update_result($update_query, $params);
             if(count($result) > 0) {
                 return array("RESULT"=>TRUE,

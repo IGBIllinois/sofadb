@@ -789,6 +789,7 @@ class method_info {
                    if($first_method_info != null) {
                     $reference_data = $first_method_info->get_references();
                     $elementId = "checkboxes_".$outputname."_".str_replace(" ", "_",$od2);
+                    //$elementId = "checkboxes[".$output_name."][".urlencode($od2)."]";
                     $ref_text = '<div class="multiselect table_full" >';
                     $ref_text .= '<div class="selectBox" onclick="showCheckboxes('.$elementId.')">';
                     $ref_text .= "<select name=references[$outputname][$od2_encode][] class='table_full'>";
@@ -802,7 +803,8 @@ class method_info {
                         $refid = $elementId ."[".$ref['id']."]";
                         $refname = $ref['reference_name'];
                         $ref_text .= ("<label for='$refid'>");
-                        $ref_text .= ("<input type='checkbox' id='$refid' />$refname</label>");
+                        $curr_name = "references[$outputname][$od2_encode]"."[".$ref['id']."]";
+                        $ref_text .= ("<input type='checkbox' id='$refid' name='$curr_name' />$refname</label>");
                     }
                     
                     $ref_text .= "</div></div>";
