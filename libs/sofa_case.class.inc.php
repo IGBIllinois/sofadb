@@ -430,21 +430,14 @@ public function submit_case($submitstatus) {
      * @param array $od1Names Array of output_data_1 names, used for INPUT_BOX, NUMERIC_ENTRY type
      */
     public function add_all_tier3_data($method_id, $method_case_id, $output_data_1, $output_data_2=null, $od1Names=null, $references = null) {
-        //echo("ADDING ALL:");
-        //print_r($output_data_1);
-        //print_r($output_data_2);
-        //print_r($od1Names);
+
             $method = new method($this->db, $method_id);
             
                 $method_data = method_info::get_data_for_method($this->db, $method_id);
                 
                 $method_info_type = $method->get_method_info_type();
                 if($method_info_type == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
-                    //echo("SPRADJANTZ<BR>");
-                    //echo("OD1s<BR>");
-                    //print_r($output_data_1);
-                    //echo("OD2s<BR>");
-                    //print_r($output_data_2);
+
                     
                     foreach($output_data_1 as $od1=>$value) {
                         if(is_array($value)) {
@@ -576,7 +569,8 @@ public function submit_case($submitstatus) {
      * @param string $od1 output_data_1 value
      * @param string $od2 output_data_2 value (can be null)
      * @param id $tier2id ID of the tier2 data to use
-     * @param string $value String value for user input (optional depending on type)
+     * @param string $value String value for user input,
+     * or output_data_3 for 3_col_with_ref type (optional depending on type)
      * @param string $interaction user_interaction type (optional)
      * @return array an array in the form
      *  ("RESULT"=>$result,
@@ -806,7 +800,7 @@ public function submit_case($submitstatus) {
      * where "RESULT" is true if successful, else false, and "MESSAGE" is an
      * output message
      */
-    public function update_tier3($t2id, $methodinfoid, $new_value){
+    public function update_tier3($t2id, $methodinfoid, $new_value, $reflist = null){
         $check_query = "SELECT * from tier3data where tier2id = :t2id and methodinfoid = :methodinfoid ";
         $params = array("t2id"=>$t2id,
                         "methodinfoid"=>$methodinfoid);
@@ -819,6 +813,14 @@ public function submit_case($submitstatus) {
                         "methodinfoid"=>$methodinfoid,
                         "new_value"=>$new_value);
 
+            if($reflist != null) {
+                $update_query = "UPDATE tier3data set value=:new_value, reference = :reflist where tier2id=:t2id and methodinfoid=:methodinfoid";
+                $params = array("t2id"=>$t2id,
+                        "methodinfoid"=>$methodinfoid,
+                        "reflist"=>$reflist,
+                        "new_value"=>$new_value);
+
+            }
             $result = $this->db->get_update_result($update_query, $params);
             if(count($result) > 0) {
                 return array("RESULT"=>TRUE,

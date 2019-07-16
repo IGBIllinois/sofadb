@@ -261,6 +261,66 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             }
         }
+    } else if($user_interaction == USER_INTERACTION_3_COL_W_REF) {
+
+        $caseid = $_POST['caseid'];
+        $case = new sofa_case($db, $caseid);
+        $tier2id = $_POST['tier2id'];
+        $tier2 = new tier2data($db, $tier2id);
+        $output_data_1 = $_POST['output_data_1'];
+        
+        
+        $new_ids = array();
+        
+        foreach($output_data_1 as $od1=>$od2_data) {
+            foreach($od2_data as $od2=>$od3) {
+                $od2 = urldecode($od2);
+                $od3 = $od3[0];
+                if($od3 != null && $od3 != "") {
+                    $method_info = $method->get_method_info_by_od1($od1, $od2, $od3);
+                    if(count($method_info) == 1) {
+                        $method_info = $method_info[0];
+                    }
+                    $new_id = $method_info->get_id();
+                    $new_ids[] = $new_id;
+
+                    $tier3data = $tier2->get_tier3data($method_info->get_id());
+                    $tier3 = new tier3data($db, $tier3data['id']);
+
+                    $newreflist = "";
+                    $newrefs = $_POST['references'][$od1][urlencode($od2)];
+                    foreach($newrefs as $id=>$status) {
+                        if($status == "on") {
+                            if($newreflist == "") {
+                                $newreflist .= $id;
+                            } else {
+                                $newreflist .= ", ".$id;
+                            }
+                        }
+                    }
+
+                    if(!in_array($new_id, $existing_ids)) {
+                        // add
+
+                        $case->add_tier3($method->get_id(), $od1, $od2, $tier2id, $od3, $user_interaction, $newreflist);
+                    } else {
+                        // update
+
+                        $case->update_tier3($tier2id, $method_info->get_id(), null, $newreflist);
+                    }
+                    foreach($existing_ids as $ex_id) {
+                        if(!in_array($ex_id, $new_ids)) {
+
+                            tier3data::delete_tier3($db, $tier2id, $ex_id);
+                        }
+                    }
+                    
+                    
+                    
+                }
+            }
+        }
+        
     }
     echo("<div id='caseform'>");
     if($errors == 0) {

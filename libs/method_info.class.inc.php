@@ -736,7 +736,9 @@ class method_info {
                $value = null;
 
                foreach($output_data_1_result as $od1_result) {
-
+                   $reflist = array();
+                   $tmp_references = null;
+                   
                    $name = $od1_result[0];
                    //In case name has spaces, encode it
                    $outputname = urlencode($name);
@@ -746,7 +748,24 @@ class method_info {
                    $od3 .= "<table >";
                    foreach($od2_data as $od2) {
                        $od2 = $od2['output_data_2'];
+                       $tmp_od3 = "";
+                       $reflist = array();
+                       foreach($methodinfos as $tmp_methodinfo) {
+                           if($outputname == $tmp_methodinfo->get_output_data_1() &&
+                                   $od2 == $tmp_methodinfo->get_output_data_2()) {
+                               $selected = true;
 
+                               $t3 = $tier2->get_tier3data($tmp_methodinfo->get_id());
+                               if($t3 != null) {
+
+                               $tmp_references = $t3[0]->get_references();
+                               }
+
+                               $reflist = array_map('trim', (explode(",", $tmp_references)));
+                               
+                               $tmp_od3 = $tmp_methodinfo->get_output_data_3();
+                           }
+                       }
                    $od3_data = $method->get_output_data_3($name, $od2);
                    $od2_encode = urlencode($od2);
                    $od3 .="<tr><td class='width_250px'>$od2</td>";
@@ -754,7 +773,7 @@ class method_info {
                    $od3 .= "<option value=''></option>";
                    foreach($od3_data as $output_data_3) {
                        $od3 .= "<option  value='".$output_data_3['output_data_3']."'";
-                           if($selected) {
+                           if($tmp_od3 == $output_data_3['output_data_3']) {
                                // it exists in the database
                                $od3 .= " selected=1 ";
                            }
@@ -763,24 +782,7 @@ class method_info {
                    $od3 .="</select>";
                    $od3 .="</td><td>";
                    
-                   /*
-                   $ref_text = "<select name=references[$outputname][$od2_encode][] style='width:100%'>";
-                   //$references = $method->get_references($name, $od2)[0];
-                   //$reference_data = method_info::get_references($db, $references['reference_list']);
-                   $method_infos = $method->get_method_info_by_od1($name, $od2);
-                   $first_method_info = $method_infos[0];
-                   $reference_data = $first_method_info->get_references();
-                   $ref_text .= "<option value=''></option>";
-                   foreach($reference_data as $ref) {
-                       $ref_text .= "<option  value='".$ref['id']."'";
-                           if($selected) {
-                               // it exists in the database
-                               $ref_text .= " selected=1 ";
-                           }
-                           $ref_text .= ">".$ref['reference_name']."</option>";    
-                   }
-                   $ref_text .= "</select><BR>";
-                   */
+
                    $method_infos = $method->get_method_info_by_od1($name, $od2);
 
 
@@ -798,13 +800,14 @@ class method_info {
                     $ref_text .= '<div class="overSelect"></div>';
                     $ref_text .= '</div>';
                     $ref_text.= '<div class="checkboxes" id="'.$elementId.'">';
-                    
+
                     foreach($reference_data as $ref) {
+
                         $refid = $elementId ."[".$ref['id']."]";
                         $refname = $ref['reference_name'];
                         $ref_text .= ("<label for='$refid'>");
                         $curr_name = "references[$outputname][$od2_encode]"."[".$ref['id']."]";
-                        $ref_text .= ("<input type='checkbox' id='$refid' name='$curr_name' />$refname</label>");
+                        $ref_text .= ("<input type='checkbox' id='$refid' name='$curr_name'".(in_array($ref['id'], $reflist)? " checked=1 " : "")." />$refname</label>");
                     }
                     
                     $ref_text .= "</div></div>";
