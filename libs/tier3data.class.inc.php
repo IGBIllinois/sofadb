@@ -12,6 +12,7 @@ class tier3data {
     private $tier2id;
     private $methodinfoid;
     private $value;
+    private $references;
 
     
     
@@ -41,6 +42,10 @@ class tier3data {
     
     public function get_value() {
         return $this->value;
+    }
+    
+    public function get_references() {
+        return $this->references;
     }
     
     // static functions
@@ -129,6 +134,7 @@ class tier3data {
         $this->tier2id = $data['tier2id'];
         $this->methodinfoid = $data['methodinfoid'];
         $this->value = $data['value'];
+        $this->references = $data['reference'];
        }
        
     }
