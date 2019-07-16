@@ -57,10 +57,21 @@ class tier2data {
         return $this->phaseid;
     }
     
-    public function get_tier3data() {
+    /** Gets all or one tier3 data for this tier2 object
+     * 
+     * @param type $methodinfoid method_info id to get tier3 data for; null to get all data
+     * @return \tier3data array of tier3 objects
+     */
+    public function get_tier3data($methodinfoid = null) {
 
         $query = "SELECT * from tier3data where tier2id = :id";
         $params = array("id"=>$this->id);
+        if($methodinfoid != null) {
+            $query .= " AND methodinfoid = :methodinfoid ";
+            $params['methodinfoid'] = $methodinfoid;
+            
+        }
+
         $result = $this->db->get_query_result($query, $params);
         $tier3s = array();
         foreach($result as $tier3) {
