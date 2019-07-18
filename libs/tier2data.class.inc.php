@@ -123,6 +123,8 @@ class tier2data {
                     } else if($interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
                         
                         $output .= "( ".$method_info->get_output_data_1().", ".$method_info->get_output_data_2(). ", " . $tier_info->get_value(). ")<BR> ";
+                    } else if($interaction == USER_INTERACTION_TEXT_AREA) {
+                        $output = "Data entered";
                     }
 
             }

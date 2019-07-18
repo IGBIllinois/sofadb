@@ -428,11 +428,12 @@ public function submit_case($submitstatus) {
      * @param array $output_data_1 Array of output_data_1 values
      * @param array $output_data_2 Array of output_data_2 values, optional
      * @param array $od1Names Array of output_data_1 names, used for INPUT_BOX, NUMERIC_ENTRY type
+     * @param string $references a comma-delimieted list of reference ids
      */
     public function add_all_tier3_data($method_id, $method_case_id, $output_data_1, $output_data_2=null, $od1Names=null, $references = null) {
 
             $method = new method($this->db, $method_id);
-            
+
                 $method_data = method_info::get_data_for_method($this->db, $method_id);
                 
                 $method_info_type = $method->get_method_info_type();
@@ -501,7 +502,8 @@ public function submit_case($submitstatus) {
                     } else if($user_interaction == USER_INTERACTION_SELECT_RANGE ||
                             $user_interaction == USER_INTERACTION_INPUT_BOX ||
                             $user_interaction == USER_INTERACTION_NUMERIC_ENTRY ||
-                            $user_interaction == USER_INTERACTION_SELECT_EACH) {
+                            $user_interaction == USER_INTERACTION_SELECT_EACH ||
+                            $user_interaction == USER_INTERACTION_TEXT_AREA) {
 
                         $i=0;
                         foreach($output_data_1 as $value) {
@@ -520,7 +522,7 @@ public function submit_case($submitstatus) {
                                     
                                    
                                 } else {
-
+                                    
                                 $result = $this->add_tier3($method_id, $name, null, $method_case_id, $value, $user_interaction);
                             }
                             } else {
@@ -600,7 +602,8 @@ public function submit_case($submitstatus) {
             }
         } else if($interaction == USER_INTERACTION_SELECT_RANGE ||
                 $interaction == USER_INTERACTION_INPUT_BOX ||
-                $interaction == USER_INTERACTION_NUMERIC_ENTRY) {
+                $interaction == USER_INTERACTION_NUMERIC_ENTRY ||
+                $interaction == USER_INTERACTION_TEXT_AREA) {
             // try without od2 for now
             $info_query = "SELECT * from method_info where methodid = :methodid AND ".
                 " output_data_1 = :od1";
@@ -659,7 +662,8 @@ public function submit_case($submitstatus) {
                     $interaction == USER_INTERACTION_NUMERIC_ENTRY ||
                         $interaction == USER_INTERACTION_SELECT_RANGE ||
                         $interaction == USER_INTERACTION_SELECT_EACH ||
-                        $interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
+                        $interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN ||
+                        $interaction == USER_INTERACTION_TEXT_AREA) {
 
                 $q = "INSERT INTO tier3data(tier2id, methodinfoid, value) VALUES ".
                         "(:t2id, :methodinfoid, :value)";

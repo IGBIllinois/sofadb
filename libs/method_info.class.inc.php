@@ -373,6 +373,9 @@ class method_info {
             } else if($user_interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
                 
                 method_info::show_method_info_user_input_with_dropdown($db, $method, $tier2id);
+            } else if($user_interaction == USER_INTERACTION_TEXT_AREA) {
+                
+                method_info::show_method_info_text_area($db, $method, $tier2id);
             }
            }
        echo("</td>");
@@ -566,7 +569,12 @@ class method_info {
        $header1 = $method->get_header_1();
        $header2 = $method->get_header_2();
 
-        echo("<legend><I>(hold CTL to select multiple)</I></legend>");
+       // Don't show for Holland, Tise, Spradley & Jantz
+       if($method->get_id() != 2 && // Tise
+               $method->get_id() != 125 && // Spradley & Jantz
+               $method->get_id() != 126) { // Holland
+                    echo("<legend><I>(hold CTL to select multiple)</I></legend>");
+               }
         echo("<table><tr>");    
 
         $value = null;
@@ -620,7 +628,7 @@ class method_info {
                     $curr_method_info = $method->get_method_info_by_od1($name);
                     $header1 = $curr_method_info[0]->get_output_data_1_description();
                     echo("<td  class='align_top td_spaced'>");
-                    echo("<table  class='td_spaced table_full'><tr><th width=50% class='align_right align_top td_spaced'><U><B>".$header1."</B></U></th>");
+                    echo("<table  class='td_spaced table_full table_horiz_spacing'><tr><th width=50% class='align_right align_top td_spaced'><U><B>".$header1."</B></U></th>");
                     echo("<th><U><B>".$header2."</B></U></th>");
 
                     echo("</tr>");
@@ -962,6 +970,44 @@ class method_info {
    
        
        }
+   }
+   
+      /** Shows HTML method_info input for a "text_area" method_info
+    * 
+    * @param method $method The method object
+    * @param int $tier2id Existing info, if editing
+    * @param string $user_interaction The user_interaction type
+    */
+   public static function show_method_info_text_area($db, $method, $tier2id, $category=null) {
+        $user_interaction = USER_INTERACTION_TEXT_AREA;
+        $output_data_1_result_sel = $method->get_data_1($user_interaction, $category);
+        
+        if($tier2id != null) {
+            $tier2 = new tier2data($db, $tier2id);
+            $data = $tier2->get_tier3data();
+            $this_method = new method($db, $tier2->get_methodid());
+            $this_method_info = $this_method->get_method_info_by_type($user_interaction);
+            $value = "";
+
+            foreach($this_method_info as $method_info) {
+
+                $value = "";
+                foreach($data as $tier3) {
+                    if($tier3->get_methodinfoid() == $method_info->get_id()) {
+                        $value = $tier3->get_value();
+                    }
+                }
+                $name = $method_info->get_output_data_1();
+                echo($name.":<BR>");
+                echo("<textarea  rows=10 cols=50 id='$name' name='output_data_1[$name]'>$value</textarea>");
+            }
+     } else {
+        foreach($output_data_1_result_sel as $od1_result) {
+            $name = $od1_result['output_data_1'];
+            echo("$name:<BR><textarea  rows=10 cols=50 id='$name' name='output_data_1[$name]'></textarea>");
+        }
+    }
+    echo("</table>");
    }
     
     private function load_method_info($id) {

@@ -189,7 +189,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else if($user_interaction == USER_INTERACTION_INPUT_BOX ||
                 $user_interaction == USER_INTERACTION_NUMERIC_ENTRY ||
                 $user_interaction == USER_INTERACTION_SELECT_EACH ||
-                $user_interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
+                $user_interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN ||
+                $user_interaction == USER_INTERACTION_TEXT_AREA) {
 
             $new_ids = array();
 
@@ -208,7 +209,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
                 } else {
                     if($user_interaction == USER_INTERACTION_NUMERIC_ENTRY ||
-                            $user_interaction == USER_INTERACTION_INPUT_BOX) {
+                            $user_interaction == USER_INTERACTION_INPUT_BOX ||
+                            $user_interaction == USER_INTERACTION_TEXT_AREA) {
                         // just use output_data_name for numeric entry
                         $method_info = method_info::get_one_method_info($db, $method->get_id(), $name);
                     } elseif($user_interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
@@ -244,7 +246,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             } else {
                 if($user_interaction == USER_INTERACTION_NUMERIC_ENTRY ||
-                            $user_interaction == USER_INTERACTION_INPUT_BOX) {
+                            $user_interaction == USER_INTERACTION_INPUT_BOX ||
+                        $user_interaction == USER_INTERACTION_TEXT_AREA) {
                     // just use output_data_name for numeric entry
                     $method_info = method_info::get_one_method_info($db, $method->get_id(), $name);
                 } else if($user_interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
