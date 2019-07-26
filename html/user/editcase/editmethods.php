@@ -59,6 +59,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $tier2 = new tier2data($db, $_POST['tier2id']);
         $method = new method($db, $tier2->get_methodid());
         
+        $est1 = null;
+        $est2 = null;
+        
+        if(isset($_POST['estimated_outcome_1'])) {
+            $est1 = $_POST['estimated_outcome_1'];
+        }
+        
+        if(isset($_POST['estimated_outcome_2'])) {
+            $est2 = $_POST['estimated_outcome_2'];
+        }
+        
+        if($est1 != null) {
+            $tier2->update_estimated_outcomes($est1, $est2);
+        }
+        
+        
+        
     }
     $result = null;
     $errors = 0;
@@ -134,9 +151,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 // first delete data that doesn't appear in new data
                 foreach($output_data_1 as $name=>$values) {
+                    $dbname = urldecode($name);
+                    echo("name, value = $dbname, $value<BR>");
                     
                     foreach($values as $value) {
-                        if($od1 == $name &&
+                        if($od1 == $dbname &&
                            $tier3->get_value() == $value) {
                             // data is still here
                             $found = true;
@@ -157,7 +176,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             foreach($output_data_1 as $name=>$values) {
                 // add new ones    
-                $method_info_by_name = method_info::get_one_method_info($db, $method->get_id(), $name);
+                $dbname = urldecode($name);
+                $method_info_by_name = method_info::get_one_method_info($db, $method->get_id(), $dbname);
+                echo("name = $dbname<BR>");
                 $curr_method_info_id = $method_info_by_name->get_id();
                 foreach($values as $value) {
                     $found = false;
@@ -177,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     
                     if($found == false) {
                         // add it
-                        $curr_result = $this_case->add_tier3($tier2->get_methodid(), $name, null, $tier2id, $value);
+                        $curr_result = $this_case->add_tier3($tier2->get_methodid(), $dbname, null, $tier2id, $value);
                         if($curr_result['RESULT'] == FALSE) {
                             $errors++;
                             $result[] = $curr_result;        

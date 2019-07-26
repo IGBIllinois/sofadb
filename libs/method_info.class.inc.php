@@ -370,11 +370,11 @@ class method_info {
            if($user_interaction == USER_INTERACTION_MULTISELECT ||
                    $user_interaction == USER_INTERACTION_SINGLE_SELECT) {
                
-               method_info::show_method_info_multiselect($method, $user_interaction);
+               method_info::show_method_info_multiselect($db, $method, $user_interaction);
 
            } else if($user_interaction == USER_INTERACTION_SELECT_RANGE) {
                
-               method_info::show_method_info_select_range($method, $tier2id);
+               method_info::show_method_info_select_range($db, $method, $tier2id);
                
            } else if($user_interaction == USER_INTERACTION_SELECT_EACH) {
                
@@ -409,7 +409,7 @@ class method_info {
     * 
     * @param type $method The method object to draw inputs for
     */
-   public static function show_method_info_multiselect($method, $user_interaction = null) {
+   public static function show_method_info_multiselect($db, $method, $user_interaction = null) {
             // Notes to user
             //$user_interaction = USER_INTERACTION_MULTISELECT;
        $header1 = $method->get_header_1();
@@ -488,7 +488,7 @@ class method_info {
     * @param method $method The method object
     * @param int $tier2id Existing info, if editing
     */
-   public static function show_method_info_select_range($method, $tier2id=null) {
+   public static function show_method_info_select_range($db, $method, $tier2id=null) {
        
        $header1 = $method->get_header_1();
        $header2 = $method->get_header_2();
@@ -548,6 +548,8 @@ class method_info {
             for($curr_range = $ranges[0]; $curr_range <= $ranges[1]; $curr_range++) {
                 $selected = false;
                 if($tier2id != null) {
+                    $tier2 = new tier2data($db, $tier2id);
+                    $tier3s = $tier2->get_tier3data();
                     foreach($tier3s as $tier3) {
                         $method_info_id = $tier3->get_methodinfoid();
                         $value = $tier3->get_value();
