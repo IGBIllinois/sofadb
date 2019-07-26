@@ -15,6 +15,8 @@ class tier2data {
     private $methodid;
     private $featureid;
     private $phaseid;
+    private $estimated_outcome_1;
+    private $estimated_outcome_2;
     
     
     private $db; // Database object
@@ -55,6 +57,14 @@ class tier2data {
     
     public function get_phaseid() {
         return $this->phaseid;
+    }
+    
+    public function get_estimated_outcome_1() {
+        return $this->estimated_outcome_1;
+    }
+    
+    public function get_estimated_outcome_2() {
+        return $this->estimated_outcome_2;
     }
     
     /** Gets all or one tier3 data for this tier2 object
@@ -149,6 +159,8 @@ class tier2data {
         $this->methodid = $data['methodid'];
         $this->featureid = $data['featureid'];
         $this->phaseid = $data['phaseid'];
+        $this->estimated_outcome_1 = $data['estimated_outcome_1'];
+        $this->estimated_outcome_2 = $data['estimated_outcome_2'];
        }
        
     }

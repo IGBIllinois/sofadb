@@ -289,6 +289,25 @@ class method_info {
     */
    public static function show_method_info($db, $method_id, $tier2id=null, $category=null) {
 
+       //echo("type = ".$method->get_method_type()."<BR>");
+       $method = new method($db, $method_id);
+       if($method->get_method_type() == "Sex") {
+           $selected = false;
+           if($tier2id != null) {
+               $tier2 = new tier2data($db, $tier2id);
+               $estimated_outcome = $tier2->get_estimated_outcome_1();
+           }
+           echo("<BR>Estimated Sex from this method:<BR>");
+           echo("<select name='estimated_outcome_1'>");
+           echo("<option value=''>- Select -</option>");
+           echo("<option value='Female' ". (($estimated_outcome == 'Female') ? " selected='selected' " : "") .">Female</option>");
+           echo("<option value='Probable Female' ".(($estimated_outcome == 'Probable Female') ? " selected='selected' " : "") .">Probable Female</option>");
+           echo("<option value='Indeterminate' ". (($estimated_outcome  == 'Indeterminate')? " selected='selected' " : "") .">Indeterminate</option>");
+           echo("<option value='Probable Male' ". (($estimated_outcome == 'Probable Male') ? " selected='selected' " : "") .">Probable Male</option>");
+           echo("<option value='Male' ". (($estimated_outcome == 'Male') ? " selected='selected' " : "") .">Male</option>");
+           echo("</select><BR>");
+       }
+       
       if($tier2id != null) {
           $tier2 = new tier2data($db, $tier2id);
           $tier3s = $tier2->get_tier3data();
@@ -679,7 +698,7 @@ class method_info {
     * @param string $user_interaction The user_interaction type
     */
    public static function show_method_info_input($db, $method, $tier2id, $user_interaction, $category=null) {
-       
+
         $output_data_1_result_sel = $method->get_data_1($user_interaction, $category);
         echo("<table >");
         if($tier2id != null) {
