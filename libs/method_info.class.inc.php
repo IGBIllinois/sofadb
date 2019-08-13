@@ -677,7 +677,7 @@ class method_info {
                foreach($output_data_1_result_sel as $od1_result) {
                    $length = strlen($od1_result[0]);
                    $width_class ="";
-                   if($length > 50) {
+                   if($length > 50 || $method->get_method_type() == "Stature") {
                        // for long names, separate into their own columns vertically
                        $maxCols = 1;
                        $width_class = " width_75 ";
@@ -762,7 +762,7 @@ class method_info {
 
                    $selectbox .="</select>";
 
-               echo("<tr><td class='align_right align_top td_spaced $width_class'>".$name.":</td><td class='align_left align_top td_spaced'> $selectbox </td></tr>");
+               echo("<tr><td width=50% class='align_right align_top td_spaced $width_class'>".$name.":</td><td class='align_left align_top td_spaced'> $selectbox </td></tr>");
                
                 echo("</table>");
                 echo("</td>");
