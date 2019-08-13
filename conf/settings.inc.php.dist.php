@@ -20,6 +20,9 @@ DEFINE ("SALT", '');
 
 DEFINE ("PAGEROWS", 20);
 
+// Number of columns for method_info fields
+DEFINE ("MAXCOLS", 5);
+
 DEFINE ("METHOD_DATA_AGE", "Age");
 DEFINE ("METHOD_DATA_SEX", "Sex");
 DEFINE ("METHOD_DATA_ANCESTRY", "Ancestry");
@@ -41,3 +44,23 @@ DEFINE ("USER_INTERACTION_INPUT_BOX", "user_input_box");
 
 // A single input box where a user enters the data
 DEFINE ("USER_INTERACTION_NUMERIC_ENTRY", "numeric_entry");
+
+// 3 columns, divided into categories, with a reference dropdown box
+DEFINE ("USER_INTERACTION_3_COL_W_REF", "3_col_w_ref");
+
+// User input with an associated dropdown box (Spradley & Jantz)
+DEFINE ("USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN", "user_input_with_dropdown");
+
+DEFINE("USER_INTERACTION_SINGLE_SELECT", "single_select");
+
+// User input with a large text area
+DEFINE("USER_INTERACTION_TEXT_AREA", "text_area");
+
+// User input for possible estimated outcome values
+DEFINE("USER_INTERACTION_ESTIMATED_OUTCOME", "estimated_outcome");
+
+// Method info type for "Spradley & Jantz 2011" method, and similar
+DEFINE("METHOD_INFO_TYPE_SPRADLEY_JANTZ", "Spradley_Jantz");
+
+// Method info type for most Stature types, with text input boxes and select_each inputs
+DEFINE("METHOD_INFO_TYPE_STATURE_1", "Stature_1");
