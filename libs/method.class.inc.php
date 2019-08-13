@@ -467,6 +467,30 @@ class method {
         }
     }
     
+    /**
+     * 
+     * @return type An array of estimated outcome possibilities for this method
+     */
+    public function get_estimated_outcomes() {
+        $query = "SELECT output_data_1 from method_info where methodid=:methodid ".
+                " AND user_interaction=:user_interaction";
+        $params = array("methodid"=>$this->get_id(),
+                        "user_interaction"=>USER_INTERACTION_ESTIMATED_OUTCOME);
+        $result = $this->db->get_query_result($query, $params);
+        $return_result = array();
+        if(count($result) > 0){ 
+            foreach($result as $data) {
+                $return_result[] = $data[0];
+            }
+            return $return_result;
+        } else {
+            return array();
+        }
+        
+    }
+    
+    // Static functions
+    
     public static function get_methods($db, $start = -1, $limit = -1) {
         $query = "SELECT id from methods ";
         if(is_numeric($start) && $start >= 0) {

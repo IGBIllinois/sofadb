@@ -248,7 +248,7 @@ class sofa_case {
      * @param type $phaseid Phase id of the method to add
      * @return type ID of the newly created case-method
      */
-    public function add_case_method($methodid, $methodtype, $featureid, $phaseid, $estimated_outcome_1 = null, $estimated_outcome_2=null) {
+    public function add_case_method($methodid, $methodtype, $featureid, $phaseid, $estimated_outcome_1 = null, $estimated_outcome_2=null, $estimated_outcome_units = null) {
         $q="INSERT INTO tier2data "
                 . "("
                 . "memberid,"
@@ -258,7 +258,8 @@ class sofa_case {
                 . "featureid,"
                 . "phaseid, "
                 . "estimated_outcome_1,"
-                . "estimated_outcome_2)"
+                . "estimated_outcome_2,"
+                . "estimated_outcome_units)"
                 . "VALUES ("
                 . ":memberid,"
                 . ":caseid,"
@@ -267,7 +268,8 @@ class sofa_case {
                 . ":featureid,"
                 . ":phaseid,"
                 . ":estimated_outcome_1,"
-                . ":estimated_outcome_2)";
+                . ":estimated_outcome_2,"
+                . ":estimated_outcome_units)";
         
         
                 $data = array("memberid"=>$this->memberid,
@@ -277,7 +279,8 @@ class sofa_case {
                         "featureid"=>$featureid,
                         "phaseid"=>$phaseid,
                         "estimated_outcome_1"=>$estimated_outcome_1,
-                        "estimated_outcome_2"=>$estimated_outcome_2);
+                        "estimated_outcome_2"=>$estimated_outcome_2,
+                        "estimated_outcome_units"=>$estimated_outcome_units);
 
                 $casemethodid = $this->db->get_insert_result($q, $data);
                 
@@ -443,10 +446,12 @@ public function submit_case($submitstatus) {
                 $method_data = method_info::get_data_for_method($this->db, $method_id);
                 
                 $method_info_type = $method->get_method_info_type();
+                
                 if($method_info_type == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
 
                     
                     foreach($output_data_1 as $od1=>$value) {
+                        
                         if(is_array($value)) {
                             $decode_od1 = urldecode($od1);
                             $od2 = $value[0];
@@ -481,6 +486,33 @@ public function submit_case($submitstatus) {
 
                   
 
+                    }
+                } else if($method_info_type == METHOD_INFO_TYPE_STATURE_1) {
+                    // Separate into text input boxes and select_each types.
+                    // If output_data_1 is an array, it's a select_each, else, it's user_input
+                    foreach($output_data_1 as $od1=>$value) {
+                        if(is_array($value)) {
+                            $od1 = urldecode($od1);
+                            $user_interaction = USER_INTERACTION_SELECT_EACH;
+                            $od2 = $value[0];
+
+                            if($od2 != null) {
+                                // don't add if nothing selected
+                            
+                                $result = $this->add_tier3($method_id, $od1, $od2, $method_case_id, null, $user_interaction);
+                            }
+                            
+                        } else {
+
+                            $user_interaction = USER_INTERACTION_INPUT_BOX;
+                            if($value != null && $value != "") {
+                                // don't add if nothing selected
+                            
+                                $result = $this->add_tier3($method_id, $od1, null, $method_case_id, $value, $user_interaction);
+                            }
+                        
+                        }
+                        
                     }
                 } else {
                 if(count($method_data) > 0) {
@@ -593,12 +625,18 @@ public function submit_case($submitstatus) {
                 $interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
             // try od1 and od2
             if($od2 != null) {
+                if($od2 == "") {
+                    // non-selectable entry
+                    return array("RESULT"=>FALSE,  
+                        "MESSAGE"=>"Could not find specified method data.");
+                } else {
             $info_query = "SELECT * from method_info where methodid = :methodid AND ".
                     " output_data_1 = :od1 and output_data_2 = :od2";
             
             $info_params = array("methodid"=>$methodid,
                     "od1"=>$od1,
                     "od2"=>$od2);
+                }
             
             } else {
                 $info_query = "SELECT * from method_info where methodid = :methodid AND ".
@@ -671,6 +709,7 @@ public function submit_case($submitstatus) {
                         $interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN ||
                         $interaction == USER_INTERACTION_TEXT_AREA) {
 
+                if($od1 != "") {
                 $q = "INSERT INTO tier3data(tier2id, methodinfoid, value) VALUES ".
                         "(:t2id, :methodinfoid, :value)";
                 $params = array("t2id"=>$tier2id,
@@ -682,6 +721,7 @@ public function submit_case($submitstatus) {
                     return array("RESULT"=>TRUE,
                                 "MESSAGE"=>"Method data added successfully.",
                                 "id"=>$info_result);
+                }
                 }
             } 
         }

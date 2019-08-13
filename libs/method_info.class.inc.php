@@ -306,6 +306,47 @@ class method_info {
            echo("<option value='Probable Male' ". (($estimated_outcome == 'Probable Male') ? " selected='selected' " : "") .">Probable Male</option>");
            echo("<option value='Male' ". (($estimated_outcome == 'Male') ? " selected='selected' " : "") .">Male</option>");
            echo("</select><BR>");
+       } else if($method->get_method_type() == "Stature") {
+           echo("<BR>Estimated Stature range from this method:");
+           echo("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value=''>");
+           echo(" to ");
+           echo("<input size=6 id='estimated_outcome_2' name='estimated_outcome_2' value=''>");
+           
+           echo("&nbsp;&nbsp;Units:");
+           echo("<select name='estimated_outcome_units'>");
+           echo("<option value=''>- Select -</option>");
+           echo("<option value='in' ". (($estimated_outcome == 'in') ? " selected='selected' " : "") .">in</option>");
+           echo("<option value='cm' ".(($estimated_outcome == 'cm') ? " selected='selected' " : "") .">cm</option>");
+           echo("</select><BR>");
+           
+       } else if($method->get_method_type() == "Age") {
+           $estimated_outcomes = $method->get_estimated_outcomes();
+
+           echo("<BR>Estimated Age range from this method:");
+           echo("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value=''> years");
+           echo(" to ");
+           echo("<input size=6 id='estimated_outcome_2' name='estimated_outcome_2' value=''> years");
+           /*
+           echo("&nbsp;&nbsp;Units:");
+           echo("<select name='estimated_outcome_units'>");
+           echo("<option value=''>- Select -</option>");
+           echo("<option value='in' ". (($estimated_outcome == 'in') ? " selected='selected' " : "") .">in</option>");
+           echo("<option value='cm' ".(($estimated_outcome == 'cm') ? " selected='selected' " : "") .">cm</option>");
+           echo("</select><BR>");
+            * 
+            */
+       } else if($method->get_method_type() == "Ancestry") {
+           $estimated_outcomes = $method->get_estimated_outcomes();
+
+           echo("<BR>Estimated Ancestry from this method:<BR>");
+           echo("<select name='estimated_outcome_1'>");
+           echo("<option value=''>- Select -</option>");
+           
+           foreach($estimated_outcomes as $outcome) {
+               echo("<option value='$outcome' ". (($estimated_outcome == $outcome) ? " selected='selected' " : "") .">$outcome</option>");
+           }
+           echo("</select><BR>");
+           
        }
        
       if($tier2id != null) {
@@ -362,7 +403,9 @@ class method_info {
            //$user_interaction = $method_info[0]->get_user_interaction();
            $interactions = $method_info[0]->get_user_interactions();
            echo("<table class='table_full'><tr>");
+
            foreach($interactions as $user_interaction) {
+
                echo("<td class='align_top'>");
                
                $user_interaction = $user_interaction[0];
@@ -378,7 +421,7 @@ class method_info {
                
            } else if($user_interaction == USER_INTERACTION_SELECT_EACH) {
                
-               method_info::show_method_info_select_each($db, $method, $tier2id);
+               method_info::show_method_info_select_each($db, $method, $tier2id, null, null, false);
 
            } else if($user_interaction == USER_INTERACTION_INPUT_BOX ||
                    $user_interaction == USER_INTERACTION_NUMERIC_ENTRY) {
@@ -582,18 +625,23 @@ class method_info {
    
     /** Shows HTML method_info input for a "select_each" method_info
     * 
+     * @param db The database object
     * @param method $method The method object
     * @param int $tier2id Existing info, if editing
+    * @param string $category Category: Used in Spradley & Jantz methods
+     * @param string $subcategory Subcategory: Used in Spradley & Jantz methods
+     * @param boolean $titles: True if you show titles for every option, false if you only show titles once
     */
-   public static function show_method_info_select_each($db, $method, $tier2id, $category=null, $subcategory=null) {
+   public static function show_method_info_select_each($db, $method, $tier2id, $category=null, $subcategory=null, $all_titles = true) {
        $user_interaction = USER_INTERACTION_SELECT_EACH;
        $header1 = $method->get_header_1();
        $header2 = $method->get_header_2();
-
        // Don't show for Holland, Tise, Spradley & Jantz
-       if($method->get_id() != 2 && // Tise
+       if(($method->get_method_type() != "Stature") &&
+               ($method->get_id() != 2 && // Tise
                $method->get_id() != 125 && // Spradley & Jantz
-               $method->get_id() != 126) { // Holland
+               $method->get_id() != 126)) { // Holland
+
                     echo("<legend><I>(hold CTL to select multiple)</I></legend>");
                }
         echo("<table><tr>");    
@@ -636,9 +684,24 @@ class method_info {
                        break;
                    }
                }
+               // similarly, check selection results, 
+               foreach($output_data_2_result_sel as $od2_result) {
+                   $length = strlen($od2_result[0]);
+                   $width_class ="";
+                   if($length > 50) {
+                       // for long names, separate into their own columns vertically
+                       $maxCols = 1;
+                       $width_class = " width_75 ";
+                       break;
+                   }
+               }
 
                
                foreach($output_data_1_result_sel as $od1_result) {
+                   $titles = true;
+                   if($i > 0) {
+                       $titles = false;
+                   }
                     if($i >= $maxCols) {
                         echo "</tr><tr>";
                         $i=0;
@@ -648,20 +711,35 @@ class method_info {
                     
                     $curr_method_info = $method->get_method_info_by_od1($name);
                     $header1 = $curr_method_info[0]->get_output_data_1_description();
+                    $header2 = $curr_method_info[0]->get_output_data_2_description();
                     echo("<td  class='align_top td_spaced'>");
-                    echo("<table  class='td_spaced table_full table_horiz_spacing'><tr><th width=50% class='align_right align_top td_spaced'><U><B>".$header1."</B></U></th>");
-                    echo("<th><U><B>".$header2."</B></U></th>");
+                    echo("<table  class='td_spaced table_full table_horiz_spacing'>");
 
-                    echo("</tr>");
+                    if($all_titles || ($titles || $maxCols > 1)) {
+                        echo("<tr><th width=50% class='align_right align_top td_spaced'><U><B>".$header1."</B></U></th>");
+                        echo("<th><U><B>".$header2."</B></U></th>");
 
+                        echo("</tr>");
+                    }
                    
                    //In case name has spaces, encode it
                    $outputname = urlencode($name);
                    
-
+                   $multiple = true;
                    $size = count($od2_data);
-                   $selectbox = "<select class='align_left' size=$size name=output_data_1[$outputname][] multiple>";
+                   
+                   if($method->get_method_type() == "Stature") {
+                       // alter display for Genoves 1967
+                       $size=1;
+                       $multiple = false;
+                   }
+                   
+                   $selectbox = "<select class='align_left' size=$size name=output_data_1[$outputname][] ".(($multiple == true) ? " multiple " : " style='width:200px' ") .">";
 
+                   if($method->get_method_type() == "Stature") {
+                       // add initial selector
+                       $selectbox .= "<option value=''>- Select One -</option>";
+                   }
                    foreach($od2_data as $od2) {
                        $od2 = $od2['output_data_2'];
                        $selected = false;
@@ -673,6 +751,7 @@ class method_info {
                                    }
                                }
                        }
+                       //$this_method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od2)
                        $selectbox .= "<option  value='".$od2."'";
                            if($selected) {
                                // it exists in the database
