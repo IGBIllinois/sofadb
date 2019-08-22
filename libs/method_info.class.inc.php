@@ -297,6 +297,9 @@ class method_info {
                $tier2 = new tier2data($db, $tier2id);
                $estimated_outcome = $tier2->get_estimated_outcome_1();
            }
+           if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
+               echo("<BR>Select any/all sectioning point outcomes.");
+           }
            echo("<BR>Estimated Sex from this method:<BR>");
            echo("<select name='estimated_outcome_1'>");
            echo("<option value=''>- Select -</option>");
@@ -307,6 +310,7 @@ class method_info {
            echo("<option value='Male' ". (($estimated_outcome == 'Male') ? " selected='selected' " : "") .">Male</option>");
            echo("</select><BR>");
        } else if($method->get_method_type() == "Stature") {
+           echo("<BR>Select any/all formulae used for your stature analysis.<BR>");
            echo("<BR>Estimated Stature range from this method:");
            echo("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value=''>");
            echo(" to ");
@@ -322,19 +326,24 @@ class method_info {
        } else if($method->get_method_type() == "Age") {
            $estimated_outcomes = $method->get_estimated_outcomes();
 
+           if(($method->get_header_2() != null) && 
+                   ($method->get_header_2() == "Reference Sample") ||
+                   ($method->get_header_2() == "Reference Samples")) {
+               $title = "Select method outcome and reference sample used.";
+           } else {
+               $title = "Select method outcome used.";
+           }
+           if(count($method->get_method_info_by_type(USER_INTERACTION_NUMERIC_ENTRY)) > 0) {
+               // No title for user input methods like Lamedin, Prince&Ubelaker, etc.s
+               $title = "";
+           }
+           if($title != "") {
+            echo("<BR>$title<BR>");
+           }
            echo("<BR>Estimated Age range from this method:");
-           echo("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value=''> years");
-           echo(" to ");
+           echo("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value=''> to ");
            echo("<input size=6 id='estimated_outcome_2' name='estimated_outcome_2' value=''> years");
-           /*
-           echo("&nbsp;&nbsp;Units:");
-           echo("<select name='estimated_outcome_units'>");
-           echo("<option value=''>- Select -</option>");
-           echo("<option value='in' ". (($estimated_outcome == 'in') ? " selected='selected' " : "") .">in</option>");
-           echo("<option value='cm' ".(($estimated_outcome == 'cm') ? " selected='selected' " : "") .">cm</option>");
-           echo("</select><BR>");
-            * 
-            */
+           echo("<BR>");
        } else if($method->get_method_type() == "Ancestry") {
            $estimated_outcomes = $method->get_estimated_outcomes();
 
@@ -355,9 +364,6 @@ class method_info {
       }
 
        echo("<BR>");
-
-       $method = new method($db, $method_id);
-
 
        $output_data_1_result = $method->get_data_1();
        $output_data_2_result = $method->get_data_2();   
@@ -838,7 +844,9 @@ class method_info {
                     $header4 = $method->get_header_4();
 
                echo("<table  style='table_full table_padded'><tr><th><U><B>".$header1."</B></U></th>");
-               echo("<th><U><B>".$header2."/".$header3."</B></U></th>");
+               echo("<th><U><B>".$header2."</B></U></th>");
+               echo("<th><U><B>".$header3."</B></U></th>");
+               echo("<th><U><B>".$header4."</B></U></th>");
 
                echo("</tr>");
                $value = null;
@@ -853,7 +861,7 @@ class method_info {
                    $od2_data = $method->get_od2_for_od1($name, 1);
                    $selected = false;
                    $od3 = "";
-                   $od3 .= "<table >";
+                   //$od3 .= "<table >";
                    foreach($od2_data as $od2) {
                        $od2 = $od2['output_data_2'];
                        $tmp_od3 = "";
@@ -876,7 +884,7 @@ class method_info {
                        }
                    $od3_data = $method->get_output_data_3($name, $od2);
                    $od2_encode = urlencode($od2);
-                   $od3 .="<tr><td class='width_250px'>$od2</td>";
+                   $od3 .="<td class='width_250px'>$od2</td>";
                    $od3 .= "<td ><select name=output_data_1[$outputname][$od2_encode][]>";
                    $od3 .= "<option value=''></option>";
                    foreach($od3_data as $output_data_3) {
@@ -918,14 +926,14 @@ class method_info {
                         $ref_text .= ("<input type='checkbox' id='$refid' name='$curr_name'".(in_array($ref['id'], $reflist)? " checked=1 " : "")." />$refname</label>");
                     }
                     
-                    $ref_text .= "</div></div>";
+                    $ref_text .= "</div></div></tr>";
                    }
               
                     $od3 .= $ref_text;
-                   $od3 .= "</td></tr>";
+                   
                    }
-                   $od3 .="</table>";
-               echo("<tr><td class='align_top td_spaced'>".$name.":</td><td class='td_spaced'> $od3 </td></tr>");
+                   
+               echo("<tr><td class='align_top td_spaced' rowspan='".count($od2_data)."'>".$name.":</td>$od3 </tr>");
        }
    }
    
