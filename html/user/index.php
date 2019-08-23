@@ -138,15 +138,12 @@ echo '<div class="scroll"><table id="hortable" summary="List of cases">
 
 
 // Fetch and print all the records:
-//while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 foreach($curr_cases as $case) {
 	echo '<tr>
 	<td><a href="./viewcase.php?id=' . $case->get_id() . '">View</a></td>';
 	
 	echo '<td><a href="./editcase/index.php?id=' . $case->get_id()  . '">Edit</a></td>';
-	
-	
-	
+
 	if($case->get_submissionstatus()==1)
 	{
 	echo '<td><a href="./index.php?id=' . $case->get_id() . '&status=1">Withdraw</a></td>';
@@ -209,9 +206,6 @@ echo '&nbsp; &nbsp; &nbsp; &nbsp;';
 echo '</p>';
 }
 
-
-
-//mysqli_close($dbcon); // Close the database connection.
 ?>
 
     </div>

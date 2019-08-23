@@ -49,26 +49,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if (empty($_POST['title2'])) {
 		$errors[] = 'You forgot to enter your title.';
 	} else {
-		$title = mysqli_real_escape_string($dbcon, trim($_POST['title2']));
+		$title = trim($_POST['title2']);
 	}
 	// Check for a first name:
 	if (empty($_POST['fname'])) {
 		$errors[] = 'You forgot to enter your first name.';
 	} else {
-			$fn = mysqli_real_escape_string($dbcon, trim($_POST['fname']));
+			$fn = trim($_POST['fname']);
 	}
 	// Check for a last name:
 	if (empty($_POST['lname'])) {
 		$errors[] = 'You forgot to enter your last name.';
 	} else {
-		$ln = mysqli_real_escape_string($dbcon, trim($_POST['lname']));
+		$ln = trim($_POST['lname']);
 	}
+        /*
+         * // Check if email is valid
+        if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors[] = "Email address '".$_POST['email']."' is not considered valid.\n";
+        }
+         * 
+         */
 	// Check for an email address:
 	if (!empty($_POST['email'])) {
 		if ($_POST['email'] != $_POST['email2']) {
 			$errors[] = 'Your two email addresses did not match.';
 		} else {
-			$e = mysqli_real_escape_string($dbcon, trim($_POST['email']));
+			$e = trim($_POST['email']);
 		}
 	} else {
 		$errors[] = 'You forgot to enter your email address.';
@@ -81,9 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		if ($_POST['psword1'] != $_POST['psword2']) {
 			$errors[] = 'Your two passwords did not match.';
 		} else {
-			$p = mysqli_real_escape_string($dbcon, trim($_POST['psword1']));
-$s = SALT;
-$hash=md5($s . $p);
+			$p = trim($_POST['psword1']);
+                        $s = SALT;
+                        $hash=md5($s . $p);
 		}
 	} else {
 		$errors[] = 'You forgot to enter your password.';
@@ -99,49 +106,49 @@ $hash=md5($s . $p);
 	if (empty($_POST['addr1'])) {
 		$errors[] = 'You forgot to enter your address.';
 	} else {
-		$ad1 = mysqli_real_escape_string($dbcon, trim($_POST['addr1']));
+		$ad1 = trim($_POST['addr1']);
 	}
 	// Check for address2:
-		if (!empty($_POST['addr2'])) {
-		$ad2 = mysqli_real_escape_string($dbcon, trim($_POST['addr2']));
-}else{
-$ad2 = NULL;
+	if (!empty($_POST['addr2'])) {
+		$ad2 = trim($_POST['addr2']);
+        }else{
+            $ad2 = NULL;
 	}
 	// Check for city:
 	if (empty($_POST['city'])) {
 		$errors[] = 'You forgot to enter your City.';
 	} else {
-		$cty = mysqli_real_escape_string($dbcon, trim($_POST['city']));
+		$cty = trim($_POST['city']);
 	}
 // Check for the county:
 	if (empty($_POST['state'])) {
 		$errors[] = 'You forgot to enter your state.';
 	} else {
-		$state = mysqli_real_escape_string($dbcon, trim($_POST['state']));
+		$state = trim($_POST['state']);
 	}	
 	// Check for the post code:
 	if (empty($_POST['pcode'])) {
 		$errors[] = 'You forgot to enter your postal (ZIP) code.';
 	} else {
-		$pcode = mysqli_real_escape_string($dbcon, trim($_POST['pcode']));
+		$pcode = trim($_POST['pcode']);
 	}
 	// Check for the phone number:
-		if (!empty($_POST['phone'])) {
-		$ph = mysqli_real_escape_string($dbcon, trim($_POST['phone']));
-}else{
-$ph = NULL;
+	if (!empty($_POST['phone'])) {
+		$ph = trim($_POST['phone']);
+        }else{
+            $ph = NULL;
 	}
 	
 	if (empty($_POST['region'])) {
 		$errors[] = 'You forgot to enter your region of practice.';
 	} else {
-		$region = mysqli_real_escape_string($dbcon, trim($_POST['region']));
+		$region = trim($_POST['region']);
 	}
 	
 	if (empty($_POST['aafs'])) {
 		$errors[] = 'You forgot to enter your AAFS Membership Status';
 	} else {
-		$aafs = mysqli_real_escape_string($dbcon, trim($_POST['aafs']));
+		$aafs = trim($_POST['aafs']);
 	}
 	
 	
@@ -150,45 +157,66 @@ $ph = NULL;
 		$degree=NULL;
 		//$errors[] = 'You forgot to enter your level of education earned';
 	} else {
-		$degree = mysqli_real_escape_string($dbcon, trim($_POST['degree']));
+		$degree = trim($_POST['degree']);
 	}
 	
 	if (!empty($_POST['degreeyear'])) {
-		$degreeyear = mysqli_real_escape_string($dbcon, trim($_POST['degreeyear']));
+		$degreeyear = trim($_POST['degreeyear']);
 	} else {
 		$degreeyear =NULL;
 	}
 	
 	if (!empty($_POST['fieldofstudy'])) {
-		$field = mysqli_real_escape_string($dbcon, trim($_POST['fieldofstudy']));
+		$field = trim($_POST['fieldofstudy']);
 	} else {
-		$field=NULL;
+		$field="";
 	}
 	
 	if (!empty($_POST['yearsexp'])) {
-		$exp = mysqli_real_escape_string($dbcon, trim($_POST['yearsexp']));
+		$exp = trim($_POST['yearsexp']);
 	} else {
 		$exp=0;
 	}
 	
 	if (!empty($_POST['casesperyear'])) {
-		$cases = mysqli_real_escape_string($dbcon, trim($_POST['casesperyear']));
+		$cases = trim($_POST['casesperyear']);
 	} else {
 	$cases=0;	
 	}
-	
-	
-	
+        
+        $params = array(
+            "uname"=>$e,
+            "pwd"=>$hash,
+            "firstname"=>$fn,
+            "lastname"=>$ln,
+            "title"=>$title,
+            "degree"=>$degree,
+            "degreeyear"=>$degreeyear,
+            "fieldofstudy"=>$field,
+            "aafsstatus"=>$aafs,
+            "institution"=>$inst,
+            "yearsexperience"=>$exp,
+            "caseperyear"=>$cases,
+            "region"=>$region,
+            "mailaddress1"=>$ad1,
+            "mailaddress2"=>$ad2,
+            "city"=>$cty,
+            "state"=>$state,
+            "zip"=>$pcode,
+            "phone"=>$ph);
+ 
+
 	
 	if (empty($errors)) { // If there were no errors
 //Determine whether the email address has already been registered	
-$q = "SELECT id FROM members WHERE uname = '$e' ";
-$result=mysqli_query ($dbcon, $q) ; 	
-if (mysqli_num_rows($result) == 0){//The mail address has not been registered already therefore register the user in the users table
-		// Make the query:
-		$q = "INSERT INTO members (uname, pwd,firstname,lastname,title,degree,degreeyear,fieldofstudy,aafsstatus,institution,yearsexperience,caseperyear,region,mailaddress,mailaddress2,city,state,zip,phone,permissionstatus,dateregistered,casessubmitted,caseswithdrawn,totalcases) VALUES ('$e', '$hash', '$fn', '$ln', '$title', '$degree', '$degreeyear','$field','$aafs','$inst','$exp','$cases','$region','$ad1','$ad2','$cty','$state','$pcode','$ph','0', NOW(), '0', '0', '0')";		
-		$result = @mysqli_query ($dbcon, $q); // Run the query.
-		if ($result) { // If it ran OK.
+
+   $member_exists = member::member_exists($db, $e);       
+
+   if(!$member_exists) {
+
+        $result = member::add_member($db, $params);
+        if($result['RESULT'] == TRUE) {
+            echo($result['MESSAGE']);
 	  //$admin_email="hughesc@illinois.edu";
                     
       $to = $admin_email;
@@ -217,9 +245,9 @@ if (mysqli_num_rows($result) == 0){//The mail address has not been registered al
 			echo '<h2>System Error</h2>
 			<p class="error">Registration failed because of a system error. We apologize for any inconvenience.</p>'; 
 			// Debugging message:
-			echo '<p>' . mysqli_error($dbcon) . '<br><br>Query: ' . $q . '</p>';
+			echo '<p>' . $db->errorInfo()[2]. '</p>';
 		} // End of if ($result)
-		mysqli_close($dbcon); // Close the database connection
+
 		// Include the footer and stop the script
 		  
 		exit();
