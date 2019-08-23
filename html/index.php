@@ -25,7 +25,7 @@ elseif($_SESSION['loggedin']==1)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>SOFA Forensic Case Database</title>
+<title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
 <script type="text/javascript" src="./js/jquery.js"></script>
 	<script type="text/javascript" src="./js/jquery.query-2.1.7.js"></script>
 	<script type="text/javascript" src="./js/rainbows.js"></script>
@@ -45,7 +45,7 @@ elseif($_SESSION['loggedin']==1)
   <div id="header"><a href="#"><img src="images/customLogo.gif" width="351" height="147" /></a></div>
  
  <div id="title">
-    <h1>Forensic Case Database</h1>
+    <h1>Forensic Anthropology Case Database (FADAMA)</h1>
  </div>
  
  <div id="hline">

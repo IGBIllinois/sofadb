@@ -9,7 +9,7 @@
 <!-- InstanceEndEditable -->
 <link href="../css/style.css" rel="stylesheet" type="text/css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>SOFA Forensic Case Database</title>
+<title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
 <script type="text/javascript" src="./js/jquery.js"></script>
 <script type="text/javascript" src="./js/jquery.query-2.1.7.js"></script>
 <script type="text/javascript" src="./js/rainbows.js"></script>
@@ -41,7 +41,7 @@ $(this).animate({"opacity": "1"}, "slow");
 <div id="header"><a href="#"><img src="../images/customLogo.gif" width="351" height="147" /></a></div>
 
 <div id="title">
-<h1>Forensic Case Database</h1>
+<h1>Forensic Anthropology Case Database (FADAMA)</h1>
 </div>
 
 <div id="hline">

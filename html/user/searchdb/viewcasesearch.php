@@ -52,7 +52,7 @@ require('../../include/session_user.php') ;
 <div id="header"><a href="http://www.sofainc.org" target="_blank"><img src="../../images/customLogo.gif" width="351" height="147" /></a></div>
 
 <div id="title">
-<h1>Forensic Case Database</h1>
+<h1>Forensic Anthropology Case Database (FADAMA)</h1>
 </div>
 
 <div id="hline">

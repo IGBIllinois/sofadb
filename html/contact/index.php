@@ -20,7 +20,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <script type='text/javascript' src='scripts/gen_validatorv31.js'></script>
 
-<title>SOFA Forensic Case Database</title>
+<title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
 
 
 <!-- // Load Javascipt -->
@@ -31,7 +31,7 @@
 <div id="header"><a href="#"><img src="../images/customLogo.gif" width="351" height="147" /></a></div>
 
 <div id="title">
-<h1>Forensic Case Database</h1>
+<h1>Forensic Anthropology Case Database (FADAMA)</h1>
 </div>
 
 <div id="hline">
