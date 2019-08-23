@@ -17,10 +17,7 @@ class functions {
     public static function drop_1($drop_var)
     {  
         global $db;
-            //include_once('db.php');
-            //include_once($_SERVER['DOCUMENT_ROOT'].'/mysqli_connect.php');
-            //$result = mysqli_query($dbcon,"SELECT methodname,id FROM methods WHERE methodtypenum='$drop_var' Order by methodname ASC") 
-            //or die(mysql_error());
+
             $methods = method::get_methods_by_type($db,$drop_var);
 
             echo '<script type=\"text/javascript\">
@@ -72,4 +69,55 @@ class functions {
     }
     
     
+    public static function reset_password($db, $selector, $validator, $new_pass) {
+        // Get tokens
+        $results = $db->get_query_result("SELECT * FROM password_reset WHERE selector = :selector AND expires >= :time", ['selector'=>$selector,'time'=>time()]);
+
+        if ( empty( $results ) ) {
+            return array('RESULT'=>FALSE,
+                'MESSAGE'=>'There was an error processing your request. Error Code: 002');
+        }
+
+        $auth_token = $results[0];
+        $token = $auth_token['token'];
+        $email = $auth_token['email'];
+        $calc = hash('sha256', hex2bin($validator));
+
+        // Validate tokens
+        if ( hash_equals( $calc, $token ) )  {
+            //$user = $this->user_exists($auth_token->email, 'email');
+            if(member::member_exists($db, $email)) {
+                $user = member::load_member_by_name($db, $email);
+                if ( null === $user ) {
+                    return array('RESULT'=>0,
+                        'MESSAGE'=>'There was an error processing your request. Error Code: 003');
+                }
+
+                // Update password
+                $result = $user->reset_password($new_pass);
+                $update = $result['RESULT'];
+            /*
+            $update = $db->get_update_result('members', 
+                array(
+                    'password'  =>  password_hash($password, $new_pass),
+                ), $user->ID
+            );
+*/
+            // Delete any existing password reset AND remember me tokens for this user
+            //$db->delete('password_reset', 'email', $user->email);
+            //$db->delete('auth_tokens', 'username', $user->username);
+
+            if ( $update == true ) {
+                // New password. New session.
+                //session_destroy();
+
+                return array('RESULT'=>TRUE,
+                    'MESSAGE'=>'Password updated successfully. <a href="index.php">Login here</a>');
+            } else {
+                return $result;
+            }
+            }
+        }
+
+    }
 }

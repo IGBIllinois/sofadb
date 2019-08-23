@@ -143,6 +143,25 @@ public function update_login_time() {
     }
 }
 
+/**
+ * 
+ * @param type $new_pass hashed new password
+ */
+public function reset_password($new_pass) {
+    echo("resetting password for ".$this->uname."<BR>");
+    $query = "UPDATE members set pwd=:new_pass where id=:id";
+    $params = array("new_pass"=>$new_pass,
+                    "id"=>$this->id);
+    $result = $this->db->get_update_result($query, $params);
+    if($result > 0) {
+        return array("RESULT"=>TRUE,
+                    "MESSAGE"=>"Password updated successfully.");
+    } else {
+        return array("RESULT"=>FALSE,
+                    "MESSAGE"=>"There was an error resetting your password.");
+    }
+}
+
 // Static functions
 /** Gets a list of database members
  * 
@@ -387,6 +406,16 @@ public static function add_member($db, $params) {
             return false;
         }
     }
+    
+    public static function load_member_by_name($db, $name) {
+        $query1 = "SELECT id from members where uname = :uname";
+        $params = array("uname"=>$name);
+        $result = $db->get_query_result($query1, $params);
+        if(count($result) >0) {
+            $id = $result[0]['id'];
+            return new member($db, $id);
+        }
+    }
 
      
     // Private functions;
@@ -431,6 +460,8 @@ public static function add_member($db, $params) {
             
         }
     }
+    
+    
             
             
     
