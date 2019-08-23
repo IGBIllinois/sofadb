@@ -39,7 +39,7 @@ require_once('session_admin.php');
 <div id="header"><a href="#"><img src="<?php echo(ROOT_URL) ?>/images/customLogo.gif" width="351" height="147" alt="SOFA" /></a></div>
 
 <div id="title">
-<h1>Forensic Case Database</h1>
+<h1>Forensic Anthropology Case Database (FADAMA)</h1>
 </div>
 
 <div id="hline">
