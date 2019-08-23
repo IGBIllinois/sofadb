@@ -45,7 +45,7 @@
     if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1) {
 ?>
     
-    <li><a href="../">My Account</a></li>
+    <li><a href="../">My Cases</a></li>
     <li><a href="../logout.php">Logout</a></li>
     <li><a href="../contact/">Contact Us</a></li>
 <?php
