@@ -212,7 +212,6 @@ $(document).ready(function(){
 });//end action button
 
 
-
 });
 
 // user/addcase
@@ -238,26 +237,16 @@ function finishAjax_tier_four(id, response) {
   $('#'+id).fadeIn();
 }
 
-function show_category() {
-        // spradley jantz method category change
-            
+function showBoneRegion(showId) {
 
-$.get("func.php", {
-		func: 'spradley_jantz', 
-                method_id: $('#method_id').val(),
-                category: $('#category').val()
+document.getElementById("Upper Appendicular").style.display = "none";
+document.getElementById("Pelvis").style.display = "none";
+document.getElementById("Lower Limb").style.display = "none";
+document.getElementById("Skull").style.display = "none";
 
-		}, 
-        function(response){
-            $('#result_3').html(response);
-                //addRow('hortable',response);
-                $('#wait_3').hide();
-
-                $('#result_3').show();
-	
-	}
-                );//end get
+document.getElementById(showId).style.display = "inline";
 }
+
 
   $(function() {
     $( "#tabs" ).tabs();

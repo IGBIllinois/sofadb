@@ -83,8 +83,8 @@ if(isset($_GET['func']) && $_GET['func'] == "drop_1"  ) {
     $category = $_GET['category'];
     $method_id = $_GET['method_id'];
 
-    $method = new method($db, $method_id);
-    method_info::show_method_info_spradley_jantz($db, $method, null, $category);
+    //$method = new method($db, $method_id);
+    //method_info::show_method_info_spradley_jantz($db, $method, null, $category);
     
 } 
    

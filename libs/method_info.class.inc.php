@@ -298,7 +298,9 @@ class method_info {
                $estimated_outcome = $tier2->get_estimated_outcome_1();
            }
            if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
-               echo("<BR>Select any/all sectioning point outcomes.");
+               echo("<BR>Select any/all sectioning point outcomes.<BR>");
+           } else if($method->get_id() == 126){ // Holland (TODO: Make this more robust)
+               echo("<BR>Select any/all formula outcomes from formulas used.<BR>");
            }
            echo("<BR>Estimated Sex from this method:<BR>");
            echo("<select name='estimated_outcome_1'>");
@@ -310,17 +312,26 @@ class method_info {
            echo("<option value='Male' ". (($estimated_outcome == 'Male') ? " selected='selected' " : "") .">Male</option>");
            echo("</select><BR>");
        } else if($method->get_method_type() == "Stature") {
-           echo("<BR>Select any/all formulae used for your stature analysis.<BR>");
+           $estimated_outcome_1 = "";
+           $estimated_outcome_2 = "";
+           $estimated_outcome_units = "";
+           if($tier2id != null) {
+               $tier2 = new tier2data($db, $tier2id);
+               $estimated_outcome_1 = $tier2->get_estimated_outcome_1();
+               $estimated_outcome_2 = $tier2->get_estimated_outcome_2();
+               $estimated_outcome_units = $tier2->get_estimated_outcome_units();
+           }
+           echo("<BR>Select any/all formulae used to estimate stature.<BR>");
            echo("<BR>Estimated Stature range from this method:");
-           echo("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value=''>");
+           echo("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'>");
            echo(" to ");
-           echo("<input size=6 id='estimated_outcome_2' name='estimated_outcome_2' value=''>");
+           echo("<input size=6 id='estimated_outcome_2' name='estimated_outcome_2' value='$estimated_outcome_2'>");
            
            echo("&nbsp;&nbsp;Units:");
            echo("<select name='estimated_outcome_units'>");
            echo("<option value=''>- Select -</option>");
-           echo("<option value='in' ". (($estimated_outcome == 'in') ? " selected='selected' " : "") .">in</option>");
-           echo("<option value='cm' ".(($estimated_outcome == 'cm') ? " selected='selected' " : "") .">cm</option>");
+           echo("<option value='in' ". (($estimated_outcome_units == 'in') ? " selected='selected' " : "") .">in</option>");
+           echo("<option value='cm' ".(($estimated_outcome_units == 'cm') ? " selected='selected' " : "") .">cm</option>");
            echo("</select><BR>");
            
        } else if($method->get_method_type() == "Age") {
@@ -380,7 +391,7 @@ class method_info {
             echo("<input type=hidden id='method_id' name='method_id' value='$method_id'>");
             $result = $db->get_query_result($category_query, $params);
             echo("<B><U>".$result[0]['output_data_3_description']."</U></B><BR>");
-            echo("<select id='category' name='category[]' onchange='show_category();'>");
+            echo("<select id='category' name='category[]' onchange='showBoneRegion(this.value)'>");
             echo("<option name='none'></option>");
             foreach($result as $category) {
                 $name = $category['output_data_3'];
@@ -388,6 +399,7 @@ class method_info {
             }
             echo("</select>");
        
+            method_info::show_method_info_spradley_jantz($db, $method, $tier2id, null);
        
        } else {
            
@@ -550,16 +562,47 @@ class method_info {
     $i = 0;
         //$method = new method($db, $method_id);
         $this_method_info = $method->get_method_info();
+        
+        $maxCols = MAXCOLS;
+               foreach($output_data_1_result_sel as $od1_result) {
+                   $length = strlen($od1_result[0]);
+                   $width_class ="";
+                   if($length > 50 || $method->get_method_type() == "Stature") {
+                       // for long names, separate into their own columns vertically
+                       $maxCols = 1;
+                       $width_class = " width_75 ";
+                       break;
+                   }
+               }
+               // similarly, check selection results, 
+               foreach($output_data_2_result_sel as $od2_result) {
+                   $length = strlen($od2_result[0]);
+                   $width_class ="";
+                   if($length > 50) {
+                       // for long names, separate into their own columns vertically
+                       $maxCols = 1;
+                       $width_class = " width_75 ";
+                       break;
+                   }
+               }
+               
         foreach($this_method_info as $method_info) {
             
             if($i >= MAXCOLS) {
                 $html .="</tr><tr>";
                 $i=0;
             }
+            /*
             echo("<td class='align_top width_20'>");
             echo("<table class='table_padded'><tr><th width=50% class='align_right align_top'><U><B>".$header1."</B></U></th>");
             echo("<th><U><B>".$header2."</B></U></th>");
+*/
+            echo("<td  class='align_top td_spaced'>");
+            echo("<table  class='td_spaced table_full table_horiz_spacing'>");
 
+            echo("<tr><th width=50% class='align_right align_top td_spaced'><U><B>".$header1."</B></U></th>");
+            echo("<th><U><B>".$header2."</B></U></th>");
+                    
             echo("</tr>");
             $value = null;
             if($tier2id != null) {
@@ -1031,25 +1074,34 @@ class method_info {
                $methodinfos[] = $method_info; 
            }
        }
-       $all_method_info = method_info::get_data_for_method($db, $method->get_id(), $category);
-       $bones = array();
-       $method_infos_by_bone = array();
-       foreach($all_method_info as $curr_method_info) {
-           $bone = $curr_method_info->get_output_data_4();
-           if(!in_array($bone, $bones)) {
-               $bones[] = $bone;
-               $method_infos_by_bone[$bone][] = $curr_method_info;
-               
-           }
-
-       }
-
        
-       
+       $category_query = "SELECT DISTINCT output_data_3, output_data_3_description from method_info where methodid = :methodid";
+            $params = array("methodid"=>$method->get_id());
+            echo("<input type=hidden id='method_id' name='method_id' value='$method_id'>");
+            $result = $db->get_query_result($category_query, $params);
+       foreach($result as $cat_data) {
+           $category = $cat_data['output_data_3'];
+            
+            $all_method_info = method_info::get_data_for_method($db, $method->get_id(), $category);
+            $bones = array();
+            $method_infos_by_bone = array();
+            foreach($all_method_info as $curr_method_info) {
+                $bone = $curr_method_info->get_output_data_4();
+                if(!in_array($bone, $bones)) {
+                    $bones[] = $bone;
+                    $method_infos_by_bone[$bone][] = $curr_method_info;
+
+                }
+
+            }
+
+       $name = $cat_data['output_data_3'];
+       echo("<div name='$category' id='$category' style='display: none'>");
        if(count($all_method_info) > 0) {
            foreach($method_infos_by_bone as $bone=>$method_info) {
                $subcategory=$bone;
            $interactions = $method_info[0]->get_user_interactions();
+
            echo("<fieldset class='methodinfobox'>");
            echo("<legend class='boldlegend'>".$subcategory."</legend> ");
            echo("<table class='table_padded'><tr>");
@@ -1077,6 +1129,8 @@ class method_info {
        }
    
        
+       }
+       echo("</div>");
        }
    }
    
