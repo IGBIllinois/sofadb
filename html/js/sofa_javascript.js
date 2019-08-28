@@ -238,13 +238,20 @@ function finishAjax_tier_four(id, response) {
 }
 
 function showBoneRegion(showId) {
+    var x = document.getElementById("category").options.length;
+    //alert("x = "+x);
+    for(var i =1; i<x; i++) {
+        //alert("i = "+i);
+        var id = document.getElementById("category").options[i].text;
+        //alert("id = "+id);
+  	//document.getElementById("demo").innerHTML+= i + " = " + document.getElementById("mySelect").options[i].text;
+        if(document.getElementById("category").options.selectedIndex == i) {
+            document.getElementById(id).style.display = "inline";
+        } else {
+            document.getElementById(id).style.display = "none";
+        }
+    }
 
-document.getElementById("Upper Appendicular").style.display = "none";
-document.getElementById("Pelvis").style.display = "none";
-document.getElementById("Lower Limb").style.display = "none";
-document.getElementById("Skull").style.display = "none";
-
-document.getElementById(showId).style.display = "inline";
 }
 
 
