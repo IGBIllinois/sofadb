@@ -335,6 +335,12 @@ class method_info {
            echo("</select><BR>");
            
        } else if($method->get_method_type() == "Age") {
+           if($tier2id != null) {
+               $tier2 = new tier2data($db, $tier2id);
+               $estimated_outcome_1 = $tier2->get_estimated_outcome_1();
+               $estimated_outcome_2 = $tier2->get_estimated_outcome_2();
+               $estimated_outcome_units = $tier2->get_estimated_outcome_units();
+           }
            $estimated_outcomes = $method->get_estimated_outcomes();
 
            if(($method->get_header_2() != null) && 
@@ -352,8 +358,8 @@ class method_info {
             echo("<BR>$title<BR>");
            }
            echo("<BR>Estimated Age range from this method:");
-           echo("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value=''> to ");
-           echo("<input size=6 id='estimated_outcome_2' name='estimated_outcome_2' value=''> years");
+           echo("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'> to ");
+           echo("<input size=6 id='estimated_outcome_2' name='estimated_outcome_2' value='$estimated_outcome_2'> years");
            echo("<BR>");
        } else if($method->get_method_type() == "Ancestry") {
            $estimated_outcomes = $method->get_estimated_outcomes();
@@ -431,7 +437,7 @@ class method_info {
            if($user_interaction == USER_INTERACTION_MULTISELECT ||
                    $user_interaction == USER_INTERACTION_SINGLE_SELECT) {
                
-               method_info::show_method_info_multiselect($db, $method, $user_interaction);
+               method_info::show_method_info_multiselect($db, $method, $tier2id, $user_interaction);
 
            } else if($user_interaction == USER_INTERACTION_SELECT_RANGE) {
                
@@ -470,11 +476,26 @@ class method_info {
     * 
     * @param type $method The method object to draw inputs for
     */
-   public static function show_method_info_multiselect($db, $method, $user_interaction = null) {
+   public static function show_method_info_multiselect($db, $method, $tier2id = null, $user_interaction = null) {
             // Notes to user
             //$user_interaction = USER_INTERACTION_MULTISELECT;
        $header1 = $method->get_header_1();
        $header2 = $method->get_header_2();
+       
+       
+
+        $methodinfos = array();
+        if($tier2id != null) {
+           $tier2 = new tier2data($db, $tier2id);
+           $data = $tier2->get_tier3data();
+           
+           foreach($data as $tier_info) {
+               $method_info = new method_info($db, $tier_info->get_methodinfoid());
+               $methodinfos[] = $method_info; 
+           }
+        }
+
+            
        
        $multiple = 1;
 
@@ -528,11 +549,11 @@ class method_info {
                 echo("<select id='output_data_2' ". (($multiple == 1) ? " multiple size=$size2 " : "" ) ." name=output_data_2[] >");
                 foreach($output_data_2_result_sel as $od2_option) {
                     foreach($methodinfos as $method_info) {
+                        $selected = false;
                         if($method_info->get_output_data_2() == $od2_option['output_data_2']) {
                             $selected = true;
-                        } else {
-                            $selected = false;
-                        }
+                            break;
+                        } 
                     }
                     echo("<option value='".$od2_option['output_data_2']."' ".($selected ? " selected=$selected " : "") .">".$od2_option['output_data_2']."</option>");
 
