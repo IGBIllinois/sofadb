@@ -146,7 +146,7 @@ class tier2data {
         return $output;
     }
     
-    public function update_estimated_outcomes($estimated_outcome_1, $estimated_outcome_2 = null) {
+    public function update_estimated_outcomes($estimated_outcome_1, $estimated_outcome_2 = null, $units=null) {
         
         $tier2id = $this->id;
         $query = "update tier2data set estimated_outcome_1=:est1 where id=:tier2id";
@@ -155,7 +155,14 @@ class tier2data {
         if($estimated_outcome_2 != null) {
             $query = "update tier2data set estimated_outcome_1=:est1 , estimated_outcome_2=:est2 where id=:tier2id";
             $params = array("tier2id"=>$tier2id, "est1"=>$estimated_outcome_1, "est2"=>$estimated_outcome_2);
+            
+            if($units != null) {
+            $query = "update tier2data set estimated_outcome_1=:est1 , estimated_outcome_2=:est2, estimated_outcome_units=:units where id=:tier2id";
+            $params = array("tier2id"=>$tier2id, "est1"=>$estimated_outcome_1, "est2"=>$estimated_outcome_2, "units"=>$units);
         }
+        }
+        
+        
         
         $result = $this->db->get_update_result($query, $params);
         return $result;
