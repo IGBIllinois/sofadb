@@ -1,6 +1,4 @@
 
-
-
 CREATE TABLE `casemethodfeature` (
   `caseid` int(11) NOT NULL,
   `methodid` int(11) NOT NULL,
@@ -53,10 +51,10 @@ CREATE TABLE `cases` (
   `idsource` text CHARACTER SET utf8,
   `nummethods` int(11) DEFAULT NULL,
   `casenotes` text CHARACTER SET utf8,
-  `datestarted` date NOT NULL,
-  `datemodified` date NOT NULL,
-  `datesubmitted` date NOT NULL,
-  `submissionstatus` int(11) NOT NULL,
+  `datestarted` date DEFAULT NULL,
+  `datemodified` date DEFAULT NULL,
+  `datesubmitted` date DEFAULT NULL,
+  `submissionstatus` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `memberid` (`memberid`),
   KEY `submissionstatus` (`submissionstatus`)
@@ -68,7 +66,6 @@ CREATE TABLE `contact` (
   `email` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 
 
 CREATE TABLE `feature` (
@@ -113,10 +110,33 @@ CREATE TABLE `members` (
   `caseswithdrawn` int(11) NOT NULL,
   `dateregistered` date NOT NULL,
   `totalcases` int(11) NOT NULL,
+  `affiliation` text,
+  `sponsor` text,
+  `sponsor_email` text,
+  `sponsor_affiliation` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+
+CREATE TABLE `method_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `methodid` int(11) NOT NULL,
+  `output_data_1` varchar(500) DEFAULT NULL,
+  `output_data_2` varchar(500) DEFAULT NULL,
+  `output_data_3` varchar(500) DEFAULT NULL,
+  `output_data_4` varchar(500) DEFAULT NULL,
+  `output_data_1_description` varchar(100) DEFAULT NULL,
+  `output_data_2_description` varchar(100) DEFAULT NULL,
+  `output_data_3_description` varchar(100) DEFAULT NULL,
+  `output_data_4_description` varchar(100) DEFAULT NULL,
+  `reference_list` varchar(100) DEFAULT NULL,
+  `age_range` varchar(100) DEFAULT NULL,
+  `user_interaction` varchar(100) DEFAULT NULL,
+  `expected_result_1` varchar(100) DEFAULT NULL,
+  `expected_result_2` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `methoddata` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -152,14 +172,31 @@ CREATE TABLE `methods` (
   `measurementtype` text CHARACTER SET latin1 NOT NULL,
   `description` text,
   `instructions` text CHARACTER SET latin1,
+  `methodinfotype` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `password_reset` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) DEFAULT NULL,
+  `selector` char(16) DEFAULT NULL,
+  `token` char(64) DEFAULT NULL,
+  `expires` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `phase` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `phasename` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `reference` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `reference_name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `regions` (
@@ -205,29 +242,21 @@ CREATE TABLE `tier2data` (
   `methodid` int(11) NOT NULL,
   `featureid` int(11) DEFAULT NULL,
   `phaseid` int(11) DEFAULT NULL,
+  `estimated_outcome_1` varchar(100) DEFAULT NULL,
+  `estimated_outcome_2` varchar(100) DEFAULT NULL,
+  `estimated_outcome_units` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `memberid` (`memberid`,`caseid`,`methodid`,`featureid`,`phaseid`),
   KEY `methodtype` (`methodtype`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 CREATE TABLE `tier3data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tier2id` int(11) DEFAULT NULL,
-  `caseid` int(11) DEFAULT NULL,
-  `methodid` int(11) DEFAULT NULL,
   `methodinfoid` int(11) DEFAULT NULL,
+  `value` text,
+  `reference` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `method_info` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `methodid` int(11) NOT NULL,
-  `output_data_1` varchar(100) DEFAULT NULL,
-  `output_data_2` varchar(100) DEFAULT NULL,
-  `output_data_1_description` varchar(100) DEFAULT NULL,
-  `output_data_2_description` varchar(100) DEFAULT NULL,
-  `age_range` varchar(100) DEFAULT NULL,
-  `user_interaction` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
