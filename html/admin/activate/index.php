@@ -11,6 +11,39 @@ require_once("../../include/header_admin.php");
 if (isset($_GET['id']))
 { 
 $idactivate=intval($_GET['id']);
+if(isset($_GET['deny'])) {
+    // decline this user
+    $member = new member($db, $idactivate);
+$result = $member->set_permission('0');
+
+
+if($result['RESULT'] == FALSE) 
+{
+    echo '<p class="error">Activation failed. We apologize for any inconvenience.</p>';
+    
+} else {
+       //$to = $emailrow['uname'];
+    $to = $member->get_uname();
+$admin_email = ADMIN_EMAIL;
+
+   $subject = "FADAMA Membership Denied";
+   $message = "Your request for FADAMA membership was denied. For more information please review our policies on membership requirements.\n\nThank you,\nFADAMA Database Committee";
+   $header = "From:".$admin_email."\r\n";
+
+   $retval = mail ($to,$subject,$message,$header);
+
+   if( $retval == true )  
+   {
+     
+	  
+   }
+   else
+   {
+      echo "Error: Activation Email could not be sent.";
+   }
+}
+    
+} else {
 $member = new member($db, $idactivate);
 $result = $member->set_permission(1);
 
@@ -25,11 +58,19 @@ if($result['RESULT'] == FALSE)
 
 //$emailrow = $result[0];
    //$admin_email="hughesc@illinois.edu";
-   $to = $emailrow['uname'];
+   //$to = $emailrow['uname'];
+   $to = $member->get_uname();
 $admin_email = ADMIN_EMAIL;
 
-   $subject = "SOFA Database Account Activated";
-   $message = "Dear ".$member->get_firstname()." ".$member->get_lastname.",\n Welcome to the SOFA Database. Your account is now activated and you can add cases, search the database, and download case information from the database.\n Best regards,\n SOFA DB ADMIN\n http://www.sofadb.org";
+   $subject = "FADAMA Membership Approved";
+   //$message = "Dear ".$member->get_firstname()." ".$member->get_lastname.",\n Welcome to the SOFA Database. Your account is now activated and you can add cases, search the database, and download case information from the database.\n Best regards,\n SOFA DB ADMIN\n http://www.sofadb.org";
+   $message = "Dear New FADAMA Member, \n
+              Your membership request has been approved. You may access          
+               the database at http://sofainc.org/sofadb/. You can both 
+               download case data and submit case data to be added to the  
+               database.  Please review our FAQ, Database 
+               Policies and Practices, and User Tutorial
+               to help get you started. ";
    $header = "From:".$admin_email."\r\n";
    $retval = mail ($to,$subject,$message,$header);
    if( $retval == true )  
@@ -45,7 +86,7 @@ $admin_email = ADMIN_EMAIL;
 
 }
 }
-
+}
 
 //set the number of rows per display page
 $pagerows = PAGEROWS;
@@ -82,6 +123,7 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
     <thead>
     	<tr>
 		    <th scope="col">Activate</th>
+                    <th scope="col">Deny</th>
             <th scope="col">Last Name</th>
             <th scope="col">First Name</th>
             <th scope="col">Email</th>
@@ -101,7 +143,7 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
 foreach($inactive_members as $inactive_member) {
 	echo '<tr>
 	<td><a href="index.php?id=' . $inactive_member->get_id() . '">Activate</a></td>
-	
+	<td><a href="index.php?deny=1&id=' . $inactive_member->get_id() . '">Deny</a></td>
 	<td>' . $inactive_member->get_lastname() . '</td>
 	<td>' . $inactive_member->get_firstname() . '</td>
 	<td>' . $inactive_member->get_uname() . '</td>
