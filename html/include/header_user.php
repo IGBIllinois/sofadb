@@ -41,6 +41,16 @@ require_once('main.inc.php');
 
 <script type="text/javascript" src="<?php echo(ROOT_URL) ?>/js/sofa_javascript.js"></script>
 
+<!--
+jQuery Plugin: Are-You-Sure (Dirty Form Detection)
+https://github.com/codedance/jquery.AreYouSure/
+
+Copyright (c) 2012-2014, Chris Dance - PaperCut Software http://www.papercut.com/
+Dual licensed under the MIT or GPL Version 2 licenses.
+http://jquery.org/license
+-->
+  <script type="text/javascript" src="<?php echo(ROOT_URL) ?>/js/jquery.are-you-sure.js"></script>
+  
 <!-- CSS -->
  <link href="<?php echo(ROOT_URL) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
  <link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery.multiselect.css" />
