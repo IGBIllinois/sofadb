@@ -7,6 +7,25 @@ require_once('func.php');
 
 <title>Edit Case Methods</title>
 
+  <script type='text/javascript'>
+  $(function() {
+    $('#casedata').areYouSure(
+      {
+        message: 'It looks like you have been editing something. '
+               + 'If you leave before saving, your changes will be lost.'
+      }
+    );
+  });
+  
+    $(function() {
+    $('#method_info_data').areYouSure(
+      {
+        message: 'It looks like you have been editing something. '
+               + 'If you leave before saving, your changes will be lost.'
+      }
+    );
+  });
+</script>
 
   <h1 class="cntr">Edit Case Methods</h1>
 
@@ -61,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         $est1 = null;
         $est2 = null;
+        $units = null;
         
         if(isset($_POST['estimated_outcome_1'])) {
             $est1 = $_POST['estimated_outcome_1'];
@@ -70,12 +90,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $est2 = $_POST['estimated_outcome_2'];
         }
         
-        if($est1 != null) {
-            $tier2->update_estimated_outcomes($est1, $est2);
+        if(isset($_POST['estimated_outcome_units'])) {
+            $units = $_POST['estimated_outcome_units'];
         }
         
-        
-        
+        if($est1 != null) {
+            $tier2->update_estimated_outcomes($est1, $est2, $units);
+        }
+
     }
     $result = null;
     $errors = 0;
@@ -93,6 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user_interactions = $method_info[0]->get_user_interactions();
         //print_r($user_interactions);
         $user_interaction = $method_info[0]->get_user_interaction();
+        
     }
     if(isset($_POST['output_data_1'])) {
         $output_data_1 = $_POST['output_data_1'];
@@ -105,6 +128,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $new_ids = array();
+    
+    
+    
+    
     if($user_interaction == USER_INTERACTION_MULTISELECT) {
     if($output_data_2 != null) {
     foreach($output_data_1 as $od1) {
@@ -215,7 +242,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $new_ids = array();
 
-        
+        //echo("user_interaction = $user_interaction<BR>");
+        //print_r($output_data_1);
             foreach($output_data_1 as $name=>$od1_value) {
                 $name = urldecode($name);
                 if(is_array($od1_value)) {
@@ -267,8 +295,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             } else {
                 if($user_interaction == USER_INTERACTION_NUMERIC_ENTRY ||
-                            $user_interaction == USER_INTERACTION_INPUT_BOX ||
-                        $user_interaction == USER_INTERACTION_TEXT_AREA) {
+                   $user_interaction == USER_INTERACTION_INPUT_BOX ||
+                   $user_interaction == USER_INTERACTION_TEXT_AREA) {
                     // just use output_data_name for numeric entry
                     $method_info = method_info::get_one_method_info($db, $method->get_id(), $name);
                 } else if($user_interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
@@ -363,7 +391,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   
 
 
-
   <div id="caseform">
   
    
@@ -390,6 +417,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
             //echo("Spradley/Jantz<BR>");
             //echo("tier2 id = ".$tier2->get_id());
+
+            $result = $method->get_categories();
+            
+            echo("<input type=hidden id='method_id' name='method_id' value='$method_id'>");
+            
+            echo("<B><U>".$result[0]['output_data_3_description']."</U></B><BR>");
+            echo("<select id='category' name='category[]' onchange='showBoneRegion(this.value)'>");
+            echo("<option name='none'></option>");
+            foreach($result as $category) {
+                $name = $category['output_data_3'];
+                echo("<option name='$name'>$name</option>");
+            }
+            echo("</select>");
+            
             $tier3s = $tier2->get_tier3data();
             $tier3 = $tier3s[0];
             $method_info_id = $tier3->get_methodinfoid();

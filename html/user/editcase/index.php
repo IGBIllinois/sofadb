@@ -43,6 +43,7 @@ elseif(isset($_SESSION['caseid']))
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+    
     //remove method from case here, decrement total cases and numsubmitted from members.
     if (isset($_POST['delsubmit']))
     {
@@ -55,6 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     } else if(isset($_POST['add_method'])) {
         	
+        $estimated_outcome_1 = null;
+        $estimated_outcome_2 = null;
+        $estimated_outcome_units = null;
+        
 	$method_id = $_POST['drop_2'];
         if(isset($_POST['output_data_1'])) {
             $output_data_1 = $_POST['output_data_1'];
@@ -75,16 +80,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $references = $_POST['references'];
         }
         
+        
+        if(isset($_POST['estimated_outcome_1'])) {
+            $estimated_outcome_1 = $_POST['estimated_outcome_1'];
+        }
+        if(isset($_POST['estimated_outcome_2'])) {
+            $estimated_outcome_2 = $_POST['estimated_outcome_2'];
+        }
+        if(isset($_POST['estimated_outcome_units'])) {
+            $estimated_outcome_units = $_POST['estimated_outcome_units'];
+        }
+        
         $od1Names = array_keys($output_data_1);
 
-        //$od1Names = isset($_GET['od1Names']) ? $_GET['od1Names'] : null;
         $caseid = $_POST['caseid'];
         
         $this_case = new sofa_case($db, $caseid);
         $method = new method($db, $method_id);
         // Add the method
-        $result = $this_case->add_case_method($method_id, $method->get_method_type_num(), 0, 127);
-        
+        $result = $this_case->add_case_method(
+                        $method_id, 
+                        $method->get_method_type_num(), 
+                        0, 
+                        127, 
+                        $estimated_outcome_1, 
+                        $estimated_outcome_2,
+                        $estimated_outcome_units);
+
         if($result['RESULT'] == TRUE) {
             $method_case_id = $result['id'];
             $this_case->add_all_tier3_data($method_id, 
@@ -499,8 +521,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } // End of the main Submit conditional.
 }
 ?>
-  
 
+  <script type='text/javascript'>
+  $(function() {
+    $('#casedata').areYouSure(
+      {
+        message: 'It looks like you have been editing something. '
+               + 'If you leave before saving, your changes will be lost.'
+      }
+    );
+  });
+  
+    $(function() {
+    $('#method_info_data').areYouSure(
+      {
+        message: 'It looks like you have been editing something. '
+               + 'If you leave before saving, your changes will be lost.'
+      }
+    );
+  });
+</script>
 
 
   <div id="caseform">
@@ -519,7 +559,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
   <fieldset class="enclosefieldset">
     
-    <form action="index.php" method="post" id="casedata">
+    <form action="index.php" method="post" id="casedata" name="casedata">
         <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
   <fieldset class="caseinfobox"><legend class="boldlegend">General Case Information</legend>
       
@@ -637,7 +677,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	     <div id="tabs-2">
                  
                      <!-- Add Method box -->    
-        <form action="index.php#tabs-2" method="post" id="casedata">
+        <form action="index.php#tabs-2" method="post" id="method_info_data" name="method_info_data">
         <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
     <fieldset class="methodinfobox"><legend class="boldlegend">Add Methods</legend>
 
