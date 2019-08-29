@@ -489,6 +489,16 @@ class method {
         
     }
     
+    /** Gets categories (output_data_3) for a Spradley/Jantz type method
+     * 
+     */
+    public function get_categories() {
+        $category_query = "SELECT DISTINCT output_data_3, output_data_3_description from method_info where methodid = :methodid";
+            $params = array("methodid"=>$this->get_id());
+            $result = $this->db->get_query_result($category_query, $params);
+            return $result;
+    }
+    
     // Static functions
     
     public static function get_methods($db, $start = -1, $limit = -1) {
