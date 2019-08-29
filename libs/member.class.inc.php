@@ -37,6 +37,11 @@ class member {
     private $dateregistered;
     private $totalcases;
     
+    private $affiliation;
+    private $sponsor;
+    private $sponsor_email;
+    private $sponsor_affiliation;
+    
     public function __construct($db, $id = null) {
         $this->db = $db;
         if($id !=  null) {
@@ -54,6 +59,7 @@ public function get_degreeyear() { return $this->degreeyear; }
 public function get_fieldofstudy() { return $this->fieldofstudy; }
 public function get_aafsstatus() { return $this->aafsstatus; }
 public function get_institution() { return $this->institution; }
+public function get_years_exp() { return $this->yearsexperience; }
 public function get_caseperyear() { return $this->caseperyear; }
 public function get_region() { return $this->region; }
 public function get_mailaddress() { return $this->mailaddress; }
@@ -61,11 +67,16 @@ public function get_mailaddress2() { return $this->mailaddress2; }
 public function get_city() { return $this->city; }
 public function get_state() { return $this->state; }
 public function get_zip() { return $this->zip; }
+public function get_phone() { return $this->phone; }
 public function get_casessubmitted() { return $this->casessubmitted; }
 public function get_totalcases() { return $this->totalcases; }
 public function get_dateregistered() { return $this->dateregistered; }
 public function get_lastlogin() { return $this->lastlogin; }
 public function get_permissionstatus() { return $this->permissionstatus; }
+public function get_affiliation() { return $this->affiliation; }
+public function get_sponsor() { return $this->sponsor; }
+public function get_sponsor_email() { return $this->sponsor_email; }
+public function get_sponsor_affiliation() { return $this->sponsor_affiliation; }
 
 /** Sets this user's permission status
  * 
@@ -83,7 +94,7 @@ public function get_permissionstatus() { return $this->permissionstatus; }
 public function set_permission($status) {
     $q="UPDATE members SET permissionstatus=:status WHERE id=:idactivate";
     $params = array("status"=>$status,
-                    "idactivate="=>$this->id);
+                    "idactivate"=>$this->id);
     $result = $this->db->get_update_result($q, $params);
     
     if($result > 0) {
@@ -351,7 +362,12 @@ public static function add_member($db, $params) {
             . "dateregistered,"
             . "casessubmitted,"
             . "caseswithdrawn,"
-            . "totalcases) VALUES ("
+            . "totalcases,"
+            . "affiliation,"
+            . "sponsor,"
+            . "sponsor_email,"
+            . "sponsor_affiliation"
+            . ") VALUES ("
                 . ":uname, "
                 . ":pwd, "
                 . ":firstname, "
@@ -375,7 +391,14 @@ public static function add_member($db, $params) {
                 . "NOW(), "
                 . "'0', "
                 . "'0', "
-                . "'0')";		
+                . "'0',"
+                . ":affiliation,"
+                . ":sponsor,"
+                . ":sponsor_email,"
+                . ":sponsor_affiliation"
+            . ")";		
+    echo("query = $q<BR>");
+    print_r($params);
     $result = $db->get_insert_result($q, $params);
     if($result > 0) {
         return array("RESULT"=>TRUE,
@@ -384,6 +407,62 @@ public static function add_member($db, $params) {
     } else {
         return array("RESULT"=>FALSE,
                     "MESSAGE"=>"An error occurred. User not added.");
+    }
+
+}
+
+/** Updates member info in the database
+ * 
+ * @param db $db
+ * @param array $params An array of parameters in $name=>$value form
+ * @return array An array of the form 
+ * ("RESULT"=>TRUE|FALSE,
+ *   "MESSAGE"=>$message,
+ *   "id"=>$id)
+ * where "RESULT" is true if completed successfully, else false, 
+ * "MESSAGE" is an output message,
+ * and $id is the id of the newly created user, if successful.
+ */
+public static function update_member($db, $params, $pwd=null) {
+    $q = "UPDATE members SET "
+            . "uname = :uname, "
+            . ($pwd != null ? "pwd = :pwd," : "")
+            . "firstname = :firstname,"
+            . "lastname = :lastname,"
+            . "title = :title,"
+            . "degree = :degree,"
+            . "degreeyear = :degreeyear,"
+            . "fieldofstudy = :fieldofstudy,"
+            . "aafsstatus = :aafsstatus,"
+            . "institution = :institution,"
+            . "yearsexperience = :yearsexperience,"
+            . "caseperyear = :caseperyear,"
+            . "region = :region,"
+            . "mailaddress = :mailaddress1,"
+            . "mailaddress2 = :mailaddress2,"
+            . "city = :city,"
+            . "state = :state,"
+            . "zip = :zip,"
+            . "phone = :phone,"
+            . "affiliation = :affiliation,"
+            . "sponsor = :sponsor,"
+            . "sponsor_email = :sponsor_email,"
+            . "sponsor_affiliation = :sponsor_affiliation"
+
+            . " WHERE id = :id";	
+    if($pwd != null) {
+        $params['pwd'] = $pwd;
+    }
+    echo("query = $q<BR>");
+    print_r($params);
+    $result = $db->get_update_result($q, $params);
+    if($result > 0) {
+        return array("RESULT"=>TRUE,
+                    "MESSAGE"=>"User updated successfully.",
+                    "id"=>$result);
+    } else {
+        return array("RESULT"=>FALSE,
+                    "MESSAGE"=>"An error occurred. User not updated.");
     }
 
 }
@@ -457,6 +536,11 @@ public static function add_member($db, $params) {
             $this->caseswithdrawn = $member_data['caseswithdrawn'];
             $this->dateregistered = $member_data['dateregistered'];
             $this->totalcases = $member_data['totalcases'];
+            
+            $this->affiliation = $member_data['affiliation'];
+            $this->sponsor = $member_data['sponsor'];
+            $this->sponsor_email = $member_data['sponsor_email'];
+            $this->sponsor_affiliation = $member_data['sponsor_affiliation'];
             
         }
     }
