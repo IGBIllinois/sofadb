@@ -184,6 +184,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$cases=0;	
 	}
         
+        if (!empty($_POST['affiliation'])) {
+		$affiliation = trim($_POST['affiliation']);
+	} else {
+		$affiliation="";
+	}
+        
+        if (!empty($_POST['sponsor'])) {
+		$sponsor = trim($_POST['sponsor']);
+	} else {
+		$sponsor="";
+	}
+        
+        if (!empty($_POST['sponsor_email'])) {
+		$sponsor_email = trim($_POST['sponsor_email']);
+	} else {
+		$sponsor_email="";
+	}
+        
+        if (!empty($_POST['sponsor_affiliation'])) {
+		$sponsor_affiliation = trim($_POST['sponsor_affiliation']);
+	} else {
+		$sponsor_affiliation="";
+	}
+        
         $params = array(
             "uname"=>$e,
             "pwd"=>$hash,
@@ -203,7 +227,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "city"=>$cty,
             "state"=>$state,
             "zip"=>$pcode,
-            "phone"=>$ph);
+            "phone"=>$ph,
+            "affiliation"=>$affiliation,
+            "sponsor"=>$sponsor,
+            "sponsor_email"=>$sponsor_email,
+            "sponsor_affiliation"=>$sponsor_affiliation);
  
 
 	
@@ -222,14 +250,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $to = $admin_email;
    //$from="admin@sofainc.org";
       $from= $admin_email;
-   $subject = "SOFA DB ADMIN ALERT: Activate new user";
+   $subject = "FADAMA DB ADMIN ALERT: Activate new user";
    $message = "New User:".$fn." ".$ln." is requesting activation.\n Email address is:".$e;
    $header = "From:".$from."\r\n";
-   $retval = mail ($to,$subject,$message,$header);
+   $retval = mail($to,$subject,$message,$header);
+   
+   // Also email user
+   $user_to = $e;
+   $user_subject = "FADAMA Membership Request";
+   $user_message = "Thank you for requesting membership approval to FADAMA. Your request is under review and may take up to 1 week to be approved.";
+   $user_header = "From:".$admin_email."\r\n";
+   
+   $user_retval = mail($user_to, $user_subject, $user_message, $user_header);
+   
    if( $retval == true )  
    {
-     header ("location: ../index.php"); 
-		exit();
+     //header ("location: ../index.php"); 
+	//	exit();
 	  
    }
    else
@@ -334,21 +371,26 @@ echo	'<p class="error">The email address is not acceptable because it is already
       
       <br><label class="label" for="yearsexp">Years of Forensic Casework</label><input id="yearsexp" type="text" name="yearsexp" size="30" maxlength="3" value="<?php if (isset($_POST['yearsexp'])) echo $_POST['yearsexp']; ?>" >
       
-      <br><label class="label" for="casesperyear">Average Number of Cases/Year**</label><input id="casesperyear" type="text" name="casesperyear" size="30" maxlength="8" value="<?php if (isset($_POST['casesperyear'])) echo $_POST['casesperyear']; ?>" ><br /><br>
-      
-      
+      <br><label class="label" for="casesperyear">Average Number of Cases/Year**</label><input id="casesperyear" type="text" name="casesperyear" size="30" maxlength="8" value="<?php if (isset($_POST['casesperyear'])) echo $_POST['casesperyear']; ?>" ><br />
+                  
+      <br><label class="label" for="affiliation">Other Forensic Governing Body Affiliation (e.g. FASE, ALAF):</label><input id="affiliation" type="text" name="affiliation" size="30"  value="<?php if (isset($_POST['affiliation'])) echo $_POST['affiliation']; ?>" >
+        <br>If you aren't a member of a forensic governing body, you are required to have a sponsor in order to access FADAMA. Fill out their name, email, and affiliated membership in the space below
+        <br><label class="label" for="sponsor">Sponsor:</label><input id="sponsor" type="text" name="sponsor" size="30" value="<?php if (isset($_POST['sponsor'])) echo $_POST['sponsor']; ?>" >
+        <br><label class="label" for="sponsor_email">Sponsor Email:</label><input id="sponsor_email" type="text" name="sponsor_email" size="30" value="<?php if (isset($_POST['sponsor_email'])) echo $_POST['sponsor_email']; ?>" >
+        <br><label class="label" for="sponsor_affiliation">Sponsor Affiliation:</label><input id="sponsor" type="text" name="sponsor_affiliation" size="30"  value="<?php if (isset($_POST['sponsor_affiliation'])) echo $_POST['sponsor_affiliation']; ?>" >
+                <BR><BR>
       
       
       
       
       </fieldset>
  <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Code of Conduct for Database Usage</legend>
-By requesting registration to the SOFA Case Database, I agree to the following guidelines of professional conduct:
+By requesting registration to the FADAMA Database, I agree to the following guidelines of professional conduct:
 <br/><br/>
 <ol>
-  <li>I shall seek and obtain permission from my institution to submit anonymous casework data to the SOFA Case Database.</li><br/>
+  <li>I shall seek and obtain permission from my institution to submit anonymous casework data to the FADAMA Database.</li><br/>
   <li>I shall cooperate with other professionals in the forensic sciences to promote the advancement of forensic anthropology through scientific research. Knowledge of any new discoveries, developments or techniques applicable to the forensic sciences shall be shared with the peer community.</li><br/>
-  <li>I shall make examinations of SOFA Case Database data utilizing generally accepted scientific techniques and methods which are reliable and accurate with appropriate standards, controls, and statistical frameworks.
+  <li>I shall make examinations of FADAMA Database data utilizing generally accepted scientific techniques and methods which are reliable and accurate with appropriate standards, controls, and statistical frameworks.
 </li><br/>
 <li>I shall at all times demonstrate respect for human remains and authority, to include all aspects of recovery, analysis, data collection, research, teaching and proper disposition in accordance with applicable country, province, state, and local laws.
  </li>
