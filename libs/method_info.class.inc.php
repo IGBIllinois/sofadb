@@ -152,7 +152,7 @@ class method_info {
         return $result;
     }
     
-    
+
     // Static functions
     
     /** Adds a new method_data to to a case
@@ -297,11 +297,7 @@ class method_info {
                $tier2 = new tier2data($db, $tier2id);
                $estimated_outcome = $tier2->get_estimated_outcome_1();
            }
-           if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
-               echo("<BR>Select any/all sectioning point outcomes.<BR>");
-           } else if($method->get_id() == 126){ // Holland (TODO: Make this more robust)
-               echo("<BR>Select any/all formula outcomes from formulas used.<BR>");
-           }
+           
            echo("<BR>Estimated Sex from this method:<BR>");
            echo("<select name='estimated_outcome_1'>");
            echo("<option value=''>- Select -</option>");
@@ -311,6 +307,13 @@ class method_info {
            echo("<option value='Probable Male' ". (($estimated_outcome == 'Probable Male') ? " selected='selected' " : "") .">Probable Male</option>");
            echo("<option value='Male' ". (($estimated_outcome == 'Male') ? " selected='selected' " : "") .">Male</option>");
            echo("</select><BR>");
+           if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
+               echo("<BR>Select any/all sectioning point outcomes.<BR>");
+           } else if($method->get_id() == 126){ // Holland (TODO: Make this more robust)
+               echo("<BR>Select any/all formula outcomes from formulas used.<BR>");
+           } else {
+               echo("<BR>Select any/all outcomes for features used.<BR>");
+           }
        } else if($method->get_method_type() == "Stature") {
            $estimated_outcome_1 = "";
            $estimated_outcome_2 = "";
@@ -321,7 +324,7 @@ class method_info {
                $estimated_outcome_2 = $tier2->get_estimated_outcome_2();
                $estimated_outcome_units = $tier2->get_estimated_outcome_units();
            }
-           echo("<BR>Select any/all formulae used to estimate stature.<BR>");
+           
            echo("<BR>Estimated Stature range from this method:");
            echo("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'>");
            echo(" to ");
@@ -333,7 +336,7 @@ class method_info {
            echo("<option value='in' ". (($estimated_outcome_units == 'in') ? " selected='selected' " : "") .">in</option>");
            echo("<option value='cm' ".(($estimated_outcome_units == 'cm') ? " selected='selected' " : "") .">cm</option>");
            echo("</select><BR>");
-           
+           echo("<BR>Select any/all formulae used to estimate stature.<BR>");
        } else if($method->get_method_type() == "Age") {
            if($tier2id != null) {
                $tier2 = new tier2data($db, $tier2id);
@@ -343,13 +346,7 @@ class method_info {
            }
            $estimated_outcomes = $method->get_estimated_outcomes();
 
-           if(($method->get_header_2() != null) && 
-                   ($method->get_header_2() == "Reference Sample") ||
-                   ($method->get_header_2() == "Reference Samples")) {
-               $title = "Select method outcome and reference sample used.";
-           } else {
-               $title = "Select method outcome used.";
-           }
+           
            if(count($method->get_method_info_by_type(USER_INTERACTION_NUMERIC_ENTRY)) > 0) {
                // No title for user input methods like Lamedin, Prince&Ubelaker, etc.s
                $title = "";
@@ -361,6 +358,13 @@ class method_info {
            echo("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'> to ");
            echo("<input size=6 id='estimated_outcome_2' name='estimated_outcome_2' value='$estimated_outcome_2'> years");
            echo("<BR>");
+           if(($method->get_header_2() != null) && 
+                   ($method->get_header_2() == "Reference Sample") ||
+                   ($method->get_header_2() == "Reference Samples")) {
+               $title = "Select method outcome and reference sample used.";
+           } else {
+               $title = "Select method outcome used.";
+           }
        } else if($method->get_method_type() == "Ancestry") {
            $estimated_outcomes = $method->get_estimated_outcomes();
 
