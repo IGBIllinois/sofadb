@@ -314,7 +314,7 @@ class sofa_case {
 public function submit_case($submitstatus) {
 
 	$q="UPDATE cases SET submissionstatus=:status,datesubmitted=NOW() WHERE id=:caseid";
-	$params = array("status"=>$submitstatus, $caseid=>$this->get_id());
+	$params = array("status"=>$submitstatus, "caseid"=>$this->get_id());
 	$result = $this->db->get_update_result($q, $params);
 
 	if(count($result) == 0) {
@@ -324,9 +324,12 @@ public function submit_case($submitstatus) {
 	
 	$this_member = new member($this->db, $this->memberid);
 
-	$q="UPDATE members SET casessubmitted=casessubmitted+1 WHERE id='$memberid'";
-	$params = array("casessubmitted"=>($this->get_casessubmitted() + 1),
-			"memberid"=>$this->memberid);
+        if($submitstatus == 1) {
+            $q="UPDATE members SET casessubmitted=casessubmitted+1 WHERE id=:memberid";
+        } else {
+            $q="UPDATE members SET casessubmitted=casessubmitted-1 WHERE id=:memberid";
+        }
+	$params = array("memberid"=>$this->memberid);
 	$result = $this->db->get_update_result($q, $params);
 
 
@@ -622,7 +625,8 @@ public function submit_case($submitstatus) {
         if($interaction == null ||
                 $interaction == USER_INTERACTION_MULTISELECT ||
                 $interaction == USER_INTERACTION_SELECT_EACH  ||
-                $interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
+                $interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN ||
+                $interaction == USER_INTERACTION_RIOS_CARDOSO) {
             // try od1 and od2
             if($od2 != null) {
                 if($od2 == "") {
@@ -642,7 +646,7 @@ public function submit_case($submitstatus) {
                 $info_query = "SELECT * from method_info where methodid = :methodid AND ".
                         " output_data_1 = :od1";
                 $info_params = array("methodid"=>$methodid,
-                        "od1"=>$od1);    
+                        "od1"=>$od1);  
             }
         } else if($interaction == USER_INTERACTION_SELECT_RANGE ||
                 $interaction == USER_INTERACTION_INPUT_BOX ||
@@ -707,7 +711,8 @@ public function submit_case($submitstatus) {
                         $interaction == USER_INTERACTION_SELECT_RANGE ||
                         $interaction == USER_INTERACTION_SELECT_EACH ||
                         $interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN ||
-                        $interaction == USER_INTERACTION_TEXT_AREA) {
+                        $interaction == USER_INTERACTION_TEXT_AREA ||
+                        $interaction == USER_INTERACTION_RIOS_CARDOSO) {
 
                 if($od1 != "") {
                 $q = "INSERT INTO tier3data(tier2id, methodinfoid, value) VALUES ".
@@ -715,7 +720,6 @@ public function submit_case($submitstatus) {
                 $params = array("t2id"=>$tier2id,
                                 "methodinfoid"=>$methodinfoid,
                                 "value"=>$value);
-
                 $info_result = $this->db->get_insert_result($q, $params);
                 if($info_result > 0) {
                     return array("RESULT"=>TRUE,

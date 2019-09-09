@@ -131,8 +131,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     
     
-    
-    if($user_interaction == USER_INTERACTION_MULTISELECT) {
+    if($user_interaction == USER_INTERACTION_RIOS_CARDOSO) {
+        $current_t3s = $tier2->get_tier3data();
+        $current_t3_values = array();
+        $selected_options = $_POST['select_option'];
+        
+        
+        foreach($current_t3s as $t3) {
+            $method_info_i = new method_info($db, $t3->get_methodinfoId());
+            $method_info_name = $method_info_i->get_output_data_1();
+            if($selected_options[$method_info_name][$t3->get_value()] == "on") {
+                // Already exists; Do nothing
+            } else {
+                // Previously added, but no longer selected; Remove.
+                tier3data::delete_tier3($db, $tier2id, $method_info_i->get_id());
+            }
+        }
+        
+        foreach($selected_options as $od1=>$sel_opt) {
+            foreach($sel_opt as $selected_option_id=>$selected_option) {
+                $found = false;
+                if($selected_option != "Select an option") {
+                    $selected_method_info = method_info::get_one_method_info($db, $tier2->get_methodid(), $od1);
+                    foreach($current_t3s as $t3) {
+                        if($t3->get_methodinfoid() == $selected_method_info->get_id() &&
+                                $t3->get_value() == $selected_option_id) {
+                            // Found; Do nothing
+                            $found  = true;
+                            
+                        }
+                    }
+                    if($found == FALSE) {
+                        // Not already found; add
+                        $addresult = $this_case->add_tier3($method->get_id(),
+                                    $od1,
+                                    null,
+                                    $tier2id,
+                                    $selected_option_id,
+                                    USER_INTERACTION_RIOS_CARDOSO);
+
+                    }
+                }
+            }
+        }
+        
+    }
+    else if($user_interaction == USER_INTERACTION_MULTISELECT) {
     if($output_data_2 != null) {
     foreach($output_data_1 as $od1) {
         foreach($output_data_2 as $od2) {
@@ -179,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // first delete data that doesn't appear in new data
                 foreach($output_data_1 as $name=>$values) {
                     $dbname = urldecode($name);
-                    echo("name, value = $dbname, $value<BR>");
+                    //echo("name, value = $dbname, $value<BR>");
                     
                     foreach($values as $value) {
                         if($od1 == $dbname &&

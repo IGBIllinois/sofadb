@@ -251,7 +251,7 @@ class method {
             $output_data_1_query .= " AND output_data_4 = :subcategory";
             $params['subcategory'] = $subcategory;
         }
-        
+
         $output_data_1_result = $this->db->get_query_result($output_data_1_query, $params);
         if(count($output_data_1_result) > 0) {
             // just return array of texts
@@ -270,7 +270,7 @@ class method {
      * @return array An array of strings that are the output_data_2 for this method_info
      */
     public function get_data_2($user_interaction = null, $category = null, $subcategory=null) {
-        $output_data_2_query = "SELECT DISTINCT output_data_2 from method_info where methodid = :method_id".(($user_interaction == null) ? "" : " and user_interaction = :user_interaction");
+        $output_data_2_query = "SELECT DISTINCT output_data_2 from method_info where methodid = :method_id and output_data_2 is not null ".(($user_interaction == null) ? "" : " and user_interaction = :user_interaction");
         $params = array("method_id"=>$this->id);
         if($user_interaction != null) {
             $params["user_interaction"] = $user_interaction;
@@ -287,6 +287,7 @@ class method {
         if(count($output_data_2_result) > 0) {
             // just return array of texts
             if(($output_data_2_result[0]['output_data_2']) != null) {
+                
                 return $output_data_2_result;
             } else {
                 return array();
@@ -305,12 +306,16 @@ class method {
             return $result;
         }
     }
+
     
-    public function get_output_data_3($od1, $od2) {
-        $query = "SELECT output_data_3 from method_info where output_data_1=:od1 and output_data_2=:od2 and methodid=:methodid";
-        $params = array("od1"=>$od1,
-                        "od2"=>$od2,
-                        "methodid"=>$this->id);
+    /** Gets output_data_1 ids and names
+     * 
+     * @return array Array with id and name info for output_data_1 of this method
+     */
+    public function get_output_data_1() {
+        $query = "SELECT id, output_data_1 from method_info where methodid=:methodid and output_data_1 is not null";
+        $params = array("methodid"=>$this->id);
+
 
         $result = $this->db->get_query_result($query, $params);
         if(count($result > 0)) {
@@ -318,11 +323,71 @@ class method {
         }
     }
     
-    public function get_output_data_4($od1, $od2) {
-        $query = "SELECT output_data_4 from method_info where output_data_1=:od1 and output_data_2=:od2 and methodid=:methodid";
+    /** Gets output_data_2 ids and names
+     * 
+     * @param $od1 output_data_1 id to get output_data_2 for. If null, get ALL output_data_2 data
+     * 
+     * @return array Array with id and name info for output_data_2 of this method
+     */
+    public function get_output_data_2($od1 = null) {
+        $query = "SELECT id, output_data_2 from method_info where output_data_1=:od1 and methodid=:methodid";
+        $params = array("od1"=>$od1,
+                        "methodid"=>$this->id);
+        if($od1 == null) {
+            // get all od3 data
+            $query = "SELECT id, output_data_2 from method_info where methodid=:methodid and output_data_2 is not null";
+            $params = array("methodid"=>$this->id);
+        }
+
+        $result = $this->db->get_query_result($query, $params);
+        if(count($result > 0)) {
+            return $result;
+        }
+    }
+    
+    /** Gets output_data_3 ids and names
+     * 
+     * @param $od1 output_data_1 id to get output_data_3 for. If null, get ALL output_data_3 data
+     * @param $od2 output_data_2 id to get output_data_3 for. If null, get ALL output_data_3 data
+     *      
+     * @return array Array with id and name info for output_data_3 of this method
+     */ 
+   public function get_output_data_3($od1 = null, $od2 = null) {
+        $query = "SELECT id, output_data_3 from method_info where output_data_1=:od1 and output_data_2=:od2 and methodid=:methodid";
         $params = array("od1"=>$od1,
                         "od2"=>$od2,
                         "methodid"=>$this->id);
+        if($od1 == null && $od2 == null) {
+            // get all od3 data
+            $query = "SELECT id, output_data_3 from method_info where methodid=:methodid and output_data_3 is not null";
+            $params = array("methodid"=>$this->id);
+        }
+
+        $result = $this->db->get_query_result($query, $params);
+        if(count($result > 0)) {
+            return $result;
+        }
+    }
+    
+    
+    /** Gets output_data_4 ids and names
+     * 
+     * @param $od1 output_data_1 id to get output_data_3 for. If null, get ALL output_data_4 data
+     * @param $od2 output_data_2 id to get output_data_3 for. If null, get ALL output_data_4 data
+     *      
+     * @return array Array with id and name info for output_data_4 of this method
+     */    
+    public function get_output_data_4($od1 = null, $od2 = null) {
+        $query = "SELECT id, output_data_4 from method_info where output_data_1=:od1 and output_data_2=:od2 and methodid=:methodid";
+        $params = array("od1"=>$od1,
+                        "od2"=>$od2,
+                        "methodid"=>$this->id);
+        
+        if($od1 == null && $od2 == null) {
+            // get all od4 data
+            $query = "SELECT id, output_data_4 from method_info where methodid=:methodid and output_data_4 is not null";
+            $params = array("methodid"=>$this->id);
+        }
 
         $result = $this->db->get_query_result($query, $params);
         if(count($result > 0)) {
@@ -381,9 +446,13 @@ class method {
         }
     }
     
-    public function get_header_3() {
+    public function get_header_3($method_info_id=null) {
         $output_data_header_query = "SELECT DISTINCT output_data_3_description from method_info where methodid = :method_id";
         $params = array("method_id"=>$this->id);
+        if($method_info_id != null) {
+            $output_data_header_query .= " AND id = :method_info_id";
+            $params['method_info_id'] = $method_info_id;
+        }
         $output_data_header_result = $this->db->get_query_result($output_data_header_query, $params);
         if(count($output_data_header_result) > 0) {
             if(($output_data_header_result[0]['output_data_3_description']) != null) {
@@ -396,9 +465,13 @@ class method {
         }
     }
     
-    public function get_header_4() {
+    public function get_header_4($method_info_id=null) {
         $output_data_header_query = "SELECT DISTINCT output_data_4_description from method_info where methodid = :method_id";
         $params = array("method_id"=>$this->id);
+        if($method_info_id != null) {
+            $output_data_header_query .= " AND id = :method_info_id";
+            $params['method_info_id'] = $method_info_id;
+        }
         $output_data_header_result = $this->db->get_query_result($output_data_header_query, $params);
         if(count($output_data_header_result) > 0) {
             if(($output_data_header_result[0]['output_data_4_description']) != null) {

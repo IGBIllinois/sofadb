@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $references = null;
         if(isset($_POST['references']) && $_POST['references'] != null &&  $_POST['references'] != "") {
-
+            
             $references = $_POST['references'];
         }
         
@@ -85,8 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $estimated_outcome_1 = $_POST['estimated_outcome_1'];
         }
         if(isset($_POST['estimated_outcome_2'])) {
-            $estimated_outcome_2 = $_POST['estimated_outcome_2'];
-        }
+            $estimated_outcome_2 = $_POST['estimated_outcome_2']; 
+       }
         if(isset($_POST['estimated_outcome_units'])) {
             $estimated_outcome_units = $_POST['estimated_outcome_units'];
         }
@@ -97,6 +97,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         $this_case = new sofa_case($db, $caseid);
         $method = new method($db, $method_id);
+        if($method->get_method_info_type() == METHOD_INFO_TYPE_RIOS_CARDOSO) {
+        // Add the method
+            
+        $result = $this_case->add_case_method(
+                        $method_id, 
+                        $method->get_method_type_num(), 
+                        0, 
+                        127, 
+                        $estimated_outcome_1, 
+                        $estimated_outcome_2,
+                        $estimated_outcome_units);
+        
+        if($result['RESULT'] == TRUE) {
+
+            $selected_options = $_POST['select_option'];
+
+            foreach($selected_options as $rib_id=>$rib_data) {
+
+                foreach($rib_data as $id=>$stage) {
+                    if($stage != "Select an option") {
+
+                        try {
+                        $addresult = $this_case->add_tier3($method_id,
+                                                $rib_id,
+                                                null,
+                                                $result['id'],
+                                                $id,
+                                                USER_INTERACTION_RIOS_CARDOSO);
+                        } catch(Exception $e) {
+                            echo($e->getTraceAsString());
+                        }
+                    }
+                }
+            }
+        }
+            
+        } else {
         // Add the method
         $result = $this_case->add_case_method(
                         $method_id, 
@@ -116,6 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $od1Names,
                     $references);
         }
+    }
     }
     
  else {
@@ -482,7 +520,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
 
                  
-                 
+                 /*
                 unset($_SESSION['loadedmethods']);
        		unset($_SESSION['num_methods']);
                 unset($_SESSION['methodtype']);
@@ -492,7 +530,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
        		unset($_SESSION['phasechosen']);
 		unset($_SESSION['featurechosen']);
                 unset($_SESSION['methoddata']);
-                
+                */
         		 
        
        		unset($_SESSION['caseid']); 

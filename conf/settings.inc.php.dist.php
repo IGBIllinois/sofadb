@@ -64,3 +64,9 @@ DEFINE("METHOD_INFO_TYPE_SPRADLEY_JANTZ", "Spradley_Jantz");
 
 // Method info type for most Stature types, with text input boxes and select_each inputs
 DEFINE("METHOD_INFO_TYPE_STATURE_1", "Stature_1");
+
+// Method info type for Rios & Cardoza, and similiarly structured methods)
+DEFINE("METHOD_INFO_TYPE_RIOS_CARDOSO", "Rios_Cardoso");
+
+// User Interaction type for Rios & Cardoza, and similiarly structured methods)
+DEFINE("USER_INTERACTION_RIOS_CARDOSO", "Rios_Cardoso");

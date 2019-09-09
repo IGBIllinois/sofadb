@@ -71,11 +71,11 @@ class method_info {
     }
     
     public function get_output_data_3_description() {
-        return $this->output_data_1_description;
+        return $this->output_data_3_description;
     }
     
     public function get_output_data_4_description() {
-        return $this->output_data_2_description;
+        return $this->output_data_4_description;
     }
     
     public function get_age_range() {
@@ -411,6 +411,10 @@ class method_info {
        
             method_info::show_method_info_spradley_jantz($db, $method, $tier2id, null);
        
+       } else if($method->get_method_info_type() == METHOD_INFO_TYPE_RIOS_CARDOSO) {
+           
+           method_info::show_method_info_rios_cardoso($db, $method_id, $tier2id);
+           
        } else {
            
        
@@ -1196,6 +1200,100 @@ class method_info {
     }
     echo("</table>");
    }
+   
+   public static function show_method_info_rios_cardoso($db, $methodid, $tier2id=null) {
+       
+       $method = new method($db, $methodid);
+       $method_infos = $method->get_method_info();
+       
+       $od1s = $method->get_output_data_1();
+       $od2s = $method->get_output_data_2();
+       $od3s = $method->get_output_data_3();
+       $od4s = $method->get_output_data_4();
+       
+       $od1_title = $method->get_header_1();
+       $od2_title = $method->get_header_2($od2s[0][0]);
+       $od3_title = $method->get_header_3($od3s[0][0]);
+       $od4_title = $method->get_header_4($od4s[0][0]);
+
+       
+       echo("<table class='table_padded'>");
+       echo("<tr><th class='td_spaced'><B><U>$od1_title</U></B></th>".
+               "<th class='td_spaced'><B><U>$od2_title</U></B></th>".
+               "<th class='td_spaced'><B><U>$od3_title</U></B></th>".
+               "<th class='td_spaced'><B><U>$od4_title</U></B></th></tr>");
+       foreach($od1s as $od1) {
+           $rib_number = $od1['output_data_1'];
+           $id = $od1['id'];
+           
+           $t3_method_info_ids = array();
+            if($tier2id != null) {
+                $tier2 = new tier2data($db, $tier2id);
+                $tier3data = $tier2->get_tier3data($id);
+                foreach($tier3data as $tier3) {
+                    $t3_method_info_ids[] = $tier3->get_value();
+                }
+            }
+           
+           echo("<tr>");
+           echo("<td>".$rib_number."</td>");
+           
+           echo("<td>");
+            echo(method_info::checkbox_dropdown($rib_number, str_replace(" ", "_",$od2_title), $od2s, $t3_method_info_ids));
+           echo("</td>");
+            
+           echo("<td>");
+           if($rib_number <= 10) {
+               echo(method_info::checkbox_dropdown($rib_number,str_replace(" ", "_",$od3_title), $od3s, $t3_method_info_ids));
+           }
+           echo("</td>");
+           
+           echo("<td>");
+           if($rib_number <= 8) {
+               echo(method_info::checkbox_dropdown($rib_number, str_replace(" ", "_",$od4_title), $od4s, $t3_method_info_ids));
+           }
+           echo("</td>");
+           
+           echo("</tr>");
+           
+       }
+       echo("</table>");
+       
+       
+   }
+   
+   public static function checkbox_dropdown($elementId, $elementId2, $list, $checked_list = array()) {
+       
+
+        $elementName = "checkboxes_".$elementId."_".$elementId2;
+        //$elementId = "checkboxes[".$output_name."][".urlencode($od2)."]";
+        $ref_text = '<div class="multiselect table_full" >';
+        $ref_text .= '<div class="selectBox" onclick="showCheckboxes('.$elementName.')">';
+        $ref_text .= "<select name=select_option[$elementId][] class='table_full'>";
+        $ref_text .= '<option selected diasbled>Select an option</option>';
+        $ref_text .= '</select>';
+        $ref_text .= '<div class="overSelect"></div>';
+        $ref_text .= '</div>';
+        $ref_text.= '<div class="checkboxes" id="'.$elementName.'">';
+
+        foreach($list as $list_item) {
+
+            $id = $elementName ."[".$list_item[0]."]";
+            $name = $list_item[1];
+            
+            $ref_text .= ("<label for='$id'>");
+            $curr_name = "select_option[$elementId]"."[".$list_item[0]."]";
+            $ref_text .= ("<input type='checkbox' id='$id' name='$curr_name'".(in_array($list_item[0], $checked_list)? " checked=1 " : "")." />$name</label>");
+        }
+
+        $ref_text .= "</div></div>";
+        
+        return $ref_text;
+
+
+   }
+   
+   // Private functions
     
     private function load_method_info($id) {
 

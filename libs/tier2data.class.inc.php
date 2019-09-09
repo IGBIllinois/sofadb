@@ -139,6 +139,23 @@ class tier2data {
                         $output .= "( ".$method_info->get_output_data_1().", ".$method_info->get_output_data_2(). ", " . $tier_info->get_value(). ")<BR> ";
                     } else if($interaction == USER_INTERACTION_TEXT_AREA) {
                         $output = "Data entered";
+                    } else if($interaction == USER_INTERACTION_RIOS_CARDOSO) {
+                        // output_data_1 is the 
+                        
+                        $newid = $tier_info->get_value();
+                        
+                        $method_info_value = new $method_info($this->db, $newid);
+                        $desc = "";
+                        if($method_info_value->get_output_data_2() != null) {
+                            
+                            $desc = "(" . $method_info_value->get_output_data_2_description() .":".$method_info_value->get_output_data_2().")";
+                        } else if($method_info_value->get_output_data_3() != null) {
+                            $desc = "(".$method_info_value->get_output_data_3_description() .":".$method_info_value->get_output_data_3().")";
+                        } else if($method_info_value->get_output_data_4() != null) {
+                            $desc = "(".$method_info_value->get_output_data_4_description() .":".$method_info_value->get_output_data_4().")";
+                        }
+                        $output .= $method_info->get_output_data_1_description() . " " . $method_info->get_output_data_1() . ": ". $desc."<BR>";
+                                
                     }
 
             }
@@ -166,6 +183,20 @@ class tier2data {
         
         $result = $this->db->get_update_result($query, $params);
         return $result;
+    }
+    
+    // static functions
+    public static function delete_tier2($db, $tier2id) {
+        $query = "DELETE from tier2data where id=:tier2id LIMIT 1";
+        $params = array("tier2id"=>$tier2id);
+        $result = $db->get_update_query($query, $params);
+        if($result > 0) {
+            return array("RESULT"=>TRUE,
+                "MESSAGE"=>"Tier 2 data deleted successfully");
+        } else {
+            return array("RESULT"=>TRUE,
+                "MESSAGE"=>"ERROR: Tier 2 data not deleted");
+        }
     }
     
  
