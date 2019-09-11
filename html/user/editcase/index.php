@@ -113,14 +113,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $selected_options = $_POST['select_option'];
 
-            foreach($selected_options as $rib_id=>$rib_data) {
+            foreach($selected_options as $m_id=>$m_data) {
 
-                foreach($rib_data as $id=>$stage) {
+                foreach($m_data as $id=>$stage) {
                     if($stage != "Select an option") {
-
+                        
+                        $mi = new method_info($db, $m_id);
+                        $od1 = $mi->get_output_data_1();
                         try {
                         $addresult = $this_case->add_tier3($method_id,
-                                                $rib_id,
+                                                $od1,
                                                 null,
                                                 $result['id'],
                                                 $id,

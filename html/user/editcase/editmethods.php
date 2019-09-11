@@ -132,6 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     
     if($user_interaction == USER_INTERACTION_RIOS_CARDOSO) {
+        
         $current_t3s = $tier2->get_tier3data();
         $current_t3_values = array();
         $selected_options = $_POST['select_option'];
@@ -139,17 +140,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         foreach($current_t3s as $t3) {
             $method_info_i = new method_info($db, $t3->get_methodinfoId());
-            $method_info_name = $method_info_i->get_output_data_1();
+            $method_info_name = $method_info_i->get_id();
             if($selected_options[$method_info_name][$t3->get_value()] == "on") {
                 // Already exists; Do nothing
             } else {
                 // Previously added, but no longer selected; Remove.
-                tier3data::delete_tier3($db, $tier2id, $method_info_i->get_id());
+                tier3data::delete_tier3_by_id($db, $t3->get_id());
             }
         }
-        
-        foreach($selected_options as $od1=>$sel_opt) {
+
+        foreach($selected_options as $m_id=>$sel_opt) {
+
+            $mi = new method_info($db, $m_id);
+            $od1 = $mi->get_output_data_1();
+            
             foreach($sel_opt as $selected_option_id=>$selected_option) {
+                
                 $found = false;
                 if($selected_option != "Select an option") {
                     $selected_method_info = method_info::get_one_method_info($db, $tier2->get_methodid(), $od1);
@@ -249,7 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // add new ones    
                 $dbname = urldecode($name);
                 $method_info_by_name = method_info::get_one_method_info($db, $method->get_id(), $dbname);
-                echo("name = $dbname<BR>");
+                //echo("name = $dbname<BR>");
                 $curr_method_info_id = $method_info_by_name->get_id();
                 foreach($values as $value) {
                     $found = false;
@@ -493,7 +499,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
      
      <input type="submit" class="showybutton" id="editmethoddatabutton" value="Save Edits" ><BR><BR>
                  
-             <U><a href="index.php?id=<?php echo $caseeditid; ?>">Back to Case</a></U>
+             <U><a href="index.php?id=<?php echo $caseeditid; ?>#tabs-2">Back to Case</a></U>
      
 
              </div>

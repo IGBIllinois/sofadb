@@ -1239,21 +1239,24 @@ class method_info {
            echo("<td>".$rib_number."</td>");
            
            echo("<td>");
-            echo(method_info::checkbox_dropdown($rib_number, str_replace(" ", "_",$od2_title), $od2s, $t3_method_info_ids));
+            echo(method_info::checkbox_dropdown($rib_number, $id, str_replace(" ", "_",$od2_title), $od2s, $t3_method_info_ids));
            echo("</td>");
             
+           // Specifics for Rios & Cardoso method
+           if(count($od3s) > 0) {
            echo("<td>");
            if($rib_number <= 10) {
-               echo(method_info::checkbox_dropdown($rib_number,str_replace(" ", "_",$od3_title), $od3s, $t3_method_info_ids));
+               echo(method_info::checkbox_dropdown($rib_number, $id, str_replace(" ", "_",$od3_title), $od3s, $t3_method_info_ids));
            }
            echo("</td>");
-           
+           }
+           if(count($od4s) > 0) {
            echo("<td>");
            if($rib_number <= 8) {
-               echo(method_info::checkbox_dropdown($rib_number, str_replace(" ", "_",$od4_title), $od4s, $t3_method_info_ids));
+               echo(method_info::checkbox_dropdown($rib_number, $id, str_replace(" ", "_",$od4_title), $od4s, $t3_method_info_ids));
            }
            echo("</td>");
-           
+           }
            echo("</tr>");
            
        }
@@ -1262,14 +1265,14 @@ class method_info {
        
    }
    
-   public static function checkbox_dropdown($elementId, $elementId2, $list, $checked_list = array()) {
+   public static function checkbox_dropdown($elementId, $elementNumber, $elementId2, $list, $checked_list = array()) {
        
-
-        $elementName = "checkboxes_".$elementId."_".$elementId2;
+$elementNumberName = "num_".$elementNumber;
+        $elementName = "checkboxes_".$elementNumber."_".$elementId2;
         //$elementId = "checkboxes[".$output_name."][".urlencode($od2)."]";
         $ref_text = '<div class="multiselect table_full" >';
         $ref_text .= '<div class="selectBox" onclick="showCheckboxes('.$elementName.')">';
-        $ref_text .= "<select name=select_option[$elementId][] class='table_full'>";
+        $ref_text .= "<select name=select_option[$elementNumber][] class='table_full'>";
         $ref_text .= '<option selected diasbled>Select an option</option>';
         $ref_text .= '</select>';
         $ref_text .= '<div class="overSelect"></div>';
@@ -1282,7 +1285,7 @@ class method_info {
             $name = $list_item[1];
             
             $ref_text .= ("<label for='$id'>");
-            $curr_name = "select_option[$elementId]"."[".$list_item[0]."]";
+            $curr_name = "select_option[$elementNumber]"."[".$list_item[0]."]";
             $ref_text .= ("<input type='checkbox' id='$id' name='$curr_name'".(in_array($list_item[0], $checked_list)? " checked=1 " : "")." />$name</label>");
         }
 
