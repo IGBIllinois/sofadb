@@ -325,7 +325,7 @@ class method_info {
                $estimated_outcome_units = $tier2->get_estimated_outcome_units();
            }
            
-           echo("<BR>Estimated Stature range from this method:");
+           echo("<BR>Estimated Stature from this method:");
            echo("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'>");
            echo(" to ");
            echo("<input size=6 id='estimated_outcome_2' name='estimated_outcome_2' value='$estimated_outcome_2'>");
@@ -336,7 +336,11 @@ class method_info {
            echo("<option value='in' ". (($estimated_outcome_units == 'in') ? " selected='selected' " : "") .">in</option>");
            echo("<option value='cm' ".(($estimated_outcome_units == 'cm') ? " selected='selected' " : "") .">cm</option>");
            echo("</select><BR>");
-           echo("<BR>Select any/all formulae used to estimate stature.<BR>");
+           if($method->get_method_info_type() == METHOD_INFO_TYPE_STATURE_1) {
+            echo("<BR>Select any/all formulae used to estimate stature.<BR>");
+           } else {
+            echo("<BR>Select any/all data used to estimate stature.<BR>");   
+           }
        } else if($method->get_method_type() == "Age") {
            if($tier2id != null) {
                $tier2 = new tier2data($db, $tier2id);
@@ -752,10 +756,13 @@ class method_info {
                $output_data_2_result_sel = $method->get_data_2($user_interaction, $category, $subcategory);
                
                $maxCols = MAXCOLS;
+               if(count($output_data_1_result_sel) < $maxCols) {
+                   $maxCols = count($output_data_1_result_sel);
+               }
                foreach($output_data_1_result_sel as $od1_result) {
                    $length = strlen($od1_result[0]);
                    $width_class ="";
-                   if($length > 50 || $method->get_method_type() == "Stature") {
+                   if($length > 50 || $method->get_method_info_type() == METHOD_INFO_TYPE_STATURE_1) {
                        // for long names, separate into their own columns vertically
                        $maxCols = 1;
                        $width_class = " width_75 ";
@@ -794,6 +801,7 @@ class method_info {
                     echo("<table  class='td_spaced table_full table_horiz_spacing'>");
 
                     if($all_titles || ($titles || $maxCols > 1)) {
+                        $header1 = str_replace(' ', '&nbsp;', $header1);
                         echo("<tr><th width=50% class='align_right align_top td_spaced'><U><B>".$header1."</B></U></th>");
                         echo("<th><U><B>".$header2."</B></U></th>");
 
@@ -806,15 +814,15 @@ class method_info {
                    $multiple = true;
                    $size = count($od2_data);
                    
-                   if($method->get_method_type() == "Stature") {
-                       // alter display for Genoves 1967
+                   if($method->get_method_info_type() == METHOD_INFO_TYPE_STATURE_1) {
+                       // alter display for Genoves 1967 and others
                        $size=1;
                        $multiple = false;
                    }
                    
                    $selectbox = "<select class='align_left' size=$size name=output_data_1[$outputname][] ".(($multiple == true) ? " multiple " : " style='width:200px' ") .">";
 
-                   if($method->get_method_type() == "Stature") {
+                   if($method->get_method_info_type() == METHOD_INFO_TYPE_STATURE_1) {
                        // add initial selector
                        $selectbox .= "<option value=''>- Select One -</option>";
                    }
