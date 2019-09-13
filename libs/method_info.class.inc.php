@@ -892,7 +892,7 @@ class method_info {
                 if($od2 != null) {
                     echo("<tr><td class='no_wrap'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name][$od2]' value='$value'></td></tr>");
                 } else {
-                    echo("<tr><td class='no_wrap'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name] value='$value'></td></tr>");
+                    echo("<tr><td class='no_wrap'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name]' value='$value'></td></tr>");
                 }
             }
      } else {
@@ -905,7 +905,7 @@ class method_info {
                 if($od2 != null) {
                     echo("<tr><td class='no_wrap'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name][$od2]'></td></tr>");
                 } else {
-                    echo("<tr><td class='no_wrap'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name]></td></tr>");
+                    echo("<tr><td class='no_wrap'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name]'></td></tr>");
                 }
             }
     }
