@@ -251,7 +251,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    //$from="admin@sofainc.org";
       $from= $admin_email;
    $subject = "FADAMA DB ADMIN ALERT: Activate new user";
-   $message = "New User:".$fn." ".$ln." is requesting activation.\n Email address is:".$e;
+   $message = "New User:".$fn." ".$ln." is requesting activation.\n Email address is:".$e."\n\n";
+   
+   $message .= "User data:\n".
+            "Email: $e\n" .
+            "First Name: $fn\n".
+            "Last Name: $ln\n".
+            "Title: $title\n".
+            "Degree: $degree\n".
+            "Degree Year: $degreeyear\n".
+            "Field of Study: $field\n".
+            "AAFS Status: $aafs\n".
+            "Institution: $inst\n".
+            "Years of Experience: $exp\n".
+            "Cases per year: $cases\n".
+            "Region: $region\n".
+            "Address 1: $ad1\n".
+            "Address 2: $ad2\n".
+            "City: $cty\n".
+            "State: $state\n".
+            "Zip: $pcode\n".
+            "Phone: $ph\n".
+            "Affiliation: $affiliation\n".
+            "Sponsor: $sponsor\n".
+            "Sponsor email: $sponsor_email\n".
+            "Sponsor affiliation: $sponsor_affiliation\n";
+           
+           
    $header = "From:".$from."\r\n";
    $retval = mail($to,$subject,$message,$header);
    
@@ -265,7 +291,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    
    if( $retval == true )  
    {
-     //header ("location: ../index.php"); 
+     header ("location: ../index.php"); 
 	//	exit();
 	  
    }
