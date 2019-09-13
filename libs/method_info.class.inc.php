@@ -307,7 +307,8 @@ class method_info {
            echo("<option value='Probable Male' ". (($estimated_outcome == 'Probable Male') ? " selected='selected' " : "") .">Probable Male</option>");
            echo("<option value='Male' ". (($estimated_outcome == 'Male') ? " selected='selected' " : "") .">Male</option>");
            echo("</select><BR>");
-           if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
+           if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ ||
+                   $method->get_method_info_type() == METHOD_INFO_TYPE_TRANSITION_ANALYSIS) {
                echo("<BR>Select any/all sectioning point outcomes.<BR>");
            } else if($method->get_id() == 126){ // Holland (TODO: Make this more robust)
                echo("<BR>Select any/all formula outcomes from formulas used.<BR>");
@@ -395,11 +396,13 @@ class method_info {
 
        $header1 = $method->get_header_1();
        $header2 = $method->get_header_2();
-       
-       if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
-           
-           //method_info::show_method_info_spradley_jantz($db, $method, $tier2id, $category);
-           //echo("method_id = $method_id<BR>");
+
+       if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ ||
+               $method->get_method_info_type() == METHOD_INFO_TYPE_TRANSITION_ANALYSIS) {
+           if($method->get_method_info_type() == METHOD_INFO_TYPE_TRANSITION_ANALYSIS) {
+               echo("<input type=hidden name='".METHOD_INFO_TYPE_TRANSITION_ANALYSIS."' value=1>");
+           }
+
             $category_query = "SELECT DISTINCT output_data_3, output_data_3_description from method_info where methodid = :methodid";
             $params = array("methodid"=>$method->get_id());
             echo("<input type=hidden id='method_id' name='method_id' value='$method_id'>");
@@ -413,7 +416,7 @@ class method_info {
             }
             echo("</select>");
        
-            method_info::show_method_info_spradley_jantz($db, $method, $tier2id, null);
+            method_info::show_method_info_spradley_jantz($db, $method, $tier2id, $name);
        
        } else if($method->get_method_info_type() == METHOD_INFO_TYPE_RIOS_CARDOSO) {
            
@@ -489,8 +492,7 @@ class method_info {
     * @param type $method The method object to draw inputs for
     */
    public static function show_method_info_multiselect($db, $method, $tier2id = null, $user_interaction = null) {
-            // Notes to user
-            //$user_interaction = USER_INTERACTION_MULTISELECT;
+
        $header1 = $method->get_header_1();
        $header2 = $method->get_header_2();
        
@@ -625,11 +627,7 @@ class method_info {
                 $html .="</tr><tr>";
                 $i=0;
             }
-            /*
-            echo("<td class='align_top width_20'>");
-            echo("<table class='table_padded'><tr><th width=50% class='align_right align_top'><U><B>".$header1."</B></U></th>");
-            echo("<th><U><B>".$header2."</B></U></th>");
-*/
+
             echo("<td  class='align_top td_spaced'>");
             echo("<table  class='td_spaced table_full table_horiz_spacing'>");
 
@@ -866,31 +864,50 @@ class method_info {
     */
    public static function show_method_info_input($db, $method, $tier2id, $user_interaction, $category=null) {
 
-        $output_data_1_result_sel = $method->get_data_1($user_interaction, $category);
+        $output_data_1_result_sel = $method->get_data_1($user_interaction, $category, null, false);
         echo("<table >");
         if($tier2id != null) {
             $tier2 = new tier2data($db, $tier2id);
             $data = $tier2->get_tier3data();
             $this_method = new method($db, $tier2->get_methodid());
-            $this_method_info = $this_method->get_method_info_by_type($user_interaction);
+            //$this_method_info = $this_method->get_method_info_by_type($user_interaction);
+            $this_method_info = $this_method->get_method_info_by_od1($od1, $od2, $od3);
             $value = "";
 
-            foreach($this_method_info as $method_info) {
-
+            //foreach($this_method_info as $method_info) {
+            foreach($output_data_1_result_sel as $od1_result) {
                 $value = "";
+                $id = $od1_result['id'];
+                $method_info = new method_info($db, $id);
                 foreach($data as $tier3) {
                     if($tier3->get_methodinfoid() == $method_info->get_id()) {
                         $value = $tier3->get_value();
                     }
                 }
+                $id = $method_info->get_id();
                 $name = $method_info->get_output_data_1();
-                echo("<tr><td class='no_wrap'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name]' value='$value'></td></tr>");
+                $curr_mi = new method_info($db, $id);
+
+                $od2 = $curr_mi->get_output_data_2();
+                if($od2 != null) {
+                    echo("<tr><td class='no_wrap'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name][$od2]' value='$value'></td></tr>");
+                } else {
+                    echo("<tr><td class='no_wrap'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name] value='$value'></td></tr>");
+                }
             }
      } else {
         foreach($output_data_1_result_sel as $od1_result) {
-            $name = $od1_result['output_data_1'];
-            echo("<tr><td class='no_wrap'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name]'></td></tr>");
-        }
+            // Use ID for name
+                $id = $od1_result['id'];
+                $curr_mi = new method_info($db, $id);
+                $name = $od1_result['output_data_1'];
+                $od2 = $curr_mi->get_output_data_2();
+                if($od2 != null) {
+                    echo("<tr><td class='no_wrap'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name][$od2]'></td></tr>");
+                } else {
+                    echo("<tr><td class='no_wrap'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name]></td></tr>");
+                }
+            }
     }
     echo("</table>");
    }
@@ -1114,6 +1131,8 @@ class method_info {
        
        $category_query = "SELECT DISTINCT output_data_3, output_data_3_description from method_info where methodid = :methodid";
             $params = array("methodid"=>$method->get_id());
+            
+            
             echo("<input type=hidden id='method_id' name='method_id' value='$method_id'>");
             $result = $db->get_query_result($category_query, $params);
        foreach($result as $cat_data) {
@@ -1135,6 +1154,7 @@ class method_info {
        $name = $cat_data['output_data_3'];
        echo("<div name='$category' id='$category' style='display: none'>");
        if(count($all_method_info) > 0) {
+           echo("<BR>");
            foreach($method_infos_by_bone as $bone=>$method_info) {
                $subcategory=$bone;
            $interactions = $method_info[0]->get_user_interactions();
@@ -1149,7 +1169,7 @@ class method_info {
             if($user_interaction == USER_INTERACTION_INPUT_BOX ||
                    $user_interaction == USER_INTERACTION_NUMERIC_ENTRY) {
 
-               method_info::show_method_info_input($method, $tier2id, $user_interaction, null, $category, $subcategory);
+               method_info::show_method_info_input($db, $method, $tier2id, $user_interaction, $category);
                
             } else if($user_interaction == USER_INTERACTION_SELECT_EACH) {
                

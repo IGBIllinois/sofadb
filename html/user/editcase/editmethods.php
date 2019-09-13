@@ -294,9 +294,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         //echo("user_interaction = $user_interaction<BR>");
         //print_r($output_data_1);
+            if(isset($_POST['Transition_Analysis'])) {
+                foreach($output_data_1 as $od1 => $values) {
+                    foreach($values as $od2=>$value) {
+                        $curr_mi = method_info::get_one_method_info($db, $method->get_id(), $od1, $od2);
+                        $methoddataid = $curr_mi->get_id();
+                        if($value != null && $value != "") {
+                            $this_case->update_tier3($tier2id, $methoddataid, $value);
+                        } else {
+                            try {
+                            // it's blank, so if it exists, try deleting it
+                            tier3data::delete_tier3($db, $tier2id, $methoddataid);
+                            } catch(Exception $e) {}
+                        }
+                        }
+                    }
+
+                } else {
             foreach($output_data_1 as $name=>$od1_value) {
                 $name = urldecode($name);
                 if(is_array($od1_value)) {
+            
                     foreach($od1_value as $od2) {
                         if($user_interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
                             $od2 = urldecode($od2);
@@ -306,6 +324,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $id = $method_info->get_id();
                         $new_ids[] = $id;
                     }
+                
                 } else {
                     if($user_interaction == USER_INTERACTION_NUMERIC_ENTRY ||
                             $user_interaction == USER_INTERACTION_INPUT_BOX ||
@@ -363,6 +382,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             }
         }
+                }
     } else if($user_interaction == USER_INTERACTION_3_COL_W_REF) {
 
         $caseid = $_POST['caseid'];
@@ -464,14 +484,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <?php
         echo($method->get_name()."<BR>");
-        if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
+        if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ ||
+                $method->get_method_info_type() == METHOD_INFO_TYPE_TRANSITION_ANALYSIS) {
             //echo("Spradley/Jantz<BR>");
             //echo("tier2 id = ".$tier2->get_id());
 
             $result = $method->get_categories();
             
             echo("<input type=hidden id='method_id' name='method_id' value='$method_id'>");
-            
+            if($method->get_method_info_type() == METHOD_INFO_TYPE_TRANSITION_ANALYSIS) {
+                echo("<input type=hidden id='".METHOD_INFO_TYPE_TRANSITION_ANALYSIS."' name='".METHOD_INFO_TYPE_TRANSITION_ANALYSIS."' value='1'>");
+            }
+            /*
             echo("<B><U>".$result[0]['output_data_3_description']."</U></B><BR>");
             echo("<select id='category' name='category[]' onchange='showBoneRegion(this.value)'>");
             echo("<option name='none'></option>");
@@ -480,13 +504,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo("<option name='$name'>$name</option>");
             }
             echo("</select>");
-            
+            */
             $tier3s = $tier2->get_tier3data();
             $tier3 = $tier3s[0];
             $method_info_id = $tier3->get_methodinfoid();
             $method_info = new method_info($db, $method_info_id);
             $category = $method_info->get_output_data_3();
-            method_info::show_method_info_spradley_jantz($db, $method, $tier2->get_id(), $category);
+            method_info::show_method_info($db, $method->get_id(), $tier2->get_id(), $category);
         } else {
             method_info::show_method_info($db, $tier2->get_methodid(), $tier2->get_id());
         }

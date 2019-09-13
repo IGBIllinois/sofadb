@@ -231,13 +231,21 @@ class method {
         }
     }
     
-    /** Gets list of output_data_1 info for this method
+
+    /**Gets list of output_data_1 info for this method
+     * 
+     * @param string $user_interaction User interaction type (optional) If null, get all types
+     * @param string $category Category (output_data_3). Used only for certain method types like Spradley_Jantz
+     * @param string $subcategory subategory (output_data_4). Used only for certain method types like Spradley_Jantz
+     * @param boolean $distinct True if you're getting distinct records, else false. If false, also return ids.
      * 
      * @return array An array of strings that are the output_data_1 for this method_info
      */
-    public function get_data_1($user_interaction = null, $category = null, $subcategory=null) {
+    public function get_data_1($user_interaction = null, $category = null, $subcategory=null, $distinct = true) {
         
-        $output_data_1_query = "SELECT DISTINCT output_data_1 from method_info where methodid = :method_id".
+        $output_data_1_query = "SELECT ". ($distinct ? " DISTINCT " : " id, ")
+                . " output_data_1 from method_info where methodid = :method_id".
+                
                 (($user_interaction == null) ? "" : " and user_interaction = :user_interaction");
         $params = array("method_id"=>$this->id);
         if($user_interaction != null) {

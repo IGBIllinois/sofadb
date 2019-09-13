@@ -449,9 +449,10 @@ public function submit_case($submitstatus) {
                 $method_data = method_info::get_data_for_method($this->db, $method_id);
                 
                 $method_info_type = $method->get_method_info_type();
+
+                // TRANSITION_ANALYSIS and RIOS_CARDOSO are handled in user/editcase/index.php or user/editcase/editmethods.php
                 
                 if($method_info_type == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
-
                     
                     foreach($output_data_1 as $od1=>$value) {
                         
@@ -473,7 +474,7 @@ public function submit_case($submitstatus) {
                             $encode_od1 = urlencode($od1);
                             $od2 = $output_data_2[$encode_od1];
                             $od2 = urldecode($od2);
-                            //echo("od1 = $od1, od2 = $od2<BR>");
+                            //echo("2: od1 = $od1, od2 = $od2<BR>");
                             $method_info_arr = $method->get_method_info_by_od1($od1, $od2);
                             if(count($method_info_arr) > 0) {
                                 $method_info = $method_info_arr[0];
@@ -657,6 +658,10 @@ public function submit_case($submitstatus) {
                 " output_data_1 = :od1";
             $info_params = array("methodid"=>$methodid,
                     "od1"=>$od1);
+            if($od2 !=  null) {
+                $info_query .= " AND output_data_2 = :od2";
+                $info_params["od2"] = $od2;
+            }
         } else if($interaction == USER_INTERACTION_3_COL_W_REF) {
             $info_query = "SELECT * from method_info where methodid = :methodid AND ".
                     "output_data_1 = :od1 and " .
