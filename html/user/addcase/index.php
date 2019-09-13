@@ -10,6 +10,17 @@ require('../../include/header_user.php') ;
 
 ?>
 
+  <script type='text/javascript'>
+  $(function() {
+    $('#casedata').areYouSure(
+      {
+        message: 'It looks like you have been editing something. '
+               + 'If you leave before saving, your changes will be lost.'
+      }
+    );
+  });
+  
+</script>
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -27,6 +38,10 @@ require('../../include/header_user.php') ;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$errors = array(); // Start an array to hold the errors
 	// Check for a casenumber:
+        if (empty($_POST['certify_permission']) || empty($_POST['certify_no_info'])) {
+		$errors[] = 'You are required to check the Submission Permissions in order to proceed.';
+	} 
+ 
 	if (empty($_POST['casenumber'])) {
 		$errors[] = 'You must enter a case number to save.';
 	} 
@@ -122,6 +137,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
                 $idsex = trim($_POST['idsex']);
+                if($idsex == "Other") {
+                    $idsex = trim($_POST['idsexother']);
+                    
+                }
 	}
 
 
@@ -415,7 +434,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				  unset($_SESSION['methodphase']);
 				  unset($_SESSION['phasechosen']);
 				  unset($_SESSION['featurechosen']);
-                header ("location: ../index.php"); exit();
+               header ("location: ../index.php"); exit();
                  
 			// Include the footer and stop the script
 		  
@@ -451,8 +470,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div id="tabs">
   <ul>
     <li><a href="#tabs-1">General Case Information</a></li>
-    <li><a href="#tabs-2">Manage Case Methods</a></li>
- 
+    <!--<li><a href="#tabs-2">Manage Case Methods</a></li>--> 
+
   </ul>
 <div id="tabs-1">
   <fieldset class="enclosefieldset">
@@ -522,13 +541,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <fieldset class="caseinfobox"><legend class="boldlegend">Biological Profile: Actual Identified Information</legend>
       
       <label class="label" for="idsex">Sex</label>
+      <!--
       <select name="idsex">
         <option value="">- Select -</option>
         <option value="Female"<?php if (isset($_POST['idsex']) AND ($_POST['idsex'] == 'Female')) echo ' selected="selected"'; ?>>Female</option>
         <option value="Male"<?php if (isset($_POST['idsex']) AND ($_POST['idsex'] == 'Male')) echo ' selected="selected"'; ?>>Male</option>
         </select>
-      
-      
+      Other:<input id="idsexother" type="text" 
+          <?php if (isset($_POST['idsex']) AND ($_POST['idsex'] != 'Male') AND ($_POST['idsex'] != 'Female')) { echo " value='".$_POST['idsex']."' ";}?>/>
+      -->
+        <input type="radio" name="idsex" value="Female" <?php if (isset($_POST['idsex']) AND ($_POST['idsex'] == 'Female')) echo ' checked'; ?>> Male
+        <input type="radio" name="idsex" value="Male" <?php if (isset($_POST['idsex']) AND ($_POST['idsex'] == 'Male')) echo ' checked'; ?>> Female
+        <input type="radio" name="idsex" value="Other" <?php if (isset($_POST['idsex']) AND ($_POST['idsex'] != 'Male') AND ($_POST['idsex'] != 'Female')) { echo " checked ";}?>> Other: 
+        <input id="idsexother" name="idsexother" type="text" 
+          <?php if (isset($_POST['idsex']) AND ($_POST['idsex'] != 'Male') AND ($_POST['idsex'] != 'Female')) { echo " value='".$_POST['idsex']."' ";}?>/>
+               <BR>
       <br/><label class="label" for="idage">Age</label><input id="idage" type="text" name="idage" size="5" maxlength="5" value="<?php if (isset($_POST['idage'])) echo $_POST['idage']; ?>"/>
       <select name="idageunits">
         <option value="years">years</option>
@@ -561,6 +588,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <br/><label class="label" for="idsource">Information Source</label><input id="idsource" type="text" name="idsource" size="30" maxlength="60" value="<?php if (isset($_POST['idsource'])) echo $_POST['idsource']; ?>" /><br />
       
   </fieldset>
+       <fieldset class="caseinfobox"><legend class="boldlegend">Case Data Submission Permissions</legend>
+           <BR>
+           <input type="checkbox" name="certify_permission" value="1"/>
+           I certify that I have permission from the appropriate agencies and/or personnel to add this case’s information to the FADAMA database.
+           <BR><BR>
+           <input type="checkbox" name="certify_no_info" value="1" />
+            I certify that no identifiable information (e.g. name, home address, relative’s names, driver’s license number etc) 
+            regarding the decedent of this case will be submitted in FADAMA.
+            <BR>
+            <BR>
+
+       </fieldset>
+           
     <fieldset class="caseinfobox"><legend class="boldlegend">Case Notes</legend>
       <label class="label" for="casenotes"></label>
       <textarea name="casenotes" cols="55" rows="7"><?php if (isset($_POST['casenotes'])) echo $_POST['casenotes']; ?></textarea>
@@ -573,6 +613,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       
       </fieldset>
    </div>
+<!--
    <div id="tabs-2">
    
               <div class="scroll" name="methodtableholder" id="methodtableholder">
@@ -608,8 +649,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
    
 					
-					
-               <!--     	<input type="button" value="Edit Method" id="editmethodbutton"  />-->
+
                          
 					
                   
@@ -652,7 +692,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     
     </div>
-    
+    -->
     
    </div></div>
    

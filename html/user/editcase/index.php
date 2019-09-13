@@ -97,6 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         $this_case = new sofa_case($db, $caseid);
         $method = new method($db, $method_id);
+
         if($method->get_method_info_type() == METHOD_INFO_TYPE_RIOS_CARDOSO) {
         // Add the method
             
@@ -145,15 +146,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $estimated_outcome_1, 
                         $estimated_outcome_2,
                         $estimated_outcome_units);
-
+        
+        echo("<div id = caseform>".$result['MESSAGE']."</div>");
+        
         if($result['RESULT'] == TRUE) {
             $method_case_id = $result['id'];
+
+            if(isset($_POST['Transition_Analysis'])) {
+                foreach($output_data_1 as $od1 => $values) {
+                    foreach($values as $od2=>$value) {
+                        if($value != null && $value != "") {
+                            try {
+                            $addresult = $this_case->add_tier3($method_id,
+                                                    $od1,
+                                                    $od2,
+                                                    $method_case_id,
+                                                    $value,
+                                                    USER_INTERACTION_INPUT_BOX );
+                            } catch(Exception $e) {
+                                echo($e->getTraceAsString());
+                            }
+                        }
+                    }
+                    
+                }
+            } else {
             $this_case->add_all_tier3_data($method_id, 
                     $method_case_id, 
                     $output_data_1, 
                     $output_data_2, 
                     $od1Names,
                     $references);
+            }
         }
     }
     }
@@ -182,7 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$casenam = trim($_POST['casename']);
 	} 
     else {
-	$casenam=NULL;	
+	$casenam="";	
 	}
     
     
@@ -264,6 +288,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
 		$idsex = trim($_POST['idsex']);
+                if($idsex == "Other") {
+                    $idsex = trim($_POST['idsexother']);
+                    
+                }
 	}
 
 
@@ -667,11 +695,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <fieldset class="caseinfobox"><legend class="boldlegend">Biological Profile: Actual Identified Information</legend>
       
       <label class="label" for="idsex">Sex</label>
+      <!--
       <select name="idsex">
         <option value="">- Select -</option>
         <option value="Female"<?php if($casedata->get_idsex() == 'Female') echo ' selected="selected"'; ?>>Female</option>
         <option value="Male"<?php if($casedata->get_idsex()  == 'Male') echo ' selected="selected"'; ?>>Male</option>
         </select>
+      -->
+              <input type="radio" name="idsex" value="Female" <?php if ($casedata->get_idsex() == 'Female') echo ' checked'; ?>> Female
+        <input type="radio" name="idsex" value="Male" <?php if ($casedata->get_idsex() == 'Male') echo ' checked'; ?>> Male
+        <input type="radio" name="idsex" value="Other" <?php if (($casedata->get_idsex() != null) AND ($casedata->get_idsex() != 'Male') AND ($casedata->get_idsex() != 'Female')) echo ' checked'; ?>> Other: 
+        <input id="idsexother" name="idsexother" type="text" 
+          <?php if (($casedata->get_idsex() != null) AND ($casedata->get_idsex() != 'Male') AND ($casedata->get_idsex() != 'Female')) { echo " value='".$casedata->get_idsex()."' ";}?>/>
+               <BR>
       
       
       <br/><label class="label" for="idage">Age</label><input id="idage" type="text" name="idage" size="5" maxlength="5" value="<?php echo $casedata->get_idage(); ?>"/>
