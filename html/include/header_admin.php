@@ -60,9 +60,11 @@ require_once('session_admin.php');
     <li><a href="<?php echo(ROOT_URL) ?>/admin/activate/index.php">Activate Members</a></li>
     <li><a href="<?php echo(ROOT_URL) ?>/admin/index.php">Member List</a></li>
     <li><a href="<?php echo(ROOT_URL) ?>/admin/membersearch/?search=1">Search Members</a></li>
+    <!--
     <li><a href="<?php echo(ROOT_URL) ?>/admin/editprofile/">Edit Member Profiles</a></li>
     <li><a href="<?php echo(ROOT_URL) ?>/admin/editcase/">Edit Case Data</a></li>
     <li><a href="<?php echo(ROOT_URL) ?>/admin/searchdb/">Search Database</a></li>
+    -->
     <li><a href="<?php echo(ROOT_URL) ?>/admin/methods/">Methods</a></li>    
     
   </ul>
