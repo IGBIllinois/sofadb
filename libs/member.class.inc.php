@@ -173,6 +173,57 @@ public function reset_password($new_pass) {
     }
 }
 
+public function delete_member($delete_member_id) {
+    if($this->get_permissionstatus() != 2) {
+        return array("RESULT"=>FALSE,
+                    "MESSAGE"=>"You do not have permission to delete this user.");        
+    }
+    
+    if($this->get_id() == $delete_member_id) {
+        return array("RESULT"=>FALSE,
+                    "MESSAGE"=>"You cannot delete yourself.");            
+    }
+    $del_member = new member($this->db, $delete_member_id);
+    if($del_member == null) {
+         return array("RESULT"=>FALSE,
+                    "MESSAGE"=>"Member not found.");             
+    }
+    $del_member_name = $del_member->get_firstname() . " ".$del_member->get_lastname();
+    $del_member_email = $del_member->get_uname();
+    $del_member_id = $del_member->get_id();
+   $total_cases = sofa_case::get_member_cases($this->db, $del_member_id);
+   foreach($total_cases as $case) {
+       // delete tier2data for each case
+       $tier2s = $case->get_case_methods();
+       foreach($tier2s as $tier2) {
+           // delete tier3 data
+           $t2id = $tier2->get_id();
+           $tier3s = $tier2->get_tier3data();
+           foreach($tier3s as $tier3) {
+               $t3id = $tier3->get_id();
+               tier3data::delete_tier3_by_id($this->db, $t3id);
+           }
+           tier2data::delete_tier2($this->db, $t2id);
+       }
+   }
+   
+    $delete_cases_query = "DELETE FROM cases where memberid = :memberid ";
+    $delete_cases_params = array("memberid"=>$delete_member_id);
+    $delete_cases_result = $this->db->get_update_result($delete_cases_query, $delete_cases_params);
+    
+    $delete_user_query = "DELETE FROM members where id = :memberid";
+    $delete_user_params = array("memberid"=>$delete_member_id);
+    $delete_user_result = $this->db->get_update_result($delete_user_query, $delete_user_params);
+    
+    if($delete_user_result > 0) {
+        return array("RESULT"=>TRUE,
+        "MESSAGE"=>"Member $del_member_name ($del_member_email) successfully deleted.");       
+    } else {
+        return array("RESULT"=>FALSE,
+        "MESSAGE"=>"There was an error deleting $del_member_name ($del_member_email). Please check the information and try again.");       
+    }
+}
+
 // Static functions
 /** Gets a list of database members
  * 

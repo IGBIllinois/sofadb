@@ -187,9 +187,9 @@ class tier2data {
     
     // static functions
     public static function delete_tier2($db, $tier2id) {
-        $query = "DELETE from tier2data where id=:tier2id LIMIT 1";
+        $query = "DELETE from tier2data where id=:tier2id ";
         $params = array("tier2id"=>$tier2id);
-        $result = $db->get_update_query($query, $params);
+        $result = $db->get_update_result($query, $params);
         if($result > 0) {
             return array("RESULT"=>TRUE,
                 "MESSAGE"=>"Tier 2 data deleted successfully");

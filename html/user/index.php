@@ -12,6 +12,30 @@ require_once('../include/header_user.php') ;
 $pagerows = PAGEROWS;
 $memberid=$_SESSION['id'];
 
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+//delete case here, decrement total cases and numsubmitted from members. Remove from cases table by id, remove from membercasetable, remove methods from
+if (isset($_POST['delsubmit']))
+{
+    $deleteid=$_POST['delid'];
+    $del_case = new sofa_case($db, $deleteid);
+    $result = $del_case->delete_case();
+
+      if ($result['RESULT'] == FALSE) 
+        { 
+        // If it did not run OK
+                        // Error message:
+                        echo '<h2>System Error</h2>
+                        <p class="error">Did not delete case. We apologize for any inconvenience.</p>'; 
+                        // Debugging message:
+                        echo '<p>' . $db->errorInfo[2] . '<br/><br/>Query: ' . $q . '</p>';
+        exit();
+        }
+}
+}
+
+
 // Has the total number of pagess already been calculated?
 if (isset($_GET['p']) && is_numeric
 ($_GET['p'])) {//already been calculated
@@ -123,6 +147,7 @@ echo '<div class="scroll"><table id="hortable" summary="List of cases">
     	<tr>
 		    <th scope="col">View</th>
 			<th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
 			<th scope="col">Submit</th>
 			<th scope="col">Case Year</th>
             <th scope="col">Case Number</th>
@@ -144,6 +169,12 @@ foreach($curr_cases as $case) {
 	
 	echo '<td><a href="./editcase/index.php?id=' . $case->get_id()  . '">Edit</a></td>';
 
+        echo '<td>
+	<form action="index.php" method="post" id="deletedata" onsubmit="return confirm(\'Do you really want to delete this case?\')">
+	<input name="delid" type="hidden" value="'.$case->get_id().'"/>
+	<input name="delsubmit" type="submit" value="Delete" /> </form>
+	</td>';
+                
 	if($case->get_submissionstatus()==1)
 	{
 	echo '<td><a href="./index.php?id=' . $case->get_id() . '&status=1">Withdraw</a></td>';
@@ -153,7 +184,7 @@ foreach($curr_cases as $case) {
 	echo '<td>' . $case->get_caseyear() . '</td>
 	<td>' . $case->get_casenumber() . '</td>
 	<td>' . $case->get_caseagency() . '</td>
-    <td>' . $case->get_datemodified() . '</td>
+        <td>' . $case->get_datemodified() . '</td>
 	<td>' . $case->get_datesubmitted() . '</td>
 	
 	
