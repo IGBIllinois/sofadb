@@ -495,22 +495,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if($method->get_method_info_type() == METHOD_INFO_TYPE_TRANSITION_ANALYSIS) {
                 echo("<input type=hidden id='".METHOD_INFO_TYPE_TRANSITION_ANALYSIS."' name='".METHOD_INFO_TYPE_TRANSITION_ANALYSIS."' value='1'>");
             }
-            /*
-            echo("<B><U>".$result[0]['output_data_3_description']."</U></B><BR>");
-            echo("<select id='category' name='category[]' onchange='showBoneRegion(this.value)'>");
-            echo("<option name='none'></option>");
-            foreach($result as $category) {
-                $name = $category['output_data_3'];
-                echo("<option name='$name'>$name</option>");
-            }
-            echo("</select>");
-            */
-            $tier3s = $tier2->get_tier3data();
-            $tier3 = $tier3s[0];
-            $method_info_id = $tier3->get_methodinfoid();
-            $method_info = new method_info($db, $method_info_id);
-            $category = $method_info->get_output_data_3();
-            method_info::show_method_info($db, $method->get_id(), $tier2->get_id(), $category);
+
+            method_info::show_method_info($db, $method->get_id(), $tier2->get_id());
         } else {
             method_info::show_method_info($db, $tier2->get_methodid(), $tier2->get_id());
         }
