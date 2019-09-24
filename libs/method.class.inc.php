@@ -602,7 +602,27 @@ class method {
     }
     
     public static function get_methods_by_type($db, $type_id) {
-            $query = "SELECT methodname,id FROM methods WHERE methodtypenum=:methodtypenum Order by methodname ASC";
+            $query = "SELECT methodname,id FROM methods WHERE methodtypenum=:methodtypenum ";
+            if($type_id == 1) {
+                // Specific order for Sex methods
+                $query .= "order by "
+                        . "methodname = 'Fordisc (skeletal, metric)' desc, "
+                        . "methodname = 'Generalized Morphology (skeleton, nonmetric)' desc, "
+                        . "methodname = 'Soft Tissue Morphology (nonmetric)' desc, "
+                        . "methodname = '3D-ID' desc, "
+                        . "methodname ASC";
+            } else if($type_id == 2) {
+                // Specific order for Age methods
+                $query .= "Order by "
+                        . "methodname = 'Epiphyseal Union (skeletal, nonmetric)' desc, "
+                        . "methodname ASC";
+            } else if($type_id == 3) {
+                // Specific order for Ancestry methods
+                $query .= "Order by methodname ASC";
+            } else if($type_id == 4) {
+                // Specific order for Stature methods
+                $query .= "Order by methodname ASC";
+            }
             $params = array("methodtypenum"=>$type_id);
             $result = $db->get_query_result($query, $params);
             $methods = array();
