@@ -615,6 +615,7 @@ class method {
                 // Specific order for Age methods
                 $query .= "Order by "
                         . "methodname = 'Epiphyseal Union (skeletal, nonmetric)' desc, "
+                        . "methodname = 'Transition Analysis (skeletal, nonmetric)' desc, "
                         . "methodname ASC";
             } else if($type_id == 3) {
                 // Specific order for Ancestry methods
