@@ -434,7 +434,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				  unset($_SESSION['methodphase']);
 				  unset($_SESSION['phasechosen']);
 				  unset($_SESSION['featurechosen']);
-               header ("location: ../index.php"); exit();
+               header ("location: ../editcase/index.php?id=$case_id&successAddCase=$case_id#tabs-2"); exit();
                  
 			// Include the footer and stop the script
 		  
@@ -525,7 +525,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     
     
-    <br/><label class="label" for="faancestry">Ancestry</label><input id="farace_othertext" type="text" name="farace_othertext" size="30" maxlength="100" value="<?php if (isset($_POST['farace_othertext'])) echo $_POST['farace_othertext']; ?>"/>
+    <br/><label class="label" for="faancestry">Ancestry/Group Affiliation</label><input id="farace_othertext" type="text" name="farace_othertext" size="30" maxlength="100" value="<?php if (isset($_POST['farace_othertext'])) echo $_POST['farace_othertext']; ?>"/>
     
     
     

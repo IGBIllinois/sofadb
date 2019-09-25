@@ -103,10 +103,15 @@ class tier2data {
      *  $value may either be an $output_data_2, a value within a range, or a 
      *  user-specified value, depending on the user_interaction type.
      * 
+     * @param int tier3id ID of a tier3 object to format. If null, get all tier3 data for this tier2 object
      * @return string A string representing the Tier3 data for this Tier2 object
      */
-    public function format_tier3data() {
-        $info = $this->get_tier3data();
+    public function format_tier3data($tier3id = null) {
+        if($tier3id == null)  {
+            $info = $this->get_tier3data();
+        } else{
+            $info = array(new tier3data($this->db, $tier3id)); 
+        }
 
         $output = "";
         foreach($info as $tier_info) {

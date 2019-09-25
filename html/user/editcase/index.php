@@ -30,6 +30,8 @@ elseif(!isset($_SESSION['caseid']))
     header ("location: ../index.php"); exit();
 }
 
+
+
 elseif(isset($_SESSION['caseid']))
 {
 	$caseeditid=$_SESSION['caseid'];
@@ -679,7 +681,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     
     
-    <br/><label class="label" for="faancestry">Ancestry</label><input id="farace_othertext" type="text" name="farace_othertext" size="30" maxlength="100" value="<?php  echo $casedata->get_faancestryottext(); ?>"/>
+    <br/><label class="label" for="faancestry">Ancestry/Group Affiliation</label><input id="farace_othertext" type="text" name="farace_othertext" size="30" maxlength="100" value="<?php  echo $casedata->get_faancestryottext(); ?>"/>
     
     
     
@@ -751,6 +753,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </form>
 	  </div>
 	     <div id="tabs-2">
+                    <?php
+   if(isset($_GET['successAddCase'])) {
+       echo("Case added successfully. You may now add method data to this case.<BR>");
+   }
+   ?>
                  
                      <!-- Add Method box -->    
         <form action="index.php#tabs-2" method="post" id="method_info_data" name="method_info_data">
