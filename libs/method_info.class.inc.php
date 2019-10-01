@@ -86,28 +86,6 @@ class method_info {
         return $this->user_interaction;
     }
 
-    /** Formats tier3 data for use in the table
-     * 
-     * @return string A string formatting the all the tier3 data for this method info
-     */
-    public function format_tier3data() {
-        $info = $this->get_tier3data();
-        $method = new method($this->db, $this->get_methodid());
-        $output = "";
-        foreach($info as $tier_info) {
-                
-
-                $q = "SELECT * from method_info where id = :methoddataid";
-                $params = array("methoddataid"=>$tier_info->get_methodinfoid());
-                $result = $this->db->get_query_result($q, $params);
-                foreach($result as $tier3) {
-
-                    $output .= "(".$tier3['output_data_1']. ", ".$tier3['output_data_2'].") ";
-                }
-
-        }
-        return $output;
-    }
     
     /** Gets all output_data_2 for an output_data_1
      * Used for select_each method_info types
@@ -373,7 +351,7 @@ class method_info {
        } else if($method->get_method_type() == "Ancestry") {
            $estimated_outcomes = $method->get_estimated_outcomes();
 
-           echo("<BR>Estimated Ancestry from this method:<BR>");
+           echo("<BR>Estimated Group Affiliation from this method:<BR>");
            echo("<select name='estimated_outcome_1'>");
            echo("<option value=''>- Select -</option>");
            
@@ -1003,6 +981,7 @@ class method_info {
 
                    if($first_method_info != null) {
                     $reference_data = $first_method_info->get_references();
+                    if(count($reference_data)>0) {
                     $elementId = "checkboxes_".$outputname."_".str_replace(" ", "_",$od2);
                     //$elementId = "checkboxes[".$output_name."][".urlencode($od2)."]";
                     $ref_text = '<div class="multiselect table_full" >';
@@ -1025,9 +1004,15 @@ class method_info {
                     
                     $ref_text .= "</div></div></tr>";
                    }
+                   else {
+                       $ref_text .= "</tr>";
+
+                       
+                   }
               
                     $od3 .= $ref_text;
                    
+                   } 
                    }
                    
                echo("<tr><td class='align_top td_spaced' rowspan='".count($od2_data)."'>".$name.":</td>$od3 </tr>");
