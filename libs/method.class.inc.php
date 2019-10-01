@@ -493,7 +493,7 @@ class method {
     }
     
     public function get_method_info() {
-        $query = "SELECT id from method_info where methodid=:methodid";
+        $query = "SELECT id from method_info where methodid=:methodid order by id";
         $params = array("methodid"=>$this->id);
         $result = $this->db->get_query_result($query, $params);
         if(count($result) > 0) {
@@ -615,6 +615,7 @@ class method {
                 // Specific order for Age methods
                 $query .= "Order by "
                         . "methodname = 'Epiphyseal Union (skeletal, nonmetric)' desc, "
+                        . "methodname = 'Epiphyseal Union, McKern and Stuart (skeletal, nonmetric)' desc, "
                         . "methodname = 'Transition Analysis (skeletal, nonmetric)' desc, "
                         . "methodname ASC";
             } else if($type_id == 3) {
