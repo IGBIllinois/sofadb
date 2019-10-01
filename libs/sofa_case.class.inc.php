@@ -313,7 +313,7 @@ class sofa_case {
     }
 /** Marks a case for submission, or other status
  * 
- * @param int $submitstatus Submission status. "1" for submitted, "0" for unsubmitted, "-1" for withdrawn
+ * @param int $submitstatus Submission status. "1" for submitted, "0" for unsubmitted
  * @return type
  */
 public function submit_case($submitstatus) {
@@ -1366,7 +1366,7 @@ public function submit_case($submitstatus) {
                         foreach($tier3s as $tier3) {
                             if($tier3->get_methodinfoid() == $method_info->get_id()) {
                                 //$curr_row[] = "Y";
-                                $curr_row[] = $tier2->format_tier3data($tier3->get_id());
+                                $curr_row[] = $tier2->format_tier3data($tier3->get_id(), false);
                                 $found = true;
                                 //break;
                             } 

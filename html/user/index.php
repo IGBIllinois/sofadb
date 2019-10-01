@@ -68,22 +68,8 @@ if(isset($_GET['id']))
 	
 	$this_case = new sofa_case($db, $casesubid);
 	
-	if($status==1)
-	{$status=0;}
-	else{$status=1;}
-	
-
-if($status==1)	{
-
-	$this_case->submit_case($status);
-
-
-}
-else{
-	$this_case->submit_case(NULL);
-
-
-}
+        $this_case->submit_case($status);
+        
 
 
 unset($_GET['id']);
@@ -177,9 +163,9 @@ foreach($curr_cases as $case) {
                 
 	if($case->get_submissionstatus()==1)
 	{
-	echo '<td><a href="./index.php?id=' . $case->get_id() . '&status=1">Withdraw</a></td>';
+	echo '<td><a href="./index.php?id=' . $case->get_id() . '&status=0">Withdraw</a></td>';
 	}
-	else{echo '<td><a href="./index.php?id=' . $case->get_id() . '&status=0">Submit</a></td>';}
+	else{echo '<td><a href="./index.php?id=' . $case->get_id() . '&status=1">Submit</a></td>';}
 	
 	echo '<td>' . $case->get_caseyear() . '</td>
 	<td>' . $case->get_casenumber() . '</td>
