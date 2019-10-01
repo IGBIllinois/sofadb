@@ -38,16 +38,16 @@
 <hr size="3" />
 </div>
 
+
 <div id="navbar">
   <ul>
-    <li><a href="../">Home</a></li>
+    <li><a href="<?php echo(ROOT_URL);?>">Home</a></li>
 <?php
     if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1) {
 ?>
-    
-    <li><a href="../">My Cases</a></li>
-    <li><a href="../logout.php">Logout</a></li>
-    <li><a href="../contact/">Contact Us</a></li>
+    <li><a href="<?php echo(ROOT_URL) ?>/user/searchdb/?search=1">Search</a></li>
+    <li><a href="<?php echo(ROOT_URL) ?>/faq.php">FAQ</a></li>
+    <li><a href="<?php echo(ROOT_URL) ?>/contact/">Contact Us</a></li>
 <?php
 
     }

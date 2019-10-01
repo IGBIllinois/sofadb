@@ -26,7 +26,12 @@ require_once('main.inc.php');
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>My Account</title>
-<link href="/sofadb/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
+
+<!-- CSS -->
+ <link href="<?php echo(ROOT_URL) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
+ <link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery-ui.css" />
+
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 
@@ -51,10 +56,7 @@ http://jquery.org/license
 -->
   <script type="text/javascript" src="<?php echo(ROOT_URL) ?>/js/jquery.are-you-sure.js"></script>
   
-<!-- CSS -->
- <link href="<?php echo(ROOT_URL) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
- <link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery.multiselect.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery-ui.css" />
+
 
  </head>
 
@@ -75,9 +77,9 @@ http://jquery.org/license
 
 <div id="navbar">
   <ul>
-    <li><a href="<?php echo(ROOT_URL) ?>/">Home</a></li>
     <li><a href="<?php echo(ROOT_URL) ?>/">My Cases</a></li>
-    <li><a href="<?php echo(ROOT_URL) ?>/logout.php">Logout</a></li>
+    <li><a href="<?php echo(ROOT_URL) ?>/user/searchdb/?search=1">Search</a></li>
+    <li><a href="<?php echo(ROOT_URL) ?>/faq.php">FAQ</a></li>
     <li><a href="<?php echo(ROOT_URL) ?>/contact/">Contact Us</a></li>
   </ul>
 </div>
