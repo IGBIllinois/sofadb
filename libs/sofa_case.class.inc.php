@@ -110,6 +110,7 @@ class sofa_case {
     }
     
     /**
+     * Adds a new case to the database
      * 
      * @param type $db Connection to database
      * @param type $data array of values. Using an array here since thera are so many
@@ -242,10 +243,10 @@ class sofa_case {
     
     /** Adds a method to a case
      * 
-     * @param type $methodid ID of the method to add
-     * @param type $methodtype Type of the method to add
-     * @param type $featureid Feature id of the method to add
-     * @param type $phaseid Phase id of the method to add
+     * @param int $methodid ID of the method to add
+     * @param string $methodtype Type of the method to add ("Age", "Sex", "Stature", "Ancestry")
+     * @param int $featureid Feature id of the method to add
+     * @param int $phaseid Phase id of the method to add
      * @return type ID of the newly created case-method
      */
     public function add_case_method($methodid, $methodtype, $featureid, $phaseid, $estimated_outcome_1 = null, $estimated_outcome_2=null, $estimated_outcome_units = null) {
@@ -310,7 +311,11 @@ class sofa_case {
                  
       
     }
-
+/** Marks a case for submission, or other status
+ * 
+ * @param int $submitstatus Submission status. "1" for submitted, "0" for unsubmitted, "-1" for withdrawn
+ * @return type
+ */
 public function submit_case($submitstatus) {
 
 	$q="UPDATE cases SET submissionstatus=:status,datesubmitted=NOW() WHERE id=:caseid";
@@ -420,6 +425,12 @@ public function submit_case($submitstatus) {
         return $tier2s;
     }
  
+    /** 
+     * 
+     * @param type $caseid
+     * @param type $methodid
+     * @return type
+     */
     public function get_method_info($caseid,    
                                     $methodid) {
         
@@ -474,7 +485,7 @@ public function submit_case($submitstatus) {
                             $encode_od1 = urlencode($od1);
                             $od2 = $output_data_2[$encode_od1];
                             $od2 = urldecode($od2);
-                            //echo("2: od1 = $od1, od2 = $od2<BR>");
+
                             $method_info_arr = $method->get_method_info_by_od1($od1, $od2);
                             if(count($method_info_arr) > 0) {
                                 $method_info = $method_info_arr[0];
@@ -584,7 +595,6 @@ public function submit_case($submitstatus) {
 
                                         $od1 = urldecode($od1);
                                         $od2 = urldecode($od2);
-                                        //echo("SELECTED: ($od1, $od2) = $result<BR>");
                                         $reflist = "";
                                         foreach($curr_references as $id=>$ref) {
                                             if($id != "0") {
@@ -998,6 +1008,392 @@ public function submit_case($submitstatus) {
                         return false;
                     }
     }
+    
+    /**
+     * Search for cases based on given criteria
+     * @param type $db The database object
+     * @param int memberid The currently logged in member
+     * @param type $case_data array of name=>value pairs of database info to search for
+     * 
+     * @return a list of case objects that fit the criteria
+     */
+    public static function search_cases($db, $memberid, $case_data) {
+        
+        $query = "SELECT id from cases where ";
+        $param_string = "";
+        
+        $conjunction = " AND ";
+        if($case_data['conjunction'] != 1) {
+            $conjunction = " OR ";
+        }
+        
+        // Member ID
+        if ($case_data['memberId'] != null && $case_data['memberId'] != "") { 
+		
+		$param_string .= " memberid =: memberId ";
+                $params["memberId"] = $case_data['memberId'];
+		
+	} else {
+            // Get all
+            $param_string .= " memberid IS NOT NULL ";
+        }
+        
+        // Case Year
+        if ($case_data['caseYear'] != null && $case_data['caseYear'] != "") {
+            $yearRange = $case_data['yearRange'];
+            $yearJoiner = " = ";
+                if($yearRange==1){
+                    $yearJoiner = ">=";
+                    
+                } elseif($yearRange==2){
+                    $yearJoiner = "<=";
+                }
+                if($param_string != "") {
+                    $param_string .= $conjunction;
+                }
+                $param_string .= " caseyear " . $yearJoiner . " :caseyear ";
+                $params["caseyear"] = $case_data['caseYear'];
+
+	}
+        
+        // Case number
+        if ($case_data['caseNumber'] != null && $case_data['caseNumber'] != "") {
+            $casenumber = $case_data['caseNumber'];
+		if($param_string != "") {
+                    $param_string .= $conjunction;
+                }
+                $param_string .= " casenumber LIKE CONCAT ('%', :caseyear, '%') ";
+                $params["caseyear"] = $case_data['caseYear'];
+                
+        }
+        
+        // Case agency
+        if ($case_data['caseAgency'] != null && $case_data['caseAgency'] != "") {
+            if($param_string != "") {
+                $param_string .= $conjunction;
+            }
+            $param_string .= " caseagency LIKE CONCAT ('%', :caseagency, '%') ";
+            $params["caseagency"] = $case_data['caseAgency'];
+        }
+        
+        // Region
+        if ($case_data['region'] != null && $case_data['region'] != "") {
+            if($param_string != "") {
+                $param_string .= $conjunction;
+            }
+            $param_string .= " members.region = :region ";
+            $params["region"] = $case_data['region'];
+        }
+        
+        // Sex id
+        if ($case_data['idsex'] != null && $case_data['idsex'] != "") {
+            if($param_string != "") {
+                $param_string .= $conjunction;
+            }
+            $param_string .= " idsex = :idsex ";
+            $params["idsex"] = $case_data['idsex'];
+        }
+                
+        // Age range
+        
+        if (($case_data['ageid1'] != null && $case_data['ageid1'] != "") &&
+                ($case_data['ageid2'] != null && $case_data['ageid2'] != "")) {
+            
+            if($param_string != "") {
+                $param_string .= $conjunction;
+            }
+            $param_string .= " ( idage between :idage1 AND :idage2 )";
+            $params["idage1"] = $case_data['idage1'];
+            $params["idage2"] = $case_data['idage2'];
+        }
+        
+        // Stature
+        if (($case_data['idstature1'] != null && $case_data['idstature1'] != "") &&
+                ($case_data['idstature2'] != null && $case_data['idstature2'] != "")) {
+            
+            if($param_string != "") {
+                $param_string .= $conjunction;
+            }
+            $param_string .= " ( idstature between :idstature1 AND :idstature2 )";
+            $params["idstature1"] = $case_data['idstature1'];
+            $params["idstature2"] = $case_data['idstature2'];
+        }
+        
+        // Race
+        // $case_data['race'] is an array of "idrace$value" as keys
+        if ($case_data['race'] != null) {
+            $race_string = "";
+            if($param_string != "") {
+                $param_string .= $conjunction;
+            }
+            foreach ($case_data['race'] as $name=>$value) {
+                if($race_string != "") {
+                    $race_string .= " OR ";
+                }
+                $race_string .= "( idrace".$name."=1 )";
+            }
+            $race_string .= ")";
+            
+            $param_string .= "(".$race_string.")";
+        }
+        
+        // Estimated sex
+                
+        if ($case_data['est_sex'] != null && $case_data['est_sex'] == 1 ) {
+            if($param_string != "") {
+                $param_string .= $conjunction;
+            }
+            $param_string .= " faxex <> '' ";
+
+        }
+        
+        // Estimated age
+        if($case_data['est_age'] != null && $case_data['est_age'] == 1) {
+            if($param_string != "") {
+                $param_string .= $conjunction;
+            }
+            
+            $param_string .= " (faage <> '' OR faage2 <> '') ";
+            
+        }
+        
+        // Estimated stature
+        if($case_data['est_stat'] != null && $case_data['est_stat'] == 1) {
+            if($param_string != "") {
+                $param_string .= $conjunction;
+            }
+            
+            $param_string .= " (fastature <> '' OR fastature2 <> '') ";
+            
+        }
+        
+        // Estimated ancestry
+        if($case_data['est_anc'] != null && $case_data['est_anc'] == 1) {
+            if($param_string != "") {
+                $param_string .= $conjunction;
+            }
+            
+            $param_string .= " faancestryottext <> '' ";
+            
+        }
+        
+        if($param_string != "") {
+            $param_string  = "(".$param_string . ")";
+            
+        }
+        //$param_string .= " memberId = :memberId ";
+        //$params['memberId'] = $memberid;
+        $query .= $param_string;
+        
+        //echo("Query = $query<BR>");
+        //print_r($case_data);
+        $result = $db->get_query_result($query, $params);
+        $results = array();
+        foreach($result as $casedata) {
+            $case = new sofa_case($db, $casedata['id']);
+            $results[] = $case;
+        }
+        
+        return $results;
+
+}
+    /** Creates an excel sheed with data from the given cases
+     * 
+     * @param db $db The database object
+     * @param \sofa_case $case_list List of case objects
+     */
+    public static function write_report($db, $case_list) {
+        header('Content-Type: text/csv; charset=utf-8');
+         ob_end_clean();
+        $today = date("m_d_Y_H_i_s");
+        $filename='SOFADBExport_'.$today.".csv";
+        header("Content-type: application/octet-stream");
+       header('Content-Disposition: attachment; filename='.$filename);
+        
+        // make header row for data
+        $headerrow=array('Case ID', 
+            'Date Submitted to SOFA DB', 
+            'Practioner Degree', 
+            'Year Earned', 
+            'Practioner Cases Per Year', 
+            'Case Year',
+            'FA Report: Sex', 
+            'FA Report: Minimum age', 
+            'FA Report: Minimum age units (years or fetal months)', 
+            'FA Report: Maximum age', 
+            'FA Report: Maximum age units (years or fetal months)',
+            'FA Report: Ancestry',
+            'FA Report: Minimum Stature (inches)',
+            'FA Report: Maximum Stature (inches)',
+            'Identified Sex',
+            'Identified Age',
+            'Identified Age Units (years or fetal months)',
+            'Identified Race/Ethnicity',
+            'Race/Ethnicity Notes',
+            'Identified Stature (inches)',
+            'Information Source',
+            'Case Notes');
+        
+        $headerrow2 = array('',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            ''
+            );
+            
+
+        // Add methods to header row
+        $all_methods = method::get_methods($db);
+        foreach($all_methods as $method) {
+            //$headerrow[] = $method->get_name() . "[".$method->get_id()."]";
+            $headerrow[] = $method->get_name();
+            $headerrow[] = $method->get_name(). ": Estimated outcome";
+            $headerrow2[] = '';
+            $headerrow2[] = '';
+            $method_infos = $method->get_method_info();
+            foreach($method_infos as $method_info) {
+                $headerrow[] = '';
+                $headerrow2[] = $method_info->get_output_data_1() . ", "
+                        . $method_info->get_output_data_2() . ", "
+                        . $method_info->get_output_data_3();
+                   
+            }
+        }
+        
+        // create a file pointer connected to the output stream
+        $output = fopen('php://output', 'w');
+        
+        // output the column headings
+        fputcsv($output,$headerrow);
+        fputcsv($output,$headerrow2);
+
+        foreach($case_list as $curr_case) {
+            $curr_row = array();
+            $member = new member($db, $curr_case->get_memberid());
+            $curr_row[] = $curr_case->get_id();
+            $curr_row[] = $curr_case->get_datesubmitted();
+            $curr_row[] = $member->get_degree();
+            $curr_row[] = $member->get_degreeyear();
+            $curr_row[] = $member->get_caseperyear();
+            $curr_row[] = $curr_case->get_caseyear();
+            $curr_row[] = $curr_case->get_fasex();
+            $curr_row[] = $curr_case->get_faage();
+            $curr_row[] = $curr_case->get_faageunits();
+            $curr_row[] = $curr_case->get_faage2();
+            $curr_row[] = $curr_case->get_faageunits2();
+            $faancestry = "";
+            if ($curr_case->get_faancestryas()!=0){$idancestry=$idancestry.'[Asian/Pacific Islander]';}
+            if ($curr_case->get_faancestryaf()!=0){$idancestry=$idancestry.'[African-American/Black]';}
+            if ($curr_case->get_faancestryhi()!=0){$idancestry=$idancestry.'[Hispanic]';}
+            if ($curr_case->get_faancestryna()!=0){$idancestry=$idancestry.'[Native Ameriacan]';}
+            if ($curr_case->get_faancestrywh()!=0){$idancestry=$idancestry.'[White]';}
+            if ($curr_case->get_faancestryot()!=0){$idancestry=$idancestry.'['.$curr_case->get_faancestryottext().']';}
+            $curr_row[] = $faancestry;
+            
+            $curr_row[] = $curr_case->get_fastature();
+            $curr_row[] = $curr_case->get_fastature2();
+            $curr_row[] = $curr_case->get_idsex();
+            $curr_row[] = $curr_case->get_idage();
+            $curr_row[] = $curr_case->get_idageunits();
+            $idancestry = "";
+            if ($curr_case->get_idraceas()!=0){$idancestry=$idancestry.'[Asian/Pacific Islander]';}
+            if ($curr_case->get_idraceaf()!=0){$idancestry=$idancestry.'[African-American/Black]';}
+            if ($curr_case->get_idracehi()!=0){$idancestry=$idancestry.'[Hispanic]';}
+            if ($curr_case->get_idracena()!=0){$idancestry=$idancestry.'[Native Ameriacan]';}
+            if ($curr_case->get_idracewh()!=0){$idancestry=$idancestry.'[White]';}
+            if ($curr_case->get_idraceot()!=0){$idancestry=$idancestry.'['.$curr_case->get_idraceottext().']';}
+            $curr_row[] = $idancestry;
+            $curr_row[] = $curr_case->get_idancaddtext();
+            $curr_row[] = $curr_case->get_idstature();
+            $curr_row[] = $curr_case->get_idsource();
+            $curr_row[] = $curr_case->get_casenotes();
+            
+            $case_methods = $curr_case->get_case_methods();
+            $case_method_ids = array();
+            $case_method_data = array();
+            foreach($case_methods as $tmp_case_method) {
+                $case_method_data[$tmp_case_method->get_methodid()] = $tmp_case_method->get_id();
+            }
+            $case_method_ids = array_keys($case_method_data);
+            //print_r($case_method_ids);
+            $i = 0;
+            foreach($all_methods as $tmp_method) {
+                if(in_array($tmp_method->get_id(), $case_method_ids)) {
+                    $curr_row[] = "Y";
+
+                    $tier2id = $case_method_data[$tmp_method->get_id()];
+                    $tier2 = new tier2data($db, $tier2id);
+                    
+                    // Estimated outcome
+
+                    $est = $tier2->get_estimated_outcome_1();
+                    $est2 = $tier2->get_estimated_outcome_2();
+                    $est_units = $tier2->get_estimated_outcome_units();
+                    if($est2 != null && $est2 != '') {
+                        $est .= " - " . $est2;
+                    }
+                    if($est_units != null && $est_units != "") {
+                        $est .=  " ".$est_units;
+                    }
+                    $curr_row[] = $est;
+                            
+                            
+                    //$curr_row[] = '';
+                    $tier3s = $tier2->get_tier3data();
+
+
+                    $method_infos = $tmp_method->get_method_info();
+                    
+                    foreach($method_infos as $method_info) {
+                        $found = false;
+                        foreach($tier3s as $tier3) {
+                            if($tier3->get_methodinfoid() == $method_info->get_id()) {
+                                //$curr_row[] = "Y";
+                                $curr_row[] = $tier2->format_tier3data($tier3->get_id());
+                                $found = true;
+                                //break;
+                            } 
+                        }
+                        if(!$found) {
+                            $curr_row[] = '';
+                        }
+                    }
+                } else {
+                    $curr_row[]= "N";
+                    // Estimated outcome is blank if not used
+                    $curr_row[] = '';
+                    $method_infos = $tmp_method->get_method_info();
+                    foreach($method_infos as $method_info) {
+                        $curr_row[] = '';
+                    }
+                }
+                $i++;
+            }
+            fputcsv($output, $curr_row);
+
+        }
+        fclose($output);
+
+    }
+            
+
 
 
     

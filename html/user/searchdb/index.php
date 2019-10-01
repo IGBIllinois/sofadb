@@ -15,7 +15,8 @@ require_once('../../include/header_user.php');
 <div name="searchresults">
  <?php 
   
-  
+ $memberid=$_SESSION['id'];
+  echo("id = $memberid<BR>");
   $error=0;
   
   if (isset($_GET['search']))
@@ -27,8 +28,36 @@ require_once('../../include/header_user.php');
        require('exportdata.php');
   }
 		  
-	  if ($_SERVER['REQUEST_METHOD'] == 'GET'){//not export
+	if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['search'] != 1){//not export
 	  $first=0;
+          $race_array = array();
+          foreach($_GET['race'] as $race=>$value) {
+              $race_array[$value] = $race;
+          }
+          $case_data = array(
+              "memberId"=>$_GET['mID'],
+              "caseYear"=>$_GET['cyear'],
+              "caseNumber"=>$_GET['cnum'],
+              "caseAgency"=>$_GET['cagency'],
+              "region"=>$_GET['region'],
+              "idsex"=>$_GET['sexid'],
+              "ageid1"=>$_GET['ageid1'],
+              "ageid2"=>$_GET['ageid2'],
+              "statureid1"=>$_GET['statureid1'],
+              "statureid2"=>$_GET['statureid2'],
+              "race"=>$race_array,
+              "est_sex"=>$_GET['est_sex'],
+              "est_age"=>$_GET['est_age'],
+              "est_stat"=>$_GET['est_stat'],
+              "est_anc"=>$_GET['est_anc'],
+              "conjuction"=>$_GET['andor']
+                  );
+              
+              $case_results = sofa_case::search_cases($db, $memberid, $case_data);
+              
+              //sofa_case::write_report($db, $case_results);
+              
+          
 
 	 
 	 	if (!empty($_GET['mID'])) 
@@ -356,7 +385,7 @@ $start = 0;
 // Make the query: THIS SQL statement is messed up [true?]
 $q = "SELECT cases.id AS id, casenumber, caseyear, caseagency, memberid, DATE_FORMAT(datesubmitted, '%M %d, %Y') AS subdat FROM cases, members WHERE members.id=cases.memberid AND ($searchstring) AND submissionstatus=1 ORDER BY caseyear ASC LIMIT $start, $pagerows";		
 
- 
+echo("<BR>orig query = $q<BR>"); 
 
 $result = @mysqli_query ($dbcon, $q); // Run the query.
 $members = mysqli_num_rows($result);
