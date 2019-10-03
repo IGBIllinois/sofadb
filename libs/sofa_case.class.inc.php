@@ -478,7 +478,7 @@ public function submit_case($submitstatus) {
                             
                                 $result = $this->add_tier3($method_id, $decode_od1, $od2, $method_case_id, null, $method_info->get_user_interaction() );
                             }else {
-                                echo("method_info not found<BR>");
+                                //echo("method_info not found<BR>");
                             }
                             
                         } else {
@@ -494,7 +494,7 @@ public function submit_case($submitstatus) {
                                 //echo("<BR>value = $value");
                                 $result = $this->add_tier3($method_id, $od1, $od2, $method_case_id, $value, $method_info->get_user_interaction());
                             } else {
-                                echo("<BR>method_info not found<BR>");
+                                //echo("<BR>method_info not found<BR>");
                             }
                         }
                         

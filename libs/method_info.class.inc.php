@@ -1041,7 +1041,7 @@ class method_info {
        * @param string category Category (like "UpperAppendicular") to get input for
        * @param string subcategory Sub-category (like "Clavicle") to get input for
     */
-   public static function show_method_info_user_input_with_dropdown($db, $method, $tier2id, $category=null, $subcategory=null) {
+   public static function show_method_info_user_input_with_dropdown($db, $method, $tier2id, $category=null, $subcategory=null, $default_txt = null) {
 
        $user_interaction = USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN;
        $od1s = $method->get_data_1($user_interaction, $category, $subcategory);
@@ -1077,7 +1077,7 @@ class method_info {
                 
                 echo("<tr><td class='width_33'>".$name.":</td><td> <input size=6 id='$name' name='output_data_1[$name]' value='$value'></td>");
                 echo("<td><select name=output_data_2[$urlName]>");
-            
+                echo("<option name=''>".($default_txt != null ? $default_txt : ""). "</option>");
                 foreach($od2s as $od2) {
                     $od2_name = $od2[0];
                     $url_od2 = urlencode($od2_name);
@@ -1097,7 +1097,7 @@ class method_info {
             $urlName = urlencode($name);
             if(count($od2s) > 0) {
                 echo("<td><select name=output_data_2[$urlName]>");
-            
+                echo("<option name='' >".($default_txt != null ? $default_txt : ""). "</option>");
                 foreach($od2s as $od2) {
                     $od2_name = $od2[0];
                     $url_od2 = urlencode($od2_name);
@@ -1175,8 +1175,8 @@ class method_info {
                method_info::show_method_info_select_each($db, $method, $tier2id, $category, $subcategory);
 
            }else if($user_interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
-                
-                method_info::show_method_info_user_input_with_dropdown($db, $method, $tier2id, $category, $subcategory);
+                $txt = "Sectioning Point used?";
+                method_info::show_method_info_user_input_with_dropdown($db, $method, $tier2id, $category, $subcategory, $txt);
             }
            
                   echo("</td>");
