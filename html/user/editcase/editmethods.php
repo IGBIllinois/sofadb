@@ -70,7 +70,7 @@ elseif(isset($_SESSION['caseid']))
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     //echo("POST=");
-//print_r($_POST);
+
     if(isset($_POST['tier2id'])) {
         
         //$method_info = new method_info($db, $_GET['methodid']);
@@ -111,12 +111,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $method = new method($db, $tier2->get_methodid());
     $method_info = $method->get_method_info();
     $user_interaction = "";
+    $user_interactions = array();
+    
     if(count($method_info) > 0) {
         $user_interactions = $method_info[0]->get_user_interactions();
-        //print_r($user_interactions);
-        $user_interaction = $method_info[0]->get_user_interaction();
+
+        //$user_interaction = $method_info[0]->get_user_interaction();
         
     }
+    
     if(isset($_POST['output_data_1'])) {
         $output_data_1 = $_POST['output_data_1'];
     } else {
@@ -126,11 +129,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(isset($_POST['output_data_2'])) {
         $output_data_2 = $_POST['output_data_2'];
     }
+    
 
     $new_ids = array();
-    
-    
-    
+
+    foreach($user_interactions as $user_interaction) {
+        $user_interaction = $user_interaction[0];
+
     if($user_interaction == USER_INTERACTION_RIOS_CARDOSO) {
         
         $current_t3s = $tier2->get_tier3data();
@@ -182,9 +187,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         
     }
+    
     else if($user_interaction == USER_INTERACTION_MULTISELECT) {
     if($output_data_2 != null) {
     foreach($output_data_1 as $od1) {
+        $od1 = urldecode($od1);
+
         foreach($output_data_2 as $od2) {
             $method_info = method_info::get_one_method_info($db, $method->get_id(), $od1, $od2);
             $id = $method_info->get_id();
@@ -290,7 +298,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $user_interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN ||
                 $user_interaction == USER_INTERACTION_TEXT_AREA) {
 
-            $new_ids = array();
+            //$new_ids = array();
 
         //echo("user_interaction = $user_interaction<BR>");
         //print_r($output_data_1);
@@ -311,41 +319,76 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
 
                 } else {
+
             foreach($output_data_1 as $name=>$od1_value) {
                 $name = urldecode($name);
+
                 if(is_array($od1_value)) {
-            
+
+                    // Get list of newly selected options
                     foreach($od1_value as $od2) {
                         if($user_interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
                             $od2 = urldecode($od2);
                         }
-                        $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od2);
-
-                        $id = $method_info->get_id();
-                        $new_ids[] = $id;
+                        if($od2 != "") {
+                            $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od2);
+                            if($method_info != null) {
+                                $id = $method_info->get_id();
+                                $new_ids[] = $id;
+                            }
+                        }
                     }
                 
                 } else {
+                    // Get list of newly selected options
+
                     if($user_interaction == USER_INTERACTION_NUMERIC_ENTRY ||
                             $user_interaction == USER_INTERACTION_INPUT_BOX ||
                             $user_interaction == USER_INTERACTION_TEXT_AREA) {
                         // just use output_data_name for numeric entry
+
                         $method_info = method_info::get_one_method_info($db, $method->get_id(), $name);
+                        if($method_info != null) {
+                            $id = $method_info->get_id();
+                            $new_ids[] = $id;
+                        }
+                        
                     } elseif($user_interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
                         $od2 = $output_data_2[urlencode($name)];
                             $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od2);
+                            if($method_info != null) {
+                            $id = $method_info->get_id();
+                            $new_ids[] = $id;
+                        }
                     }else {
+                        
                         $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od1_value);
+                        if($method_info != null) {
+                            $id = $method_info->get_id();
+                            $new_ids[] = $id;
+                        }
+
                     }
-                    $id = $method_info->get_id();
-                    $new_ids[] = $id;
+                    /*
+                    if($od1_value != "") {
+                        if($method_info != null) {
+                            $id = $method_info->get_id();
+                            $new_ids[] = $id;
+                        } else { 
+                            echo("Wrong type<BR>");
+                        }
+                    }
+                     * 
+                     */
                 }
             }
         
         // if it's in the existing ids, but not in the new ids, delete it.
 
         foreach($existing_ids as $existing_id) {
+            // Get list of current options in the database
             if(!in_array($existing_id, $new_ids)) {
+
                 $curr_result = tier3data::delete_tier3($db, $tier2id, $existing_id);
                 if($curr_result['RESULT'] == FALSE) {
                     $errors++;
@@ -357,16 +400,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         foreach($output_data_1 as $name=>$od1_value) {
             $name = urldecode($name);
             if(is_array($od1_value)) {
+
                 foreach($od1_value as $od2) {
+                    if($od2 != ""){
                     $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od2);
-                    $methoddataid = $method_info->get_id();
-                    $this_case->update_tier3($tier2id, $methoddataid, $od2);
+                    if($method_info != null) {
+                        $methoddataid = $method_info->get_id();
+                        $this_case->update_tier3($tier2id, $methoddataid, $od2);
+                    }
                 }
+                }
+
             } else {
                 if($user_interaction == USER_INTERACTION_NUMERIC_ENTRY ||
                    $user_interaction == USER_INTERACTION_INPUT_BOX ||
                    $user_interaction == USER_INTERACTION_TEXT_AREA) {
                     // just use output_data_name for numeric entry
+
                     $method_info = method_info::get_one_method_info($db, $method->get_id(), $name);
                 } else if($user_interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
                     $od2 = $output_data_2[urlencode($name)];
@@ -374,11 +424,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }else {
                     $method_info = method_info::get_one_method_info($db, $method->get_id(), $name, $od1_value);
                 }
-                $methoddataid = $method_info->get_id();
-                $curr_result = $this_case->update_tier3($tier2id, $methoddataid, $od1_value);
-                if($curr_result['RESULT'] == FALSE) {
-                    $errors++;
-                    $result[] = $curr_result;        
+                if($method_info != null) {
+                    $methoddataid = $method_info->get_id();
+                    $curr_result = $this_case->update_tier3($tier2id, $methoddataid, $od1_value);
+                    if($curr_result['RESULT'] == FALSE) {
+                        $errors++;
+                        $result[] = $curr_result;
+                    }
+                } else {
+                    //echo("Wrong type 2<BR>");
                 }
             }
         }
@@ -430,6 +484,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         $case->update_tier3($tier2id, $method_info->get_id(), null, $newreflist);
                     }
+                }
+            }
+        }
+
                     foreach($existing_ids as $ex_id) {
                         if(!in_array($ex_id, $new_ids)) {
 
@@ -439,9 +497,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     
                     
                     
-                }
-            }
-        }
+                
+            
+        
+    }
         
     }
     echo("<div id='caseform'>");

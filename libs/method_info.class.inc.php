@@ -349,14 +349,19 @@ class method_info {
                $title = "Select method outcome used.";
            }
        } else if($method->get_method_type() == "Ancestry") {
+           if($tier2id != null) {
+               $tier2 = new tier2data($db, $tier2id);
+               $estimated_outcome_1 = $tier2->get_estimated_outcome_1();
+               $estimated_outcome_2 = $tier2->get_estimated_outcome_2();
+               $estimated_outcome_units = $tier2->get_estimated_outcome_units();
+           }
            $estimated_outcomes = $method->get_estimated_outcomes();
-
            echo("<BR>Estimated Group Affiliation from this method:<BR>");
            echo("<select name='estimated_outcome_1'>");
            echo("<option value=''>- Select -</option>");
            
            foreach($estimated_outcomes as $outcome) {
-               echo("<option value='$outcome' ". (($estimated_outcome == $outcome) ? " selected='selected' " : "") .">$outcome</option>");
+               echo("<option value='$outcome' ". (($estimated_outcome_1 == $outcome) ? " selected='selected' " : "") .">$outcome</option>");
            }
            echo("</select><BR>");
            
@@ -417,7 +422,7 @@ class method_info {
        $method_info = method_info::get_data_for_method($db, $method_id);
        
        if(count($method_info) > 0) {
-           //$user_interaction = $method_info[0]->get_user_interaction();
+
            $interactions = $method_info[0]->get_user_interactions();
            echo("<table class='table_full'><tr>");
 
@@ -688,7 +693,7 @@ class method_info {
     * @param int $tier2id Existing info, if editing
     * @param string $category Category: Used in Spradley & Jantz methods
      * @param string $subcategory Subcategory: Used in Spradley & Jantz methods
-     * @param boolean $titles: True if you show titles for every option, false if you only show titles once
+     * @param boolean $all_titles: True if you show titles for every option, false if you only show titles once
     */
    public static function show_method_info_select_each($db, $method, $tier2id, $category=null, $subcategory=null, $all_titles = true) {
        $user_interaction = USER_INTERACTION_SELECT_EACH;
@@ -698,7 +703,8 @@ class method_info {
        if(($method->get_method_type() != "Stature") &&
                ($method->get_id() != 2 && // Tise
                $method->get_id() != 125 && // Spradley & Jantz
-               $method->get_id() != 126)) { // Holland
+               $method->get_id() != 126) && // Holland
+               $method->get_name() != "Rhine 1990 (skull, nonmetric)") { 
 
                     echo("<legend><I>(hold CTL to select multiple)</I></legend>");
                }
@@ -756,6 +762,12 @@ class method_info {
                        break;
                    }
                }
+               if($method->get_method_info_type() == METHOD_INFO_TYPE_STATURE_1 ||
+                           $method->get_name() == "Rhine 1990 (skull, nonmetric)") {
+                       // alter display for Genoves 1967 and others
+                       $maxCols = 1;
+                       $all_titles = false;
+                   }
 
                
                foreach($output_data_1_result_sel as $od1_result) {
@@ -790,7 +802,8 @@ class method_info {
                    $multiple = true;
                    $size = count($od2_data);
                    
-                   if($method->get_method_info_type() == METHOD_INFO_TYPE_STATURE_1) {
+                   if($method->get_method_info_type() == METHOD_INFO_TYPE_STATURE_1 ||
+                           $method->get_name() == "Rhine 1990 (skull, nonmetric)") {
                        // alter display for Genoves 1967 and others
                        $size=1;
                        $multiple = false;
@@ -798,7 +811,8 @@ class method_info {
                    
                    $selectbox = "<select class='align_left' size=$size name=output_data_1[$outputname][] ".(($multiple == true) ? " multiple " : " style='width:200px' ") .">";
 
-                   if($method->get_method_info_type() == METHOD_INFO_TYPE_STATURE_1) {
+                   if($method->get_method_info_type() == METHOD_INFO_TYPE_STATURE_1 ||
+                           $method->get_name() == "Rhine 1990 (skull, nonmetric)") {
                        // add initial selector
                        $selectbox .= "<option value=''>- Select One -</option>";
                    }

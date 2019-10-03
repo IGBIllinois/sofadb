@@ -453,7 +453,7 @@ public function submit_case($submitstatus) {
      * @param array $od1Names Array of output_data_1 names, used for INPUT_BOX, NUMERIC_ENTRY type
      * @param string $references a comma-delimieted list of reference ids
      */
-    public function add_all_tier3_data($method_id, $method_case_id, $output_data_1, $output_data_2=null, $od1Names=null, $references = null) {
+    public function add_all_tier3_data($method_id, $method_case_id, $output_data_1, $output_data_2=null, $od1Names=null, $references = null, $interaction = null) {
 
             $method = new method($this->db, $method_id);
 
@@ -522,7 +522,7 @@ public function submit_case($submitstatus) {
                             $user_interaction = USER_INTERACTION_INPUT_BOX;
                             if($value != null && $value != "") {
                                 // don't add if nothing selected
-                            
+
                                 $result = $this->add_tier3($method_id, $od1, null, $method_case_id, $value, $user_interaction);
                             }
                         
@@ -534,13 +534,16 @@ public function submit_case($submitstatus) {
                     
                     $user_interactions = $method_data[0]->get_user_interactions();
                     $user_interaction = $method_data[0]->get_user_interaction();
+                    foreach($user_interactions as $user_interaction) {
+                        $user_interaction = $user_interaction[0];
+
                     if($user_interaction == USER_INTERACTION_MULTISELECT) {
                         if(count($output_data_2) > 0) {
                             // do both
 
                             foreach($output_data_1 as $od1) {
                                 foreach($output_data_2 as $od2) {
-                                    $result = $this->add_tier3($method_id, $od1, $od2, $method_case_id);
+                                    $result = $this->add_tier3($method_id, $od1, $od2, $method_case_id, null, $interaction);
 
                                 }
                             }
@@ -548,7 +551,7 @@ public function submit_case($submitstatus) {
 
                             // just one
                             foreach($output_data_1 as $od1) {
-                                $result = $this->add_tier3($method_id, $od1, null, $method_case_id);
+                                $result = $this->add_tier3($method_id, $od1, null, $method_case_id, null, $interaction);
 
                             }
                         }
@@ -562,21 +565,28 @@ public function submit_case($submitstatus) {
                         foreach($output_data_1 as $value) {
                             
                             $name = urldecode($od1Names[$i]);
+
                             if(is_array($value)) {
                                 if($user_interaction == USER_INTERACTION_SELECT_RANGE) {
                                     foreach($value as $arr_val) {
+                                        
                                         $result = $this->add_tier3($method_id, $name, null, $method_case_id, $arr_val, $user_interaction);
                                     }
                                 } else if($user_interaction == USER_INTERACTION_SELECT_EACH) {
                                     // array values are output_data_2 values
                                     foreach($value as $arr_val) {
-                                        $result = $this->add_tier3($method_id, $name, $arr_val, $method_case_id, null, $user_interaction);
+
+                                        if($arr_val != '') {
+                                            $result = $this->add_tier3($method_id, $name, $arr_val, $method_case_id, null, $user_interaction);
+                                        }
                                     }
                                     
                                    
                                 } else {
-                                    
-                                $result = $this->add_tier3($method_id, $name, null, $method_case_id, $value, $user_interaction);
+
+                                foreach($value as $id=>$text_val) {
+                                $result = $this->add_tier3($method_id, $name, null, $method_case_id, $text_val, $user_interaction);
+                                }
                             }
                             } else {
 
@@ -614,6 +624,8 @@ public function submit_case($submitstatus) {
                     }   
 
                 }
+                }
+                
     }
     }
     
@@ -633,6 +645,18 @@ public function submit_case($submitstatus) {
      * output message
      */
     public function add_tier3($methodid, $od1, $od2, $tier2id, $value=NULL, $interaction=NULL, $references = null) {
+        $tmp_method_info = method_info::get_one_method_info($this->db, $methodid, $od1, $od2);
+        if($tmp_method_info == null) {
+            echo("method info not found: Not adding tier3<BR>");
+            return array("RESULT"=>FALSE,  
+                        "MESSAGE"=>"method info not found: Not adding tier3<BR>");
+        }
+        $tmp_user_interaction = $tmp_method_info->get_user_interaction();
+        if(($interaction != null && $interaction != $tmp_user_interaction)) {
+            echo("$interaction != $tmp_user_interaction: Not adding tier3<BR>");
+            return array("RESULT"=>FALSE,  
+                        "MESSAGE"=>"$interaction != $tmp_user_interaction: Not adding tier3<BR>");
+        }
         if($interaction == null ||
                 $interaction == USER_INTERACTION_MULTISELECT ||
                 $interaction == USER_INTERACTION_SELECT_EACH  ||
