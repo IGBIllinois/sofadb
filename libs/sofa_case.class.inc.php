@@ -1294,9 +1294,11 @@ public function submit_case($submitstatus) {
             $method_infos = $method->get_method_info();
             foreach($method_infos as $method_info) {
                 $headerrow[] = '';
+                if($method_info->get_output_data_1() != null) {
                 $headerrow2[] = $method_info->get_output_data_1() . ", "
                         . $method_info->get_output_data_2() . ", "
                         . $method_info->get_output_data_3();
+                }
                    
             }
         }
@@ -1387,16 +1389,20 @@ public function submit_case($submitstatus) {
                     
                     foreach($method_infos as $method_info) {
                         $found = false;
+                        $txt = "";
                         foreach($tier3s as $tier3) {
                             if($tier3->get_methodinfoid() == $method_info->get_id()) {
                                 //$curr_row[] = "Y";
-                                $curr_row[] = $tier2->format_tier3data($tier3->get_id(), false);
+                                //$curr_row[] = $tier2->format_tier3data($tier3->get_id(), false);
+                                $txt .= " ". $tier2->format_tier3data($tier3->get_id(), false);
                                 $found = true;
                                 //break;
                             } 
                         }
                         if(!$found) {
                             $curr_row[] = '';
+                        } else {
+                            $curr_row[] = $txt;
                         }
                     }
                 } else {
