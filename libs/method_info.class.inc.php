@@ -605,9 +605,11 @@ class method_info {
                }
                
         foreach($this_method_info as $method_info) {
-            
-            if($i >= MAXCOLS) {
-                $html .="</tr><tr>";
+            if($method_info->get_user_interaction() == USER_INTERACTION_SELECT_RANGE) {
+
+            if($i >= $maxCols) {
+
+                echo("</tr><tr>");
                 $i=0;
             }
 
@@ -682,7 +684,9 @@ class method_info {
             $i++;
 
             }
+        }
             echo("</table>");
+        
 
    }
    
