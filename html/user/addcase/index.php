@@ -79,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$fasex=NULL;
 	} 
     else {
+        
                 $fasex = trim($_POST['fasex']);
 	}
 	
@@ -86,12 +87,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
        	//check for a FA age 2 first!
 	if (empty($_POST['faage2'])) {
-		$faage2=NULL;
-        $faageunits2=NULL;
+            $faage2=NULL;
+            $faageunits2=NULL;
 	} 
     else {
-		$faage2 = trim($_POST['faage2']);
+            $faage2_test = trim($_POST['faage2']);
+            if(!is_numeric($faage2_test)) {
+                $errors[] = "Forensic Anthropology estimated age must be numeric.";
+            } else {
+		$faage2 = $faage2_test;
                 $faageunits = trim($_POST['faageunits2']);
+            }
 	}
     
     
@@ -103,8 +109,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $faageunits2=NULL;
 	} 
     else {
-		$faage = trim($_POST['faage']);
-        $faageunits = trim($_POST['faageunits']);
+            $faage_test = trim($_POST['faage']);
+            if(!is_numeric($faage_test)) {
+                $errors[] = "Forensic Anthropology estimated age must be numeric.";
+            }
+            $faage = trim($_POST['faage']);
+            $faageunits = trim($_POST['faageunits']);
 	}
 
 	
@@ -114,21 +124,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fastature2=NULL;
 	} 
     else {
-		$fastature2 = trim($_POST['fastature2']);
-        
+        $fastature2_test = trim($_POST['fastature2']);
+        if(!is_numeric($faage2_test)) {
+            $errors[] = "Forensic Anthropology estimated stature must be numeric.";
+        } else {
+            $fastature2 = trim($_POST['fastature2']);
 	}
+    }
 
 
 	//check for a FA stature
 	if (empty($_POST['fastature'])) {
-		$fastature=NULL;
-        $fastature2=NULL;
-        $fastatureunits=NULL;
+            $fastature=NULL;
+            $fastature2=NULL;
+            $fastatureunits=NULL;
 	} 
-    else {
-		$fastature = trim($_POST['fastature']);
-                $fastatureunits = trim($_POST['fastatureunits']);
-	}
+        else {
+            $fastature_test = trim($_POST['fastature']);
+            if(!is_numeric($fastature_test)) {
+                $errors[] = "Forensic Anthropology estimated stature must be numeric.";
+            } else {
+
+                    $fastature = trim($_POST['fastature']);
+                    $fastatureunits = trim($_POST['fastatureunits']);
+            }
+    }
 
 
   // Check for a id sex
@@ -146,13 +166,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   //check for a id age 
 	if (empty($_POST['idage'])) {
-		$idage=NULL;
-        $idageunits=NULL;
+            $idage=NULL;
+            $idageunits=NULL;
         
 	} 
     else {
+            $idage_test = trim($_POST['idage']);
+            if(!is_numeric($idage_test)) {
+                $errors[] = "Identified age must be numeric.";
+            } else {
 		$idage = trim($_POST['idage']);
                 $idageunits = trim($_POST['idageunits']);
+            }
 	}
 
 
@@ -163,8 +188,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $idstatureunits=NULL;
 	} 
     else {
+        $idstature_test = trim($_POST['idstature']);
+            if(!is_numeric($idstature_test)) {
+                $errors[] = "Identified stature must be numeric.";
+            } else {
+    
 		$idstature = trim($_POST['idstature']);
                 $idstatureunits = trim($_POST['idstatureunits']);
+            }
 	}
    
    
@@ -483,7 +514,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <label class="label" for="casenumber">Case Number*</label><input id="casenumber" type="text" name="casenumber" size="30" maxlength="30" value="<?php if (isset($_POST['casenumber'])) echo $_POST['casenumber']; ?>"/>
   <br />
     
-  <label class="label" for="caseagency">Case Agency</label><input id="caseagency" type="text" name="caseagency" size="30" maxlength="30" value="<?php if (isset($_POST['caseagency'])) echo $_POST['caseagency']; ?>"/>
+  <label class="label" for="caseagency">Case Agency</label><input id="caseagency" type="text" name="caseagency" size="30"  value="<?php if (isset($_POST['caseagency'])) echo $_POST['caseagency']; ?>"/>
   <br />
     
  
@@ -531,8 +562,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     <br/><label class="label" for="fastature">Stature</label><input id="fastature" type="text" name="fastature" size="6" maxlength="8" value="<?php if (isset($_POST['fastature'])) echo $_POST['fastature']; ?>"/>  &nbsp; to &nbsp;
     
-    <input id="fastature2" type="text" name="fastature2" size="6" maxlength="8" value="<?php if (isset($_POST['fastature2'])) echo $_POST['fastature2']; ?>"/>  <select name="fastatureunits" disabled>
+    <input id="fastature2" type="text" name="fastature2" size="6" maxlength="8" value="<?php if (isset($_POST['fastature2'])) echo $_POST['fastature2']; ?>"/>  <select name="fastatureunits">
       <option value="in">inches</option>
+      <option value="cm">cm</option>
       </select>
     
     
@@ -579,8 +611,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       
       <br/><label class="label" for="idstature">Stature</label><input id="idstature" type="text" name="idstature" size="6" maxlength="8" value="<?php if (isset($_POST['idstature'])) echo $_POST['idstature']; ?>" />
       
-      <select name="idstatureunits" disabled>
+      <select name="idstatureunits">
         <option value="in">inches</option>
+        <option value="cm">cm</option>
         </select>
       
       <br />

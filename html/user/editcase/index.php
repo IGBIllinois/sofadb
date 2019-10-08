@@ -237,8 +237,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $faageunits2=NULL;
 	} 
         else {
-            $faage2 = trim($_POST['faage2']);
-            $faageunits2 = trim($_POST['faageunits2']);
+            $faage2_test = trim($_POST['faage2']);
+            if(!is_numeric($faage2_test)) {
+                $errors[] = "Forensic Anthropology estimated age must be numeric.";
+            } else {
+                $faage2 = trim($_POST['faage2']);
+                $faageunits2 = trim($_POST['faageunits2']);
+            }
         }
     
     
@@ -250,8 +255,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $faageunits2=NULL;
 	} 
     else {
-            $faage = trim($_POST['faage']);
-            $faageunits = trim($_POST['faageunits']);
+        $faage_test = trim($_POST['faage']);
+            if(!is_numeric($faage_test)) {
+                $errors[] = "Forensic Anthropology estimated age must be numeric.";
+            } else {
+                $faage = trim($_POST['faage']);
+                $faageunits = trim($_POST['faageunits']);
+            }
 	}
 
 	
@@ -273,13 +283,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $fastatureunits=NULL;
 	} 
     else {
-            $fastature = trim($_POST['fastature']);
-            $fastature2 = trim($_POST['fastature2']);
-            
-            if(isset($_POST['fastatureunits'])) {
-                $fastatureunits = trim($_POST['fastatureunits']);
+        $fastature_test = trim($_POST['fastature']);
+        $fastature2_test = trim($_POST['fastature2']);
+            if(!is_numeric($fastature_test) || !is_numeric($fastature2_test)) {
+                $errors[] = "Forensic Anthropology estimated stature must be numeric.";
             } else {
-                $fastatureunits = "inches";
+                $fastature = trim($_POST['fastature']);
+                $fastature2 = trim($_POST['fastature2']);
+
+                if(isset($_POST['fastatureunits'])) {
+                    $fastatureunits = trim($_POST['fastatureunits']);
+                } else {
+                    $fastatureunits = "inches";
+                }
             }
 	}
 
@@ -304,8 +320,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
 	} 
     else {
+        $idage_test = trim($_POST['idage']);
+            if(!is_numeric($idage_test)) {
+                $errors[] = "Identified age must be numeric.";
+            } else {
 		$idage = trim($_POST['idage']);
-        $idageunits = trim($_POST['idageunits']);
+                $idageunits = trim($_POST['idageunits']);
+            }
 	}
 
 
@@ -316,12 +337,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $idstatureunits=NULL;
 	} 
     else {
+        $idstature_test = trim($_POST['idstature']);
+            if(!is_numeric($idstature)) {
+                $errors[] = "Identified stature must be numeric.";
+            } else {
+            
 		$idstature = trim($_POST['idstature']);
-          if(isset($_POST['idstatureunits'])) {
+            if(isset($_POST['idstatureunits'])) {
                 $idstatureunits = trim($_POST['idstatureunits']);
                 } else {
                     $idstatureunits = "inches";
                 }
+            }
 	}
    
    
@@ -551,20 +578,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     echo($result["MESSAGE"]);
                 }
 
-                 
-                 /*
-                unset($_SESSION['loadedmethods']);
-       		unset($_SESSION['num_methods']);
-                unset($_SESSION['methodtype']);
-                unset($_SESSION['methodname']);
-                unset($_SESSION['methodfeature']);
-		unset($_SESSION['methodphase']);
-       		unset($_SESSION['phasechosen']);
-		unset($_SESSION['featurechosen']);
-                unset($_SESSION['methoddata']);
-                */
-        		 
-       
        		unset($_SESSION['caseid']); 
                 header ("location: ../index.php"); exit();
 
@@ -687,8 +700,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     <br/><label class="label" for="fastature">Stature</label><input id="fastature" type="text" name="fastature" size="6" maxlength="8" value="<?php echo $casedata->get_fastature() ?>"/>  &nbsp; to &nbsp;
     
-    <input id="fastature2" type="text" name="fastature2" size="6" maxlength="8" value="<?php echo $casedata->get_fastature2(); ?>"/>  <select name="fastatureunits" disabled>
-      <option value="in">inches</option>
+    <input id="fastature2" type="text" name="fastature2" size="6" maxlength="8" value="<?php echo $casedata->get_fastature2(); ?>"/>  <select name="fastatureunits">
+        <option value="in" <?php if ($casedata->get_fastatureunits() == 'in') echo ' selected="selected"'; ?>>inches</option>
+      <option value="cm" <?php if ($casedata->get_fastatureunits() == 'cm') echo ' selected="selected"'; ?>>cm</option>
       </select>
     
     
@@ -736,8 +750,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       
       <br/><label class="label" for="idstature">Stature</label><input id="idstature" type="text" name="idstature" size="6" maxlength="8" value="<?php echo $casedata->get_idstature(); ?>" />
       
-      <select name="idstatureunits" disabled>
-        <option value="in">inches</option>
+      <select name="idstatureunits" >
+          <option value="in" <?php if ($casedata->get_idstatureunits() == 'in') echo ' selected="selected"'; ?>>inches</option>
+        <option value="cm" <?php if ($casedata->get_idstatureunits() == 'cm') echo ' selected="selected"'; ?>>cm</option>
         </select>
       
       <br />
