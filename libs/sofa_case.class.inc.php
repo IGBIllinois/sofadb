@@ -414,7 +414,7 @@ public function submit_case($submitstatus) {
      * the methods used in this case
      */
     public function get_case_methods() {
-        $query = "SELECT * from tier2data where caseid = :id";
+        $query = "SELECT * from tier2data where caseid = :id order by id ASC";
         $params = array("id"=>$this->id);
         $result = $this->db->get_query_result($query, $params);
         $tier2s = array();
@@ -647,7 +647,7 @@ public function submit_case($submitstatus) {
     public function add_tier3($methodid, $od1, $od2, $tier2id, $value=NULL, $interaction=NULL, $references = null) {
         $tmp_method_info = method_info::get_one_method_info($this->db, $methodid, $od1, $od2);
         if($tmp_method_info == null) {
-            echo("method info not found: Not adding tier3<BR>");
+
             return array("RESULT"=>FALSE,  
                         "MESSAGE"=>"method info not found: Not adding tier3<BR>");
         }
