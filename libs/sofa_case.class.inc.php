@@ -765,6 +765,33 @@ public function submit_case($submitstatus) {
             
     }
     
+    public function add_tier3_v2($tier2id, $method_infos_option_id, $value=null) {
+        $fields = "(tier2id, method_infos_option_id ";
+        $values = "(:tier2id, :method_infos_option_id ";
+        $params = array("tier2id"=>$tier2id, "method_infos_option_id"=>$method_infos_option_id);
+
+        if($value != null) {
+            $fields .= ", value ";
+            $values .= ", :value ";
+            $params['value'] = $value;
+        }
+        $fields .= ")";
+        $values .= ")";
+        
+        $query = "INSERT INTO tier3data $fields VALUES $values";
+        echo("query = $query<BR>");
+        print_r($params);
+        
+        $result = $this->db->get_insert_result($query, $params);
+        if($result > 0) {
+            return array("RESULT"=>TRUE,
+                        "MESSAGE"=>"Tier 3 data added successfully.",
+                        "id"=>$result);
+        } else {
+            return array("RESULT"=>FALSE,
+                        "MESSAGE"=>"Tier 3 data not added successfully.");
+        }
+    }
     /** Adds a record to the tier3data table given a methodinfoid id instead
      * of output_data values
      * 
@@ -950,10 +977,18 @@ public function submit_case($submitstatus) {
     public function delete_case() {
         $memberid = $this->memberid;
         $deleteid = $this->id;
-        $q="UPDATE cases SET submissionstatus=-1 WHERE memberid=:memberid AND id=:deleteid";
-        $params = array("memberid"=>$memberid,
+        //$q="UPDATE cases SET submissionstatus=-1 WHERE memberid=:memberid AND id=:deleteid";
+        $delete_case_query = "DELETE FROM cases where memberid=:memberid AND id=:deleteid";
+        $delete_case_params = array("memberid"=>$memberid,
                         "deleteid"=>$deleteid);
-        $result = $this->db->get_update_result($q, $params);
+        
+        // delete tier2 data
+        $tier2_data = $this->get_case_methods();
+        foreach($tier2_data as $t2) {
+            $this->remove_method($t2->get_id());
+        }
+
+        $result = $this->db->get_update_result($delete_case_query, $delete_case_params);
         if(count($result) > 0) {
             return array("RESULT"=>TRUE,
                         "MESSAGE"=>"Case deleted successfully.");

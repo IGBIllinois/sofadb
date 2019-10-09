@@ -833,7 +833,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                    Method Name
                             </th>
                             <th>
-                                   Method Data
+                                   Method Outcome
                             </th>
                             </p>
                     </tr>

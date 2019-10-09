@@ -156,7 +156,7 @@ foreach($curr_cases as $case) {
 	echo '<td><a href="./editcase/index.php?id=' . $case->get_id()  . '">Edit</a></td>';
 
         echo '<td>
-	<form action="index.php" method="post" id="deletedata" onsubmit="return confirm(\'Do you really want to delete this case?\')">
+	<form action="index.php" method="post" id="deletedata" onsubmit="return confirm(\'This will permanently delete this case and all data associated with it.\nDo you really want to delete this case?\')">
 	<input name="delid" type="hidden" value="'.$case->get_id().'"/>
 	<input name="delsubmit" type="submit" value="Delete" /> </form>
 	</td>';
