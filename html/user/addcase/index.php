@@ -425,46 +425,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $case_id = $result['id'];
 
                 $case =  new sofa_case($db, $case_id);
-                
-        	for ($i=1;$i<=$numcasemethods;$i++){
-                
-                $methodidsave=$_SESSION['methodname'][$i-1];
-               
-                $methodtypesave=$_SESSION['methodtype'][$i-1];
-		
-                if($_SESSION['featurechosen'][$i-1]==1){
-                    $methodfeatsave=$_SESSION['methodfeature'][$i-1];
-                    
-                } else {
-                    $methodfeatsave=1;
-                }
-				
-                if($_SESSION['phasechosen'][$i-1]==1){
-                    $methodphasesave=$_SESSION['methodphase'][$i-1];
-                    
-                } else {
-                    $methodphasesave=127;
-                }
-	
 
-		$case->add_case_method($methodidsave, $methodtypesave, $methodfeatsave, $methodphasesave);		
-                
-                 
-                 
-                 
-                 }
-                 
-
-                 
-                 
-       
-       			 unset($_SESSION['num_methods']);
-                unset($_SESSION['methodtype']);
-                 unset($_SESSION['methodname']);
-                 unset($_SESSION['methodfeature']);
-				  unset($_SESSION['methodphase']);
-				  unset($_SESSION['phasechosen']);
-				  unset($_SESSION['featurechosen']);
                header ("location: ../editcase/index.php?id=$case_id&successAddCase=$case_id#tabs-2"); exit();
                  
 			// Include the footer and stop the script

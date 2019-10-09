@@ -13,8 +13,6 @@ class tier2data {
     private $caseid;
     private $methodtype;
     private $methodid;
-    private $featureid;
-    private $phaseid;
     private $estimated_outcome_1;
     private $estimated_outcome_2;
     private $estimated_outcome_units;
@@ -49,14 +47,6 @@ class tier2data {
     
     public function get_methodid() {
         return $this->methodid;
-    }
-    
-    public function get_featureid() {
-        return $this->featureid;
-    }
-    
-    public function get_phaseid() {
-        return $this->phaseid;
     }
     
     public function get_estimated_outcome_1() {
@@ -244,8 +234,6 @@ class tier2data {
         $this->caseid = $data['caseid'];
         $this->methodtype = $data['methodtype'];
         $this->methodid = $data['methodid'];
-        $this->featureid = $data['featureid'];
-        $this->phaseid = $data['phaseid'];
         $this->estimated_outcome_1 = $data['estimated_outcome_1'];
         $this->estimated_outcome_2 = $data['estimated_outcome_2'];
         $this->estimated_outcome_units = $data['estimated_outcome_units'];

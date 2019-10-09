@@ -105,9 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
         $result = $this_case->add_case_method(
                         $method_id, 
-                        $method->get_method_type_num(), 
-                        0, 
-                        127, 
+                        $method->get_method_type_num(),
                         $estimated_outcome_1, 
                         $estimated_outcome_2,
                         $estimated_outcome_units);
@@ -143,8 +141,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $result = $this_case->add_case_method(
                         $method_id, 
                         $method->get_method_type_num(), 
-                        0, 
-                        127, 
                         $estimated_outcome_1, 
                         $estimated_outcome_2,
                         $estimated_outcome_units);
@@ -654,7 +650,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <label class="label" for="casenumber">Case Number</label><input id="casenumber" type="text" name="casenumber" size="30" maxlength="30" value="<?php echo $casedata->get_casenumber(); ?>"/>
   <br />
     
-  <label class="label" for="caseagency">Case Agency</label><input id="caseagency" type="text" name="caseagency" size="30" maxlength="30" value="<?php echo $casedata->get_caseagency(); ?>"/>
+  <label class="label" for="caseagency">Case Agency</label><input id="caseagency" type="text" name="caseagency" size="30" value="<?php echo $casedata->get_caseagency(); ?>"/>
       
   <br/>
     <span name="savebutton" class="bigsavebutton">

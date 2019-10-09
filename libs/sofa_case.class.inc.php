@@ -249,15 +249,13 @@ class sofa_case {
      * @param int $phaseid Phase id of the method to add
      * @return type ID of the newly created case-method
      */
-    public function add_case_method($methodid, $methodtype, $featureid, $phaseid, $estimated_outcome_1 = null, $estimated_outcome_2=null, $estimated_outcome_units = null) {
+    public function add_case_method($methodid, $methodtype, $estimated_outcome_1 = null, $estimated_outcome_2=null, $estimated_outcome_units = null) {
         $q="INSERT INTO tier2data "
                 . "("
                 . "memberid,"
                 . "caseid,"
                 . "methodtype,"
                 . "methodid,"
-                . "featureid,"
-                . "phaseid, "
                 . "estimated_outcome_1,"
                 . "estimated_outcome_2,"
                 . "estimated_outcome_units)"
@@ -266,8 +264,6 @@ class sofa_case {
                 . ":caseid,"
                 . ":methodtype,"
                 . ":methodid,"
-                . ":featureid,"
-                . ":phaseid,"
                 . ":estimated_outcome_1,"
                 . ":estimated_outcome_2,"
                 . ":estimated_outcome_units)";
@@ -277,8 +273,6 @@ class sofa_case {
                         "caseid"=>$this->id,
                         "methodid"=>$methodid,
                         "methodtype"=>$methodtype,
-                        "featureid"=>$featureid,
-                        "phaseid"=>$phaseid,
                         "estimated_outcome_1"=>$estimated_outcome_1,
                         "estimated_outcome_2"=>$estimated_outcome_2,
                         "estimated_outcome_units"=>$estimated_outcome_units);
