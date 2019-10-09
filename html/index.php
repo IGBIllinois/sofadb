@@ -174,13 +174,16 @@ exit(); // Cancels the rest of the script.
 
 
 			<div id="links_left">
+                            
+			<a href="contact/resetPasswordRequest.php">Forgot your Password?</a> |
 
-			<a href="contact/resetPasswordRequest.php">Forgot your Password?</a>
+                        <a href="contact/index.php">Contact Us</a> |
                         
-			</div>
-    <div id ="links_left"> <a href="contact/index.php">Contact Us</a></div>
-			<div id="links_right"><a href="register/index.php">Not a Member Yet?</a></div>
+                        <a href="faq.php">FAQ</a> |
+                        
+			<a href="register/index.php">Not a Member Yet?</a></div>
 
+                       
 		</div>
 
 		<div id="wrapperbottom"></div>
