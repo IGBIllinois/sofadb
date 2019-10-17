@@ -7,12 +7,15 @@ if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
     exit;
 }
 
-
+/*
 if(file_exists('../../../conf/settings.inc.php')) {
 require_once('../../../conf/settings.inc.php');
 } else if('../../conf/settings.inc.php') {
     require_once('../../conf/settings.inc.php');
 }
+ * 
+ */
+require_once(__DIR__ . "\..\..\conf\settings.inc.php");
 require_once('main.inc.php');
 require_once('session_admin.php');
 

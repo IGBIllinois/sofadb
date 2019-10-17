@@ -6,12 +6,15 @@ if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
     header('Location: ' . $location);
     exit;
 }
-
+/*
 if(file_exists('../../../conf/settings.inc.php')) {
 require_once('../../../conf/settings.inc.php');
 } else if('../../conf/settings.inc.php') {
     require_once('../../conf/settings.inc.php');
 }
+ * 
+ */
+require_once(__DIR__ . "\..\..\conf\settings.inc.php");
 if(isset($addcase) && ($addcase == 1)) {
     require_once('session_addcase.php');
 } else {
@@ -30,8 +33,8 @@ require_once('main.inc.php');
 <!-- CSS -->
  <link href="<?php echo(ROOT_URL) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
  <link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery.multiselect.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery-ui.css" />
 
+<link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/vendor/components/jquery-ui/themes/base/jquery-ui.css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 
@@ -39,8 +42,9 @@ require_once('main.inc.php');
   <script type='text/javascript' src='<?php echo(ROOT_URL) ?>/js/gen_validatorv4.js'></script>
    <script type="text/javascript" src="<?php echo(ROOT_URL) ?>/js/addrow.js"></script>
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="<?php echo(ROOT_URL) ?>/vendor/components/jquery/jquery.js"></script>
+<script type="text/javascript" src="<?php echo(ROOT_URL) ?>/vendor/components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+
 
 <script type="text/javascript" src="<?php echo(ROOT_URL) ?>/js/jquery.multiselect.js"></script>
 
