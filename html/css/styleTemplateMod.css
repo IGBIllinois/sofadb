@@ -280,8 +280,7 @@ body {
 }
 
 .scroll {
-	overflow: -moz-scrollbars-vertical;
-	overflow: -moz-scrollbars-horizontal;
+
 	overflow-x: scroll;
 	overflow-y: scroll;
 	width: 100%;
@@ -378,10 +377,10 @@ body {
 /*@import url(http://pablogarciafernandez.com/css/reset.css);*/
 
 /* Typography
-------------------------------------- */
+------------------------------------- 
 //@charset "UTF-8";
 //@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
-
+*/
 /*body {
 	  font-family: 'Open Sans', sans-serif;
 	  font-size: 1em;
@@ -524,7 +523,7 @@ a:hover { text-decoration: none; }
 	    transition-delay: 0s;
 	    transition-duration: 0.4s;
 	    transition-property: all;
-	    transition-timing-function: line;
+	    transition-timing-function: linear;
     
     box-shadow: 0 0;
     transform: translate3d(0px, 0px, 0);
@@ -534,7 +533,7 @@ a:hover { text-decoration: none; }
 	    transition-delay: 0s;
 	    transition-duration: 0.2s;
 	    transition-property: all;
-	    transition-timing-function: line;
+	    transition-timing-function: linear;
     
     box-shadow: #303030 -1px 1px, #333 -2px 2px, #2E2E2E -3px 3px, #2B2B2B -4px 4px, #292929 -5px 5px, #262626 -6px 6px;
     transform: translate3d(6px, 0px, 0);
@@ -690,10 +689,10 @@ a:hover { text-decoration: none; }
     white-space:nowrap;
 }
 
-// Checkbox dropdown
+/* Checkbox dropdown */
 
 .multiselect {
-  //width: 100%;
+  /*width: 100%;*/
 }
 
 .selectBox {
@@ -701,7 +700,7 @@ a:hover { text-decoration: none; }
 }
 
 .selectBox select {
-  //width: 100%;
+  /*width: 100%;*/
 }
 
 .overSelect {
@@ -714,7 +713,7 @@ a:hover { text-decoration: none; }
 
 .checkboxes {
   display: none;
-  //border: 1px #dadada solid;
+  /*border: 1px #dadada solid;*/
   position: absolute;
   border-style: solid;
   border-width:thin;
@@ -736,5 +735,5 @@ a:hover { text-decoration: none; }
     margin-left:15px;  
 } 
 
-// end checkbox dropdown
+/* end checkbox dropdown */
 

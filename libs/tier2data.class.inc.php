@@ -183,6 +183,43 @@ class tier2data {
         return $output;
     }
     
+        /** Formats Tier3 data for display in the table, in the form:
+     *  ($output_data_1, $value), for each $output_data_1 for this Tier2 data.
+     *  $value may either be an $output_data_2, a value within a range, or a 
+     *  user-specified value, depending on the user_interaction type.
+     * 
+     * @param int tier3id ID of a tier3 object to format. If null, get all tier3 data for this tier2 object
+     * @param boolean for_web True if outputting to web (include <BR> tags). Defaults to true
+     * 
+     * @return string A string representing the Tier3 data for this Tier2 object
+     */
+    public function format_tier3data_new($tier3id = null, $for_web=true) {
+        if($tier3id == null)  {
+            $info = $this->get_tier3data();
+        } else{
+            $info = array(new tier3data($this->db, $tier3id)); 
+        }
+
+        $output = "";
+        foreach($info as $tier_info) {
+            
+            $method = new method($this->db, $this->get_methodid());
+            $mi_option_id = $tier_info->get_method_info_option_id();
+
+            $option = new method_info_option($this->db, $mi_option_id);
+
+            $method_infos = new method_infos($this->db, $option->get_method_infos_id());
+            $output .= $method_infos->get_name() . ": " .$option->get_value() ." ". $tier_info->get_value();
+            if($for_web) {
+                $output .= "<BR>";
+            }
+
+
+        }
+        
+        return $output;
+    }
+    
     public function update_estimated_outcomes($estimated_outcome_1, $estimated_outcome_2 = null, $units=null) {
         
         $tier2id = $this->id;

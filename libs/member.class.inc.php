@@ -69,7 +69,7 @@ public function get_state() { return $this->state; }
 public function get_zip() { return $this->zip; }
 public function get_phone() { return $this->phone; }
 public function get_casessubmitted() { return $this->casessubmitted; }
-public function get_totalcases() { return $this->totalcases; }
+//public function get_totalcases() { return $this->totalcases; }
 public function get_dateregistered() { return $this->dateregistered; }
 public function get_lastlogin() { return $this->lastlogin; }
 public function get_permissionstatus() { return $this->permissionstatus; }
@@ -78,6 +78,9 @@ public function get_sponsor() { return $this->sponsor; }
 public function get_sponsor_email() { return $this->sponsor_email; }
 public function get_sponsor_affiliation() { return $this->sponsor_affiliation; }
 
+public function get_totalcases() {
+    return $this->get_num_active_cases();
+}
 /** Sets this user's permission status
  * 
  * @param int $status The users new status 

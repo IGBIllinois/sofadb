@@ -153,7 +153,7 @@ foreach($curr_cases as $case) {
 	echo '<tr>
 	<td><a href="./viewcase.php?id=' . $case->get_id() . '">View</a></td>';
 	
-	echo '<td><a href="./editcase/index.php?id=' . $case->get_id()  . '">Edit</a></td>';
+	echo '<td><a href="./editcase/index.php?id=' . $case->get_id()  . '">Edit</a><BR>(<a href="./editcase/index_v2.php?id=' . $case->get_id()  . '">Edit_v2</a>)</td>';
 
         echo '<td>
 	<form action="index.php" method="post" id="deletedata" onsubmit="return confirm(\'This will permanently delete this case and all data associated with it.\nDo you really want to delete this case?\')">
