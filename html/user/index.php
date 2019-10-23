@@ -131,7 +131,6 @@ echo '</p>';
 echo '<div class="scroll"><table id="hortable" summary="List of cases">
     <thead>
     	<tr>
-		    <th scope="col">View</th>
 			<th scope="col">Edit</th>
                         <th scope="col">Delete</th>
 			<th scope="col">Submit</th>
@@ -150,10 +149,10 @@ echo '<div class="scroll"><table id="hortable" summary="List of cases">
 
 // Fetch and print all the records:
 foreach($curr_cases as $case) {
-	echo '<tr>
-	<td><a href="./viewcase.php?id=' . $case->get_id() . '">View</a></td>';
+	echo '<tr>';
 	
-	echo '<td><a href="./editcase/index.php?id=' . $case->get_id()  . '">Edit</a><BR>(<a href="./editcase/index_v2.php?id=' . $case->get_id()  . '">Edit_v2</a>)</td>';
+	echo '<td><a href="./editcase/index.php?id=' . $case->get_id()  . '">Edit</a></td>';
+        //<BR>(<a href="./editcase/index_v2.php?id=' . $case->get_id()  . '">Edit_v2</a>)</td>';
 
         echo '<td>
 	<form action="index.php" method="post" id="deletedata" onsubmit="return confirm(\'This will permanently delete this case and all data associated with it.\nDo you really want to delete this case?\')">
