@@ -53,6 +53,14 @@ class sofa_case {
     private $idancaddtext;
     private $nummethods;
     
+    // prior known data
+    private $known_none;
+    private $known_sex;
+    private $known_age;
+    private $known_ancestry;
+    private $known_stature;
+    private $known_unable_to_determine;
+    
     // getters
     public function get_id() { return $this->id; }
     public function get_casename() { return $this->casename; }
@@ -98,6 +106,13 @@ class sofa_case {
     public function get_idancaddtext() { return $this->idancaddtext; }
     public function get_nummethods() { return $this->nummethods; }
 
+    public function get_known_none() { return $this->known_none; }
+    public function get_known_sex() { return $this->known_sex; }
+    public function get_known_age() { return $this->known_age; }
+    public function get_known_ancestry() { return $this->known_ancestry; }
+    public function get_known_stature() { return $this->known_stature; }
+    public function get_known_unable_to_determine() { return $this->known_unable_to_determine; }
+    
     public function __construct($db, $id = 0) {
 
 
@@ -164,7 +179,15 @@ class sofa_case {
                 . "idraceot,"
                 . "idraceottext,"
                 . "idancaddtext,"
-                . "nummethods) "
+                
+                . "known_none,"
+                . "known_sex,"
+                . "known_age,"
+                . "known_ancestry,"
+                . "known_stature,"
+                . "known_unable_to_determine"
+                
+                .") "
                 
                 . "VALUES ("
                     . ":casename,"
@@ -212,7 +235,16 @@ class sofa_case {
                     . ":idraceot,"
                     . ":idraceottext,"
                     . ":idancaddtext,"
-                    . ":numcasemethods)";	
+                
+                    . ":known_none,"
+                    . ":known_sex,"
+                    . ":known_age,"
+                    . ":known_ancestry,"
+                    . ":known_stature,"
+                    . ":known_unable_to_determine"
+                    
+
+                . ")";	
         
 
                 $caseid = $db->get_insert_result($q, $data);
@@ -226,10 +258,10 @@ class sofa_case {
                         );
                 }
 
-                $q = "INSERT INTO membercasetable (memberid,caseid) VALUES (:memberid,:caseid)";
-                $d = array("memberid"=>$data['memberid'], "caseid"=>$caseid);
+                //$q = "INSERT INTO membercasetable (memberid,caseid) VALUES (:memberid,:caseid)";
+                //$d = array("memberid"=>$data['memberid'], "caseid"=>$caseid);
 
-                $result2 = $db->get_insert_result($q, $d);
+                //$result2 = $db->get_insert_result($q, $d);
                 
 
                 return array("RESULT"=>TRUE,
@@ -355,16 +387,17 @@ public function submit_case($submitstatus) {
                 . "caseyear=:caseyear,"
                 . "casenumber=:casenum,"
                 . "caseagency=:caseag,"
-                . "fasex=:fasex,"
                 
+                . "fasex=:fasex,"
                 . "faage=:faage,"
                 . "faage2=:faage2,"
                 . "faageunits=:faageunits, "
                 . "faageunits2=:faageunits2,"
-                . "fastature=:fastature,"
                 
+                . "fastature=:fastature,"
                 . "fastature2=:fastature2,"
                 . "fastatureunits=:fastatureunits,"
+                
                 . "idsex=:idsex,"
                 . "idage=:idage,"
                 . "idageunits=:idageunits,"
@@ -388,13 +421,21 @@ public function submit_case($submitstatus) {
                 . "idracewh=:idracewh,"
                 . "idracehi=:idracehi,"
                 . "idracena=:idracena,"
-                . "idraceot=:idraceot,"
                 
+                . "idraceot=:idraceot,"
                 . "idraceottext=:idraceottext,"
                 . "idancaddtext=:idancaddtext,"
-                . "nummethods=:numcasemethods "
+
+                . "known_none=:known_none,"
+                . "known_sex=:known_sex,"
+                . "known_age=:known_age,"
+                . "known_ancestry=:known_ancestry,"
+                . "known_stature=:known_stature,"
+                . "known_unable_to_determine=:known_unable_to_determine"
+                
                 . " WHERE id=:caseeditid";
-        
+
+
         $this->db->get_update_result($q, $data);
         return array("RESULT"=>TRUE,
                     "MESSAGE"=>"Case ".$this->get_casename() . " edited successfully.");
@@ -408,7 +449,7 @@ public function submit_case($submitstatus) {
      * the methods used in this case
      */
     public function get_case_methods() {
-        $query = "SELECT * from tier2data where caseid = :id order by id ASC";
+        $query = "SELECT * from tier2data where caseid = :id order by id DESC";
         $params = array("id"=>$this->id);
         $result = $this->db->get_query_result($query, $params);
         $tier2s = array();
@@ -638,7 +679,7 @@ public function submit_case($submitstatus) {
      * where "RESULT" is true if successful, else false, and "MESSAGE" is an
      * output message
      */
-    public function add_tier3($methodid, $od1, $od2, $tier2id, $value=NULL, $interaction=NULL, $references = null) {
+    public function add_tier3_orig($methodid, $od1, $od2, $tier2id, $value=NULL, $interaction=NULL, $references = null) {
         $tmp_method_info = method_info::get_one_method_info($this->db, $methodid, $od1, $od2);
         if($tmp_method_info == null) {
 
@@ -765,10 +806,10 @@ public function submit_case($submitstatus) {
             
     }
     
-    public function add_tier3_v2($tier2id, $method_infos_option_id, $value=null) {
-        $fields = "(tier2id, method_infos_option_id ";
-        $values = "(:tier2id, :method_infos_option_id ";
-        $params = array("tier2id"=>$tier2id, "method_infos_option_id"=>$method_infos_option_id);
+    public function add_tier3($tier2id, $method_info_option_id, $value=null) {
+        $fields = "(tier2id, method_info_option_id ";
+        $values = "(:tier2id, :method_info_option_id ";
+        $params = array("tier2id"=>$tier2id, "method_info_option_id"=>$method_info_option_id);
 
         if($value != null) {
             $fields .= ", value ";
@@ -779,9 +820,10 @@ public function submit_case($submitstatus) {
         $values .= ")";
         
         $query = "INSERT INTO tier3data $fields VALUES $values";
+        /*
         echo("query = $query<BR>");
         print_r($params);
-        
+        */
         $result = $this->db->get_insert_result($query, $params);
         if($result > 0) {
             return array("RESULT"=>TRUE,
@@ -997,6 +1039,8 @@ public function submit_case($submitstatus) {
                         "MESSAGE"=>"There was an error deleting the case. Please check your information and try again.");
         }
     }
+    
+
 
 
     // Static functions
@@ -1056,6 +1100,29 @@ public function submit_case($submitstatus) {
 
                     $result = $db->get_query_result($q, $params);
                     if(count($result) > 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+    }
+    
+    /** Determines if a case exists, without a case id. Used when adding new cases
+     * 
+     * 
+     * @param db $db The database object
+     * @param int $memberid ID of the member whose case this is
+     * @param string $casename Case name to search for
+     * @param string $casenumber Case number
+     * @return boolean
+     */
+    public static function new_case_exists($db, $memberid, $casename, $casenumber) {
+        $q = "SELECT id FROM cases WHERE memberid=:memberid AND casename=:casename AND casenumber=:casenum";
+                $params = array("memberid"=>$memberid,
+                                "casename"=>$casename,
+                                "casenum"=>$casenum);
+                
+                $result = $db->get_query_result($q, $params);
+                if(count($result) > 0) {
                         return true;
                     } else {
                         return false;
@@ -1512,6 +1579,13 @@ public function submit_case($submitstatus) {
         $this->datemodified = $casedata['datemodified'];
         $this->submissionstatus = $casedata['submissionstatus'];
         $this->datesubmitted = $casedata['datesubmitted'];
+        
+        $this->known_none = $casedata['known_none'];
+        $this->known_sex = $casedata['known_sex'];
+        $this->known_age = $casedata['known_age'];
+        $this->known_ancestry = $casedata['known_ancestry'];
+        $this->known_stature = $casedata['known_stature'];
+        $this->known_unable_to_determine = $casedata['known_unable_to_determine'];
         }
     
 }

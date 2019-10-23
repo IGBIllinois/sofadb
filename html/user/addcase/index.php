@@ -326,7 +326,56 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $idOt=$_POST['race_other'];
 	}
 	else{$idOt=0;}
-  
+        
+        // prior known data
+    if(isset($_POST['known_none'])) {
+      $known_none=$_POST['known_none'];
+    }
+    else{
+        $known_none=0;
+    }
+
+    if(isset($_POST['known_none'])) {
+      $known_none=$_POST['known_none'];
+    }
+    else{
+        $known_none=0;
+    }
+    
+    if(isset($_POST['known_sex'])) {
+      $known_sex=$_POST['known_sex'];
+    }
+    else{
+        $known_sex=0;
+    }
+    
+    if(isset($_POST['known_age'])) {
+      $known_age=$_POST['known_age'];
+    }
+    else{
+        $known_age=0;
+    }
+    
+    if(isset($_POST['known_ancestry'])) {
+      $known_ancestry=$_POST['known_ancestry'];
+    }
+    else{
+        $known_ancestry=0;
+    }
+    
+    if(isset($_POST['known_stature'])) {
+      $known_stature=$_POST['known_stature'];
+    }
+    else{
+        $known_stature=0;
+    }
+              
+    if(isset($_POST['known_unable_to_determine'])) {
+      $known_unable_to_determine=$_POST['known_unable_to_determine'];
+    }
+    else{
+        $known_unable_to_determine=0;
+    }
     
     if (empty($_POST['idrace_othertext'])) {
 		$idothertext=NULL;
@@ -341,15 +390,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	{$errors[] = 'You must Check the Other box and enter text.';}
     
     
-    //Now we need to add methods
-    if (isset($_SESSION['num_methods']))
-    {
-    $numcasemethods=$_SESSION['num_methods'];
-    
-    
-    }
-    else{ $numcasemethods=0;}
-    
     
 		if (empty($errors)) 
         { // If there were no errors
@@ -363,6 +403,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 "casenum"=>$casenum);
                 
                 $result = $db->get_query_result($q, $params);
+                
+
 			
             if (count($result) == 0)
             {//The case has not been registered already 
@@ -411,7 +453,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     "idraceot"=>$idOt,
                     "idraceottext"=>$idothertext,
                     "idancaddtext"=>$idancaddtext,
-                    "numcasemethods"=>$numcasemethods);	
+                    
+                    "known_none"=>$known_none,
+                    "known_age"=>$known_age,
+                    "known_sex"=>$known_sex,
+                    "known_ancestry"=>$known_ancestry,
+                    "known_stature"=>$known_stature,
+                    "known_unable_to_determine"=>$known_unable_to_determine
+                
+                        
+                        
+                        );	
 
                     
                 
@@ -531,18 +583,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     </fieldset>
     
+      <!-- Identified information -->
     <fieldset class="caseinfobox"><legend class="boldlegend">Biological Profile: Actual Identified Information</legend>
       
       <label class="label" for="idsex">Sex</label>
-      <!--
-      <select name="idsex">
-        <option value="">- Select -</option>
-        <option value="Female"<?php if (isset($_POST['idsex']) AND ($_POST['idsex'] == 'Female')) echo ' selected="selected"'; ?>>Female</option>
-        <option value="Male"<?php if (isset($_POST['idsex']) AND ($_POST['idsex'] == 'Male')) echo ' selected="selected"'; ?>>Male</option>
-        </select>
-      Other:<input id="idsexother" type="text" 
-          <?php if (isset($_POST['idsex']) AND ($_POST['idsex'] != 'Male') AND ($_POST['idsex'] != 'Female')) { echo " value='".$_POST['idsex']."' ";}?>/>
-      -->
+
         <input type="radio" name="idsex" value="Female" <?php if (isset($_POST['idsex']) AND ($_POST['idsex'] == 'Female')) echo ' checked'; ?>> Male
         <input type="radio" name="idsex" value="Male" <?php if (isset($_POST['idsex']) AND ($_POST['idsex'] == 'Male')) echo ' checked'; ?>> Female
         <input type="radio" name="idsex" value="Other" <?php if (isset($_POST['idsex']) AND ($_POST['idsex'] != 'Male') AND ($_POST['idsex'] != 'Female')) { echo " checked ";}?>> Other: 
@@ -582,6 +627,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <br/><label class="label" for="idsource">Information Source</label><input id="idsource" type="text" name="idsource" size="30" maxlength="60" value="<?php if (isset($_POST['idsource'])) echo $_POST['idsource']; ?>" /><br />
       
   </fieldset>
+      
+      <!-- Prior information -->
+            <fieldset class="caseinfobox"><legend class="boldlegend">Prior Case Knowledge</legend>
+                <BR>
+                Please check any component of the biological profile that was known to the practitioner during or before the time of case analysis.
+                <BR><BR>
+
+<label class="label" for="known_none"></label><input type="checkbox" name="known_none" value="1" />No biological profile information was known<BR>
+<label class="label" for="known_sex"></label><input type="checkbox" name="known_sex" value="1" />Sex was known<BR>
+<label class="label" for="known_age"></label><input type="checkbox" name="known_age" value="1" />Age was known<BR>
+<label class="label" for="known_ancestry"></label><input type="checkbox" name="known_ancestry" value="1" />Ancestry/Group Affinity was known<BR>
+<label class="label" for="known_stature"></label><input type="checkbox" name="known_stature" value="1" />Stature was known <BR>
+<label class="label" for="known_unable_to_determine"></label><input type="checkbox" name="known_unable_to_determine" value="1" />Unable to determine<BR>
+
+      </fieldset>
+      
        <fieldset class="caseinfobox"><legend class="boldlegend">Case Data Submission Permissions</legend>
            <BR>
            <input type="checkbox" name="certify_permission" value="1"/>
