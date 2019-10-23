@@ -21,6 +21,9 @@ DEFINE ("METHOD_DATA_STATURE", "Stature");
 // one or more multi-select boxes, multiple choices can be made from all
 DEFINE ("USER_INTERACTION_MULTISELECT", "multiselect"); 
 
+// one or more multi-select boxes, multiple choices can be made from all
+DEFINE ("USER_INTERACTION_SINGLESELECT", "singleselect"); 
+
 // For each output_data_1, there is a multi-select box of choices
 DEFINE ("USER_INTERACTION_SELECT_EACH", "select_each");
 
@@ -28,7 +31,10 @@ DEFINE ("USER_INTERACTION_SELECT_EACH", "select_each");
 DEFINE ("USER_INTERACTION_SELECT_RANGE", "select_range");
 
 // A single input box where a user enters the data
-DEFINE ("USER_INTERACTION_INPUT_BOX", "user_input_box");
+DEFINE ("USER_INTERACTION_TEXT_ENTRY", "text_entry");
+
+// A single input box where a user enters the data
+DEFINE ("USER_INTERACTION_INPUT_BOX", "text_input");
 
 // A single input box where a user enters the data
 DEFINE ("USER_INTERACTION_NUMERIC_ENTRY", "numeric_entry");
@@ -39,8 +45,6 @@ DEFINE ("USER_INTERACTION_3_COL_W_REF", "3_col_w_ref");
 // User input with an associated dropdown box (Spradley & Jantz)
 DEFINE ("USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN", "user_input_with_dropdown");
 
-DEFINE("USER_INTERACTION_SINGLE_SELECT", "single_select");
-
 // User input with a large text area
 DEFINE("USER_INTERACTION_TEXT_AREA", "text_area");
 
@@ -50,6 +54,8 @@ DEFINE("USER_INTERACTION_TWO_COLUMN", "two-column");
 // User input for possible estimated outcome values
 DEFINE("USER_INTERACTION_ESTIMATED_OUTCOME", "estimated_outcome");
 
+// User input for possible estimated outcome values
+DEFINE("USER_INTERACTION_CATEGORY", "category");
 
 
 // Method info type for "Spradley & Jantz 2011" method, and similar

@@ -1,12 +1,8 @@
 <?php
 
-if(file_exists('../../../conf/settings.inc.php')) {
-require_once('../../../conf/settings.inc.php');
-} else if(file_exists('../../conf/settings.inc.php')) {
-    require_once('../../conf/settings.inc.php');
-}else if(file_exists('../conf/settings.inc.php')) {
-    require_once('../conf/settings.inc.php');
-}
+require_once($_SERVER['DOCUMENT_ROOT'].'/sofadb/conf/settings.inc.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/sofadb/conf/app.inc.php');
+error_reporting(E_ERROR | E_PARSE);
 
 ini_set('display_errors',1);
 
@@ -14,11 +10,10 @@ set_include_path(get_include_path().";../libs;../conf;");
 
 function my_autoloader($class_name) {
 
-    $paths = array("../libs/", "../../libs/", "../../../libs/");
 
-    foreach($paths as $path)
-	if(file_exists($path . $class_name . ".class.inc.php")) {
-		require_once $path .$class_name . '.class.inc.php';
+    //foreach($paths as $path)
+	if(file_exists($_SERVER['DOCUMENT_ROOT'].'/sofadb/libs/'. $class_name . ".class.inc.php")) {
+		require_once $_SERVER['DOCUMENT_ROOT'].'/sofadb/libs/' .$class_name . '.class.inc.php';
 	}
 
 
