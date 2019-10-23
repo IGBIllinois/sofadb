@@ -13,6 +13,8 @@ class tier3data {
     private $methodinfoid;
     private $value;
     private $references;
+    private $output_data_id;
+    private $method_info_option_id;
 
     
     
@@ -48,6 +50,14 @@ class tier3data {
         return $this->references;
     }
     
+    public function get_output_data_id() {
+        return $this->output_data_id;
+    }
+    
+    public function get_method_info_option_id() {
+        return $this->method_info_option_id;
+    }
+    
     // static functions
     
     
@@ -78,12 +88,38 @@ class tier3data {
      *  where RESULT is true if the Tier3 was deleted successfully, and "MESSAGE"
      * is an output message.
      */
-    public static function delete_tier3($db, $t2id, $methodinfoid) {
+    public static function delete_tier3_orig($db, $t2id, $methodinfoid) {
 
         // TODO: Delete all data. Right now, only deletes one, but there may be several
         $query = "DELETE FROM tier3data where tier2id=:tier2id and methodinfoid=:methodinfoid";
         $params = array("tier2id"=>$t2id,
                         "methodinfoid"=>$methodinfoid);
+        $result = $db->get_update_result($query, $params);
+
+        if($result > 0) {
+            return array("RESULT"=>TRUE,
+                                "MESSAGE"=>"Method data deleted successfully.");
+        } else {
+            return array("RESULT"=>FALSE,
+                                "MESSAGE"=>"Method data not deleted successfully.");
+        }
+        
+    }
+    
+        /** Deletes Tier 3 data for a givet Tier 2 id and method_info id
+     * 
+     * @param int $t2id Tier 2 ID
+     * @param int $methoddataid method_info id
+     * @return array An array of the format ("RESULT"=>TRUE|FALSE, "MESSAGE"=>$message)
+     *  where RESULT is true if the Tier3 was deleted successfully, and "MESSAGE"
+     * is an output message.
+     */
+    public static function delete_tier3($db, $t2id, $method_info_option_id) {
+
+        // TODO: Delete all data. Right now, only deletes one, but there may be several
+        $query = "DELETE FROM tier3data where tier2id=:tier2id and method_info_option_id=:method_info_option_id";
+        $params = array("tier2id"=>$t2id,
+                        "method_info_option_id"=>$method_info_option_id);
         $result = $db->get_update_result($query, $params);
 
         if($result > 0) {
@@ -130,11 +166,13 @@ class tier3data {
        if(count($result) > 0) {
            $data = $result[0];
        
-       $this->id = $id;
+        $this->id = $id;
         $this->tier2id = $data['tier2id'];
         $this->methodinfoid = $data['methodinfoid'];
         $this->value = $data['value'];
         $this->references = $data['reference'];
+        $this->output_data_id = $data['output_data_id'];
+        $this->method_info_option_id = $data['method_info_option_id'];
        }
        
     }

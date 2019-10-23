@@ -14,6 +14,60 @@ class functions {
      * @global type $db
      * @param type $drop_var
      */
+    public static function drop_1_orig($drop_var)
+    {  
+        global $db;
+
+            $methods = method::get_methods_by_type($db,$drop_var);
+
+            echo '<script type=\"text/javascript\">
+             $(function(){
+            //$("#drop_X").multiselect();
+
+            $("#drop_X").multiselect({
+       multiple: false,
+       header: "Select an option",
+       noneSelectedText: "Select an Option",
+       selectedList: 1
+    });
+
+
+    });</script>
+      ';
+
+            echo '<select name="drop_2" id="drop_2">
+                  <option value="" disabled="disabled" selected="selected">Choose method</option>';
+
+
+                    foreach($methods as $method) {
+                        echo '<option value="'.$method->get_id().'">'.$method->get_name().'</option>';
+                    }
+
+            echo '</select>';
+
+            echo "<script type=\"text/javascript\">
+    $('#wait_2').hide();
+            $('#drop_2').change(function(){
+              $('#wait_2').show();
+              $('#result_2').hide();
+              $('#wait_3').hide();
+            $('#result_3').hide();
+            $('#drop_3').hide();
+            $('#drop_4').hide();
+            $('#fchoseninput').val('0');
+            $('#pchoseninput').val('0');
+          $.get(\"func.php\", {
+                    func: \"show_method_info\",
+                    method_id: $('#drop_2').val()
+          }, function(response){
+            $('#result_2').fadeOut();
+            setTimeout(\"finishAjax_tier_three('result_2', '\"+escape(response)+\"')\", 400);
+          });
+            return false;
+            });
+    </script>";
+    }
+    
     public static function drop_1($drop_var)
     {  
         global $db;
@@ -68,7 +122,6 @@ class functions {
     </script>";
     }
     
-    
     public static function reset_password($db, $selector, $validator, $new_pass) {
         // Get tokens
         $results = $db->get_query_result("SELECT * FROM password_reset WHERE selector = :selector AND expires >= :time", ['selector'=>$selector,'time'=>time()]);
@@ -112,12 +165,33 @@ class functions {
                 //session_destroy();
 
                 return array('RESULT'=>TRUE,
-                    'MESSAGE'=>'Password updated successfully. <a href="index.php">Login here</a>');
+                    'MESSAGE'=>'Password updated successfully. <a href="../index.php">Login here</a>');
             } else {
                 return $result;
             }
             }
         }
 
+    }
+    
+    /**
+     * 
+     * @param type $options Array of $id->value elements ($id is the id of the method_info_option object, $value is the text displayed)
+     * @param type $selected Array of selected ids
+     * @param type $multiple True if multiselect, else false.
+     * @return string
+     */
+    public static function draw_select($options, $selected, $multiple, $default_option = null) {
+
+        $result .= "<select ".( $multiple ? " multiple size='".count($options)."'" : " style='width:200px' " ) ." name='output_data[]' id='$select_id' >";
+        if($default_option != null) {
+            $result .= "<option value='' id='' name='' >$default_option</option>";
+        }
+        foreach($options as $id=>$value) {
+            $result .= "<option value=$id id=$id name=$id ". (in_array($id, $selected) ? " selected " : "") .">$value</option>";
+        }
+        $result .="</select>";
+        return $result;
+            
     }
 }

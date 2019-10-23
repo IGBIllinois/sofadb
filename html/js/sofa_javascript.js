@@ -107,7 +107,7 @@ $(document).ready(function(){
 	
 	
 	
-	$('#methodtype').change(function(){
+	$('#methodtype_old').change(function(){
 
 	  $('#wait_1').show();
 	  $('#result_1').hide();
@@ -131,7 +131,29 @@ $(document).ready(function(){
     	return false;
 	});//end method type change
         
-        
+
+    	$('#methodtype').change(function(){
+
+	  $('#wait_1').show();
+	  $('#result_1').hide();
+	  $('#wait_2').hide();
+	$('#fchoseninput').val('0');
+	$('#pchoseninput').val('0');
+	$('#result_2').hide();
+	$('#wait_3').hide();
+	$('#result_3').hide();
+	$('#drop_1').hide();
+	$('#drop_2').hide();
+
+      $.get("func.php", {
+		func: "drop_1",
+		drop_var: $('#methodtype').val()
+      }, function(response){
+        $('#result_1').fadeOut();
+        setTimeout("finishAjax('result_1', '"+escape(response)+"')", 400);
+      });//end get
+    	return false;
+	});//end method type change
         
         
 
@@ -212,6 +234,23 @@ $(document).ready(function(){
 });//end action button
 
 
+// Script for Chrome. When linking to a div tab, like #tab-2, Chrome doesn't
+// go to the proper tab without this script.
+
+    var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+
+    if (window.location.hash && isChrome) {
+        //alert("Hash in chrome!" + window.location.hash);
+        setTimeout(function () {
+            var hash = window.location.hash;
+            window.location.hash = "";
+            window.location.hash = hash;
+            
+        }, 300);
+
+    }
+        
+
 });
 
 // user/addcase
@@ -267,15 +306,9 @@ $('document').ready(function() {
 var expanded = false;
 
 function showCheckboxes(elementId) {
-    //alert('elementId = '+elementId);
-    //alert('elementName = '+elementName);
-  //var checkboxes = document.getElementById(elementId);
+
   checkboxes = elementId;
-  //alert('checkboxes 0= '+checkboxes);
-  //elementName = "checkboxes_humerus_composite_distal_epiphysis_to_shaft";
-  //var checkboxes = document.getElementsByName(elementName);
-  //checkboxes = checkboxes[0];
-  //alert('checkboxes 1= '+checkboxes);
+
   if (!expanded) {
     checkboxes.style.display = "block";
     expanded = true;

@@ -552,7 +552,7 @@ class method {
      * 
      * @return type An array of estimated outcome possibilities for this method
      */
-    public function get_estimated_outcomes() {
+    public function get_estimated_outcomes_orig() {
         $query = "SELECT output_data_1 from method_info where methodid=:methodid ".
                 " AND user_interaction=:user_interaction";
         $params = array("methodid"=>$this->get_id(),
@@ -562,6 +562,27 @@ class method {
         if(count($result) > 0){ 
             foreach($result as $data) {
                 $return_result[] = $data[0];
+            }
+            return $return_result;
+        } else {
+            return array();
+        }
+        
+    }
+    
+    /**
+     * 
+     * @return type An array of estimated outcome possibilities for this method
+     */
+    public function get_estimated_outcomes() {
+        $est_input_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_ESTIMATED_OUTCOME);
+        $est_query = "SELECT id from method_info_options where method_infos_id = (select id from method_infos where methodid=:methodid and input_type=:input_type)";
+        $est_params = array("methodid"=>$this->get_id(), "input_type"=>$est_input_type->get_id());
+        $result = $this->db->get_query_result($est_query, $est_params);
+        $return_result = array();
+        if(count($result) > 0){ 
+            foreach($result as $data) {
+                $return_result[] = new method_info_option($this->db, $data['id']);
             }
             return $return_result;
         } else {
@@ -634,7 +655,51 @@ class method {
             }
             return $methods;
         }
+        
+        // New version
+        public function get_method_infos() {
+            $query = "SELECT id from method_infos where methodid=:methodid";
+            $params = array("methodid"=>$this->id);
+            $result = $this->db->get_query_result($query, $params);
+            
+            $return_result = array();
+            if(count($result) > 0) {
+                foreach($result as $method_infos) {
+                    $mi = new method_infos($this->db, $method_infos['id']);
+                    $return_result[] = $mi;
+                }
+            }
+            return $return_result;
+        }
     
+        /** Gets method_infos for a method sorted by type
+         * 
+         * @return \method_infos An array whose contents are arrays of method_infos, sorted by type
+         */
+        public function get_method_infos_by_type($type = null) {
+            if($type == null) {
+                $type_query = "SELECT DISTINCT input_type from method_infos where methodid = :methodid";
+                $type_params =array("methodid"=>$this->id);
+                $type_result = $this->db->get_query_result($type_query, $type_params);
+            } else {
+                $type_result = array('input_type'=>$type);
+            }
+            $return_array = array();
+            foreach($type_result as $type) {
+                $info_array = array();
+                $input_type = $type['input_type'];
+                $infos_query = "SELECT id from method_infos where methodid= :methodid and input_type=:type";
+                $infos_params = array("methodid"=>$this->id, "type"=>$input_type);
+                $info_result = $this->db->get_query_result($infos_query, $infos_params);
+                
+                foreach($info_result as $info) {
+                    $method_infos = new method_infos($this->db, $info['id']);
+                    $info_array[] = $method_infos;
+                }
+                $return_array[$input_type] = $info_array;
+            }
+            return $return_array;
+        }
      // Private functions
 
      /** Loads database data into this method
