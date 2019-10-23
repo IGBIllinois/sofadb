@@ -10,9 +10,6 @@ require_once('func.php');
 
   <h1 class="cntr">Edit Case Information</h1>
 
-
-
-
   <?php
 
 $casedata = null;
@@ -45,10 +42,14 @@ elseif(isset($_SESSION['caseid']))
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+    if(isset($_POST['methodtype'])) {
+        $selmethodtype = $_POST['methodtype'][0];
+    }
     
     //remove method from case here, decrement total cases and numsubmitted from members.
     if (isset($_POST['delsubmit']))
     {
+
             $deleteid=$_POST['delid'];
             $tier2 = new tier2data($db, $deleteid);
             $caseid = $tier2->get_caseid();
@@ -57,31 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
 
     } else if(isset($_POST['add_method'])) {
-        	
+
+
+        //print_r($_POST);
+        
         $estimated_outcome_1 = null;
         $estimated_outcome_2 = null;
         $estimated_outcome_units = null;
-        
-	$method_id = $_POST['drop_2'];
-        if(isset($_POST['output_data_1'])) {
-            $output_data_1 = $_POST['output_data_1'];
-        } else {
-            $output_data_1 = array();
-        }
-        $output_data_2 = array();
-
-
-        if(isset($_POST['output_data_2']) && $_POST['output_data_2'] != null &&  $_POST['output_data_2'] != "") {
-
-            $output_data_2 = $_POST['output_data_2'];
-        }
-
-        $references = null;
-        if(isset($_POST['references']) && $_POST['references'] != null &&  $_POST['references'] != "") {
-            
-            $references = $_POST['references'];
-        }
-        
         
         if(isset($_POST['estimated_outcome_1'])) {
             $estimated_outcome_1 = $_POST['estimated_outcome_1'];
@@ -93,16 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $estimated_outcome_units = $_POST['estimated_outcome_units'];
         }
         
-        $od1Names = array_keys($output_data_1);
-
+        $method_id = $_POST['drop_2'];
+        $method = new method($db, $method_id);
+        
         $caseid = $_POST['caseid'];
         
         $this_case = new sofa_case($db, $caseid);
-        $method = new method($db, $method_id);
-
-        if($method->get_method_info_type() == METHOD_INFO_TYPE_RIOS_CARDOSO) {
-        // Add the method
-            
+        
         $result = $this_case->add_case_method(
                         $method_id, 
                         $method->get_method_type_num(),
@@ -111,73 +91,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $estimated_outcome_units);
         
         if($result['RESULT'] == TRUE) {
-
-            $selected_options = $_POST['select_option'];
-
-            foreach($selected_options as $m_id=>$m_data) {
-
-                foreach($m_data as $id=>$stage) {
-                    if($stage != "Select an option") {
-                        
-                        $mi = new method_info($db, $m_id);
-                        $od1 = $mi->get_output_data_1();
-                        try {
-                        $addresult = $this_case->add_tier3($method_id,
-                                                $od1,
-                                                null,
-                                                $result['id'],
-                                                $id,
-                                                USER_INTERACTION_RIOS_CARDOSO);
-                        } catch(Exception $e) {
-                            echo($e->getTraceAsString());
-                        }
-                    }
-                }
-            }
-        }
-            
+            $t2id = $result['id'];
         } else {
-        // Add the method
-        $result = $this_case->add_case_method(
-                        $method_id, 
-                        $method->get_method_type_num(), 
-                        $estimated_outcome_1, 
-                        $estimated_outcome_2,
-                        $estimated_outcome_units);
-        
-        echo("<div id = caseform>".$result['MESSAGE']."</div>");
-        
-        if($result['RESULT'] == TRUE) {
-            $method_case_id = $result['id'];
+            echo($result['MESSAGE']);
+            return;
+        }
 
-            if(isset($_POST['Transition_Analysis'])) {
-                foreach($output_data_1 as $od1 => $values) {
-                    foreach($values as $od2=>$value) {
-                        if($value != null && $value != "") {
-                            try {
-                            $addresult = $this_case->add_tier3($method_id,
-                                                    $od1,
-                                                    $od2,
-                                                    $method_case_id,
-                                                    $value,
-                                                    USER_INTERACTION_INPUT_BOX );
-                            } catch(Exception $e) {
-                                echo($e->getTraceAsString());
-                            }
-                        }
+        $output_data = $_POST['output_data'];
+        foreach($output_data as $od) {
+
+            if(is_array($od)) {
+                foreach($od as $id=>$value) {
+                    if($id != null && $id != '') {
+                    //echo("adding to tier3 ($id, $value)<BR>");
+                    $this_case->add_tier3($t2id, $id, $value);
                     }
-                    
                 }
             } else {
-            $this_case->add_all_tier3_data($method_id, 
-                    $method_case_id, 
-                    $output_data_1, 
-                    $output_data_2, 
-                    $od1Names,
-                    $references);
+                if($od != null && $od != '') {
+                //echo("adding to tier3 ($od)<BR>");
+                $this_case->add_tier3($t2id, $od);
+                }
             }
         }
-    }
+
+
+
+
     }
     
  else {
@@ -486,17 +426,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $idothertext = $_POST['idrace_othertext'];
 	
 	}
+        
+                // prior known data
+    if(isset($_POST['known_none'])) {
+      $known_none=$_POST['known_none'];
+    }
+    else{
+        $known_none=0;
+    }
+
+    if(isset($_POST['known_none'])) {
+      $known_none=$_POST['known_none'];
+    }
+    else{
+        $known_none=0;
+    }
+    
+    if(isset($_POST['known_sex'])) {
+      $known_sex=$_POST['known_sex'];
+    }
+    else{
+        $known_sex=0;
+    }
+    
+    if(isset($_POST['known_age'])) {
+      $known_age=$_POST['known_age'];
+    }
+    else{
+        $known_age=0;
+    }
+    
+    if(isset($_POST['known_ancestry'])) {
+      $known_ancestry=$_POST['known_ancestry'];
+    }
+    else{
+        $known_ancestry=0;
+    }
+    
+    if(isset($_POST['known_stature'])) {
+      $known_stature=$_POST['known_stature'];
+    }
+    else{
+        $known_stature=0;
+    }
+    
+    if(isset($_POST['known_unable_to_determine'])) {
+      $known_unable_to_determine=$_POST['known_unable_to_determine'];
+    }
+    else{
+        $known_unable_to_determine=0;
+    }    
     
     if(($idOt==0 && $idothertext)||($idOt==1 && !$idothertext))
 	{$errors[] = 'You must Check the Other box and enter text.';}
     
-     if (isset($_SESSION['num_methods']))
-    {
-    $numcasemethods=$_SESSION['num_methods'];
-    
-    
-    }
-    else{ $numcasemethods=0;}
+
 
     
     if (empty($errors)) 
@@ -529,12 +513,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                    "fastature"=>$fastature,
                     "fastature2"=>$fastature2,
                     "fastatureunits"=>$fastatureunits,
+                    
                     "idsex"=>$idsex,
                     "idage"=>$idage,
-                    
                     "idageunits"=>$idageunits,
                     "idstature"=>$idstature,
                     "idstatureunits"=>$idstatureunits,
+                    
                     "idsource"=>$idsource,
                     "casenotes"=>$casenotes,
                     
@@ -555,7 +540,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     "idraceot"=>$idOt,
                     "idraceottext"=>$idothertext,
                     "idancaddtext"=>$idancaddtext,
-                    "numcasemethods"=>$numcasemethods,
+
+                    "known_none"=>$known_none,
+                    "known_age"=>$known_age,
+                    "known_sex"=>$known_sex,
+                    "known_ancestry"=>$known_ancestry,
+                    "known_stature"=>$known_stature,
+                    "known_unable_to_determine"=>$known_unable_to_determine,
                                     
                     "caseeditid"=>$caseeditid);
 
@@ -650,7 +641,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <label class="label" for="casenumber">Case Number</label><input id="casenumber" type="text" name="casenumber" size="30" maxlength="30" value="<?php echo $casedata->get_casenumber(); ?>"/>
   <br />
     
-  <label class="label" for="caseagency">Case Agency</label><input id="caseagency" type="text" name="caseagency" size="30" value="<?php echo $casedata->get_caseagency(); ?>"/>
+  <label class="label" for="caseagency">Case Agency</label><input id="caseagency" type="text" name="caseagency" size="30" maxlength="30" value="<?php echo $casedata->get_caseagency(); ?>"/>
       
   <br/>
     <span name="savebutton" class="bigsavebutton">
@@ -756,6 +747,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <br/><label class="label" for="idsource">Information Source</label><input id="idsource" type="text" name="idsource" size="30" maxlength="60" value="<?php echo $casedata->get_idsource(); ?>" /><br />
       
   </fieldset>
+        
+          </fieldset>
+      
+      <!-- Prior information -->
+            <fieldset class="caseinfobox"><legend class="boldlegend">Prior Case Knowledge</legend>
+                <BR>
+                Please check any component of the biological profile that was known to the practitioner during or before the time of case analysis.
+                <BR><BR>
+
+<label class="label" for="known_none"></label><input type="checkbox" name="known_none" value="1" <?php if ($casedata->get_known_none() == 1) echo ' checked'; ?>/>No biological profile information was known<BR>
+<label class="label" for="known_sex"></label><input type="checkbox" name="known_sex" value="1" <?php if ($casedata->get_known_sex() == 1) echo ' checked'; ?>/>Sex was known<BR>
+<label class="label" for="known_age"></label><input type="checkbox" name="known_age" value="1" <?php if ($casedata->get_known_age() == 1) echo ' checked'; ?>/>Age was known<BR>
+<label class="label" for="known_ancestry"></label><input type="checkbox" name="known_ancestry" value="1" <?php if ($casedata->get_known_ancestry() == 1) echo ' checked'; ?>/>Ancestry/Group Affinity was known<BR>
+<label class="label" for="known_stature"></label><input type="checkbox" name="known_stature" value="1" <?php if ($casedata->get_known_stature() == 1) echo ' checked'; ?>/>Stature was known <BR>
+<label class="label" for="known_unable_to_determine"></label><input type="checkbox" name="known_unable_to_determine" value="1" <?php if ($casedata->get_known_unable_to_determine() == 1) echo ' checked'; ?>/>Unable to determine<BR>
+
+      </fieldset>
+      
     <fieldset class="caseinfobox"><legend class="boldlegend">Case Notes</legend>
       <label class="label" for="casenotes"></label>
       <textarea name="casenotes" cols="55" rows="7"><?php echo $casedata->get_casenotes(); ?></textarea>
@@ -777,15 +786,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <div name="methodholder" id="methodholder">
              <p><select name="methodtype[]" id="methodtype">
-    
+                     
                            <option value="" selected="selected" disabled="disabled">Add Method For</option>
                            <option value="1" >Sex</option>
                            <option value="2" >Age</option>
                            <option value="3" >Ancestry</option>
                            <option value="4" >Stature</option>
+
                             </select>
-                            
+
                              <span id="wait_1" style="display: none;">
+
     <img alt="Please Wait" src="ajax-loader.gif"/>
     </span>
      <span id="result_1" style="display: none;"></span>
@@ -793,7 +804,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <img alt="Please Wait" src="ajax-loader.gif"/>
     </span>
      
-     <input type="submit" class="showybutton" id="addmethodbutton" name='add_method' value="Add Method" ><BR>
+     <input type="submit" class="showybutton" id="addmethodbutton"  formmethod='POST' name='add_method' value="Save Method" ><BR>
      
      <span id="result_2" style="display: none;"></span>
     <span id="wait_3" style="display: none;">
@@ -833,7 +844,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                    Method Name
                             </th>
                             <th>
-                                   Method Outcome
+                                   Method Outcomes
                             </th>
                             </p>
                     </tr>
@@ -857,7 +868,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         
                         echo("<td>". $method->get_method_type()."</td>
 				<td>".$method->get_name()."</td>".
-                                "<td>".$tier2->format_tier3data()."</td>".
+                                //"<td>".$tier2->format_tier3data_new()."</td>".
+                                "<td>".$tier2->show_estimated_outcome()."</td>".
 				"</tr>");
                     }
 
