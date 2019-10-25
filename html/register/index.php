@@ -8,7 +8,7 @@ $admin_email = ADMIN_EMAIL;
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Account Registration</title>
-<link href="../css/styleTemplate.css" rel="stylesheet" type="text/css" />
+<link href="../css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <script type='text/javascript' src='gen_validatorv4.js'></script>
 

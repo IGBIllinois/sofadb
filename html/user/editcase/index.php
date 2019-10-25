@@ -1,6 +1,6 @@
 <?php 
 require_once('../../include/header_user.php');
-require_once('../../include/session_addcase.php') ;
+require_once('../../include/session_user.php') ;
 require_once('func.php');
 
 ?>
@@ -113,6 +113,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $this_case->add_tier3($t2id, $od);
                 }
             }
+        }
+        
+        if($_POST['select_option'] != null) {
+            // add references
+            print_r($_POST['select_option']);
+            $sel_refs = $_POST['select_option'];
+            foreach($sel_refs as $id=>$ref_list) {
+                echo("mi_id = $id<BR>");
+                foreach($ref_list as $ref=>$ref_name) {
+                    echo("  ref_id = $ref<BR>");
+                    if($ref > 0) {                
+                        $reference = new reference($db, $ref);
+                        echo("adding (ref, t2id, mi_id) ($ref, $t2id, $id)<BR>");
+                        $reference->add_reference_to_tier2($t2id, $id);
+                    }
+                }
+
+            }
+            
         }
 
 

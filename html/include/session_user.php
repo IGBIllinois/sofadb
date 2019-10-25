@@ -7,12 +7,7 @@
   {
   if($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==1)
 {
-	            unset($_SESSION['loadedmethods']);
-       			unset($_SESSION['num_methods']);
-                unset($_SESSION['methodtype']);
-                unset($_SESSION['methodname']);
-                unset($_SESSION['methodfeature']);
-       		    unset($_SESSION['caseid']);
+
 	
 	}
 elseif($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==2)

@@ -26,16 +26,28 @@ elseif($_SESSION['loggedin']==1)
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
+<!--
 <script type="text/javascript" src="./js/jquery.js"></script>
+
 	<script type="text/javascript" src="./js/jquery.query-2.1.7.js"></script>
-	<script type="text/javascript" src="./js/rainbows.js"></script>
+-->
+
 	<!-- // Load Javascipt -->
 
 	<!-- Load stylesheets -->
+        
 	<link type="text/css" rel="stylesheet" href="css/style.css" media="screen" />
+        
 	<!-- // Load stylesheets -->
 	
+<script type="text/javascript" src='/vendor/components/jquery/jquery.js'></script>
+<script type="text/javascript" src='/vendor/components/jquery-ui/jquery-ui.js'></script>
+<script type="text/javascript" src='/vendor/components/jquery/jquery.js'></script>
 
+ <link href="<?php echo(ROOT_URL) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
+ <link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery.multiselect.css" />
+
+<link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery-ui.css" />
 
 
 </head>
@@ -80,7 +92,6 @@ $hash=md5($s . $p);
 	}
 	if ($e && $hash){//if no problems
 // Retrieve the user_id, first_name and user_level for that email/password combination:
-		//$q = "SELECT id, uname, firstname, permissionstatus FROM members WHERE uname='$e' AND pwd='$hash'";
                 $member = new member($db);
                 $result = $member->load_info_by_name($e, $hash);
 			

@@ -15,11 +15,12 @@ require_once('../../../conf/settings.inc.php');
  * 
  */
 require_once(__DIR__ . "\..\..\conf\settings.inc.php");
-if(isset($addcase) && ($addcase == 1)) {
-    require_once('session_addcase.php');
-} else {
+
+//if(isset($addcase) && ($addcase == 1)) {
+//    require_once('session_addcase.php');
+//} else {
     require_once('session_user.php') ;
-}
+//}
 require_once('main.inc.php');
 
 ?>
@@ -35,6 +36,7 @@ require_once('main.inc.php');
  <link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery.multiselect.css" />
 
 <link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/vendor/components/jquery-ui/themes/base/jquery-ui.css" />
+
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 

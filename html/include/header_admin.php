@@ -28,7 +28,7 @@ require_once('session_admin.php');
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Activate Members</title>
-<link href="<?php echo(ROOT_URL) ?>/css/styleTemplate.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo(ROOT_URL) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 

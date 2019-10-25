@@ -18,7 +18,11 @@
 <!-- CSS -->
  <link href="<?php echo(ROOT_URL) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
  <link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery.multiselect.css" />
+ <!--
 <link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery-ui.css" />
+-->
+<script type="text/javascript" src="<?php echo(ROOT_URL) ?>/vendor/components/jquery/jquery.js"></script>
+<script type="text/javascript" src="<?php echo(ROOT_URL) ?>/vendor/components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <script type='text/javascript' src='scripts/gen_validatorv31.js'></script>

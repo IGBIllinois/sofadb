@@ -451,8 +451,7 @@ public static function add_member($db, $params) {
                 . ":sponsor_email,"
                 . ":sponsor_affiliation"
             . ")";		
-    echo("query = $q<BR>");
-    print_r($params);
+
     $result = $db->get_insert_result($q, $params);
     if($result > 0) {
         return array("RESULT"=>TRUE,

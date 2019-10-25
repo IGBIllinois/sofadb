@@ -49,9 +49,9 @@ http://jquery.org/license
 <!-- CSS -->
  <link href="<?php echo(ROOT_URL) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
  <link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery.multiselect.css" />
-
+<!--
 <link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery-ui.css" />
-
+-->
  </head>
 
 
