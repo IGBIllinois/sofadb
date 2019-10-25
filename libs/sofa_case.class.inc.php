@@ -1139,7 +1139,7 @@ public function submit_case($submitstatus) {
      */
     public static function search_cases($db, $memberid, $case_data) {
         
-        $query = "SELECT id from cases where ";
+        $query = "SELECT id from cases where submissionstatus=1  ";
         $param_string = "";
         
         $conjunction = " AND ";
@@ -1150,12 +1150,12 @@ public function submit_case($submitstatus) {
         // Member ID
         if ($case_data['memberId'] != null && $case_data['memberId'] != "") { 
 		
-		$param_string .= " memberid =: memberId ";
+		$query .= " AND memberid =: memberId  ";
                 $params["memberId"] = $case_data['memberId'];
 		
 	} else {
             // Get all
-            $param_string .= " memberid IS NOT NULL ";
+            $query .= " AND memberid IS NOT NULL ";
         }
         
         // Case Year
@@ -1216,8 +1216,8 @@ public function submit_case($submitstatus) {
                 
         // Age range
         
-        if (($case_data['ageid1'] != null && $case_data['ageid1'] != "") &&
-                ($case_data['ageid2'] != null && $case_data['ageid2'] != "")) {
+        if (($case_data['idage1'] != null && $case_data['idage1'] != "") &&
+                ($case_data['idage2'] != null && $case_data['idage2'] != "")) {
             
             if($param_string != "") {
                 $param_string .= $conjunction;
@@ -1298,11 +1298,10 @@ public function submit_case($submitstatus) {
         }
         
         if($param_string != "") {
-            $param_string  = "(".$param_string . ")";
+            $param_string  = " AND (".$param_string . ")";
             
         }
-        //$param_string .= " memberId = :memberId ";
-        //$params['memberId'] = $memberid;
+
         $query .= $param_string;
         
         //echo("Query = $query<BR>");
