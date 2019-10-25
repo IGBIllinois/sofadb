@@ -71,7 +71,16 @@ class method_infos {
            return;
        }
        $output = "";
-       
+       $output .= "<BR>VERSION 2<BR>";
+       $prompt = "Select any/all outcomes for features used.";
+       $method_name = $method->get_name();
+       if(in_array($method_name, method_infos::$noPrompts)){
+           $prompt = "";
+       } else if(in_array($method_name, method_infos::$formulaPrompts)) {
+           $prompt = "<BR>Enter any/all measurements and select any/all formulas used.</BR>";
+       } else if(in_array($method_name, method_infos::$formulaOutcomePrompts)) {
+           $prompt = "<BR>Enter any/all measurements and select any/all formula outcomes from formulas used.</BR>";
+       }
        // Draw estimated outcomes
        if($method->get_method_type() == "Sex") {
            $selected = false;
@@ -89,6 +98,7 @@ class method_infos {
            $output .= ("<option value='Probable Male' ". (($estimated_outcome == 'Probable Male') ? " selected='selected' " : "") .">Probable Male</option>");
            $output .= ("<option value='Male' ". (($estimated_outcome == 'Male') ? " selected='selected' " : "") .">Male</option>");
            $output .= ("</select><BR>");
+           /*
            if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ ||
                    $method->get_method_info_type() == METHOD_INFO_TYPE_TRANSITION_ANALYSIS) {
                $output .= ("<BR>Select any/all sectioning point outcomes.<BR>");
@@ -97,6 +107,9 @@ class method_infos {
            } else {
                $output .= ("<BR>Select any/all outcomes for features used.<BR>");
            }
+            * 
+            */
+           $output .= $prompt;
        } else if($method->get_method_type() == "Stature") {
            $estimated_outcome_1 = "";
            $estimated_outcome_2 = "";
@@ -119,11 +132,15 @@ class method_infos {
            $output .= ("<option value='in' ". (($estimated_outcome_units == 'in') ? " selected='selected' " : "") .">in</option>");
            $output .= ("<option value='cm' ".(($estimated_outcome_units == 'cm') ? " selected='selected' " : "") .">cm</option>");
            $output .= ("</select><BR>");
+           /*
            if($method->get_method_info_type() == METHOD_INFO_TYPE_STATURE_1) {
             $output .= ("<BR>Select any/all formulae used to estimate stature.<BR>");
            } else {
             $output .= ("<BR>Select any/all data used to estimate stature.<BR>");   
            }
+            * 
+            */
+           $output .= $prompt;
        } else if($method->get_method_type() == "Age") {
            if($tier2id != null) {
                $tier2 = new tier2data($db, $tier2id);
@@ -133,18 +150,11 @@ class method_infos {
            }
            $estimated_outcomes = $method->get_estimated_outcomes();
 
-           
+           /*
            if(count($method->get_method_info_by_type(USER_INTERACTION_NUMERIC_ENTRY)) > 0) {
                // No title for user input methods like Lamedin, Prince&Ubelaker, etc.s
                $title = "";
            }
-           if($title != "") {
-            $output .= ("<BR>$title<BR>");
-           }
-           $output .= ("<BR>Estimated Age range from this method:");
-           $output .= ("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'> to ");
-           $output .= ("<input size=6 id='estimated_outcome_2' name='estimated_outcome_2' value='$estimated_outcome_2'> years");
-           $output .= ("<BR>");
            if(($method->get_header_2() != null) && 
                    ($method->get_header_2() == "Reference Sample") ||
                    ($method->get_header_2() == "Reference Samples")) {
@@ -152,6 +162,18 @@ class method_infos {
            } else {
                $title = "Select method outcome used.";
            }
+           if($title != "") {
+            $output .= ("<BR>$title<BR>");
+           }
+            * 
+            */
+
+           $output .= ("<BR>Estimated Age range from this method:");
+           $output .= ("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'> to ");
+           $output .= ("<input size=6 id='estimated_outcome_2' name='estimated_outcome_2' value='$estimated_outcome_2'> years");
+           $output .= ("<BR>");
+           $output .= $prompt;
+           
        } else if($method->get_method_type() == "Ancestry") {
            if($tier2id != null) {
                $tier2 = new tier2data($db, $tier2id);
@@ -170,6 +192,7 @@ class method_infos {
                $output .= ("<option value='$id' ". (($estimated_outcome_1 == $id) ? " selected='selected' " : "") .">$value</option>");
            }
            $output .= ("</select><BR>");
+           $output .= $prompt;
            
        }
        
@@ -184,7 +207,7 @@ class method_infos {
        $method_infos_by_type = $method->get_method_infos_by_type();
 
        if(count($method_infos_by_type) > 0) {
-           $output .= ("VERSION 2");
+           
         if($method->get_method_info_type() != null) {
            $input_type = new input_type($db, $method->get_method_info_type());
 
@@ -304,6 +327,20 @@ class method_infos {
         return $return_result;
         
     }
+    
+       public function get_references() {
+       $query = "SELECT reference_id from method_info_reference_list where method_infos_id=:mi_id";
+       $params = array("mi_id"=>$this->get_id());
+       $results = $this->db->get_query_result($query, $params);
+
+       $return_result = array();
+       foreach($results as $ref) {
+           $ref = new reference($this->db, $ref['reference_id']);
+           $return_result[] = $ref;
+       }
+       return $return_result;
+   }
+   
 
     // static
     public static function show_method_infos_select($db, $method_infos_id, $tier2id = null, $header = true, $multiple=true, $default_option = null) {
@@ -529,17 +566,17 @@ class method_infos {
         //$m_query = "SELECT id from method_infos where parent_id=:parentid";
         //$m_params = array("parentid"=>$method_infos_id);
         //$result = $db->get_query_result($m_query, $m_params);
-        $m_infos = new method_infos($method_infos_id);
+        $m_infos = new method_infos($db, $method_infos_id);
         $result = $m_infos->get_children();
         
         $inputbox_mi = null;
         $dropdown_mi = null;
-        $parent_mi = new method_infos($db, $method_infos_id);
+
         $input_box_type = input_type::get_input_type_by_name($db, USER_INTERACTION_NUMERIC_ENTRY);
         $dropdown_type = input_type::get_input_type_by_name($db, USER_INTERACTION_MULTISELECT);
         foreach($result as $mi_info) {
 
-            $mi = new method_infos($db, $mi_info['id']);
+            $mi = new method_infos($db, $mi_info->get_id());
 
             if($mi->get_type() == $input_box_type->get_id()) {
                 $inputbox_mi = $mi;
@@ -566,7 +603,7 @@ class method_infos {
         
     }
     
-          /** Shows HTML method_info input for a "text_area" method_info
+   /** Shows HTML method_info input for a "text_area" method_info
     * 
     * @param method $method The method object
     * @param int $tier2id Existing info, if editing
@@ -607,7 +644,7 @@ class method_infos {
 
    
     public static function show_method_info_3_col_with_ref($db, $method_id, $tier2id=null) {
-       echo("0");
+
         $output = "";
           $method = new method($db, $method_id);
           $cat_input_type = input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY);
@@ -661,13 +698,29 @@ class method_infos {
                        $values = array();
                        $options = $mi->get_method_info_options();
                        $output .= "<tr><td>".$mi->get_name()."</td>";
+                       
                        foreach($options as $op) {
                             $values[$op->get_id()] = $op->get_value();
                         }
-
+                        
                         $output .= "<td>".(functions::draw_select($values, $selected, false, " ")). "</td>";
                        
-                       $output .= "<td>[References]</td></tr>";
+                        $refs = $mi->get_references();
+                        $ref_list= array();
+                        foreach($refs as $ref) {
+                            $ref_list[] = array($ref->get_id(), $ref->get_reference_name());
+                        }
+                        $selected_refs = array();
+                        if($tier2 != null) {
+                            $t3 = tier3data::get_tier3_by_option($db, $mi->get_id(), $op->get_id());
+                            $sel_ref_list = $t3->get_references();
+                            foreach($sel_ref_list as $sel_ref) {
+                                $selected_refs[] = $sel_ref->get_id();
+                            }
+                        }
+                        //print_r($ref_list);
+                        $references = functions::checkbox_dropdown($mi->get_id(), $mi->get_name(), $ref_list, $selected_refs);
+                       $output .= "<td>$references</td></tr>";
                    }
                    $output .= "</tr>";
                }
@@ -782,6 +835,8 @@ class method_infos {
        }
        return $return_result;
    }
+   
+
     
     // Private
     private function load_method_infos($id) {
@@ -803,7 +858,35 @@ class method_infos {
          $this->category = $data['category'];
          $this->subcategory = $data['subcategory'];
     }
-
     }
+
+  
     
+    private static $noPrompts = array(
+        "Fordisc (skeletal, metric)",
+        "Generalized Morphology (skeleton, nonmetric)",
+        "Soft Tissue Morphology (nonmetric)",
+        "3D-ID (cranial, metric)",
+        "Buikstra and Ubelaker 1994 (skull, nonmetric)",
+        "Rogers et al. 2000 (clavicle, nonmetric)",
+        "Walker 2005 (os coxae)",
+        "Raxter et al. (skeletal, metric)");
+    
+    private static $formulaPrompts = array(
+        "Fully 1956 (skeletal, metric)",
+        "Genoves 1967 (long bones, metric)",
+        "Ousley 1995 (long bones, metric)",
+        "Sjovold 1990 (long bones, metric)",
+        "Spradley et al. 2008 (long bones, metric)",
+        "Steele 1970 (long bones, metric)",
+        "Trotter 1970 (long bones, metric)",
+        "Trotter and Glesser 1952 (long bones, metric)"
+        );
+
+    private static $formulaOutcomePrompts = array(
+        "Holland 1991 (proximal tibia, metric)",
+        "Tise et al. 2013 (postcranial, metric)",
+        "Spradley and Jantz 2011 (metric)"
+        
+    );
 }

@@ -46,9 +46,6 @@ class tier3data {
         return $this->value;
     }
     
-    public function get_references() {
-        return $this->references;
-    }
     
     public function get_output_data_id() {
         return $this->output_data_id;
@@ -72,6 +69,25 @@ class tier3data {
         $query = "SELECT id from tier3data where methodinfoid=:methodinfoid and value=:value";
         $params = array("methodinfoid"=>$methodinfoid,
                         "value"=>$value);
+        $result = $db->get_query_result($query, $params);
+        if(count($result)>0) {
+            return new tier3data($db, $result[0][id]);
+        } else {
+            return null;
+        }
+    }
+    
+        /** Gets a Tier 3 data by its tier2id and method_info_option id
+     * 
+     * @param type $db The database object
+     * @param type $methodinfoid The method_info id
+     * @param type $value The value for the Tier 3 data
+     * @return \tier3data|null The Tier 3 data if it exists, else null
+     */
+    public static function get_tier3_by_option($db, $t2id, $option_id) {
+        $query = "SELECT id from tier3data where tier2id=:t2id and method_info_option_id=:option_id";
+        $params = array("t2id"=>$t2id,
+                        "method_info_option_id"=>$option_id);
         $result = $db->get_query_result($query, $params);
         if(count($result)>0) {
             return new tier3data($db, $result[0][id]);

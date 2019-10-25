@@ -242,6 +242,59 @@ class tier2data {
         return $result;
     }
     
+    public function show_estimated_outcome() {
+        
+        $est1 = $this->estimated_outcome_1;
+        $est2 = $this->estimated_outcome_2;
+        $units = $this->estimated_outcome_units;
+        
+        $output = "";
+        
+        $method = new method($this->db, $this->methodid);
+        $outcome_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_ESTIMATED_OUTCOME);
+        
+        $outcomes = $method->get_method_infos_by_type();
+        
+        if($outcomes[$outcome_type->get_id()] != null) {
+            $method_info_option = new method_info_option($this->db, $est1);
+            $output .= $method_info_option->get_value();
+        }
+        else {
+        if($est1 != null) {
+            $output .= $est1;
+        }
+        if($est2 != null && $est2 != "") {
+            if($output != "") {
+                $output .= " - ";
+            }
+            $output .= $est2;
+        }
+        if($units != null && $units != "") {
+            $output .= " $units";
+        }
+        }
+        if($output == "") {
+            $output = "No estimated outcome given";
+        }
+        
+        return $output;
+
+    }
+    
+    public function get_selected_references($method_info_id) {
+        $query = "SELECT reference_id from reference_data where tier2_id=:tier2id and method_info_id = :method_info_id";
+        $params = array("tier2id"=>$this->get_id(),
+                        "method_info_id"=>$method_info_id);
+        $result = $this->db->get_query_result($query, $params);
+        
+        $return_result = array();
+        foreach($result as $ref) {
+            $reference = new reference($this->db, $ref['reference_id']);
+            $return_result[] = $reference;
+        }
+        return $return_result;
+    }
+    
     // static functions
     public static function delete_tier2($db, $tier2id) {
         $query = "DELETE from tier2data where id=:tier2id ";
