@@ -87,10 +87,11 @@ class tier3data {
     public static function get_tier3_by_option($db, $t2id, $option_id) {
         $query = "SELECT id from tier3data where tier2id=:t2id and method_info_option_id=:option_id";
         $params = array("t2id"=>$t2id,
-                        "method_info_option_id"=>$option_id);
+                        "option_id"=>$option_id);
+
         $result = $db->get_query_result($query, $params);
         if(count($result)>0) {
-            return new tier3data($db, $result[0][id]);
+            return new tier3data($db, $result[0]['id']);
         } else {
             return null;
         }

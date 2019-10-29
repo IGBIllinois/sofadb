@@ -281,8 +281,13 @@ class tier2data {
 
     }
     
+    /** Gets all references for a specific method_infos for this tier2
+     * 
+     * @param int $method_info_id
+     * @return \reference Array of reference objects for this tier2 and method_infos
+     */
     public function get_selected_references($method_info_id) {
-        $query = "SELECT reference_id from reference_data where tier2_id=:tier2id and method_info_id = :method_info_id";
+        $query = "SELECT reference_id from reference_data where tier2id=:tier2id and method_info_id = :method_info_id";
         $params = array("tier2id"=>$this->get_id(),
                         "method_info_id"=>$method_info_id);
         $result = $this->db->get_query_result($query, $params);
@@ -294,6 +299,24 @@ class tier2data {
         }
         return $return_result;
     }
+    
+    /** Gets a list of all references for this tier2
+     * 
+     * @return \reference An array of references that have been saved for this tier2 object
+     */
+    public function get_all_selected_references() {
+       $query = "SELECT reference_id from reference_data where tier2id=:tier2id ";
+        $params = array("tier2id"=>$this->get_id());
+        $result = $this->db->get_query_result($query, $params);
+        
+        $return_result = array();
+        foreach($result as $ref) {
+            $reference = new reference($this->db, $ref['reference_id']);
+            $return_result[] = $reference;
+        }
+        return $return_result; 
+    }
+    
     
     // static functions
     public static function delete_tier2($db, $tier2id) {

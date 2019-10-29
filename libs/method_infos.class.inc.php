@@ -66,13 +66,14 @@ class method_infos {
    // Newer versions
    public static function show_method_info($db, $methodid, $tier2id=null) {
        $method = new method($db, $methodid);
+
        if($method == null) {
            echo "Method not found.";
            return;
        }
        $output = "";
        $output .= "<BR>VERSION 2<BR>";
-       $prompt = "Select any/all outcomes for features used.";
+       $prompt = "<BR>Select any/all outcomes for features used.</BR>";
        $method_name = $method->get_name();
        if(in_array($method_name, method_infos::$noPrompts)){
            $prompt = "";
@@ -80,9 +81,13 @@ class method_infos {
            $prompt = "<BR>Enter any/all measurements and select any/all formulas used.</BR>";
        } else if(in_array($method_name, method_infos::$formulaOutcomePrompts)) {
            $prompt = "<BR>Enter any/all measurements and select any/all formula outcomes from formulas used.</BR>";
+       } else if(in_array($method_name, method_infos::$measurementPrompts)) {
+           $prompt = "<BR>Enter all measurements used below<BR>";
        }
+       
        // Draw estimated outcomes
        if($method->get_method_type() == "Sex") {
+
            $selected = false;
            if($tier2id != null) {
                $tier2 = new tier2data($db, $tier2id);
@@ -98,6 +103,7 @@ class method_infos {
            $output .= ("<option value='Probable Male' ". (($estimated_outcome == 'Probable Male') ? " selected='selected' " : "") .">Probable Male</option>");
            $output .= ("<option value='Male' ". (($estimated_outcome == 'Male') ? " selected='selected' " : "") .">Male</option>");
            $output .= ("</select><BR>");
+
            /*
            if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ ||
                    $method->get_method_info_type() == METHOD_INFO_TYPE_TRANSITION_ANALYSIS) {
@@ -120,7 +126,7 @@ class method_infos {
                $estimated_outcome_2 = $tier2->get_estimated_outcome_2();
                $estimated_outcome_units = $tier2->get_estimated_outcome_units();
            }
-           
+
            $output .= ("<BR>Estimated Stature from this method:");
            $output .= ("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'>");
            $output .= (" to ");
@@ -142,12 +148,14 @@ class method_infos {
             */
            $output .= $prompt;
        } else if($method->get_method_type() == "Age") {
+
            if($tier2id != null) {
                $tier2 = new tier2data($db, $tier2id);
                $estimated_outcome_1 = $tier2->get_estimated_outcome_1();
                $estimated_outcome_2 = $tier2->get_estimated_outcome_2();
                $estimated_outcome_units = $tier2->get_estimated_outcome_units();
            }
+
            $estimated_outcomes = $method->get_estimated_outcomes();
 
            /*
@@ -198,16 +206,18 @@ class method_infos {
        
 
        $maxcols = MAXCOLS;
-       if($method->get_method_type() == "Stature") {
+       if($method->get_method_type() == "Stature" ||
+               $method->get_name() == 'Holland 1991 (proximal tibia, metric)' ||
+               $method->get_name() == 'Birkby et al. 2008 (skeletal, nonmetric)') {
            // Draw vertically
-           $maxcols = 0;
+           $maxcols = 1;
        }
 
        //$method_infos = $method->get_method_infos();
        $method_infos_by_type = $method->get_method_infos_by_type();
 
        if(count($method_infos_by_type) > 0) {
-           
+
         if($method->get_method_info_type() != null) {
            $input_type = new input_type($db, $method->get_method_info_type());
 
@@ -218,7 +228,12 @@ class method_infos {
                echo $output;
                return;
             } else if($method->get_method_info_type() == USER_INTERACTION_3_COL_W_REF) {
+
                 $output .= method_infos::show_method_info_3_col_with_ref($db, $methodid, $tier2id);
+                echo $output;
+                return;
+            } else if($method->get_method_info_type() == METHOD_INFO_TYPE_TRANSITION_ANALYSIS) {
+                $output .= method_infos::show_method_info_transition_analysis($db, $methodid, $tier2id);
                 echo $output;
                 return;
             }  
@@ -241,8 +256,8 @@ class method_infos {
         $i=0;
 
         $output .= "<table><tr>";
+        $count = 0 ;
        foreach($method_infos as $method_info) {
-           
            $method_info_id = $method_info->get_id();
            $input_type_id = $method_info->get_type();
            $input_type = new input_type($db, $input_type_id);
@@ -258,7 +273,7 @@ class method_infos {
                    $multiple = false;
                    $default = ' - Select One - ';
                }
-               if($i > $maxcols) {
+               if($i >= $maxcols) {
                    $output .= "</tr><tr>";
                    $i = 0;
                }
@@ -278,17 +293,33 @@ class method_infos {
            }
            
            else if($input_type_name == USER_INTERACTION_SELECT_EACH) {
+               $inner_table = true;
+               
+               if($maxcols == 1) {
+                   // draw vertically
+                   $inner_table = false;
+               }
+               
                if($i >= $maxcols) {
                    $output .= "</tr><tr>";
                    $i = 0;
                }
+               if(!$inner_table && $count == 0) {
+                   // draw headers for all
+                   $method_infos = new method_infos($db, $method_info_id);
+                   $header = $method_infos->get_header();
+                   $option_header = $method_infos->get_option_header();
+                   $output .= "<tr><th class='td_spaced align_top align_right'><B><U>$header</U></B></th><th><B><U>$option_header</U></B></th></tr>";
+                   
+               }
 
-               $output .= "<td class='td_spaced align_top'>";
-               $output .= self::show_method_infos_select_each($db, $method_info_id, $tier2id);
+               $output .= "<td class='td_spaced align_top ".(!$inner_table ? " align_right ": "")."'>";
+               $output .= self::show_method_infos_select_each($db, $method_info_id, $tier2id, $inner_table);
                $output .= "</td>";
            }
            
            $i++;
+           $count++;
        }
        $output .= "</tr></table>";
        //$output .= "</td>";
@@ -413,16 +444,22 @@ class method_infos {
         return $output;
     }
     
-    public static function show_method_infos_select_each($db, $method_infos_id, $tier2id = null) {
+    public static function show_method_infos_select_each($db, $method_infos_id, $tier2id = null, $inner_table = true) {
         $method_infos = new method_infos($db, $method_infos_id);
         $options = $method_infos->get_method_info_options();
         $output = "";
         // header
+        if($inner_table) {
         $output .= "<table><tr><th class='align_right align_top td_spaced'>";
-        $output .= "<B><U>".$method_infos->get_header() . "</U></B></th><th class='td_spaced' ><B><U>". $method_infos->get_option_header() . "</U></B></th></tr>";
+        $output .= "<B><U>".$method_infos->get_header() . "</U></B></th><th class='td_spaced align_left' ><B><U>". $method_infos->get_option_header() . "</U></B></th></tr><tr>";
         $output .= "<tr><td class='align_right align_top td_spaced'>";
+        }
         $output .= $method_infos->get_name();
-        $output .=":</td><td class='align_right align_top td_spaced'>";
+        if($method_infos->get_name() != null && $method_infos->get_name() != "") {
+            $output .= ":";
+        }
+
+        $output .="</td><td class='align_left align_top td_spaced'>";
         
         $values = array();
         $selected = array();
@@ -441,8 +478,9 @@ class method_infos {
         }
 
         $output .= (functions::draw_select($values, $selected, true));
+        if($inner_table) {
         $output .= "</td></tr></table>";
-        
+        }
         return $output;
     }
     
@@ -553,6 +591,91 @@ class method_infos {
         }
         $output .= "</div>";
     }
+        return $output;
+    }
+    
+    public static function show_method_info_transition_analysis($db, $method_id, $tier2id=null) {
+
+        $method = new method($db, $method_id);
+        // Get main categories
+        $cat_type  = input_type::get_input_type_by_name($db, 'category');
+        $cat_type_id = $cat_type->get_id();
+        $cat_query = "SELECT * from method_infos where methodid = :methodid and input_type = :input_type and parent_id is null";
+
+        $cat_params = array("methodid"=>$method_id, 'input_type'=>$cat_type_id);
+
+        $categories = $db->get_query_result($cat_query, $cat_params);
+        $output = "";
+
+        $output .= ("<B><U>All Data</U></B><BR>");
+            $output .= ("<select id='category' name='category[]' onchange='showBoneRegion(this.value)'>");
+            $output .= ("<option name='none'></option>");
+        // Show initial dropdown box
+        foreach($categories as $category) {
+
+            $category_info = new method_infos($db, $category['id']);
+            $name = $category_info->get_name();
+            $output .= ("<option name='$name'>$name</option>");
+
+        }
+        $output .= ("</select>");
+
+        foreach($categories as $category) {
+                // Get method_infos
+                $category_info = new method_infos($db, $category['id']);
+                $name = $category_info->get_name();
+
+                //echo('subcat id = '.$subcategory['id']);
+                $info_query = "SELECT * from method_infos where methodid = :methodid and parent_id = :parentid";
+                
+                $info_params = array("methodid"=>$method_id, 'parentid'=>$category_info->get_id());
+                //echo("info_query = $info_query<BR>");
+                //print_r($info_params);
+                $infos = $db->get_query_result($info_query, $info_params);
+
+                
+                $output .= ("<div name='$name' id='$name' style='display: none'>");
+                $output .= ("<fieldset class='methodinfobox'>");
+                $output .= ("<legend class='boldlegend'>".$name."</legend> ");
+                
+                //FInally, display infos
+                
+                $sorted_method_infos = array();
+                foreach($infos as $method_infos) {
+                    $output .= ("<table class='table_padded'><tr>");
+                    $mi_id = $method_infos['id'];
+                    
+                    $mi = new method_infos($db, $mi_id);
+                    $input_type_id = $mi->get_type();
+                    $input_type = new input_type($db, $input_type_id);
+                    if(!key_exists($input_type->get_input_type(), $sorted_method_infos)) {
+
+                        $sorted_method_infos[$input_type->get_input_type()] = array();
+                    }
+                    $sorted_method_infos[$input_type->get_input_type()][] = $method_infos;
+
+                            
+                }
+
+
+                foreach($sorted_method_infos as $input_type_name=>$infos) {
+                    $output .= "<td>";
+
+                    if($input_type_name == USER_INTERACTION_NUMERIC_ENTRY) {
+                        foreach($infos as $method_infos) {
+                            //$method_info = new method_infos($db, $method_infos['id']);
+
+                            $method_info_id = $method_infos['id'];
+                            $output .= self::show_method_infos_user_input($db, $method_info_id, $tier2id);
+                        }
+                    }
+                    $output .= "</td>";
+
+                }
+                $output .= "</tr></table></fieldset>";
+                $output .= "</div>";
+            }
+
         return $output;
     }
     
@@ -667,14 +790,20 @@ class method_infos {
 
             $selected = array();
        $methodinfos = array();
+
             if($tier2id != null) {
+
                    $tier2 = new tier2data($db, $tier2id);
+
                    $data = $tier2->get_tier3data();
-                   
+
                    foreach($data as $tier_info) {
+                       
                        $sel_id = $tier_info->get_method_info_option_id();
                        $selected[] = $sel_id;
                    }
+                   
+                   
                }
 
 
@@ -686,7 +815,7 @@ class method_infos {
                $output .= ("</tr>");
                $value = null;
                
-               
+
                foreach($categories as $category) {
                    $cat = new method_infos($db, $category['id']);
                    $method_infos = $cat->get_children();
@@ -712,19 +841,23 @@ class method_infos {
                         }
                         $selected_refs = array();
                         if($tier2 != null) {
-                            $t3 = tier3data::get_tier3_by_option($db, $mi->get_id(), $op->get_id());
-                            $sel_ref_list = $t3->get_references();
-                            foreach($sel_ref_list as $sel_ref) {
-                                $selected_refs[] = $sel_ref->get_id();
-                            }
+                                $sel_ref_list = $tier2->get_selected_references($mi->get_id());
+
+                                foreach($sel_ref_list as $sel_ref) {
+
+                                    $selected_refs[] = $sel_ref->get_id();
+                                }
+
                         }
-                        //print_r($ref_list);
+
                         $references = functions::checkbox_dropdown($mi->get_id(), $mi->get_name(), $ref_list, $selected_refs);
+
                        $output .= "<td>$references</td></tr>";
                    }
                    $output .= "</tr>";
                }
                $output .= "</table>";
+
                return $output;
 /*
                foreach($output_data_1_result as $od1_result) {
@@ -888,5 +1021,10 @@ class method_infos {
         "Tise et al. 2013 (postcranial, metric)",
         "Spradley and Jantz 2011 (metric)"
         
+    );
+    
+    private static $measurementPrompts = array(
+        "Lamendin et al. 1992 (dentition, metric)",
+        "Prince and Ubelaker 2002 (dentition, metric)"
     );
 }
