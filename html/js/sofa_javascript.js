@@ -302,6 +302,38 @@ $('document').ready(function() {
    $(window).scrollTop(0);
 });
 
+// checkbox closing
+ $(document).ready(function () {
+     $('#checkboxes').hide()
+ });
+
+
+
+// hide checkboxes
+
+
+ $(document).mouseup(function (e) {
+     var ids = document.querySelectorAll('[id]');
+        //console.log("e.target.id = "+e.target.id);
+         //console.log("e.target.name = "+e.target.name);
+     if(!(e.target.id).startsWith('checkbox_label') &&
+             !(e.target.id).startsWith('checkboxes_') &&
+             !(e.target.id).startsWith('checkbox_container')) {
+         //alert(e.target.id);
+         
+         Array.prototype.forEach.call( ids, function( el ) {
+            // "el" is your element
+            if((el.id).startsWith('checkbox_container')) {
+                //console.log(el.id);
+                el.style.display = "none";
+                expanded = false;
+            }
+        });
+         
+     };
+ });
+ //
+
 // checkbox dropdown
 var expanded = false;
 
@@ -317,4 +349,15 @@ function showCheckboxes(elementId) {
     expanded = false;
   }
 }
+
+function hideCheckboxes(){
+   //alert("hiding: "+elementId);
+  //var divToHide = document.getElementById(elementId);
+  document.onclick = function(e){
+    if(!(e.target.id).startsWith("checkboxes_") ){
+      //element clicked wasn't the div; hide the div
+      divToHide.style.display = 'none';
+    }
+  };
+};
 // end checkbox dropdown

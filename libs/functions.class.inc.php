@@ -98,7 +98,8 @@ class functions {
                     }
 
             echo '</select>';
-
+            echo('&nbsp;<input type="submit" class="showybutton"  name="add_method" value="Save Method" /><BR>');
+            
             echo "<script type=\"text/javascript\">
     $('#wait_2').hide();
             $('#drop_2').change(function(){
@@ -108,8 +109,6 @@ class functions {
             $('#result_3').hide();
             $('#drop_3').hide();
             $('#drop_4').hide();
-            $('#fchoseninput').val('0');
-            $('#pchoseninput').val('0');
           $.get(\"func.php\", {
                     func: \"show_method_info\",
                     method_id: $('#drop_2').val()
@@ -208,29 +207,32 @@ class functions {
        
 
         $elementName = "checkboxes_".urlencode($elementId);
+        $divName = "checkbox_container_".urlencode($elementId);
         //$elementId = "checkboxes[".$output_name."][".urlencode($od2)."]";
         $ref_text = '<div class="multiselect table_full" >';
-        $ref_text .= '<div class="selectBox" onclick="showCheckboxes('.$elementName.')">';
+        $ref_text .= '<div class="selectBox" onclick="showCheckboxes('.$divName.')">';
         $ref_text .= "<select name=select_option[$elementId][] class='table_full'>";
         $ref_text .= '<option selected diasbled>Select an option</option>';
         $ref_text .= '</select>';
-        $ref_text .= '<div class="overSelect"></div>';
+        $ref_text .= '<div id="checkbox_label" class="overSelect"></div>';
         $ref_text .= '</div>';
-        $ref_text.= '<div class="checkboxes" id="'.$elementName.'">';
+        $ref_text.= '<div class="checkboxes" id="'.$divName.'">';
 
         foreach($list as $list_item) {
 
             $id = $elementName ."[".$list_item[0]."]";
             $name = $list_item[1];
             
-            $ref_text .= ("<label for='$id'>");
+            $ref_text .= ("<label id='checkbox_label' for='$id'>");
             $curr_name = "select_option[$elementId]"."[".$list_item[0]."]";
             $ref_text .= ("<input type='checkbox' id='$id' name='$curr_name'".(in_array($list_item[0], $checked_list)? " checked=1 " : "")." />$name</label>");
         }
 
         $ref_text .= "</div></div>";
         
+        
         return $ref_text;
+        
 
 
    }
