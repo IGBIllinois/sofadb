@@ -145,8 +145,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
     }
     
-    echo("New ids = ");
-    
+
+     
     //print_r($new_ids);
     //echo("<BR><BR>");
     
@@ -163,6 +163,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             tier3data::delete_tier3($db, $tier2id, $ex_id);
         }
     }
+    
+    // References
+    // Delete existing and add new
+
+    $selected_refs = $tier2->get_all_selected_references();
+    foreach($selected_refs as $sel_ref) {
+        $sel_ref->remove_reference_from_tier2($sel_ref->get_id());
+    }
+    
+    if($_POST['select_option'] != null) {
+            // add references
+        $t2id = $tier2->get_id();
+            $sel_refs = $_POST['select_option'];
+            foreach($sel_refs as $id=>$ref_list) {
+
+                foreach($ref_list as $ref=>$ref_name) {
+
+                    if($ref > 0) {                
+                        $reference = new reference($db, $ref);
+                        //echo("adding (ref, t2id, mi_id) ($ref, $t2id, $id)<BR>");
+                        $reference->add_reference_to_tier2($t2id, $id);
+                    }
+                }
+
+            }
+            
+        }
     
     echo("<div id='caseform'>");
     if($errors == 0) {
@@ -204,24 +231,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <?php
         echo($method->get_name()."<BR>");
-        if(/*$method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ ||*/
-                $method->get_method_info_type() == METHOD_INFO_TYPE_TRANSITION_ANALYSIS) {
-            //echo("Spradley/Jantz<BR>");
-            //echo("tier2 id = ".$tier2->get_id());
 
-            $result = $method->get_categories();
-            
-            echo("<input type=hidden id='method_id' name='method_id' value='$method_id'>");
-            if($method->get_method_info_type() == METHOD_INFO_TYPE_TRANSITION_ANALYSIS) {
-                echo("<input type=hidden id='".METHOD_INFO_TYPE_TRANSITION_ANALYSIS."' name='".METHOD_INFO_TYPE_TRANSITION_ANALYSIS."' value='1'>");
-            }
 
-            method_info::show_method_info($db, $method->get_id(), $tier2->get_id());
-        } else {
             //method_info::show_method_info($db, $tier2->get_methodid(), $tier2->get_id());
-            //echo("tier2 id = ".$tier2->get_id());
+
             method_infos::show_method_info($db, $tier2->get_methodid(), $tier2->get_id());
-        }
+        
         ?>
              <div name="methodholder" id="methodholder">
              <p>

@@ -17,7 +17,7 @@ if(isset($_GET['id']))
 {
     $caseeditid=$_GET['id'];
     $_SESSION['caseid']=$caseeditid;
-    unset($_GET['id']);
+    //unset($_GET['id']);
 
     $casedata = new sofa_case($db, $caseeditid);
 }
@@ -42,6 +42,9 @@ elseif(isset($_SESSION['caseid']))
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+//echo("POST");
+//print_r($_POST);
+//exit();
     if(isset($_POST['methodtype'])) {
         $selmethodtype = $_POST['methodtype'][0];
     }
@@ -117,15 +120,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         if($_POST['select_option'] != null) {
             // add references
-            print_r($_POST['select_option']);
+            //print_r($_POST['select_option']);
             $sel_refs = $_POST['select_option'];
             foreach($sel_refs as $id=>$ref_list) {
-                echo("mi_id = $id<BR>");
                 foreach($ref_list as $ref=>$ref_name) {
-                    echo("  ref_id = $ref<BR>");
                     if($ref > 0) {                
                         $reference = new reference($db, $ref);
-                        echo("adding (ref, t2id, mi_id) ($ref, $t2id, $id)<BR>");
+                        //echo("adding (ref, t2id, mi_id) ($ref, $t2id, $id)<BR>");
                         $reference->add_reference_to_tier2($t2id, $id);
                     }
                 }
@@ -134,10 +135,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
         }
 
-
-
+        header ("location:index.php#tabs-2");
 
     }
+
     
  else {
 
@@ -585,7 +586,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
 
        		unset($_SESSION['caseid']); 
-                header ("location: ../index.php"); exit();
+                header ("location: ../index.php");
 
 			// Include the footer and stop the script
 		  
@@ -799,7 +800,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    ?>
                  
                      <!-- Add Method box -->    
-        <form action="index.php#tabs-2" method="post" id="method_info_data" name="method_info_data">
+
+        <form action="index.php#tabs-2" method="post" id="method_info_data">
         <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
     <fieldset class="methodinfobox"><legend class="boldlegend">Add Methods</legend>
 
@@ -822,9 +824,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <span id="wait_2" style="display: none;">
     <img alt="Please Wait" src="ajax-loader.gif"/>
     </span>
-     
-     <input type="submit" class="showybutton" id="addmethodbutton"  formmethod='POST' name='add_method' value="Save Method" ><BR>
-     
+     <!--
+     <input type="submit" class="showybutton"  name='add_method' value="Save Method" /><BR>
+     -->
      <span id="result_2" style="display: none;"></span>
     <span id="wait_3" style="display: none;">
         <img alt="Please Wait" src="ajax-loader.gif"/>
@@ -879,7 +881,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <td><U><a href=editmethods.php?id=".$caseeditid."&tier2id=".$tier2->get_id().">Edit</a></U></td>");
                         
                         
-                        echo '<td>
+                        echo '<td><form action="index.php#tabs-2" method="post" id="removedata" onsubmit="return confirm(\'Do you really want to remove this method from this case?\')">
                             <form action="index.php#tabs-2" method="post" id="removedata" onsubmit="return confirm(\'Do you really want to remove this method from this case?\')">
                             <input name="delid" type="hidden" value="'.$tier2->get_id().'"/>
                             <input name="delsubmit" type="submit" value="Remove" /> </form>
