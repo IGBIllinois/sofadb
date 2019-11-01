@@ -138,14 +138,7 @@ class method_infos {
            $output .= ("<option value='in' ". (($estimated_outcome_units == 'in') ? " selected='selected' " : "") .">in</option>");
            $output .= ("<option value='cm' ".(($estimated_outcome_units == 'cm') ? " selected='selected' " : "") .">cm</option>");
            $output .= ("</select><BR>");
-           /*
-           if($method->get_method_info_type() == METHOD_INFO_TYPE_STATURE_1) {
-            $output .= ("<BR>Select any/all formulae used to estimate stature.<BR>");
-           } else {
-            $output .= ("<BR>Select any/all data used to estimate stature.<BR>");   
-           }
-            * 
-            */
+
            $output .= $prompt;
        } else if($method->get_method_type() == "Age") {
 
@@ -633,8 +626,8 @@ class method_infos {
 
         $categories = $db->get_query_result($cat_query, $cat_params);
         $output = "";
-
-        $output .= ("<B><U>All Data</U></B><BR>");
+        $header = $categories[0]['header'];
+        $output .= ("<B><U>$header</U></B><BR>");
             $output .= ("<select id='category' name='category[]' onchange='showBoneRegion(this.value)'>");
             $output .= ("<option name='none'></option>");
         // Show initial dropdown box
