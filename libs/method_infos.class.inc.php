@@ -208,14 +208,15 @@ class method_infos {
        $maxcols = MAXCOLS;
        if($method->get_method_type() == "Stature" ||
                $method->get_name() == 'Holland 1991 (proximal tibia, metric)' ||
-               $method->get_name() == 'Birkby et al. 2008 (skeletal, nonmetric)') {
+               $method->get_name() == 'Birkby et al. 2008 (skeletal, nonmetric)' ||
+               $method->get_name() == 'Rhine 1990 (skull, nonmetric)') {
            // Draw vertically
            $maxcols = 1;
        }
 
        //$method_infos = $method->get_method_infos();
        $method_infos_by_type = $method->get_method_infos_by_type();
-
+       
        if(count($method_infos_by_type) > 0) {
 
         if($method->get_method_info_type() != null) {
@@ -236,6 +237,13 @@ class method_infos {
                 $output .= method_infos::show_method_info_transition_analysis($db, $methodid, $tier2id);
                 echo $output;
                 return;
+            } else if($method->get_method_info_type() == METHOD_INFO_TYPE_RIOS_CARDOSO) {
+
+                $output .= method_infos::show_method_infos_rios_cardoso($db, $methodid, $tier2id) ;
+                
+                echo $output;
+                return;
+                        
             }  
        } 
        
@@ -266,7 +274,7 @@ class method_infos {
 
            if($input_type_name == USER_INTERACTION_MULTISELECT ||
                    $input_type_name == USER_INTERACTION_TWO_COLUMN ||
-                   $input_type_name == USER_INTERACTION_SINGLESELECT) {
+                   $input_type_name == USER_INTERACTION_SINGLESELECT ) {
                $multiple = true;
                $default = null;
                if($input_type_name == USER_INTERACTION_SINGLESELECT) {
@@ -292,10 +300,13 @@ class method_infos {
                $output .= self::show_method_info_text_area($db, $method_info_id, $tier2id);
            }
            
-           else if($input_type_name == USER_INTERACTION_SELECT_EACH) {
+           else if($input_type_name == USER_INTERACTION_SELECT_EACH ||
+                   $input_type_name == USER_INTERACTION_CHECKBOX_SELECT) {
                $inner_table = true;
-               
-               if($maxcols == 1) {
+               if($input_type_name == USER_INTERACTION_CHECKBOX_SELECT) {
+                   $maxcols = 1;
+               }
+               if($maxcols == 1 ) {
                    // draw vertically
                    $inner_table = false;
                }
@@ -314,7 +325,7 @@ class method_infos {
                }
 
                $output .= "<td class='td_spaced align_top ".(!$inner_table ? " align_right ": "")."'>";
-               $output .= self::show_method_infos_select_each($db, $method_info_id, $tier2id, $inner_table);
+               $output .= self::show_method_infos_select_each($db, $method_info_id, $tier2id, $inner_table, ($input_type_name == USER_INTERACTION_CHECKBOX_SELECT));
                $output .= "</td>";
            }
            
@@ -407,7 +418,8 @@ class method_infos {
         }
         $output .= "<td class='td_spaced align_top align_left'>";
 
-        $output .= (functions::draw_select($values, $selected, $multiple, $default_option));;
+        $output .= (functions::draw_select($values, $selected, $multiple, $default_option));
+        
         $output .= "</td></tr></table>";
 
         return $output;
@@ -444,7 +456,8 @@ class method_infos {
         return $output;
     }
     
-    public static function show_method_infos_select_each($db, $method_infos_id, $tier2id = null, $inner_table = true) {
+    public static function show_method_infos_select_each($db, $method_infos_id, $tier2id = null, $inner_table = true, $checkboxes = false) {
+
         $method_infos = new method_infos($db, $method_infos_id);
         $options = $method_infos->get_method_info_options();
         $output = "";
@@ -476,8 +489,18 @@ class method_infos {
         foreach($options as $op) {
             $values[$op->get_id()] = $op->get_value();
         }
-
+        if(!$checkboxes) {
         $output .= (functions::draw_select($values, $selected, true));
+        } else {
+
+            $check_values = array();
+                foreach($options as $option) {
+                $id = $option->get_id();
+                $value = $option->get_value();
+                $check_values[] = array($option->get_id(),  $option->get_value());
+            }
+            $output .= functions::checkbox_dropdown($method_infos->get_id(), $method_infos->get_name(), $check_values, $selected, 'check_select');
+        }
         if($inner_table) {
         $output .= "</td></tr></table>";
         }
@@ -496,8 +519,9 @@ class method_infos {
 
         $categories = $db->get_query_result($cat_query, $cat_params);
         $output = "";
+        $output_header = $categories[0]['header'];
 
-        $output .= ("<B><U>Skeletal Region</U></B><BR>");
+        $output .= ("<B><U>$output_header</U></B><BR>");
             $output .= ("<select id='category' name='category[]' onchange='showBoneRegion(this.value)'>");
             $output .= ("<option name='none'></option>");
         // Show initial dropdown box
@@ -519,18 +543,21 @@ class method_infos {
 
             $sub_categories = $db->get_query_result($subcat_query, $subcat_params);
             
+            if(count($sub_categories) == 0) {
+                $sub_categories = array($category);
+            }
+            
             $output .= ("<div name='$category_name' id='$category_name' style='display: none'>");
             $default_option = "Sectioning point used?";
             foreach($sub_categories as $subcategory) {
                 // Get method_infos
                 $subcategory_info = new method_infos($db, $subcategory['id']);
                 $subname = $subcategory_info->get_name();
-                //echo('subcat id = '.$subcategory['id']);
+
                 $info_query = "SELECT * from method_infos where methodid = :methodid and parent_id = :parentid";
                 
                 $info_params = array("methodid"=>$method_id, 'parentid'=>$subcategory_info->get_id());
-                //echo("info_query = $info_query<BR>");
-                //print_r($info_params);
+
                 $infos = $db->get_query_result($info_query, $info_params);
 
                 
@@ -629,8 +656,7 @@ class method_infos {
                 $info_query = "SELECT * from method_infos where methodid = :methodid and parent_id = :parentid";
                 
                 $info_params = array("methodid"=>$method_id, 'parentid'=>$category_info->get_id());
-                //echo("info_query = $info_query<BR>");
-                //print_r($info_params);
+
                 $infos = $db->get_query_result($info_query, $info_params);
 
                 
@@ -684,11 +710,7 @@ class method_infos {
         // one numeric_entry, and one multiselect
         
         $output = '';
-        //$method_infos = new method_infos($db, $method_infos_id);
-        //$id = $method_infos->get_id();
-        //$m_query = "SELECT id from method_infos where parent_id=:parentid";
-        //$m_params = array("parentid"=>$method_infos_id);
-        //$result = $db->get_query_result($m_query, $m_params);
+
         $m_infos = new method_infos($db, $method_infos_id);
         $result = $m_infos->get_children();
         
@@ -712,9 +734,6 @@ class method_infos {
         }
         if($inputbox_mi != null) {
         $output .= "<table class='td_spaced'><tr><td>";
-        //$output .= $parent_mi->get_name();
-        //$output .= "</td><td>";
-        //$output .= "<input type=text width=6 id=output_data[][$id]>";
 
         $output .= method_infos::show_method_infos_user_input($db, $inputbox_mi->get_id(), $tier2id);
         $output .= "</td><td class='td_spaced align_right'>";
@@ -725,7 +744,7 @@ class method_infos {
         
         
     }
-    
+        
    /** Shows HTML method_info input for a "text_area" method_info
     * 
     * @param method $method The method object
@@ -806,13 +825,13 @@ class method_infos {
                    
                }
 
+               $output .= "";
+               $headers = "";
+               $has_refs = false;
+               $headers .= ("<table  style='table_full table_padded'><tr><th><U><B>".$header1."</B></U></th>");
+               $headers .= ("<th><U><B>".$header2."</B></U></th>");
+               $headers .= ("<th><U><B>".$header3."</B></U></th>");
 
-               $output .= ("<table  style='table_full table_padded'><tr><th><U><B>".$header1."</B></U></th>");
-               $output .= ("<th><U><B>".$header2."</B></U></th>");
-               $output .= ("<th><U><B>".$header3."</B></U></th>");
-               $output .= ("<th><U><B>".$header4."</B></U></th>");
-
-               $output .= ("</tr>");
                $value = null;
                
 
@@ -835,6 +854,10 @@ class method_infos {
                         $output .= "<td>".(functions::draw_select($values, $selected, false, " ")). "</td>";
                        
                         $refs = $mi->get_references();
+                        if(count($refs) > 0) {
+
+                            $has_refs = true;
+                        
                         $ref_list= array();
                         foreach($refs as $ref) {
                             $ref_list[] = array($ref->get_id(), $ref->get_reference_name());
@@ -850,110 +873,96 @@ class method_infos {
 
                         }
 
-                        $references = functions::checkbox_dropdown($mi->get_id(), $mi->get_name(), $ref_list, $selected_refs);
-
+                        $references = functions::checkbox_dropdown($mi->get_id(), $mi->get_name(), $ref_list, $selected_refs, 'references');
+                        }
                        $output .= "<td>$references</td></tr>";
+                        
                    }
                    $output .= "</tr>";
                }
                $output .= "</table>";
 
-               return $output;
-/*
-               foreach($output_data_1_result as $od1_result) {
-                   $reflist = array();
-                   $tmp_references = null;
-                   
-                   $name = $od1_result[0];
-                   //In case name has spaces, encode it
-                   $outputname = urlencode($name);
-                   $od2_data = $method->get_od2_for_od1($name, 1);
-                   $selected = false;
-                   $od3 = "";
-                   //$od3 .= "<table >";
-                   foreach($od2_data as $od2) {
-                       $od2 = $od2['output_data_2'];
-                       $tmp_od3 = "";
-                       $reflist = array();
-                       foreach($methodinfos as $tmp_methodinfo) {
-                           if($outputname == $tmp_methodinfo->get_output_data_1() &&
-                                   $od2 == $tmp_methodinfo->get_output_data_2()) {
-                               $selected = true;
-
-                               $t3 = $tier2->get_tier3data($tmp_methodinfo->get_id());
-                               if($t3 != null) {
-
-                               $tmp_references = $t3[0]->get_references();
-                               }
-
-                               $reflist = array_map('trim', (explode(",", $tmp_references)));
-                               
-                               $tmp_od3 = $tmp_methodinfo->get_output_data_3();
-                           }
-                       }
-                   $od3_data = $method->get_output_data_3($name, $od2);
-                   $od2_encode = urlencode($od2);
-                   $od3 .="<td class='width_250px'>$od2</td>";
-                   $od3 .= "<td ><select name=output_data_1[$outputname][$od2_encode][]>";
-                   $od3 .= "<option value=''></option>";
-                   foreach($od3_data as $output_data_3) {
-                       $od3 .= "<option  value='".$output_data_3['output_data_3']."'";
-                           if($tmp_od3 == $output_data_3['output_data_3']) {
-                               // it exists in the database
-                               $od3 .= " selected=1 ";
-                           }
-                           $od3 .= ">".$output_data_3['output_data_3']."</option>";    
-                   }
-                   $od3 .="</select>";
-                   $od3 .="</td><td>";
-                   
-
-                   $method_infos = $method->get_method_info_by_od1($name, $od2);
-
-
-                   $first_method_info = $method_infos[0];
-
-                   if($first_method_info != null) {
-                    $reference_data = $first_method_info->get_references();
-                    if(count($reference_data)>0) {
-                    $elementId = "checkboxes_".$outputname."_".str_replace(" ", "_",$od2);
-                    //$elementId = "checkboxes[".$output_name."][".urlencode($od2)."]";
-                    $ref_text = '<div class="multiselect table_full" >';
-                    $ref_text .= '<div class="selectBox" onclick="showCheckboxes('.$elementId.')">';
-                    $ref_text .= "<select name=references[$outputname][$od2_encode][] class='table_full'>";
-                    $ref_text .= '<option>Select an option</option>';
-                    $ref_text .= '</select>';
-                    $ref_text .= '<div class="overSelect"></div>';
-                    $ref_text .= '</div>';
-                    $ref_text.= '<div class="checkboxes" id="'.$elementId.'">';
-
-                    foreach($reference_data as $ref) {
-
-                        $refid = $elementId ."[".$ref['id']."]";
-                        $refname = $ref['reference_name'];
-                        $ref_text .= ("<label for='$refid'>");
-                        $curr_name = "references[$outputname][$od2_encode]"."[".$ref['id']."]";
-                        $ref_text .= ("<input type='checkbox' id='$refid' name='$curr_name'".(in_array($ref['id'], $reflist)? " checked=1 " : "")." />$refname</label>");
-                    }
-                    
-                    $ref_text .= "</div></div></tr>";
-                   }
-                   else {
-                       $ref_text .= "</tr>";
-
-                       
-                   }
-              
-                    $od3 .= $ref_text;
-                   
-                   } 
-                   }
-                   
-               echo("<tr><td class='align_top td_spaced' rowspan='".count($od2_data)."'>".$name.":</td>$od3 </tr>");
-       }
- * 
- */
+               if($has_refs == true) {
+                   $headers .= ("<th><U><B>".$header4."</B></U></th>");
+               }
+               else {
+                   $headers .= "<th></th>";
+               }
+               return $headers . $output;
    }
+   
+    public static function show_method_infos_rios_cardoso($db, $method_id, $tier2id=null) {
+        
+        $method = new method($db, $method_id);
+        
+        $selected = array();
+        if($tier2id != null) {
+            $t2 = new tier2data($db, $tier2id);
+            $tier3s = $t2->get_tier3data();
+            foreach($tier3s as $tier3) {
+                $option_id = $tier3->get_method_info_option_id();
+                $selected[] = $option_id;
+            }
+        }
+        
+        // Get main categories
+        $cat_type  = input_type::get_input_type_by_name($db, 'category');
+        $cat_type_id = $cat_type->get_id();
+        $cat_query = "SELECT * from method_infos where methodid = :methodid and input_type = :input_type and parent_id is null";
+
+        $cat_params = array("methodid"=>$method_id, 'input_type'=>$cat_type_id);
+
+        $categories = $db->get_query_result($cat_query, $cat_params);
+        $output = "";
+        $output_header = $categories[0]['header'];
+        
+        $headers = array();
+        $table = '';
+        
+        // table headers
+        
+        foreach($categories as $cat_info) {
+            $row = "";
+            $category = new method_infos($db, $cat_info['id']);
+            $subcategories = $category->get_children();
+            $sorted_subcats = array();
+            foreach($subcategories as $subcat) {
+                if(!in_array($subcat->get_name(), $headers)) {
+                    $headers[] = $subcat->get_name();
+                }
+                $sorted_subcats[array_search($subcat->get_name(), $headers)] = $subcat;
+            }
+            $row .= "<tr>";
+            $row .= "<td>".$category->get_name()."</td>";
+            
+            foreach($sorted_subcats as $subcat_info) {
+                
+
+                $method_info_options = $subcat_info->get_method_info_options();
+                $list = array();
+                foreach($method_info_options as $opt) {
+                    $list[] = array($opt->get_id(), $opt->get_value());
+                }
+                $row .= "<td>";
+                
+                $row .= functions::checkbox_dropdown($subcat_info->get_id(), $subcat_info->get_name(), $list, $selected, 'check_select');
+                $row .= "</td>";
+            }
+            $row .= "</tr>";
+            $table .= $row;
+        }
+        $header_info = "<tr class='td_spaced'>";
+        $header_info .= "<td><B><U>$output_header</U></B></td>";
+        foreach($headers as $header) {
+            $header_info .= "<td><B><U>".$header."</U></B></td>";
+        }
+        $header_info .= "</tr>";
+        $table = "<table class='table_padded'>".$header_info. $table;
+        $table .= "</table>";
+        
+        return $table;
+        
+    }
    
    public function get_children() {
        $query = "SELECT id from method_infos where parent_id = :parent_id";
@@ -1002,7 +1011,9 @@ class method_infos {
         "3D-ID (cranial, metric)",
         "Buikstra and Ubelaker 1994 (skull, nonmetric)",
         "Rogers et al. 2000 (clavicle, nonmetric)",
-        "Walker 2005 (os coxae)",
+        "Walker 2005 (os coxa, nonmetric)",
+        "Walker 2008 (cranial, nonmetric)",
+        "Edgar 2013 (detention, nonmetric)",
         "Raxter et al. (skeletal, metric)");
     
     private static $formulaPrompts = array(

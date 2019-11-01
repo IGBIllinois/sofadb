@@ -172,10 +172,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $sel_ref->remove_reference_from_tier2($sel_ref->get_id());
     }
     
-    if($_POST['select_option'] != null) {
+    if($_POST['references'] != null) {
             // add references
         $t2id = $tier2->get_id();
-            $sel_refs = $_POST['select_option'];
+            $sel_refs = $_POST['references'];
             foreach($sel_refs as $id=>$ref_list) {
 
                 foreach($ref_list as $ref=>$ref_name) {
@@ -183,12 +183,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if($ref > 0) {                
                         $reference = new reference($db, $ref);
                         //echo("adding (ref, t2id, mi_id) ($ref, $t2id, $id)<BR>");
-                        $reference->add_reference_to_tier2($t2id, $id);
+                        $reference->add_reference_to_tier2($tier2id, $id);
                     }
                 }
 
             }
             
+        }
+        
+        if($_POST['check_select'] != null) {
+            // used for checkbox arrays, like Rios & Cardoso
+            echo("t2id = $t2id<BR>");
+            $check_select = $_POST['check_select'];
+            foreach($check_select as $method_info_id=>$option_list) {
+                foreach($option_list as $option_id=>$option_name) {
+                    if($option_id > 0) {                
+                        $this_case->add_tier3($tier2id, $option_id);
+                    }
+                }
+            }
         }
     
     echo("<div id='caseform'>");

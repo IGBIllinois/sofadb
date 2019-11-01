@@ -42,9 +42,6 @@ elseif(isset($_SESSION['caseid']))
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-//echo("POST");
-//print_r($_POST);
-//exit();
     if(isset($_POST['methodtype'])) {
         $selmethodtype = $_POST['methodtype'][0];
     }
@@ -62,8 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     } else if(isset($_POST['add_method'])) {
 
-
-        //print_r($_POST);
         
         $estimated_outcome_1 = null;
         $estimated_outcome_2 = null;
@@ -112,21 +107,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             } else {
                 if($od != null && $od != '') {
-                //echo("adding to tier3 ($od)<BR>");
                 $this_case->add_tier3($t2id, $od);
                 }
             }
         }
         
-        if($_POST['select_option'] != null) {
+        if($_POST['check_select'] != null) {
+            // used for checkbox arrays, like Rios & Cardoso
+            print_r($_POST['check_select']);
+            $check_select = $_POST['check_select'];
+            foreach($check_select as $method_info_id=>$option_list) {
+                foreach($option_list as $option_id=>$option_name) {
+                    if($option_id > 0) {                
+                        $this_case->add_tier3($t2id, $option_id);
+                    }
+                }
+
+            }
+            
+        }
+        
+        if($_POST['references'] != null) {
             // add references
-            //print_r($_POST['select_option']);
-            $sel_refs = $_POST['select_option'];
+
+            $sel_refs = $_POST['references'];
             foreach($sel_refs as $id=>$ref_list) {
                 foreach($ref_list as $ref=>$ref_name) {
                     if($ref > 0) {                
                         $reference = new reference($db, $ref);
-                        //echo("adding (ref, t2id, mi_id) ($ref, $t2id, $id)<BR>");
                         $reference->add_reference_to_tier2($t2id, $id);
                     }
                 }

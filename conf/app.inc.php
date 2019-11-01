@@ -57,6 +57,7 @@ DEFINE("USER_INTERACTION_ESTIMATED_OUTCOME", "estimated_outcome");
 // User input for possible estimated outcome values
 DEFINE("USER_INTERACTION_CATEGORY", "category");
 
+DEFINE("USER_INTERACTION_CHECKBOX_SELECT", "checkbox_select");
 
 // Method info type for "Spradley & Jantz 2011" method, and similar
 DEFINE("METHOD_INFO_TYPE_SPRADLEY_JANTZ", "Spradley_Jantz");
