@@ -49,7 +49,7 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
  <link href="<?php echo(ROOT_URL) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
  <link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery.multiselect.css" />
 
-<link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/vendor/components/jquery-ui/themes/base/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/vendor/components/jqueryui/themes/base/jquery-ui.css" />
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
@@ -59,7 +59,7 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
    <script type="text/javascript" src="<?php echo(ROOT_URL) ?>/js/addrow.js"></script>
 
 <script type="text/javascript" src="<?php echo(ROOT_URL) ?>/vendor/components/jquery/jquery.js"></script>
-<script type="text/javascript" src="<?php echo(ROOT_URL) ?>/vendor/components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+<script type="text/javascript" src="<?php echo(ROOT_URL) ?>/vendor/components/jqueryui/jquery-ui.min.js"></script>
 
 
 <script type="text/javascript" src="<?php echo(ROOT_URL) ?>/js/jquery.multiselect.js"></script>
