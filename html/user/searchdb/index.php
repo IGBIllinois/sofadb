@@ -1,6 +1,6 @@
 <?php
 require_once('../../include/header_user.php');
- require_once('../../include/session_user.php') ;
+ require_once('../../include/session.inc.php') ;
 ?>
 
 <BR/>
@@ -180,7 +180,7 @@ $regcount=1;
 foreach($case_results as $case) {
 	$regcount=$regcount+1;
 	echo '<tr>
-	<td><a href="../editcase/index.php?id=' . $case->get_id() . '">View</a></td>
+	<td><a href="../viewcase.php?id=' . $case->get_id() . '">View</a></td>
 	<td>' . $case->get_casenumber() . '</td>
 	<td>' . $case->get_caseyear(). '</td>
 	<td>' . $case->get_datesubmitted() . '</td>
@@ -422,29 +422,8 @@ frmvalidator.addValidation("ageid2","geelmnt=ageid1","The second age should be l
 _END;
 } 
 ?>
-
-
-  
-  
-  
-  </div>
-
-
-
-
-
-
-
-
-
-
-</div></div>
-<div id="footer">Copyright 2014 by <a href="http://www.sofainc.org/" target="_blank">SOFA</a>.</div>
 </div>
 
-
-
-
-</body>
-</html>
-
+<?php
+    require_once("../../include/footer.php");
+?>
