@@ -1,6 +1,6 @@
 <?php 
 require_once('../../include/header_user.php');
-require_once('../../include/session_user.php') ;
+require_once('../../include/session.inc.php') ;
 require_once('func.php');
 
 ?>
@@ -249,19 +249,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     else {
         $fastature_test = trim($_POST['fastature']);
         $fastature2_test = trim($_POST['fastature2']);
-            if(!is_numeric($fastature_test) || !is_numeric($fastature2_test)) {
-                $errors[] = "Forensic Anthropology estimated stature must be numeric.";
-            } else {
-                $fastature = trim($_POST['fastature']);
-                $fastature2 = trim($_POST['fastature2']);
+        
+        if(!is_numeric($fastature_test)) {
+            $errors[] = "Forensic Anthropology estimated stature must be numeric.";
+        } else {
+            $fastature = trim($_POST['fastature']);
+        }
+        if(!empty($_POST['fastature2'])) {
 
-                if(isset($_POST['fastatureunits'])) {
-                    $fastatureunits = trim($_POST['fastatureunits']);
-                } else {
-                    $fastatureunits = "inches";
-                }
+            if(!is_numeric($fastature2_test)) {
+                $errors[] = "Forensic Anthropology second estimated stature must be numeric.";
+            } else {
+                $fastature2 = trim($_POST['fastature2']);
             }
-	}
+        }
+
+
+        if(isset($_POST['fastatureunits'])) {
+                $fastatureunits = trim($_POST['fastatureunits']);
+        } else {
+                $fastatureunits = "inches";
+        }
+    }
+	
 
 
   // Check for a id sex
@@ -302,7 +312,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
         $idstature_test = trim($_POST['idstature']);
-            if(!is_numeric($idstature)) {
+            if(!is_numeric($idstature_test)) {
                 $errors[] = "Identified stature must be numeric.";
             } else {
             
