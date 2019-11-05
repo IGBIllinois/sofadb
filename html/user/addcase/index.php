@@ -1,12 +1,11 @@
 <?php 
 $addcase = 1;
 require('../../include/header_user.php') ;
- require_once('addcase_methodfix.php');
  
  if(!isset($_SESSION['num_methods']))
  { $_SESSION['num_methods']=0;}
  
-  require_once('func.php');
+
 
 ?>
 
@@ -668,94 +667,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       
       </fieldset>
    </div>
-<!--
-   <div id="tabs-2">
-   
-              <div class="scroll" name="methodtableholder" id="methodtableholder">
-             
-            
-             
-               <table id="hortable" border="1">
-                  <tbody>
-                    <tr>
-                      <p>
-						
-						<th>Selected </th>
-						 <th>
-						
-   Method Type
-					     </th>
-						 <th>
-							Method Name
-						 </th>
-							</p>
-                    </tr>
-                   
-                    </tbody>
-                </table>
-				<div class="clear"></div>
-    
-    </div>
-    <fieldset class="methodinfobox"><legend class="boldlegend">Remove Methods</legend> 
-      <input type="button" value="Remove Method from List" id="removemethodbutton"  /> 
-      (Select a method in table above to remove.)
-      </fieldset>
-    <fieldset class="methodinfobox"><legend class="boldlegend">Add Methods</legend>
-    
-   
-					
 
-                         
-					
-                  
-			
-             <div name="methodholder" id="methodholder">
-             <p><select name="methodtype[]" id="methodtype">
-    
-                           <option value="" selected="selected" disabled="disabled">Add Method For</option>
-                           <option value="1" >Sex</option>
-                           <option value="2" >Age</option>
-                           <option value="3" >Ancestry</option>
-                           <option value="4" >Stature</option>
-                            </select>
-                            
-                             <span id="wait_1" style="display: none;">
-    <img alt="Please Wait" src="ajax-loader.gif"/>
-    </span>
-     <span id="result_1" style="display: none;"></span>
-    <span id="wait_2" style="display: none;">
-    <img alt="Please Wait" src="ajax-loader.gif"/>
-    </span>
-    
-     <span id="result_2" style="display: none;"></span>
-                              <span id="wait_3" style="display: none;">
-    <img alt="Please Wait" src="ajax-loader.gif"/>
-    </span>
-    <span id="result_3" style="display: none;"></span></p>
-           <p>   <input type="button" class="showybutton" id="addmethodbutton" value="Add Method to List" ></p>
-             </div>
-             
-            <span>
-             Don't see your method? <a href="../../contact/index.php" style="color:red" target="_blank">Click here.</a></span>
-             
-    <span name="savebutton" class="bigsavebutton">
-    <input name="savecase" type="image" id="savecase" src="../../images/bigsave.png" alt="Save Case" width="90"/></span>
-    <input name="fchoseninput" type="hidden" id="fchoseninput" value="0" />
-    <input name="pchoseninput" type="hidden" id="pchoseninput" value="0" />
-    </fieldset>
-     
-    
-    
-    </div>
-    -->
     
    </div></div>
    
      <div id="casedata_errorloc" class="errorlocation">
     </div>
     
- <!-- <br />	<br /> <label class="label" for="savecase">Click here to save case</label>
-    <input name="savecase" id="savecase" type="submit" value="Save Case"/>-->
     
     
     </fieldset>
@@ -797,7 +715,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   frmvalidator.addValidation("idstature","numeric","Statures must be entered as a number");
   
   frmvalidator.addValidation("idrace_othertext","req","Please fill-in the  Other Race/Ethinicity textbox",
-        "VWZ_IsChecked(document.forms['casedata'].elements['race_other'],'1')");
+        "VWZ_IsChecked(document.forms['casedata'].elements['idrace_other'],'1')");
 		
 frmvalidator.addValidation("farace_othertext","req","Please fill-in the Other Ancestry textbox",
         "VWZ_IsChecked(document.forms['casedata'].elements['farace_other'],'1')");

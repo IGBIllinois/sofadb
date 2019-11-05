@@ -1,6 +1,6 @@
 <?php
 
- require_once('../../include/session_user.php') ;
+ require_once('../../include/session.inc.php') ;
  
 	  if (isset($_POST['exportsubmit'])|| isset($_POST['exportall']))
 	  {

@@ -12,9 +12,7 @@
 <title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
 <script type="text/javascript" src="./js/jquery.js"></script>
 <script type="text/javascript" src="./js/jquery.query-2.1.7.js"></script>
-<!--
-<script type="text/javascript" src="./js/rainbows.js"></script>
--->
+
 <!-- // Load Javascipt -->
 
 

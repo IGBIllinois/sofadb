@@ -1,19 +1,25 @@
 <?php
 
-require_once($_SERVER['DOCUMENT_ROOT'].'/sofadb/conf/settings.inc.php');
-require_once($_SERVER['DOCUMENT_ROOT'].'/sofadb/conf/app.inc.php');
+$root_dir = $_SERVER['SERVER_NAME'] . $_SERVER['CONTEXT_PREFIX'];
+$ds = DIRECTORY_SEPARATOR;
+
+$filepath = __DIR__ . "$ds..$ds..$ds";
+
+require_once($filepath. "conf". $ds. 'settings.inc.php');
+require_once($filepath . "conf". $ds. 'app.inc.php');
 error_reporting(E_ERROR | E_PARSE);
 
 ini_set('display_errors',1);
 
-set_include_path(get_include_path().";../libs;../conf;");
+set_include_path(get_include_path().";".$filepath."libs".$db.";".$filepath."conf".$db.";");
 
 function my_autoloader($class_name) {
+global $filepath;
+global $ds;
 
+	if(file_exists($filepath."libs".$ds.$class_name . ".class.inc.php")) {
 
-    //foreach($paths as $path)
-	if(file_exists($_SERVER['DOCUMENT_ROOT'].'/sofadb/libs/'. $class_name . ".class.inc.php")) {
-		require_once $_SERVER['DOCUMENT_ROOT'].'/sofadb/libs/' .$class_name . '.class.inc.php';
+		require_once $filepath."libs".$ds.$class_name . '.class.inc.php';
 	}
 
 

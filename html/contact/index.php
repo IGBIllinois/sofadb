@@ -4,7 +4,7 @@
 
   if(isset($_SESSION['loggedin']))
   {
-     require_once("../include/session_user.php"); 
+     require_once("../include/session.inc..php"); 
   } else {
        session_start();
   }
@@ -18,7 +18,6 @@
 <title>Contact Us</title>
 <link href="../css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <script type='text/javascript' src='scripts/gen_validatorv31.js'></script>
 
 <title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
 
@@ -104,12 +103,7 @@ Bone(s) used by method:</textarea></div>
 	
 	</form>
 </div>
-<div id="footer">Copyright 2014 by <a href="http://www.sofainc.org/" target="_blank">SOFA</a>.</div>
-</div>
-
-
-
-
-</body>
-</html>
+<?php
+    require_once("../../include/footer.php");
+?>
 

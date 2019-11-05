@@ -1,6 +1,6 @@
 <?php
 require_once('../include/header_user.php');
-//require_once('../include/session_user.php') ;
+require_once('../include/session.inc.php') ;
 
 ?>
 
@@ -249,4 +249,4 @@ if(!isset($_SESSION['loadedmethods']))
 </div>
 <?php
 require_once("../include/footer.php");
-
+?>

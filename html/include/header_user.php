@@ -6,23 +6,37 @@ if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
     header('Location: ' . $location);
     exit;
 }
-/*
-if(file_exists('../../../conf/settings.inc.php')) {
-require_once('../../../conf/settings.inc.php');
-} else if('../../conf/settings.inc.php') {
-    require_once('../../conf/settings.inc.php');
-}
- * 
- */
+
 require_once(__DIR__ . "\..\..\conf\settings.inc.php");
 
-//if(isset($addcase) && ($addcase == 1)) {
-//    require_once('session_addcase.php');
-//} else {
-    require_once('session_user.php') ;
-//}
+
+require_once('session.inc.php') ;
 require_once('main.inc.php');
 
+if($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==1)
+{}
+elseif($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==2)
+{
+    // If they're admin, redirect to the admin page
+    header('Location: ' . $_SERVER['DOCUMENT_ROOT'].'/admin/index.php');
+exit();
+}
+elseif($_SESSION['loggedin']==1)
+{echo '<p>Your account is not activated yet. <a href="contact/index.php">Contact</a> the administrator if you registered more than 48 hours ago.</p>';
+    $_SESSION=array();
+    session_destroy();
+    header('Location: ' .  ROOT_URL);
+    exit();
+}
+
+
+
+if(isset($_SERVER['CONTEXT_PREFIX'])) {
+    $root_url = $_SERVER['CONTEXT_PREFIX'];
+    
+} else {
+    $root_url = ROOT_URL;
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -84,7 +98,7 @@ http://jquery.org/license
 <div id="navbar">
   <ul>
     <li><a href="<?php echo(ROOT_URL) ?>/">My Cases</a></li>
-    <li><a href="<?php echo(ROOT_URL) ?>/user/searchdb/?search=1">Search</a></li>
+    <li><a href="<?php echo(ROOT_URL) ?>/user/searchdb/index.php?search=1">Search</a></li>
     <li><a href="<?php echo(ROOT_URL) ?>/faq.php">FAQ</a></li>
     <li><a href="<?php echo(ROOT_URL) ?>/contact/">Contact Us</a></li>
   </ul>
@@ -110,13 +124,7 @@ http://jquery.org/license
 <rect x="2.9" y="9.4" width="24.1" height="15.3"/>
 
 <text transform="matrix(1 0 0 1 11.5 20.375)" fill="#FFFFFF" font-family="'MyriadPro-Regular'" font-size="12">+</text></svg><span title="About">Add Case</span></a></li>
-<!--
-<li>
-<a href="<?php echo(ROOT_URL) ?>/user/deletecase/">
-<svg class="work" width="30px" height="30px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve"><path d="M11.8,8.3h-1.8V6.5c0-0.7,0.6-1.2,1.2-1.2h7.4c0.7,0,1.2,0.6,1.2,1.2v1.8h-1.8v-1c0-0.2-0.2-0.4-0.4-0.4h-5.5c-0.2,0-0.4,0.2-0.4,0.4C11.8,7.3,11.8,8.3,11.8,8.3z"/>
-<rect x="2.9" y="9.4" width="24.1" height="15.3"/>
-<text transform="matrix(1 0 0 1 12.5 22.375)" fill="#FFFFFF" font-family="'MyriadPro-Regular'" font-size="18">-</text></svg><span title="Work">Delete</span></a></li>
--->
+
 <li><a href="<?php echo(ROOT_URL) ?>/user/searchdb/?search=1">
 <svg class="search" width="30px" height="30px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve"><path d="M11.8,8.3h-1.8V6.5c0-0.7,0.6-1.2,1.2-1.2h7.4c0.7,0,1.2,0.6,1.2,1.2v1.8h-1.8v-1c0-0.2-0.2-0.4-0.4-0.4h-5.5c-0.2,0-0.4,0.2-0.4,0.4C11.8,7.3,11.8,8.3,11.8,8.3z"/>
 
