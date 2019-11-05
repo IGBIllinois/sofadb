@@ -289,12 +289,8 @@ _END;
 
 
  </div>
-<div id="footer">Copyright 2014 by <a href="http://www.sofainc.org/" target="_blank">SOFA</a>.</div>
-</div>
+<?php
+    require_once("../../include/footer.php");
+?>
 
-
-
-
-</body>
-</html>
 
