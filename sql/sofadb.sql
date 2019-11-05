@@ -1,21 +1,4 @@
 
-
-
-CREATE TABLE `casemethodfeature` (
-  `caseid` int(11) NOT NULL,
-  `methodid` int(11) NOT NULL,
-  `featureid` int(11) NOT NULL,
-  `stage` text CHARACTER SET utf8,
-  `outcome` text CHARACTER SET utf8,
-  `m1` float DEFAULT NULL,
-  `m1units` text CHARACTER SET utf8,
-  `m2` float DEFAULT NULL,
-  `m2units` text CHARACTER SET utf8,
-  `matched` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-
 CREATE TABLE `cases` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `casenumber` text CHARACTER SET utf8 NOT NULL,
@@ -52,6 +35,12 @@ CREATE TABLE `cases` (
   `idstature` float DEFAULT NULL,
   `idstatureunits` text CHARACTER SET utf8,
   `idsource` text CHARACTER SET utf8,
+  `known_none` tinyint(1) DEFAULT NULL,
+  `known_sex` tinyint(1) DEFAULT NULL,
+  `known_age` tinyint(1) DEFAULT NULL,
+  `known_ancestry` tinyint(1) DEFAULT NULL,
+  `known_stature` tinyint(1) DEFAULT NULL,
+  `known_unable_to_determine` tinyint(1) DEFAULT NULL,
   `nummethods` int(11) DEFAULT NULL,
   `casenotes` text CHARACTER SET utf8,
   `datestarted` date DEFAULT NULL,
@@ -63,13 +52,11 @@ CREATE TABLE `cases` (
   KEY `submissionstatus` (`submissionstatus`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
 CREATE TABLE `contact` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 
 CREATE TABLE `feature` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -78,15 +65,11 @@ CREATE TABLE `feature` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
-CREATE TABLE `membercasetable` (
-  `memberid` int(11) NOT NULL,
-  `caseid` int(11) NOT NULL,
-  KEY `memberid` (`memberid`,`caseid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
+CREATE TABLE `input_types` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `input_type` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `members` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -122,10 +105,6 @@ CREATE TABLE `members` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-DROP TABLE IF EXISTS `method_info`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `method_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `methodid` int(11) NOT NULL,
@@ -145,18 +124,30 @@ CREATE TABLE `method_info` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-DROP TABLE IF EXISTS `methoddata`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `methoddata` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `methodid` int(11) DEFAULT NULL,
-  `dataname` text,
-  `datatype` text,
+CREATE TABLE `method_info_options` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `method_infos_id` int(10) unsigned DEFAULT NULL,
+  `value` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `method_info_reference_list` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `method_infos_id` int(10) unsigned DEFAULT NULL,
+  `reference_id` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `method_infos` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `methodid` int(10) unsigned DEFAULT NULL,
+  `name` text,
+  `header` text,
+  `option_header` text,
+  `input_type` int(10) unsigned DEFAULT NULL,
+  `parent_id` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `methodfeature` (
   `methodid` int(11) NOT NULL,
@@ -166,13 +157,11 @@ CREATE TABLE `methodfeature` (
   KEY `featureid` (`featureid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
 CREATE TABLE `methodphase` (
   `methodid` int(11) NOT NULL,
   `featureid` int(11) NOT NULL,
   `phaseid` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 
 CREATE TABLE `methods` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -186,7 +175,6 @@ CREATE TABLE `methods` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 CREATE TABLE `password_reset` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `email` varchar(255) DEFAULT NULL,
@@ -194,13 +182,7 @@ CREATE TABLE `password_reset` (
   `token` char(64) DEFAULT NULL,
   `expires` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
-
-
---
--- Table structure for table `phase`
---
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `phase` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -208,73 +190,26 @@ CREATE TABLE `phase` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=128 DEFAULT CHARSET=latin1;
 
-
---
--- Table structure for table `reference`
---
-
 CREATE TABLE `reference` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `reference_name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
---
--- Table structure for table `regions`
---
-
-DROP TABLE IF EXISTS `regions`;
+CREATE TABLE `reference_data` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `tier2id` int(10) unsigned DEFAULT NULL,
+  `method_info_id` int(10) unsigned DEFAULT NULL,
+  `reference_id` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `regions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
-
---
--- Table structure for table `simplecase`
---
-
-DROP TABLE IF EXISTS `simplecase`;
-
-CREATE TABLE `simplecase` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` text CHARACTER SET utf8 NOT NULL,
-  `user` text CHARACTER SET utf8 NOT NULL,
-  `datestarted` date NOT NULL,
-  `datemodified` date NOT NULL,
-  `datesubmitted` date NOT NULL,
-  `datewithdrawn` date NOT NULL,
-  `agefa` float NOT NULL,
-  `agefaunits` int(11) NOT NULL,
-  `staturefa` float NOT NULL,
-  `staturefaunits` int(11) NOT NULL,
-  `ancestryfa` int(11) NOT NULL,
-  `sexfa` int(11) NOT NULL,
-  `age` float NOT NULL,
-  `ageunits` int(11) NOT NULL,
-  `stature` float NOT NULL,
-  `statureunits` int(11) NOT NULL,
-  `ancestry` int(11) NOT NULL,
-  `sex` int(11) NOT NULL,
-  `source` int(11) NOT NULL,
-  `sourceother` text CHARACTER SET utf8 NOT NULL,
-  `notes` text CHARACTER SET utf8 NOT NULL,
-  `extra1` int(11) NOT NULL,
-  `extra2` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
---
--- Table structure for table `tier2data`
---
-
-DROP TABLE IF EXISTS `tier2data`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tier2data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `memberid` int(11) NOT NULL,
@@ -289,23 +224,15 @@ CREATE TABLE `tier2data` (
   PRIMARY KEY (`id`),
   KEY `memberid` (`memberid`,`caseid`,`methodid`,`featureid`,`phaseid`),
   KEY `methodtype` (`methodtype`)
-) 
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
---
--- Table structure for table `tier3data`
---
-
-DROP TABLE IF EXISTS `tier3data`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tier3data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tier2id` int(11) DEFAULT NULL,
   `methodinfoid` int(11) DEFAULT NULL,
   `value` text,
   `reference` varchar(100) DEFAULT NULL,
+  `method_info_option_id` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
