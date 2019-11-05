@@ -7,8 +7,9 @@
   } else {
        session_start();
   }
-    require_once("../conf/settings.inc.php");
+require_once("../conf/settings.inc.php");
 require_once("../conf/app.inc.php");
+require_once("include/main.inc.php");
 ?>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -195,8 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	
 	
 	if (empty($_POST['degree'])) {
-		$degree=NULL;
-		//$errors[] = 'You forgot to enter your level of education earned';
+		$degree="";
 	} else {
 		$degree = trim($_POST['degree']);
 	}
@@ -204,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if (!empty($_POST['degreeyear'])) {
 		$degreeyear = trim($_POST['degreeyear']);
 	} else {
-		$degreeyear =NULL;
+                $degreeyear = -1;
 	}
 	
 	if (!empty($_POST['fieldofstudy'])) {
@@ -222,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if (!empty($_POST['casesperyear'])) {
 		$cases = trim($_POST['casesperyear']);
 	} else {
-	$cases=0;	
+                $cases=0;	
 	}
         
         if (!empty($_POST['affiliation'])) {
@@ -332,8 +332,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    
    if( $retval == true )  
    {
-     header ("location: ../index.php"); 
-	//	exit();
+     echo("Thank you for requesting membership approval to FADAMA. Your request is under review and may take up to 1 week to be approved.");
 	  
    }
    else
