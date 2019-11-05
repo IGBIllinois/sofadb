@@ -26,11 +26,7 @@ elseif($_SESSION['loggedin']==1)
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
-<!--
-<script type="text/javascript" src="./js/jquery.js"></script>
 
-	<script type="text/javascript" src="./js/jquery.query-2.1.7.js"></script>
--->
 
 	<!-- // Load Javascipt -->
 
@@ -106,13 +102,7 @@ $_SESSION['lastactivity']=time();
 $_SESSION['id'] = $member->get_id();
 
 $member->update_login_time();
-/*
-$q = "UPDATE members SET lastlogin=NOW() WHERE uname='$e' AND pwd='$hash'";
-$result = mysqli_query ($dbcon, $q);
-if(!$result)
-{'<p class="error">Could not update login data.</p>';
-exit();}
-*/
+
 }
 
 if(isset($_SESSION['loggedin'])){
@@ -192,7 +182,7 @@ exit(); // Cancels the rest of the script.
                         
                         <a href="faq.php">FAQ</a> |
                         
-			<a href="register/index.php">Not a Member Yet?</a></div>
+			<a href="register.php">Not a Member Yet?</a></div>
 
                        
 		</div>
