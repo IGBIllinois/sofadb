@@ -77,6 +77,7 @@ require_once("../conf/app.inc.php");
     }
 ?>
 <div id="templatecontainer"> 
+     <div id="caseform">
   </br>
   <h1 class="cntr">Membership Registration</h1>
   
@@ -372,7 +373,7 @@ echo	'<p class="error">The email address is not acceptable because it is already
   
   
   <div id="registerform">
-  <form action="index.php" method="post" id="registration">
+  <form action="register.php" method="post" id="registration">
     
     
   <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
@@ -543,14 +544,12 @@ By requesting registration to the FADAMA Database, I agree to the following guid
   
   
   
+<?php 
+    require_once("include/footer.php");
+?>
 </div>
-<div id="footer">Copyright 2014 by <a href="http://www.sofainc.org/" target="_blank">SOFA</a>.</div>
-</div>
-
 
 
 
 </body>
 </html>
-
-<?php ob_end_flush(); ?>
