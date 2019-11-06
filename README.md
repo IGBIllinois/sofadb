@@ -1,6 +1,6 @@
 # SOFADB
-# Society of Forensic Anthropologists
-# Forensic Anthropology Case Database (FADAMA)
+- Society of Forensic Anthropologists
+- Forensic Anthropology Case Database (FADAMA)
 
 
 # Installation
