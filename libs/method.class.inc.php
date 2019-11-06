@@ -63,90 +63,7 @@ class method {
         return $this->methodinfotype;
     }
     
-    /** Add a list of features to this Method
-     * 
-     * @param array $new_features An array of feature IDs to add to this method
-     */
-    public function add_features($new_features) {
-        foreach($new_features as $id=>$feature) {
-            $query = "INSERT INTO methodfeature (methodid, featureid, measurementtype) VALUES(".
-                   ":methodid ,".
-                   ":featureid,"
-                    . "'')";
-            $params = array("methodid"=>$this->id, "featureid"=>$feature);
 
-            $result = $this->db->get_insert_result($query, $params);
-        }
-    }
-    
-    public function edit_features($new_features) {
-        $curr_features = $this->get_features();
-        $curr_feature_ids = array(); 
-        foreach($curr_features as $curr_feature) {
-            $curr_feature_ids[] = $curr_feature->get_id();
-        }
-        if($new_features != null) {
-        foreach($new_features as $id) {
-            if( !in_array($id, $curr_feature_ids)) {
-            $query = "INSERT INTO methodfeature (methodid, featureid, measurementtype) VALUES(".
-                   ":methodid ,".
-                   ":featureid,"
-                    . "'')";
-            $params = array("methodid"=>$this->id, "featureid"=>$id);
-            $result = $this->db->get_insert_result($query, $params);
-
-            }
-        }
-        }
-        // Remove old features
-        foreach($curr_features as $feature) {
-            $feature_id = $feature->get_id();
-            if($feature_id != "" && !in_array($feature_id, $new_features)) {
-            $query = "DELETE FROM methodfeature WHERE methodid = ".
-                   ":methodid".
-                    " AND featureid = ".
-                   ":featureid";
-            $params = array("methodid"=>$this->id, "featureid"=>$feature_id);
-
-            $result = $this->db->get_update_result($query, $params);
-            
-            }
-        }
-        
-    }
-    
-    /** Add a list of phases to this Method
-     * 
-     * @param int feature ID of the feature to add phases to
-     * @param array $new_phases An array of feature IDs to add to this method
-     */
-    public function add_phases($feature, $new_phases) {
-        foreach($new_phases as $phase) {
-            $query = "INSERT INTO methodphase (methodid, featureid, $phaseid) VALUES(".
-                   ":methodid ,".
-                   ":featureid)";
-        }
-    }
-    
-    public function get_features() {
-        $query = "SELECT featureid from methodfeature where methodid = :id";
-        $params = array("id"=>$this->id);
-        $result = $this->db->get_query_result($query, $params);
-        $features = array();
-        foreach($result as $row) {
-            //$features[] = $row['featureid'];
-            $features[] = new feature($this->db, $row['featureid']);
-        }
-        return $features;
-    }
-    
-    public function get_phases() {
-        $query = "SELECT * from methodphase where methodid = '".mysqli_real_escape_string($this->dbcon, $this->id) ."'";
-        $result = $this->db->get_query_result($query);
-        return mysqli_fetch_array($result,MYSQLI_ASSOC);
-    
-    }
-    
     public function update_method(
             $name, 
             $type, 
@@ -641,7 +558,10 @@ class method {
                         . "methodname ASC";
             } else if($type_id == 3) {
                 // Specific order for Ancestry methods
-                $query .= "Order by methodname ASC";
+                $query .= "Order by ".
+                        "methodname = '3D-ID' desc, ".
+                        "methodname ='Fordisc (skeletal, metric)' desc,".
+                        "methodname ASC";
             } else if($type_id == 4) {
                 // Specific order for Stature methods
                 $query .= "Order by methodname ASC";
@@ -678,12 +598,19 @@ class method {
          */
         public function get_method_infos_by_type($type = null) {
             if($type == null) {
-                $type_query = "SELECT DISTINCT input_type from method_infos where methodid = :methodid";
+                $type_query = "SELECT DISTINCT input_type from method_infos where methodid = :methodid ORDER BY FIELD(input_type,4,5,7)";
+                //echo("query = $type_query");
                 $type_params =array("methodid"=>$this->id);
                 $type_result = $this->db->get_query_result($type_query, $type_params);
             } else {
                 $type_result = array('input_type'=>$type);
             }
+
+            $text_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_TEXT_ENTRY);
+            $numeric_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY);
+            
+            $out = array_splice($type_result, $text_type, 1);
+            array_splice($type_result, 0, 0, $out);
             $return_array = array();
             foreach($type_result as $type) {
                 $info_array = array();
@@ -698,6 +625,27 @@ class method {
                 }
                 $return_array[$input_type] = $info_array;
             }
+            /*
+            //print_r("orig return array = ");
+            //print_r($return_array);
+            $text_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_TEXT_ENTRY);
+            $numeric_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY);
+            //echo("text_type = $text_type<BR>");
+            //echo("num_type = $numeric_type<BR>");
+            echo("orig keys = ");
+            print_r(array_keys($return_array));
+            $i=0;
+            foreach($return_array as $id=>$info_array) {
+                echo("id = $id");
+                if($id == $text_type->get_id() || $id == $numeric_type->get_id()) {
+                    echo("found id $id");
+                    $out = array_splice($return_array, $i, 1);
+                    array_splice($return_array, 0,0,$out);
+                }
+            }
+            echo("new keys = ");
+            print_r(array_keys($return_array));
+            */
             return $return_array;
         }
      // Private functions
