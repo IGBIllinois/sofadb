@@ -44,9 +44,9 @@
 <?php
     if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1) {
 ?>
-    <li><a href="<?php echo(ROOT_URL) ?>/user/searchdb/?search=1">Search</a></li>
-    <li><a href="<?php echo(ROOT_URL) ?>/faq.php">FAQ</a></li>
-    <li><a href="<?php echo(ROOT_URL) ?>/contact/">Contact Us</a></li>
+    <li><a href="../user/searchdb/?search=1">Search</a></li>
+    <li><a href="../faq.php">FAQ</a></li>
+    <li><a href="../contact/">Contact Us</a></li>
 <?php
 
     }
@@ -74,7 +74,7 @@
    $retval = mail ($to,$subject,$message,$header);
    if( $retval == true )  
    {
-      echo "Message sent successfully."; //<a href=../../>[Go Back]</a>";
+      echo "Message sent successfully."; 
 	  
    }
    else

@@ -16,13 +16,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Contact Us</title>
 <!-- CSS -->
- <link href="<?php echo(ROOT_URL) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
- <link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery.multiselect.css" />
- <!--
-<link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery-ui.css" />
--->
-<script type="text/javascript" src="<?php echo(ROOT_URL) ?>/vendor/components/jquery/jquery.js"></script>
-<script type="text/javascript" src="<?php echo(ROOT_URL) ?>/vendor/components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+ <link href="css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
+ <link rel="stylesheet" type="text/css" href="/css/jquery.multiselect.css" />
+
+<script type="text/javascript" src="vendor/components/jquery/jquery.js"></script>
+<script type="text/javascript" src="vendor/components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
@@ -49,13 +47,13 @@
 
 <div id="navbar">
   <ul>
-    <li><a href="<?php echo(ROOT_URL);?>">Home</a></li>
+    <li><a href="index.php">Home</a></li>
 <?php
     if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1) {
 ?>
-    <li><a href="<?php echo(ROOT_URL) ?>/user/searchdb/?search=1">Search</a></li>
-    <li><a href="<?php echo(ROOT_URL) ?>/faq.php">FAQ</a></li>
-    <li><a href="<?php echo(ROOT_URL) ?>/contact/">Contact Us</a></li>
+    <li><a href="user/searchdb/?search=1">Search</a></li>
+    <li><a href="faq.php">FAQ</a></li>
+    <li><a href="contact/">Contact Us</a></li>
 <?php
 
     }

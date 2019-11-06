@@ -11,6 +11,14 @@ require_once(__DIR__ . "\..\..\conf\settings.inc.php");
 require_once('main.inc.php');
 require_once('session.inc.php');
 
+if(isset($_SERVER['CONTEXT_PREFIX'])) {
+    $root_url = $_SERVER['CONTEXT_PREFIX'];
+    
+} else {
+    $root_url = ROOT_URL;
+}
+
+
   if($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==2)
 {}
 elseif($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==1)
@@ -23,7 +31,7 @@ elseif($_SESSION['loggedin']==1)
 {echo '<p>Your account is not activated yet. <a href="contact/index.php">Contact</a> the administrator if you registered more than 48 hours ago.</p>';
     $_SESSION=array();
     session_destroy();
-    header('Location: ' .  ROOT_URL);
+    header('Location: ' .  $root_url);
     exit();
 }
 
@@ -36,7 +44,7 @@ elseif($_SESSION['loggedin']==1)
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Activate Members</title>
-<link href="<?php echo(ROOT_URL) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo($root_url) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 
@@ -47,7 +55,7 @@ elseif($_SESSION['loggedin']==1)
 
 <body>
 <div id="top">
-<div id="header"><a href="#"><img src="<?php echo(ROOT_URL) ?>/images/customLogo.gif" width="351" height="147" alt="SOFA" /></a></div>
+<div id="header"><a href="#"><img src="<?php echo($root_url) ?>/images/customLogo.gif" width="351" height="147" alt="SOFA" /></a></div>
 
 <div id="title">
 <h1>Forensic Anthropology Case Database (FADAMA)</h1>
@@ -59,24 +67,19 @@ elseif($_SESSION['loggedin']==1)
 
 <div id="navbar">
   <ul>
-    <li><a href="<?php echo(ROOT_URL) ?>/">Home</a></li>
-    <li><a href="<?php echo(ROOT_URL) ?>">My Account</a></li>
-    <li><a href="<?php echo(ROOT_URL) ?>/logout.php">Logout</a></li>
-    <li><a href="<?php echo(ROOT_URL) ?>/contact/">Contact Us</a></li>
+    <li><a href="<?php echo($root_url) ?>/">Home</a></li>
+    <li><a href="<?php echo($root_url) ?>">My Account</a></li>
+    <li><a href="<?php echo($root_url) ?>/logout.php">Logout</a></li>
+    <li><a href="<?php echo($root_url) ?>/contact/">Contact Us</a></li>
   </ul>
 </div>
 <div id="templatecontainer"><h1 style="text-align:center">Admin Tools</h1>
   <div id="leftnav"><h2 style="color:#00C ;font-weight: bold;font-size: 16pt;">Control Panel</h2>
   <ul>
-    <li><a href="<?php echo(ROOT_URL) ?>/admin/activate/index.php">Activate Members</a></li>
-    <li><a href="<?php echo(ROOT_URL) ?>/admin/index.php">Member List</a></li>
-    <li><a href="<?php echo(ROOT_URL) ?>/admin/membersearch/?search=1">Search Members</a></li>
-    <!--
-    <li><a href="<?php echo(ROOT_URL) ?>/admin/editprofile/">Edit Member Profiles</a></li>
-    <li><a href="<?php echo(ROOT_URL) ?>/admin/editcase/">Edit Case Data</a></li>
-    <li><a href="<?php echo(ROOT_URL) ?>/admin/searchdb/">Search Database</a></li>
-    -->
-    <li><a href="<?php echo(ROOT_URL) ?>/admin/methods/">Methods</a></li>    
+    <li><a href="<?php echo($root_url) ?>/admin/activate/index.php">Activate Members</a></li>
+    <li><a href="<?php echo($root_url) ?>/admin/index.php">Member List</a></li>
+    <li><a href="<?php echo($root_url) ?>/admin/membersearch/?search=1">Search Members</a></li>
+    <li><a href="<?php echo($root_url) ?>/admin/methods/">Methods</a></li>    
     
   </ul>
     </div>
