@@ -7,25 +7,6 @@ require_once('func.php');
 
 <title>Edit Case Methods</title>
 
-  <script type='text/javascript'>
-  $(function() {
-    $('#casedata').areYouSure(
-      {
-        message: 'It looks like you have been editing something. '
-               + 'If you leave before saving, your changes will be lost.'
-      }
-    );
-  });
-  
-    $(function() {
-    $('#method_info_data').areYouSure(
-      {
-        message: 'It looks like you have been editing something. '
-               + 'If you leave before saving, your changes will be lost.'
-      }
-    );
-  });
-</script>
 
   <h1 class="cntr">Edit Case Methods</h1>
 
@@ -45,7 +26,6 @@ if(isset($_GET['id']))
     
     
     if(isset($_GET['tier2id'])) {
-        //$method_info = new method_info($db, $_GET['methodid']);
         $tier2id = $_GET['tier2id'];
         $tier2 = new tier2data($db, $_GET['tier2id']);
         $method = new method($db, $tier2->get_methodid());
@@ -69,11 +49,9 @@ elseif(isset($_SESSION['caseid']))
  
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //echo("POST=");
 
     if(isset($_POST['tier2id'])) {
         
-        //$method_info = new method_info($db, $_GET['methodid']);
         $tier2id = $_POST['tier2id'];
         $tier2 = new tier2data($db, $_POST['tier2id']);
         $method = new method($db, $tier2->get_methodid());
@@ -108,30 +86,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     foreach($tier3s as $t3) {
         $existing_ids[] = $t3->get_method_info_option_id();
     }
-    //echo("existing ids = ");
-    //print_r($existing_ids);
-    //echo("<BR><BR>");
+
     $method = new method($db, $tier2->get_methodid());
     $method_info = $method->get_method_info();
     $user_interaction = "";
     $user_interactions = array();
     
-    //echo("method id = ".$method->get_id());
-    //echo("<BR>");
-    //print_r($_POST['output_data']);
-    //echo("output_data = <BR>");
+
     $output_data = $_POST['output_data'];
-    //echo("<BR><BR>");
+
     $new_ids = array();
     
     foreach($output_data as $od) {
         if(is_array($od)) {
-            //$new_ids[] = ;
-            
+
             foreach($od as $id=>$value) {
                 $new_ids[] = $id;
                 if($id != null && $id != '') {
-                    //echo("Setting value of $id to $value<BR>");
+
                     tier3data::delete_tier3($db, $tier2id, $id);
                     $casedata->add_tier3($tier2id, $id, $value);
                 }
@@ -144,22 +116,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         
     }
-    
 
-     
-    //print_r($new_ids);
-    //echo("<BR><BR>");
     
     foreach($new_ids as $new_id) {
         if(!in_array($new_id, $existing_ids)) {
-            //echo("ADDING $new_id<BR>");
             $casedata->add_tier3($tier2id, $new_id);
         }
     }
     
     foreach($existing_ids as $ex_id) {
         if(!in_array($ex_id, $new_ids)) {
-            //echo("DELETING $ex_id<BR>");
             tier3data::delete_tier3($db, $tier2id, $ex_id);
         }
     }
@@ -182,7 +148,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     if($ref > 0) {                
                         $reference = new reference($db, $ref);
-                        //echo("adding (ref, t2id, mi_id) ($ref, $t2id, $id)<BR>");
                         $reference->add_reference_to_tier2($tier2id, $id);
                     }
                 }
@@ -337,11 +302,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	  
      <div id="casedata_errorloc" class="errorlocation">
     </div>
-    
-<!--<br />	<br /> <label class="label" for="savecase">Click here to save case</label>
-    <input name="savecase" id="savecase" type="submit" value="Save Case"/>-->
-    
-    
+
     </fieldset>
  
   </form>

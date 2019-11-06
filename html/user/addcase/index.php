@@ -4,22 +4,9 @@ require('../../include/header_user.php') ;
  
  if(!isset($_SESSION['num_methods']))
  { $_SESSION['num_methods']=0;}
- 
-
 
 ?>
 
-  <script type='text/javascript'>
-  $(function() {
-    $('#casedata').areYouSure(
-      {
-        message: 'It looks like you have been editing something. '
-               + 'If you leave before saving, your changes will be lost.'
-      }
-    );
-  });
-  
-</script>
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -464,9 +451,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         
                         );	
 
-                    
-                
-                
                 $result = sofa_case::add_case($db, $data);
                 
                 if($result['RESULT'] == FALSE) {
@@ -513,7 +497,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div id="tabs">
   <ul>
     <li><a href="#tabs-1">General Case Information</a></li>
-    <!--<li><a href="#tabs-2">Manage Case Methods</a></li>--> 
 
   </ul>
 <div id="tabs-1">
