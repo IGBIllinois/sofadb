@@ -1,8 +1,28 @@
 <?php 
+//**************************************
+//     First selection results     //
+//**************************************
+if(isset($_GET['func']) && $_GET['func'] == "drop_1"  ) { 
+   // If drop_1 (method type) was chosen, show dropdown for the newly selected method type
+   require_once('../../include/main.inc.php') ;
+   functions::drop_1($_GET['drop_var']); 
+   exit();
+   
+} else if(isset($_GET['func']) && $_GET['func'] == "show_method_info"  ) { 
+    // If a method was chosen, show the method_infos for that method
+    require_once('../../include/main.inc.php') ;
+    $method_id = $_GET['method_id'];
+    method_infos::show_method_info($db, $method_id); 
+    exit();
+    
+}
+
 require_once('../../include/header_user.php');
 require_once('../../include/session.inc.php') ;
-require_once('func.php');
 
+
+
+ 
 ?>
 
 <title>Edit Case Information</title>
@@ -630,31 +650,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-  <script type='text/javascript'>
-  $(function() {
-    $('#casedata').areYouSure(
-      {
-        message: 'It looks like you have been editing something. '
-               + 'If you leave before saving, your changes will be lost.'
-      }
-    );
-  });
-  
-    $(function() {
-    $('#method_info_data').areYouSure(
-      {
-        message: 'It looks like you have been editing something. '
-               + 'If you leave before saving, your changes will be lost.'
-      }
-    );
-  });
-</script>
-
 
   <div id="caseform">
-  
-   
-  
 
 	<div id="tabs">
   <ul>
@@ -836,30 +833,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                              <span id="wait_1" style="display: none;">
 
-    <img alt="Please Wait" src="ajax-loader.gif"/>
+    <img alt="Please Wait" src="../../images/ajax-loader.gif"/>
     </span>
      <span id="result_1" style="display: none;"></span>
     <span id="wait_2" style="display: none;">
-    <img alt="Please Wait" src="ajax-loader.gif"/>
+    <img alt="Please Wait" src="../../images/ajax-loader.gif"/>
     </span>
-     <!--
-     <input type="submit" class="showybutton"  name='add_method' value="Save Method" /><BR>
-     -->
+
      <span id="result_2" style="display: none;"></span>
-    <span id="wait_3" style="display: none;">
-        <img alt="Please Wait" src="ajax-loader.gif"/>
-    </span>
-     <span id="result_3" style="display: none;">
-         
-     </span></p>
+    </p>
              
-           <!--<p>  <input type="button" class="showybutton" id="addmethodbutton" value="Add Method to List" ></p>-->
     </div>
 
-          <input name="fchoseninput" type="hidden" id="fchoseninput" value="0" />
-    <input name="pchoseninput" type="hidden" id="pchoseninput" value="0" />   
-   
-    
     </fieldset>
         </form>
     <!-- End Add Method box -->
@@ -907,7 +892,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         
                         echo("<td>". $method->get_method_type()."</td>
 				<td>".$method->get_name()."</td>".
-                                //"<td>".$tier2->format_tier3data_new()."</td>".
                                 "<td>".$tier2->show_estimated_outcome()."</td>".
 				"</tr>");
                     }
@@ -929,9 +913,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	  
      <div id="casedata_errorloc" class="errorlocation">
     </div>
-    
-<!--<br />	<br /> <label class="label" for="savecase">Click here to save case</label>
-    <input name="savecase" id="savecase" type="submit" value="Save Case"/>-->
     
     
     </fieldset>
