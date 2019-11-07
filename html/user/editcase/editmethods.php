@@ -1,7 +1,6 @@
 <?php 
 require_once('../../include/header_user.php');
 require_once('../../include/session.inc.php') ;
-require_once('func.php');
 
 ?>
 

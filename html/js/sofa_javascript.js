@@ -37,7 +37,7 @@ $(document).ready(function(){
 	$('#drop_1').hide();
 	$('#drop_2').hide();
 
-      $.get("func.php", {
+      $.get("index.php", {
 		func: "drop_1",
 		drop_var: $('#methodtype').val()
       }, function(response){
