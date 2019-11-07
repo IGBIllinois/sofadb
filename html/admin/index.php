@@ -10,6 +10,33 @@ require_once('../include/header_admin.php') ;
 //set the number of rows per display page
 $pagerows = PAGEROWS;
 $all_members = member::get_members($db);
+$memberid=$_SESSION['id'];
+$member = new member($db, $memberid);
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+
+if (isset($_POST['delsubmit']))
+{
+    // Delete the user, and all associated case data
+    $deleteid=$_POST['delid'];
+    $result = $member->delete_member($deleteid);
+
+      if ($result['RESULT'] == FALSE) 
+        { 
+        // If it did not run OK
+                        // Error message:
+                        echo '<h2>System Error</h2>
+                        <p class="error">Did not delete case. We apologize for any inconvenience.</p>'; 
+                        // Debugging message:
+                        echo '<p>' . $db->errorInfo[2] . '<br/><br/>:' . $result['MESSAGE'] . '</p>';
+        exit();
+        } else {
+            echo($result['MESSAGE']);
+        }
+}
+}
+
 
 // Has the total number of pages already been calculated?
 if (isset($_GET['p']) && is_numeric ($_GET['p'])) { //already been calculated
@@ -35,8 +62,6 @@ $start = $_GET['s'];
 }else{
 $start = 0;
 }
-// Make the query:
-$q = "SELECT lastname, firstname, uname, institution, DATE_FORMAT(dateregistered, '%M %d, %Y') AS regdat, DATE_FORMAT(lastlogin, '%M %d, %Y') AS logdat, permissionstatus, id, totalcases FROM members ORDER BY dateregistered DESC LIMIT $start, $pagerows";		
 
 $all_members = member::get_members($db);
 $members = member::get_members($db, $start, $pagerows);
@@ -53,13 +78,13 @@ if (count($members)>0)  { // If it ran OK, display the records.
 echo '<div class="scroll"><table id="hortable" summary="List of members">
     <thead>
     	<tr>
-		    <th scope="col">Edit</th>
+            <th scope="col">Edit</th>
             <th scope="col">Delete</th>
-        	<th scope="col">Last Name</th>
+            <th scope="col">Last Name</th>
             <th scope="col">First Name</th>
             <th scope="col">Email</th>
             <th scope="col">Institution</th>
-			<th scope="col">Date Registered</th>
+            <th scope="col">Date Registered</th>
             <th scope="col">Last Login</th>
             <th scope="col">Access</th>
             <th scope="col">Total Cases</th>
@@ -74,7 +99,10 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
 foreach($members as $member) {
 	echo '<tr>
 	<td><a href="edit_record.php?id=' . $member->get_id() . '">Edit</a></td>
-	<td><a href="delete_record.php?id=' . $member->get_id() . '">Delete</a></td>
+	<td><form action="index.php" method="post" id="deletemember" onsubmit="return confirm(\'Do you really want to delete this member?\nAll member data and cases associated with this user will be deleted.\')">
+	<input name="delid" type="hidden" value="'.$member->get_id().'"/>
+	<input name="delsubmit" type="submit" value="Delete" /> </form>
+	</td>
 	<td>' . $member->get_lastname() . '</td>
 	<td>' . $member->get_firstname() . '</td>
 	<td>' . $member->get_uname() . '</td>
@@ -92,7 +120,7 @@ foreach($members as $member) {
 // Public message:
 	echo '<p class="error">The current record could not be retrieved. We apologize for any inconvenience.</p>';
 	// Debugging message:
-	echo '<p>' . $db->errorInfo[2]. '<br><br>Query: ' . $q . '</p>';
+	echo '<p>' . $db->errorInfo[2]. '<br></p>';
 } // End of if ($result). Now display the total number of records/members.
 
 $total_members = count($all_members);
@@ -125,15 +153,7 @@ echo '</p>';
   
   
 </div>
-<div id="footer">Copyright 2014 by <a href="http://www.sofainc.org/" target="_blank">SOFA</a>. 
-    <a href="http://validator.w3.org/check?uri=referer"><img
-      src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
-  </div>
-</div>
-
-
-
-
-</body>
-</html>
+<?php
+    require_once("../../include/footer.php");
+?>
 
