@@ -19,6 +19,13 @@ elseif($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']=2){header('Locat
 elseif($_SESSION['loggedin']==1)
 {echo '<p>Your account is not activated yet. <a href="contact/index.php">Contact</a> the administrator if you registered more than 48 hours ago.</p>';
 }}
+
+if(isset($_SERVER['CONTEXT_PREFIX'])) {
+    $root_url = $_SERVER['CONTEXT_PREFIX'];
+    
+} else {
+    $root_url = ROOT_URL;
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -40,10 +47,10 @@ elseif($_SESSION['loggedin']==1)
 <script type="text/javascript" src='/vendor/components/jquery-ui/jquery-ui.js'></script>
 <script type="text/javascript" src='/vendor/components/jquery/jquery.js'></script>
 
- <link href="<?php echo(ROOT_URL) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
- <link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery.multiselect.css" />
+ <link href="<?php echo($root_url) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
+ <link rel="stylesheet" type="text/css" href="<?php echo($root_url) ?>/css/jquery.multiselect.css" />
 
-<link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo($root_url) ?>/css/jquery-ui.css" />
 
 
 </head>
