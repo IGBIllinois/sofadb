@@ -211,8 +211,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo($method->get_name()."<BR>");
 
 
-            //method_info::show_method_info($db, $tier2->get_methodid(), $tier2->get_id());
-
             method_infos::show_method_info($db, $tier2->get_methodid(), $tier2->get_id());
         
         ?>

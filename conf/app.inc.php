@@ -74,4 +74,41 @@ DEFINE("USER_INTERACTION_RIOS_CARDOSO", "Rios_Cardoso");
 // Method info type for "Spradley & Jantz 2011" method, and similar
 DEFINE("METHOD_INFO_TYPE_TRANSITION_ANALYSIS", "Transition_Analysis");
 
+
+    
+DEFINE ("NO_PROMPTS", array(
+        "Fordisc (skeletal, metric)",
+        "Generalized Morphology (skeleton, nonmetric)",
+        "Soft Tissue Morphology (nonmetric)",
+        "3D-ID (cranial, metric)",
+        "Buikstra and Ubelaker 1994 (skull, nonmetric)",
+        "Rogers et al. 2000 (clavicle, nonmetric)",
+        "Walker 2005 (os coxa, nonmetric)",
+        "Walker 2008 (cranial, nonmetric)",
+        "Edgar 2013 (detention, nonmetric)",
+        "Raxter et al. (skeletal, metric)",
+        "Demirjian et al. 1973 (dentition, nonmetric)"));
+    
+DEFINE ("FORMULA_PROMPTS", array(
+        "Fully 1956 (skeletal, metric)",
+        "Genoves 1967 (long bones, metric)",
+        "Ousley 1995 (long bones, metric)",
+        "Sjovold 1990 (long bones, metric)",
+        "Spradley et al. 2008 (long bones, metric)",
+        "Steele 1970 (long bones, metric)",
+        "Trotter 1970 (long bones, metric)",
+        "Trotter and Glesser 1952 (long bones, metric)"
+        ));
+
+DEFINE("FORMULA_OUTCOME_PROMPTS", array(
+        "Holland 1991 (proximal tibia, metric)",
+        "Tise et al. 2013 (postcranial, metric)",
+        "Spradley and Jantz 2011 (metric)"
+        
+    ));
+    
+DEFINE("MEASUREMENT_PROMPTS", array(
+        "Lamendin et al. 1992 (dentition, metric)",
+        "Prince and Ubelaker 2002 (dentition, metric)"
+    ));
 ?>

@@ -16,8 +16,8 @@ class method_infos {
     private $header;
     private $option_header;
     private $type;
-    private $category;
-    private $subcategory;
+    private $parent_id;
+
     
     
     public function get_id() {
@@ -44,13 +44,11 @@ class method_infos {
         return $this->type;
     }
     
-    public function get_category() {
-        return $this->category;
+    public function get_parent_id() {
+        return $this->parent_id;
     }
     
-    public function get_subcategory() {
-        return $this->subcategory;
-    }
+
     
             
     public function __construct($db, $id = null) {
@@ -63,7 +61,75 @@ class method_infos {
         }  
     }
     
-   // Newer versions
+        /** Get all options for this method_infos
+     * 
+     * @return \method_info_option An array of method_info_option objects for this method_infos
+     */
+    public function get_method_info_options() {
+        $query = "SELECT id from method_info_options where method_infos_id = :method_infos_id";
+        $params = array("method_infos_id"=>$this->get_id());
+
+        $result = $this->db->get_query_result($query, $params);
+        
+        $return_result = array();
+        if(count($result) > 0) {
+            foreach($result as $mi_opt) {
+                $id = $mi_opt['id'];
+                $option = new method_info_option($this->db, $id);
+                $return_result[] = $option;
+                
+            }
+        }
+        
+        return $return_result;
+        
+    }
+    
+    /** Gets references associated with this method_infos object, if any
+     * 
+     * @return \reference An array of reference objects associated with this method_infos
+     */
+    public function get_references() {
+       $query = "SELECT reference_id from method_info_reference_list where method_infos_id=:mi_id";
+       $params = array("mi_id"=>$this->get_id());
+       $results = $this->db->get_query_result($query, $params);
+
+       $return_result = array();
+       foreach($results as $ref) {
+           $ref = new reference($this->db, $ref['reference_id']);
+           $return_result[] = $ref;
+       }
+       return $return_result;
+   }
+   
+   /** Gets the children of this method_infos object
+     * 
+     * @return \method_infos An array of method_infos that have
+     * this method_infos listed as thier parent
+     */
+   public function get_children() {
+       $query = "SELECT id from method_infos where parent_id = :parent_id";
+       $params = array("parent_id"=>$this->get_id());
+
+       $result = $this->db->get_query_result($query, $params);
+       $return_result = array();
+       foreach($result as $mi) {
+
+           $method_infos = new method_infos($this->db, $mi['id']);
+           $return_result[] = $method_infos;
+       }
+       return $return_result;
+   }
+   
+   // Static
+    
+   /** Displays input for a method information
+    * 
+    * @param type $db The database object
+    * @param type $methodid ID of the method to add
+    * @param type $tier2id ID of tier2 object, if editing existing data
+    * @return type HTML output for inputting data
+    */
    public static function show_method_info($db, $methodid, $tier2id=null) {
        $method = new method($db, $methodid);
 
@@ -72,16 +138,15 @@ class method_infos {
            return;
        }
        $output = "";
-       $output .= "<BR>VERSION 2<BR>";
        $prompt = "<BR>Select any/all outcomes for features used.</BR>";
        $method_name = $method->get_name();
-       if(in_array($method_name, method_infos::$noPrompts)){
+       if(in_array($method_name, NO_PROMPTS)){
            $prompt = "";
-       } else if(in_array($method_name, method_infos::$formulaPrompts)) {
+       } else if(in_array($method_name, FORMULA_PROMPTS)) {
            $prompt = "<BR>Enter any/all measurements and select any/all formulas used.</BR>";
-       } else if(in_array($method_name, method_infos::$formulaOutcomePrompts)) {
+       } else if(in_array($method_name, FORMULA_OUTCOME_PROMPTS)) {
            $prompt = "<BR>Enter any/all measurements and select any/all formula outcomes from formulas used.</BR>";
-       } else if(in_array($method_name, method_infos::$measurementPrompts)) {
+       } else if(in_array($method_name, MEASUREMENT_PROMPTS)) {
            $prompt = "<BR>Enter all measurements used below<BR>";
        }
        
@@ -104,17 +169,6 @@ class method_infos {
            $output .= ("<option value='Male' ". (($estimated_outcome == 'Male') ? " selected='selected' " : "") .">Male</option>");
            $output .= ("</select><BR>");
 
-           /*
-           if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ ||
-                   $method->get_method_info_type() == METHOD_INFO_TYPE_TRANSITION_ANALYSIS) {
-               $output .= ("<BR>Select any/all sectioning point outcomes.<BR>");
-           } else if($method->get_name() == ("Holland 1991 (proximal tibia, metric)")){ // Holland (TODO: Make this more robust)
-               $output .= ("<BR>Select any/all formula outcomes from formulas used.<BR>");
-           } else {
-               $output .= ("<BR>Select any/all outcomes for features used.<BR>");
-           }
-            * 
-            */
            $output .= $prompt;
        } else if($method->get_method_type() == "Stature") {
            $estimated_outcome_1 = "";
@@ -150,24 +204,6 @@ class method_infos {
            }
 
            $estimated_outcomes = $method->get_estimated_outcomes();
-
-           /*
-           if(count($method->get_method_info_by_type(USER_INTERACTION_NUMERIC_ENTRY)) > 0) {
-               // No title for user input methods like Lamedin, Prince&Ubelaker, etc.s
-               $title = "";
-           }
-           if(($method->get_header_2() != null) && 
-                   ($method->get_header_2() == "Reference Sample") ||
-                   ($method->get_header_2() == "Reference Samples")) {
-               $title = "Select method outcome and reference sample used.";
-           } else {
-               $title = "Select method outcome used.";
-           }
-           if($title != "") {
-            $output .= ("<BR>$title<BR>");
-           }
-            * 
-            */
 
            $output .= ("<BR>Estimated Age range from this method:");
            $output .= ("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'> to ");
@@ -326,58 +362,25 @@ class method_infos {
            $count++;
        }
        $output .= "</tr></table>";
-       //$output .= "</td>";
 }
         $output .= "</tr></table>";
-        echo($output);
        }
-           else {
-               method_info::show_method_info($db, $methodid, $tier2id);
-           }
-           
+        echo($output);
+       
        
    }    
-    
 
-    /** Get all options for this method_infos
-     * 
-     * @return \method_info_option An array of method_info_option objects for this method_infos
-     */
-    public function get_method_info_options() {
-        $query = "SELECT id from method_info_options where method_infos_id = :method_infos_id";
-        $params = array("method_infos_id"=>$this->get_id());
-
-        $result = $this->db->get_query_result($query, $params);
-        
-        $return_result = array();
-        if(count($result) > 0) {
-            foreach($result as $mi_opt) {
-                $id = $mi_opt['id'];
-                $option = new method_info_option($this->db, $id);
-                $return_result[] = $option;
-                
-            }
-        }
-        
-        return $return_result;
-        
-    }
-    
-       public function get_references() {
-       $query = "SELECT reference_id from method_info_reference_list where method_infos_id=:mi_id";
-       $params = array("mi_id"=>$this->get_id());
-       $results = $this->db->get_query_result($query, $params);
-
-       $return_result = array();
-       foreach($results as $ref) {
-           $ref = new reference($this->db, $ref['reference_id']);
-           $return_result[] = $ref;
-       }
-       return $return_result;
-   }
    
-
-    // static
+    /** Displays input for a Selection method_infos object (Single-select, multi-select or checkbox)
+    * 
+    * @param type $db The database object
+    * @param type $method_infos_id  ID of the method_infos object to display
+    * @param type $tier2id ID of tier2 object, if editing existing data
+     * @param boolean $header True if a header should be displayed, else false
+     * @param boolean $multiple True if you can select multiple entries, else false
+     * @param string $default_option The string for a default option (optional)
+    * @return type HTML output for inputting data
+    */
     public static function show_method_infos_select($db, $method_infos_id, $tier2id = null, $header = true, $multiple=true, $default_option = null) {
 
         $method_infos = new method_infos($db, $method_infos_id);
@@ -418,6 +421,14 @@ class method_infos {
         return $output;
     }
     
+    /** Displays input for a User input method_infos object (numeric_enty, text_entry)
+    * 
+    * @param db $db The database object
+    * @param int $method_infos_id  ID of the method_infos object to display
+    * @param int $tier2id ID of tier2 object, if editing existing data
+     * @param boolean $text True if this is a text entry (show longer text box)
+     * @return string HTML for inputting data for this method_infos object
+     */
     public static function show_method_infos_user_input($db, $method_infos_id, $tier2id = null, $text = null) {
         $method_infos = new method_infos($db, $method_infos_id);
         $options = $method_infos->get_method_info_options();
@@ -449,6 +460,15 @@ class method_infos {
         return $output;
     }
     
+    /** Displays input for a select_each method_infos object 
+     * 
+     * @param db $db The database object
+     * @param int $method_infos_id  ID of the method_infos object to display
+     * @param int $tier2id ID of tier2 object, if editing existing data
+     * @param boolean $inner_table True if each entry should be in its own table. False if all will be aligned in an outer table
+     * @param boolean $checkboxes True if this should be displayed as checkboxes, otherwise it will be displayed as a dropdown
+     * @return string HTML for inputting data for this method_infos object
+     */
     public static function show_method_infos_select_each($db, $method_infos_id, $tier2id = null, $inner_table = true, $checkboxes = false) {
 
         $method_infos = new method_infos($db, $method_infos_id);
@@ -500,6 +520,13 @@ class method_infos {
         return $output;
     }
     
+    /** Displays input for a Spradley_Jantz type method_infos object 
+    * 
+    * @param db $db The database object
+    * @param int $method_infos_id  ID of the method_infos object to display
+    * @param int $tier2id ID of tier2 object, if editing existing data
+     * @return string HTML for inputting data for this method_infos object
+     */
     public static function show_method_info_spradley_jantz($db, $method_id, $tier2id=null) {
 
         $method = new method($db, $method_id);
@@ -614,6 +641,12 @@ class method_infos {
         return $output;
     }
     
+    /** Displays input for a Transition_analysis type method_infos object 
+    * @param db $db The database object
+    * @param int $method_infos_id  ID of the method_infos object to display
+    * @param int $tier2id ID of tier2 object, if editing existing data
+     * @return string HTML for inputting data for this method_infos object
+     */
     public static function show_method_info_transition_analysis($db, $method_id, $tier2id=null) {
 
         $method = new method($db, $method_id);
@@ -645,7 +678,6 @@ class method_infos {
                 $category_info = new method_infos($db, $category['id']);
                 $name = $category_info->get_name();
 
-                //echo('subcat id = '.$subcategory['id']);
                 $info_query = "SELECT * from method_infos where methodid = :methodid and parent_id = :parentid";
                 
                 $info_params = array("methodid"=>$method_id, 'parentid'=>$category_info->get_id());
@@ -657,7 +689,7 @@ class method_infos {
                 $output .= ("<fieldset class='methodinfobox'>");
                 $output .= ("<legend class='boldlegend'>".$name."</legend> ");
                 
-                //FInally, display infos
+                //Finally, display infos
                 
                 $sorted_method_infos = array();
                 foreach($infos as $method_infos) {
@@ -698,6 +730,14 @@ class method_infos {
         return $output;
     }
     
+    /** Displays input for an input_box_with_dropdown method_infos object
+    * 
+    * @param db $db The database object
+    * @param int $method_infos_id  ID of the method_infos object to display
+    * @param int $tier2id ID of tier2 object, if editing existing data
+     * @param string $default_option Text for an initial, unselectable default option (optional)
+     * @return string HTML for inputting data for this method_infos object
+     */
     public static function show_method_infos_input_box_with_dropdown($db, $method_infos_id, $tier2id=null, $default_option = null) {
         // Method info bos with dropdown should have 2 method_infos whose parent_ids point back to it
         // one numeric_entry, and one multiselect
@@ -777,7 +817,13 @@ class method_infos {
    }
    
 
-   
+    /** Displays input for a 3 column with reference method_infos object 
+    * 
+    * @param db $db The database object
+    * @param int $method_infos_id  ID of the method_infos object to display
+    * @param int $tier2id ID of tier2 object, if editing existing data
+     * @return string HTML for inputting data for this method_infos object
+     */
     public static function show_method_info_3_col_with_ref($db, $method_id, $tier2id=null) {
 
         $output = "";
@@ -884,6 +930,13 @@ class method_infos {
                return $headers . $output;
    }
    
+    /** Displays input for a Rios_Cardoso type method_infos object 
+    * 
+    * @param db $db The database object
+    * @param int $method_infos_id  ID of the method_infos object to display
+    * @param int $tier2id ID of tier2 object, if editing existing data
+     * @return string HTML for inputting data for this method_infos object
+     */
     public static function show_method_infos_rios_cardoso($db, $method_id, $tier2id=null) {
         
         $method = new method($db, $method_id);
@@ -957,22 +1010,7 @@ class method_infos {
         
     }
    
-   public function get_children() {
-       $query = "SELECT id from method_infos where parent_id = :parent_id";
-       $params = array("parent_id"=>$this->get_id());
-
-       $result = $this->db->get_query_result($query, $params);
-       $return_result = array();
-       foreach($result as $mi) {
-
-           $method_infos = new method_infos($this->db, $mi['id']);
-           $return_result[] = $method_infos;
-       }
-       return $return_result;
-   }
-   
-
-    
+ 
     // Private
     private function load_method_infos($id) {
 
@@ -990,45 +1028,8 @@ class method_infos {
          $this->header = $data['header'];
          $this->option_header = $data['option_header'];
          $this->type = $data['input_type'];
-         $this->category = $data['category'];
-         $this->subcategory = $data['subcategory'];
+         $this->parent_id = $data['parent_id'];
     }
     }
 
-  
-    
-    private static $noPrompts = array(
-        "Fordisc (skeletal, metric)",
-        "Generalized Morphology (skeleton, nonmetric)",
-        "Soft Tissue Morphology (nonmetric)",
-        "3D-ID (cranial, metric)",
-        "Buikstra and Ubelaker 1994 (skull, nonmetric)",
-        "Rogers et al. 2000 (clavicle, nonmetric)",
-        "Walker 2005 (os coxa, nonmetric)",
-        "Walker 2008 (cranial, nonmetric)",
-        "Edgar 2013 (detention, nonmetric)",
-        "Raxter et al. (skeletal, metric)");
-    
-    private static $formulaPrompts = array(
-        "Fully 1956 (skeletal, metric)",
-        "Genoves 1967 (long bones, metric)",
-        "Ousley 1995 (long bones, metric)",
-        "Sjovold 1990 (long bones, metric)",
-        "Spradley et al. 2008 (long bones, metric)",
-        "Steele 1970 (long bones, metric)",
-        "Trotter 1970 (long bones, metric)",
-        "Trotter and Glesser 1952 (long bones, metric)"
-        );
-
-    private static $formulaOutcomePrompts = array(
-        "Holland 1991 (proximal tibia, metric)",
-        "Tise et al. 2013 (postcranial, metric)",
-        "Spradley and Jantz 2011 (metric)"
-        
-    );
-    
-    private static $measurementPrompts = array(
-        "Lamendin et al. 1992 (dentition, metric)",
-        "Prince and Ubelaker 2002 (dentition, metric)"
-    );
 }
