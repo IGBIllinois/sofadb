@@ -24,7 +24,7 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
 elseif($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==1)
 {
     // If they're a user, redirect to the user page.
-    header('Location: ' . $_SERVER['DOCUMENT_ROOT'].'/user/index.php');
+    header('Location: ' . $root_url.'/user/index.php');
 exit();
 }
 elseif($_SESSION['loggedin']==1)

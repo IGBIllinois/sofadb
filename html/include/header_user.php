@@ -6,31 +6,6 @@ if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
     header('Location: ' . $location);
     exit;
 }
-//print_r($_SERVER);
-require_once(__DIR__ . "\..\..\conf\settings.inc.php");
-
-
-require_once('session.inc.php') ;
-require_once('main.inc.php');
-
-
-if($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==1)
-{}
-elseif($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==2)
-{
-    // If they're admin, redirect to the admin page
-    header('Location: ' . $_SERVER['DOCUMENT_ROOT'].'/admin/index.php');
-exit();
-}
-elseif($_SESSION['loggedin']==1)
-{echo '<p>Your account is not activated yet. <a href="contact/index.php">Contact</a> the administrator if you registered more than 48 hours ago.</p>';
-    $_SESSION=array();
-    session_destroy();
-    header('Location: ' .  ROOT_URL);
-    exit();
-}
-
-
 
 if(isset($_SERVER['CONTEXT_PREFIX'])) {
     $root_url = $_SERVER['CONTEXT_PREFIX'];
@@ -38,6 +13,32 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
 } else {
     $root_url = ROOT_URL;
 }
+
+require_once(__DIR__ . "\..\..\conf\settings.inc.php");
+
+require_once('session.inc.php') ;
+require_once('main.inc.php');
+
+if($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==1)
+{}
+elseif($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==2)
+{
+    // If they're admin, redirect to the admin page
+    header('Location: ' . $root_url.'/admin/index.php');
+exit();
+}
+
+elseif($_SESSION['loggedin']==1)
+{echo '<p>Your account is not activated yet. <a href="'.$root_url.'/contact/index.php">Contact</a> the administrator if you registered more than 48 hours ago.</p>';
+    $_SESSION=array();
+    session_destroy();
+    header('Location: ' .  $root_url);
+    exit();
+}
+
+
+
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

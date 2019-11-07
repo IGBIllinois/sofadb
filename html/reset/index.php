@@ -7,13 +7,19 @@
 <!-- InstanceEndEditable -->
 <!-- InstanceBeginEditable name="head" -->
 <!-- InstanceEndEditable -->
-<link href="../css/style.css" rel="stylesheet" type="text/css" />
+
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
-<script type="text/javascript" src="./js/jquery.js"></script>
-<script type="text/javascript" src="./js/jquery.query-2.1.7.js"></script>
 
-<!-- // Load Javascipt -->
+<!-- JS -->
+	
+<script type="text/javascript" src='vendor/components/jquery/jquery.js'></script>
+<script type="text/javascript" src='vendor/components/jquery-ui/jquery-ui.js'></script>
+
+<!-- CSS -->
+<link href="<?php echo($root_url) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="css/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="vendor/components/jqueryui/themes/base/jquery-ui.css" />
 
 
 <script>
@@ -63,12 +69,7 @@ $(this).animate({"opacity": "1"}, "slow");
   <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 </div>
 <!-- InstanceEndEditable -->
-<div id="footer">Copyright 2014 by <a href="http://www.sofainc.org/" target="_blank">SOFA</a>.</div>
-</div>
 
-
-
-
-</body>
-<!-- InstanceEnd --></html>
-
+<?php 
+    require_once("include/footer.php");
+?>

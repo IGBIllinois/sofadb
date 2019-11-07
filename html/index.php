@@ -34,23 +34,16 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
 
-
-	<!-- // Load Javascipt -->
-
-	<!-- Load stylesheets -->
         
-	<link type="text/css" rel="stylesheet" href="css/style.css" media="screen" />
-        
-	<!-- // Load stylesheets -->
+<!-- JS -->
 	
-<script type="text/javascript" src='/vendor/components/jquery/jquery.js'></script>
-<script type="text/javascript" src='/vendor/components/jquery-ui/jquery-ui.js'></script>
-<script type="text/javascript" src='/vendor/components/jquery/jquery.js'></script>
+<script type="text/javascript" src='vendor/components/jquery/jquery.js'></script>
+<script type="text/javascript" src='vendor/components/jquery-ui/jquery-ui.js'></script>
 
- <link href="<?php echo($root_url) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
- <link rel="stylesheet" type="text/css" href="<?php echo($root_url) ?>/css/jquery.multiselect.css" />
-
-<link rel="stylesheet" type="text/css" href="<?php echo($root_url) ?>/css/jquery-ui.css" />
+<!-- CSS -->
+<link rel="stylesheet" href="css/styleTemplateMod.css"  type="text/css" />
+<link rel="stylesheet" type="text/css" href="css/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="vendor/components/jqueryui/themes/base/jquery-ui.css" />
 
 
 </head>
