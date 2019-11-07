@@ -105,14 +105,10 @@ class functions {
             $('#drop_2').change(function(){
               $('#wait_2').show();
               $('#result_2').hide();
-              $('#wait_3').hide();
-            $('#result_3').hide();
-            $('#drop_3').hide();
-            $('#drop_4').hide();
-          $.get(\"func.php\", {
+          $.get(\"index.php\", {
                     func: \"show_method_info\",
                     method_id: $('#drop_2').val()
-          }, function(response){
+                    }, function(response){
             $('#result_2').fadeOut();
             setTimeout(\"finishAjax_tier_three('result_2', '\"+escape(response)+\"')\", 400);
           });

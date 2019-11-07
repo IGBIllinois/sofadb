@@ -100,30 +100,7 @@ $start = $_GET['s'];
 else{
 $start = 0;
 }
-// Make the query: THIS SQL statement is messed up [true?]
-/*
-$q = "SELECT cases.id AS id, casenumber, caseyear, caseagency, memberid, DATE_FORMAT(datesubmitted, '%M %d, %Y') AS subdat FROM cases, members WHERE members.id=cases.memberid AND ($searchstring) AND submissionstatus=1 ORDER BY caseyear ASC LIMIT $start, $pagerows";		
 
-echo("<BR>orig query = $q<BR>"); 
-
-$result = @mysqli_query ($dbcon, $q); // Run the query.
-$members = mysqli_num_rows($result);
-
-
-//This sql statement is messed up, it doesn't work when region is part of the search string [true?]
-$q="SELECT regions.name FROM cases, members, regions WHERE regions.id=members.region AND members.id=cases.memberid AND ($searchstring) AND cases.submissionstatus=1 ORDER BY cases.caseyear ASC";
-$regionresult=@mysqli_query ($dbcon, $q);
-$regrows=mysqli_num_rows($regionresult);
-*/
-
-//if ($result && $members && $regionresult && $regrows) { // If it ran OK, display the records.
-// Table header.
-/*
-$q = "SELECT COUNT(memberid) FROM cases WHERE ($searchstring) AND submissionstatus=1";
-$resultP = @mysqli_query ($dbcon, $q);
-$row = @mysqli_fetch_array ($resultP, MYSQLI_NUM);
-$cases = $row[0];
-*/
 if(count($case_results) > 0) {
 $cases = count($case_results);
 $current_page = ($start/$pagerows) + 1;
