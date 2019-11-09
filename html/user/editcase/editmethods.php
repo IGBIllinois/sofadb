@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $method = new method($db, $tier2->get_methodid());
-    $method_info = $method->get_method_info();
+
     $user_interaction = "";
     $user_interactions = array();
     

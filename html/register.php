@@ -10,20 +10,22 @@
 require_once("../conf/settings.inc.php");
 require_once("../conf/app.inc.php");
 require_once("include/main.inc.php");
+
+
 ?>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Contact Us</title>
+<title>Register</title>
 <!-- CSS -->
  <link href="<?php echo(ROOT_URL) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
- <link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery.multiselect.css" />
- <!--
-<link rel="stylesheet" type="text/css" href="<?php echo(ROOT_URL) ?>/css/jquery-ui.css" />
--->
-<script type="text/javascript" src="<?php echo(ROOT_URL) ?>/vendor/components/jquery/jquery.js"></script>
-<script type="text/javascript" src="<?php echo(ROOT_URL) ?>/vendor/components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+ <link rel="stylesheet" type="text/css" href="/css/jquery.multiselect.css" />
+
+ <!-- JS -->
+<script type="text/javascript" src="vendor/components/jquery/jquery.js"></script>
+<script type="text/javascript" src="vendor/components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/gen_validatorv4.js"></script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
@@ -365,7 +367,7 @@ echo	'<p class="error">The email address is not acceptable because it is already
 		}
 		echo '</p><h3>Please try again.</h3><p><br></p>';
 		}// End of if (empty($errors))
-} // End of the main Submit conditional.
+}// End of the main Submit conditional.
 ?>
   
   
@@ -546,9 +548,3 @@ By requesting registration to the FADAMA Database, I agree to the following guid
 <?php 
     require_once("include/footer.php");
 ?>
-</div>
-
-
-
-</body>
-</html>

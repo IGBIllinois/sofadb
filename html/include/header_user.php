@@ -58,7 +58,7 @@ elseif($_SESSION['loggedin']==1)
 
 <!-- Javascript -->
   <script type='text/javascript' src='<?php echo($root_url) ?>/js/gen_validatorv4.js'></script>
-   <script type="text/javascript" src="<?php echo($root_url) ?>/js/addrow.js"></script>
+
 
 <script type="text/javascript" src="<?php echo($root_url) ?>/vendor/components/jquery/jquery.js"></script>
 <script type="text/javascript" src="<?php echo($root_url) ?>/vendor/components/jqueryui/jquery-ui.min.js"></script>

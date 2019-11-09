@@ -57,62 +57,7 @@ $(document).ready(function(){
     $('#wait_1').hide();
 	
     $('#addmethodbutton').hide();
-	
-	$('#addmethodbutton2').click(function(){
 
-	$.get("func.php", {
-		savecase: "1"
-
-		}, function(response){
-			addRow('hortable',response);
-			$('#wait_1').hide();
-	$('#wait_2').hide();
-	$('#result_1').hide();
-	$('#result_2').hide();
-	$('#wait_3').hide();
-	$('#result_3').hide();
-	$('#drop_1').hide();
-	$('#drop_2').hide();
-	$('#drop_3').hide();
-	
-	$('#methodtype').val("");
-	$('#addmethodbutton').hide();
-	$('hortable').show();
-			
-			
-			});//end get
-
-});//end document ready functi
-	
-	
-	
-		$('#removemethodbutton2').click(function(){
-	     
-	sendarray=deleteRow('hortable');
-	
-	$.get("func.php",{delrow:"1",delmethods:JSON.stringify(sendarray)});
-	
-	
-		
-});//end action button
-	
-	$('#editmethodbutton2').click(function(){
-	     
-	senddata=deleteOneRow('hortable');
-	recdata=0;
-	
-	
-	$.get("func.php",{editrow:"1",delmethods:senddata},function (resp){$('#methodtype').val(resp).change();});
-	$.get("func.php",{editrow:"2",delmethods:senddata},function (resp){ 
-	recdata=resp;});
-
-	$('#drop_2').val("5");
-	
-
-	
-	
-		
-});//end action button
 
 
 // Script for Chrome. When linking to a div tab, like #tab-2, Chrome doesn't
