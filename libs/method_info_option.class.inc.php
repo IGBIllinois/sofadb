@@ -40,6 +40,12 @@ class method_info_option {
             
         }  
     }
+    
+    public function get_type() {
+        $method_infos = new method_infos($this->db, method_infos_id);
+        $type = $method_infos->get_type();
+        return $type;
+    }
 
     // Private
     private function load_method_info_option($id) {
