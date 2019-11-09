@@ -461,25 +461,19 @@ public function submit_case($submitstatus) {
         return $tier2s;
     }
  
-    /** 
-     * 
-     * @param type $caseid
-     * @param type $methodid
-     * @return type
-     */
-    public function get_method_info($caseid,    
-                                    $methodid) {
-        
-        $case = new sofa_case($this->db, $caseid);
-        $method = new method($this->db, $methodid);
-        
-        $methoddata = new method_info($db);
-        $methoddataobjects = $methoddata->get_method_data($caseid, $methodid);
-        return $methoddataobjects;
 
-            
-    }
- 
+ /** Adds tier3 data to the database
+  * 
+  * @param type $tier2id ID of the Tier2 object
+  * @param type $method_info_option_id ID of the method_info_option object
+  * @param type $value Value of the method_info_option (optional)
+     * @return array an array in the form
+     *  ("RESULT"=>$result,
+     *      "MESSAGE"=>$message,
+     *       "id"=>$id)
+     * where "RESULT" is true if successful, else false, and "MESSAGE" is an
+     * output message, and "id" is the id of the newly inserted tier3, if successful
+  */
     public function add_tier3($tier2id, $method_info_option_id, $value=null) {
         $fields = "(tier2id, method_info_option_id ";
         $values = "(:tier2id, :method_info_option_id ";
@@ -1057,14 +1051,11 @@ public function submit_case($submitstatus) {
             $headerrow[] = $method->get_name(). ": Estimated outcome";
             $headerrow2[] = '';
             $headerrow2[] = '';
-            $method_infos = $method->get_method_info();
+            $method_infos = $method->get_method_infos();
             foreach($method_infos as $method_info) {
                 $headerrow[] = '';
-                if($method_info->get_output_data_1() != null) {
-                $headerrow2[] = $method_info->get_output_data_1() . ", "
-                        . $method_info->get_output_data_2() . ", "
-                        . $method_info->get_output_data_3();
-                }
+                $headerrow2[] = $method_info->get_name();
+                
                    
             }
         }
@@ -1151,16 +1142,24 @@ public function submit_case($submitstatus) {
                     $tier3s = $tier2->get_tier3data();
 
 
-                    $method_infos = $tmp_method->get_method_info();
+                    $method_infos = $tmp_method->get_method_infos();
                     
                     foreach($method_infos as $method_info) {
+                        $options = $method_info->get_method_info_options();
+                        $opt_ids = array();
+                        foreach($options as $opt) {
+                            $opt_ids[] = $opt->get_id();
+                        }
                         $found = false;
                         $txt = "";
                         foreach($tier3s as $tier3) {
-                            if($tier3->get_methodinfoid() == $method_info->get_id()) {
+                            if(in_array($tier3->get_method_info_option_id(), $opt_ids)) {
                                 //$curr_row[] = "Y";
                                 //$curr_row[] = $tier2->format_tier3data($tier3->get_id(), false);
-                                $txt .= " ". $tier2->format_tier3data($tier3->get_id(), false);
+                                if($txt != "") {
+                                    $txt .= ", ";
+                                }
+                                $txt .= $tier2->format_tier3data($tier3->get_id(), false);
                                 $found = true;
                                 //break;
                             } 
@@ -1175,7 +1174,7 @@ public function submit_case($submitstatus) {
                     $curr_row[]= "N";
                     // Estimated outcome is blank if not used
                     $curr_row[] = '';
-                    $method_infos = $tmp_method->get_method_info();
+                    $method_infos = $tmp_method->get_method_infos();
                     foreach($method_infos as $method_info) {
                         $curr_row[] = '';
                     }

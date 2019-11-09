@@ -66,13 +66,13 @@ class tier2data {
      * @param type $methodinfoid method_info id to get tier3 data for; null to get all data
      * @return \tier3data array of tier3 objects
      */
-    public function get_tier3data($methodinfoid = null) {
+    public function get_tier3data($method_info_option_id = null) {
 
         $query = "SELECT * from tier3data where tier2id = :id";
         $params = array("id"=>$this->id);
         if($methodinfoid != null) {
-            $query .= " AND methodinfoid = :methodinfoid ";
-            $params['methodinfoid'] = $methodinfoid;
+            $query .= " AND method_info_option_id = :method_info_option_id ";
+            $params['method_info_option_id'] = $method_info_option_id;
             
         }
 
@@ -88,7 +88,8 @@ class tier2data {
 
     }
     
-    /** Formats Tier3 data for display in the table, in the form:
+ 
+        /** Formats Tier3 data for display in the table, in the form:
      *  ($output_data_1, $value), for each $output_data_1 for this Tier2 data.
      *  $value may either be an $output_data_2, a value within a range, or a 
      *  user-specified value, depending on the user_interaction type.
@@ -107,101 +108,6 @@ class tier2data {
 
         $output = "";
         foreach($info as $tier_info) {
-            if(count($tier_info) > 0) {
-                $method = new method($this->db, $this->get_methodid());
-
-
-                    $method_info = new method_info($this->db, $tier_info->get_methodinfoid());
-                    
-                    $interaction = $method_info->get_user_interaction();
-
-                    if($interaction == USER_INTERACTION_MULTISELECT||
-                            $interaction == USER_INTERACTION_SELECT_EACH) {
-                        
-                        if($for_web) {
-                            if($method_info->get_output_data_2() != null) {
-                                $output .= "(".$method_info->get_output_data_1(). ", ".$method_info->get_output_data_2().")";
-                            } else {
-                                $output .= "(".$method_info->get_output_data_1().")";
-                            }
-                        } else {
-                            $output .= "Y";
-                        }
-
-                    } else if($interaction == USER_INTERACTION_INPUT_BOX ||
-                            $interaction == USER_INTERACTION_NUMERIC_ENTRY ||
-                            $interaction == USER_INTERACTION_SELECT_RANGE) {
-                        if($for_web) {     
-                            $output .= "(".$method_info->get_output_data_1(). ", ".$tier_info->get_value().")";
-                        } else {
-                            $output .= $tier_info->get_value();
-                        }
-                    } else if($interaction == USER_INTERACTION_3_COL_W_REF) {
-                        if($for_web) {
-                            $output .= "(".$method_info->get_output_data_1().", ".$method_info->get_output_data_2(). ", ".$method_info->get_output_data_3().") ";
-                        } else {
-                            $output .= "Y";
-                        }
-                    } else if($interaction == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
-                        if($for_web) {
-                            $output .= "( ".$method_info->get_output_data_1().", ".$method_info->get_output_data_2(). ", " . $tier_info->get_value(). ") ";
-                        } else {
-                            $output .= $tier_info->get_value();
-                        }
-                    } else if($interaction == USER_INTERACTION_TEXT_AREA) {
-                        $output = "Data entered";
-                    } else if($interaction == USER_INTERACTION_RIOS_CARDOSO) {
-                        // output_data_1 is the 
-                        if($for_web) {
-                            $newid = $tier_info->get_value();
-
-                            $method_info_value = new $method_info($this->db, $newid);
-                            $desc = "";
-                            if($method_info_value->get_output_data_2() != null) {
-
-                                $desc = "(" . $method_info_value->get_output_data_2_description() .":".$method_info_value->get_output_data_2().")";
-                            } else if($method_info_value->get_output_data_3() != null) {
-                                $desc = "(".$method_info_value->get_output_data_3_description() .":".$method_info_value->get_output_data_3().")";
-                            } else if($method_info_value->get_output_data_4() != null) {
-                                $desc = "(".$method_info_value->get_output_data_4_description() .":".$method_info_value->get_output_data_4().")";
-                            }
-                            $output .= $method_info->get_output_data_1_description() . " " . $method_info->get_output_data_1() . ": ". $desc."";
-
-                        } else {
-                            $output .= $tier_info->get_value();
-                        }
-                    }
-                    
-                    if($for_web) {
-                        $output .= "<BR>";
-                    }
-
-            }
-            
-        }
-        
-        return $output;
-    }
-    
-        /** Formats Tier3 data for display in the table, in the form:
-     *  ($output_data_1, $value), for each $output_data_1 for this Tier2 data.
-     *  $value may either be an $output_data_2, a value within a range, or a 
-     *  user-specified value, depending on the user_interaction type.
-     * 
-     * @param int tier3id ID of a tier3 object to format. If null, get all tier3 data for this tier2 object
-     * @param boolean for_web True if outputting to web (include <BR> tags). Defaults to true
-     * 
-     * @return string A string representing the Tier3 data for this Tier2 object
-     */
-    public function format_tier3data_new($tier3id = null, $for_web=true) {
-        if($tier3id == null)  {
-            $info = $this->get_tier3data();
-        } else{
-            $info = array(new tier3data($this->db, $tier3id)); 
-        }
-
-        $output = "";
-        foreach($info as $tier_info) {
             
             $method = new method($this->db, $this->get_methodid());
             $mi_option_id = $tier_info->get_method_info_option_id();
@@ -209,7 +115,12 @@ class tier2data {
             $option = new method_info_option($this->db, $mi_option_id);
 
             $method_infos = new method_infos($this->db, $option->get_method_infos_id());
-            $output .= $method_infos->get_name() . ": " .$option->get_value() ." ". $tier_info->get_value();
+            //$output .= $method_infos->get_name() . ": " .$option->get_value() ." ". $tier_info->get_value();
+            if($tier_info->get_value() != null && $tier_info->get_value() != "") {
+                $output .= $tier_info->get_value();
+            } else {
+                $output .= $option->get_value();
+            }
             if($for_web) {
                 $output .= "<BR>";
             }

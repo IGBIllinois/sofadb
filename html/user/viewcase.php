@@ -200,7 +200,7 @@ if(!isset($_SESSION['loadedmethods']))
                                    Method Name
                             </th>
                             <th>
-                                   Method Data
+                                   Method Outcomes
                             </th>
                             </p>
                     </tr>
@@ -217,7 +217,7 @@ if(!isset($_SESSION['loadedmethods']))
                         
                         echo("<td>". $method->get_method_type()."</td>
 				<td>".$method->get_name()."</td>".
-                                "<td>".$tier2->format_tier3data()."</td>".
+                                "<td>".$tier2->show_estimated_outcome()."</td>".
 				"</tr>");
                     }
 
