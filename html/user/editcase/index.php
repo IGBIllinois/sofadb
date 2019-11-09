@@ -6,6 +6,7 @@ if(isset($_GET['func']) && $_GET['func'] == "drop_1"  ) {
    // If drop_1 (method type) was chosen, show dropdown for the newly selected method type
    require_once('../../include/main.inc.php') ;
    functions::drop_1($_GET['drop_var']); 
+
    exit();
    
 } else if(isset($_GET['func']) && $_GET['func'] == "show_method_info"  ) { 
@@ -62,6 +63,8 @@ elseif(isset($_SESSION['caseid']))
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+    $numerrors = 0;
+    $errors = array(); // Start an array to hold the errors
     if(isset($_POST['methodtype'])) {
         $selmethodtype = $_POST['methodtype'][0];
     }
@@ -94,9 +97,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $estimated_outcome_units = $_POST['estimated_outcome_units'];
         }
         
+        
         $method_id = $_POST['drop_2'];
         $method = new method($db, $method_id);
+
+
+        if($method->get_method_type() == "Stature" ||
+                $method->get_method_type() == "Age") {
+            if(($estimated_outcome_1 != null && $estimated_outcome_1 !=  "" && !is_numeric($estimated_outcome_1)) ||
+                    ($estimated_outcome_2 != null && $estimated_outcome_2 !=  "" && !(is_numeric($estimated_outcome_2)))) {
+                $numerrors++;
+                $errors[] = "Estimated outcome must be numeric.";
+
+            }
+        }
         
+        // Check for errors
+        $output_data = $_POST['output_data'];
+        foreach($output_data as $od) {
+
+            if(is_array($od)) {
+                foreach($od as $id=>$value) {
+                    if($id != null && $id != '') {
+                        $opt = new method_info_option($db, $id);
+                        $itype = $opt->get_type();
+                        $input_type = new input_type($db, $itype);
+                        if($input_type->get_input_type() == USER_INTERACTION_NUMERIC_ENTRY && !is_numeric($value)) {
+                            $errors[] = ("Value for ".$opt->get_value() . " must be numeric.");
+                            $numerrors++;
+                        }
+
+                    }
+                }
+            }
+        }
+        if($numerrors == 0) {
         $caseid = $_POST['caseid'];
         
         $this_case = new sofa_case($db, $caseid);
@@ -115,26 +150,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             return;
         }
 
+        
         $output_data = $_POST['output_data'];
+
+
+        if($numerrors == 0) {
         foreach($output_data as $od) {
 
-            if(is_array($od)) {
-                foreach($od as $id=>$value) {
-                    if($id != null && $id != '') {
-                    //echo("adding to tier3 ($id, $value)<BR>");
-                    $this_case->add_tier3($t2id, $id, $value);
+                if(is_array($od)) {
+                    foreach($od as $id=>$value) {
+                        if($id != null && $id != '') {
+
+
+                        $this_case->add_tier3($t2id, $id, $value);
+                        }
                     }
-                }
-            } else {
-                if($od != null && $od != '') {
-                $this_case->add_tier3($t2id, $od);
+                } else {
+                    if($od != null && $od != '') {
+                    $this_case->add_tier3($t2id, $od);
+                    }
                 }
             }
         }
         
+        
         if($_POST['check_select'] != null) {
             // used for checkbox arrays, like Rios & Cardoso
-            print_r($_POST['check_select']);
+
             $check_select = $_POST['check_select'];
             foreach($check_select as $method_info_id=>$option_list) {
                 foreach($option_list as $option_id=>$option_name) {
@@ -162,15 +204,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
             
         }
+        }
+        if($numerrors == 0) {
+            //header ("location:index.php#tabs-2");
+        } else {
+            { // Report the errors.
+		echo '<span style="padding-left:100px; 
+                    display:block;"><h2>Error!</h2>
+		<p class="error">The following error(s) occurred:<br/>';
+		foreach ($errors as $msg) 
+        { // Print each error.
+			echo " - $msg<br/>\n";
+		}
+		echo '</p><h3>Please try again.</h3><p><br/></p></span>';
+	   }
+        }
+    } else {
 
-        header ("location:index.php#tabs-2");
-
-    }
-
-    
- else {
-
-	$errors = array(); // Start an array to hold the errors
+	
 	
 	// Check for a casename:
 	if (empty($_POST['caseyear'])) {

@@ -42,7 +42,7 @@ class method_info_option {
     }
     
     public function get_type() {
-        $method_infos = new method_infos($this->db, method_infos_id);
+        $method_infos = new method_infos($this->db, $this->method_infos_id);
         $type = $method_infos->get_type();
         return $type;
     }
