@@ -4,7 +4,7 @@
 
   if(isset($_SESSION['loggedin']))
   {
-     require_once("../include/session.inc..php"); 
+     require_once("../include/session.inc.php"); 
   } else {
        session_start();
   }
@@ -44,15 +44,15 @@
 <?php
     if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1) {
 ?>
-    <li><a href="index.php">My Cases</a></li>
-    <li><a href="user/searchdb/?search=1">Search</a></li>
-    <li><a href="faq.php">FAQ</a></li>
-    <li><a href="contact/">Contact Us</a></li>
+    <li><a href="../index.php">My Cases</a></li>
+    <li><a href="../user/searchdb/?search=1">Search</a></li>
+    <li><a href="../faq.php">FAQ</a></li>
+    <li><a href="../contact/">Contact Us</a></li>
 <?php
 
     } else {
 ?>
-    <li><a href="index.php">Home</a></li>
+    <li><a href="../index.php">Home</a></li>
 <?php 
     }
 ?>
@@ -74,7 +74,7 @@
     $from = FROM_EMAIL;
   //$from = "admin@sofainc.org";
    $subject = "SOFA DB ADMIN ALERT: Comments and Questions";
-   $message = $_POST['emailmessage']."\n From email:A ".$_POST['emailentry']."and Name: A ".$_POST['nameentry'];
+   $message = $_POST['emailmessage']."\n From email: ".$_POST['emailentry']."and Name: ".$_POST['nameentry'];
    $header = "From:".$from."\r\n";
    $retval = mail ($to,$subject,$message,$header);
    if( $retval == true )  
@@ -109,6 +109,6 @@ Bone(s) used by method:</textarea></div>
 	</form>
 </div>
 <?php
-    require_once("../../include/footer.php");
+    require_once("../include/footer.php");
 ?>
 

@@ -28,7 +28,13 @@ require_once("../include/main.inc.php");
 </div>
 
 <?php
+$success = false;
 if(isset($_POST['submitpass'])) {
+    
+    $psword1 = $_POST['psword1'];
+    $psword2 = $_POST['psword2'];
+    
+    if($psword1 == $psword2) {
     echo("SUBMITTING...<BR>");
     $p = trim($_POST['psword1']);
     $s = SALT;
@@ -38,16 +44,26 @@ if(isset($_POST['submitpass'])) {
     $result = functions::reset_password($db, $selector, $validator, $hash);    
     
     echo($result['MESSAGE']);
+    $success = $result['RESULT'];
+    } else if($psword1 == null || $psword1 == "") {
+        $success = false;
+        echo("Please fill out the password fields.<BR>");
+    } else {
+        $success = false;
+        echo("The passwords do not match. Please try again.<BR>");
+
+    }
         
 
-} else {
+}
+if(!$success) {
 // Check for tokens
 $selector = filter_input(INPUT_GET, 'selector');
 $validator = filter_input(INPUT_GET, 'validator');
-
+$queryString = $_SERVER['QUERY_STRING'];
 if ( false !== ctype_xdigit( $selector ) && false !== ctype_xdigit( $validator ) ) :
 ?>
-    <form action="reset.php" method="post">
+    <form action="reset.php? <?php echo $queryString;?>" method="post">
         <input type="hidden" name="selector" value="<?php echo $selector; ?>">
         <input type="hidden" name="validator" value="<?php echo $validator; ?>">
         <input type="password" class="text" name="psword1" placeholder="Enter your new password" required><BR>
@@ -57,6 +73,7 @@ if ( false !== ctype_xdigit( $selector ) && false !== ctype_xdigit( $validator )
 <?php endif; 
 
 }
+
 
 ?>
 
@@ -73,3 +90,7 @@ if ( false !== ctype_xdigit( $selector ) && false !== ctype_xdigit( $validator )
       frmvalidator.addValidation("psword2","req","Please confirm your password");
       
   </script>
+  
+  <?php
+  require_once('../include/footer.php');
+  ?>
