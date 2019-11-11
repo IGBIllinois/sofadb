@@ -122,7 +122,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $opt = new method_info_option($db, $id);
                         $itype = $opt->get_type();
                         $input_type = new input_type($db, $itype);
-                        if($input_type->get_input_type() == USER_INTERACTION_NUMERIC_ENTRY && !is_numeric($value)) {
+                        if($input_type->get_input_type() == USER_INTERACTION_NUMERIC_ENTRY && 
+                                $value != null &&
+                                $value != "" &&
+                                !is_numeric($value)) {
                             $errors[] = ("Value for ".$opt->get_value() . " must be numeric.");
                             $numerrors++;
                         }
@@ -208,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if($numerrors == 0) {
             //header ("location:index.php#tabs-2");
         } else {
-            { // Report the errors.
+         // Report the errors.
 		echo '<span style="padding-left:100px; 
                     display:block;"><h2>Error!</h2>
 		<p class="error">The following error(s) occurred:<br/>';
@@ -217,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			echo " - $msg<br/>\n";
 		}
 		echo '</p><h3>Please try again.</h3><p><br/></p></span>';
-	   }
+
         }
     } else {
 

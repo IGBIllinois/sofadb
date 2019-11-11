@@ -50,6 +50,8 @@ elseif(isset($_SESSION['caseid']))
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if(isset($_POST['tier2id'])) {
+        $numerrors = 0;
+        $errors = array();
         
         $tier2id = $_POST['tier2id'];
         $tier2 = new tier2data($db, $_POST['tier2id']);
@@ -70,14 +72,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if(isset($_POST['estimated_outcome_units'])) {
             $units = $_POST['estimated_outcome_units'];
         }
+
+
+
+        if($method->get_method_type() == "Stature" ||
+                $method->get_method_type() == "Age") {
+            if(($est1 != null && $est1 !=  "" && !is_numeric($est1)) ||
+                    ($est2 != null && $est2 !=  "" && !(is_numeric($est2)))) {
+                $numerrors++;
+                $errors[] = "Estimated outcome must be numeric.";
+
+            }
+        }
+        
+        // Check for errors
+        $output_data = $_POST['output_data'];
+        foreach($output_data as $od) {
+
+            if(is_array($od)) {
+                foreach($od as $id=>$value) {
+                    if($id != null && $id != '') {
+                        $opt = new method_info_option($db, $id);
+                        $itype = $opt->get_type();
+                        $input_type = new input_type($db, $itype);
+                        if($input_type->get_input_type() == USER_INTERACTION_NUMERIC_ENTRY && 
+                                $value != null &&
+                                $value != "" &&
+                                !is_numeric($value)) {
+                            $errors[] = ("Value for ".$opt->get_value() . " must be numeric.");
+                            $numerrors++;
+                        }
+
+                    }
+                }
+            }
+        }
+        
+
+
+    if($numerrors == 0) {
         
         if($est1 != null) {
             $tier2->update_estimated_outcomes($est1, $est2, $units);
         }
-
-    }
+    
     $result = null;
-    $errors = 0;
+    $numerrors = 0;
     // make changes
     $this_case = new sofa_case($db, $caseeditid);
     $tier3s = $tier2->get_tier3data();
@@ -169,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     
     echo("<div id='caseform'>");
-    if($errors == 0) {
+    if($numerrors == 0) {
         echo("Method info updated successfully.");
     } else {
         foreach($result as $error_result) {
@@ -178,6 +218,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     echo("</div>");
             
+    } else {
+         // Report the errors.
+		echo '<span style="padding-left:100px; 
+                    display:block;"><h2>Error!</h2>
+		<p class="error">The following error(s) occurred:<br/>';
+		foreach ($errors as $msg) 
+        { // Print each error.
+			echo " - $msg<br/>\n";
+		}
+		echo '</p><h3>Please try again.</h3><p><br/></p></span>';
+	   
+    }
+    }
         
     
 }
