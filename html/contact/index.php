@@ -40,15 +40,20 @@
 
 <div id="navbar">
   <ul>
-    <li><a href="<?php echo(ROOT_URL);?>">Home</a></li>
+
 <?php
     if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1) {
 ?>
-    <li><a href="../user/searchdb/?search=1">Search</a></li>
-    <li><a href="../faq.php">FAQ</a></li>
-    <li><a href="../contact/">Contact Us</a></li>
+    <li><a href="index.php">My Cases</a></li>
+    <li><a href="user/searchdb/?search=1">Search</a></li>
+    <li><a href="faq.php">FAQ</a></li>
+    <li><a href="contact/">Contact Us</a></li>
 <?php
 
+    } else {
+?>
+    <li><a href="index.php">Home</a></li>
+<?php 
     }
 ?>
   </ul>
