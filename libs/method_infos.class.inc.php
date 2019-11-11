@@ -867,7 +867,7 @@ class method_infos {
                $output .= "";
                $headers = "";
                $has_refs = false;
-               $headers .= ("<table  style='table_full table_padded'><tr><th><U><B>".$header1."</B></U></th>");
+               $headers .= ("<table><tr><th><U><B>".$header1."</B></U></th>");
                $headers .= ("<th><U><B>".$header2."</B></U></th>");
                $headers .= ("<th><U><B>".$header3."</B></U></th>");
 
