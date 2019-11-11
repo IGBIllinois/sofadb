@@ -35,25 +35,27 @@ if(isset($_POST['submitpass'])) {
     $psword2 = $_POST['psword2'];
     
     if($psword1 == $psword2) {
-    echo("SUBMITTING...<BR>");
-    $p = trim($_POST['psword1']);
-    $s = SALT;
-    $hash=md5($s . $p);
-    $validator = $_POST['validator'];
-    $selector = $_POST['selector'];    
-    $result = functions::reset_password($db, $selector, $validator, $hash);    
-    
-    echo($result['MESSAGE']);
-    $success = $result['RESULT'];
-    } else if($psword1 == null || $psword1 == "") {
-        $success = false;
-        echo("Please fill out the password fields.<BR>");
+        if($psword1 == null || $psword1 == "") {
+            $success = false;
+            echo("Please fill out the password fields.<BR>");
+        } else {
+            echo("SUBMITTING...<BR>");
+            $p = trim($_POST['psword1']);
+            $s = SALT;
+            $hash=md5($s . $p);
+            $validator = $_POST['validator'];
+            $selector = $_POST['selector'];    
+            $result = functions::reset_password($db, $selector, $validator, $hash);    
+
+            echo($result['MESSAGE']);
+            $success = $result['RESULT'];
+        }
+ 
     } else {
         $success = false;
         echo("The passwords do not match. Please try again.<BR>");
 
-    }
-        
+    }    
 
 }
 if(!$success) {
