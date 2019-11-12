@@ -69,7 +69,7 @@ CREATE TABLE `input_types` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `input_type` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `members` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -130,20 +130,6 @@ CREATE TABLE `method_infos` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `methodfeature` (
-  `methodid` int(11) NOT NULL,
-  `featureid` int(11) NOT NULL,
-  `measurementtype` text CHARACTER SET utf8 NOT NULL,
-  KEY `methodid` (`methodid`,`featureid`),
-  KEY `featureid` (`featureid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `methodphase` (
-  `methodid` int(11) NOT NULL,
-  `featureid` int(11) NOT NULL,
-  `phaseid` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 CREATE TABLE `methods` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `methodname` text CHARACTER SET latin1 NOT NULL,
@@ -165,12 +151,6 @@ CREATE TABLE `password_reset` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `phase` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `phasename` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=128 DEFAULT CHARSET=latin1;
-
 CREATE TABLE `reference` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `reference_name` varchar(100) DEFAULT NULL,
@@ -184,12 +164,6 @@ CREATE TABLE `reference_data` (
   `reference_id` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `regions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` text CHARACTER SET utf8 NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 CREATE TABLE `tier2data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -210,9 +184,7 @@ CREATE TABLE `tier2data` (
 CREATE TABLE `tier3data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tier2id` int(11) DEFAULT NULL,
-  `methodinfoid` int(11) DEFAULT NULL,
   `value` text,
-  `reference` varchar(100) DEFAULT NULL,
   `method_info_option_id` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
