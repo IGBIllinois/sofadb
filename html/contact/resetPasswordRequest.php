@@ -3,6 +3,16 @@
 
 require_once("../../conf/settings.inc.php");
 require_once("../include/main.inc.php");
+
+if(isset($_SERVER['CONTEXT_PREFIX'])) {
+    $root_url = $_SERVER['CONTEXT_PREFIX'];
+    
+} else {
+    $root_url = ROOT_URL;
+}
+
+$contactURL = "https://". $_SERVER['HTTP_HOST']. $root_url. "/contact/";
+
 ?>
 <title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
 
@@ -24,15 +34,18 @@ require_once("../include/main.inc.php");
 
 <?php
 
-
+$success = false;
 if(isset($_POST['resetsubmit'])) {
     $email = $_POST['email'];
-    
+    if($email == null || $email == "" || (!filter_var($email, FILTER_VALIDATE_EMAIL))) {
+        echo("Please enter a valid email address.<BR>");
+        
+    } else {
     // Create tokens
 $selector = bin2hex(random_bytes(8));
 $token = random_bytes(32);
 
-$url = sprintf('%sreset.php?%s', "https://".$_SERVER['HTTP_HOST']."/sofadb/contact/", http_build_query([
+$url = sprintf('%sreset.php?%s', $contactURL, http_build_query([
     'selector' => $selector,
     'validator' => bin2hex($token)
 ]));
@@ -77,12 +90,13 @@ $headers .= "Content-type: text/html\r\n";
 // Send email
 $sent = mail($to, $subject, $message, $headers);
 echo("An email has been sent to $to with a link to reset the password for that account.");
+    $success = true;
+    }
+}
     
-    
-    
-} else {
+if(!$success) {
 echo("<form method='POST' action='resetPasswordRequest.php'>");
-echo("Please enter the email you used as your username when you registered:<BR>Submitting the form will send a link");
+echo("Please enter the email you used as your username when you registered:<BR>Submitting the form will send a link to the specified address.");
 ?>
 <br><label class="label" for="email">Email Address*</label><input id="email" type="text" name="email" size="30" maxlength="160" value="<?php if (isset($_POST['email'])) echo $_POST['email']; ?>" >
 <input name="resetsubmit" id="resetsubmit" type="submit" value="Send email"/>
@@ -91,7 +105,8 @@ echo("Please enter the email you used as your username when you registered:<BR>S
 echo("</form>");
 }
 
-echo("<a href='../index.php'>Back to Main Page</A>");
+
+echo("<BR><a href='../index.php'>Back to Main Page</A>");
     
 require_once('../include/footer.php');
 
