@@ -105,25 +105,6 @@ CREATE TABLE `members` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `method_info` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `methodid` int(11) NOT NULL,
-  `output_data_1` varchar(500) DEFAULT NULL,
-  `output_data_2` varchar(500) DEFAULT NULL,
-  `output_data_3` varchar(500) DEFAULT NULL,
-  `output_data_4` varchar(500) DEFAULT NULL,
-  `output_data_1_description` varchar(100) DEFAULT NULL,
-  `output_data_2_description` varchar(100) DEFAULT NULL,
-  `output_data_3_description` varchar(100) DEFAULT NULL,
-  `output_data_4_description` varchar(100) DEFAULT NULL,
-  `reference_list` varchar(100) DEFAULT NULL,
-  `age_range` varchar(100) DEFAULT NULL,
-  `user_interaction` varchar(100) DEFAULT NULL,
-  `expected_result_1` varchar(100) DEFAULT NULL,
-  `expected_result_2` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 CREATE TABLE `method_info_options` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `method_infos_id` int(10) unsigned DEFAULT NULL,
