@@ -19,7 +19,7 @@ require_once("include/main.inc.php");
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Register</title>
 <!-- CSS -->
- <link href="<?php echo(ROOT_URL) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
+ <link href="<?php echo(ROOT_URL) ?>/css/style.css" rel="stylesheet" type="text/css" />
  <link rel="stylesheet" type="text/css" href="/css/jquery.multiselect.css" />
 
  <!-- JS -->

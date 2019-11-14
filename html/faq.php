@@ -16,7 +16,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Contact Us</title>
 <!-- CSS -->
- <link href="css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
+ <link href="css/style.css" rel="stylesheet" type="text/css" />
  <link rel="stylesheet" type="text/css" href="/css/jquery.multiselect.css" />
 
 <script type="text/javascript" src="vendor/components/jquery/jquery.js"></script>

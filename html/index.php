@@ -28,8 +28,8 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
 }
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
@@ -41,7 +41,7 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
 <script type="text/javascript" src='vendor/components/jqueryui/jquery-ui.js'></script>
 
 <!-- CSS -->
-<link rel="stylesheet" href="css/styleTemplateMod.css"  type="text/css" />
+<link rel="stylesheet" href="css/style.css"  type="text/css" />
 <link rel="stylesheet" type="text/css" href="css/jquery.multiselect.css" />
 <link rel="stylesheet" type="text/css" href="vendor/components/jqueryui/themes/base/jquery-ui.css" />
 

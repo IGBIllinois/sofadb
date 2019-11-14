@@ -14,8 +14,6 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
     $root_url = ROOT_URL;
 }
 
-require_once(__DIR__ . "\..\..\conf\settings.inc.php");
-
 require_once('session.inc.php') ;
 require_once('main.inc.php');
 
@@ -41,14 +39,14 @@ elseif($_SESSION['loggedin']==1)
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html >
+<html >
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>My Account</title>
 
 <!-- CSS -->
- <link href="<?php echo($root_url) ?>/css/styleTemplateMod.css" rel="stylesheet" type="text/css" />
+ <link href="<?php echo($root_url) ?>/css/style.css" rel="stylesheet" type="text/css" />
  <link rel="stylesheet" type="text/css" href="<?php echo($root_url) ?>/css/jquery.multiselect.css" />
 
 <link rel="stylesheet" type="text/css" href="<?php echo($root_url) ?>/vendor/components/jqueryui/themes/base/jquery-ui.css" />
