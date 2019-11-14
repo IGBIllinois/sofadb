@@ -21,8 +21,8 @@ Alias /sofadb /var/www/sofadb/html
 
 4.  Create a user/password on the mysql server which has select/insert/delete/update permissions on the cluster_accounting database.
 ```
-CREATE USER 'saswo_dbadmin'@'localhost' IDENTIFIED BY 'STRONG_PASSWORD';
-GRANT SELECT,INSERT,DELETE,UPDATE ON sofadb.* to 'saswo_dbadmin'@'localhost';
+CREATE USER 'sofadb_admin'@'localhost' IDENTIFIED BY 'STRONG_PASSWORD';
+GRANT SELECT,INSERT,DELETE,UPDATE ON sofadb.* to 'sofadb_admin'@'localhost';
 ```
 
 5. Run the additional .sql files to populate the information databases
