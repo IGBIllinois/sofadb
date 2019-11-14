@@ -257,11 +257,6 @@ class sofa_case {
 				<p> " . $db->errorInfo()[2] ."<br/><br/>Query: " . $q . "</p>"
                         );
                 }
-
-                //$q = "INSERT INTO membercasetable (memberid,caseid) VALUES (:memberid,:caseid)";
-                //$d = array("memberid"=>$data['memberid'], "caseid"=>$caseid);
-
-                //$result2 = $db->get_insert_result($q, $d);
                 
 
                 return array("RESULT"=>TRUE,

@@ -115,7 +115,7 @@ class tier2data {
             $option = new method_info_option($this->db, $mi_option_id);
 
             $method_infos = new method_infos($this->db, $option->get_method_infos_id());
-            //$output .= $method_infos->get_name() . ": " .$option->get_value() ." ". $tier_info->get_value();
+
             if($tier_info->get_value() != null && $tier_info->get_value() != "") {
                 $output .= $tier_info->get_value();
             } else {
@@ -131,6 +131,13 @@ class tier2data {
         return $output;
     }
     
+    /** Update the estimated outcomes for a Tier2data.
+     * 
+     * @param string $estimated_outcome_1 The new first estimated outcome value
+     * @param string $estimated_outcome_2 The new second estimated outcome value (optinal)
+     * @param string $units The new estimated outcome units (optional)
+     * @return type
+     */
     public function update_estimated_outcomes($estimated_outcome_1, $estimated_outcome_2 = null, $units=null) {
         
         $tier2id = $this->id;
