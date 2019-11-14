@@ -147,7 +147,11 @@ class method_infos {
        } else if(in_array($method_name, FORMULA_OUTCOME_PROMPTS)) {
            $prompt = "<BR>Enter any/all measurements and select any/all formula outcomes from formulas used.</BR>";
        } else if(in_array($method_name, MEASUREMENT_PROMPTS)) {
-           $prompt = "<BR>Enter all measurements used below<BR>";
+           $prompt = "<BR>Enter all measurements used below.<BR>";
+       } else if(in_array($method_name, PHASE_REF_PROMPTS)) {
+           $prompt = "<BR>Select corresponding phase/stage and reference sample.<BR>";
+       } else if (in_array($method_name, PHASE_PROMPTS)) {
+           $prompt = "<BR>Select corresponding phase/stage.<BR>";
        }
        
        // Draw estimated outcomes

@@ -87,7 +87,9 @@ DEFINE ("NO_PROMPTS", array(
         "Walker 2008 (cranial, nonmetric)",
         "Edgar 2013 (detention, nonmetric)",
         "Raxter et al. (skeletal, metric)",
-        "Demirjian et al. 1973 (dentition, nonmetric)"));
+        "Demirjian et al. 1973 (dentition, nonmetric)",
+        "Transition Analysis (skeletal, nonmetric)",
+        "Berg and Kennyhercz 2017 (mandible)"));
     
 DEFINE ("FORMULA_PROMPTS", array(
         "Fully 1956 (skeletal, metric)",
@@ -106,6 +108,40 @@ DEFINE("FORMULA_OUTCOME_PROMPTS", array(
         "Spradley and Jantz 2011 (metric)"
         
     ));
+
+DEFINE("PHASE_REF_PROMPTS", array(
+    "Albert and Maples 1995 (vertebrae, nonmetric)",
+    "Blankenship et al. 2017 (dentition, nonmetric)",
+    "Brooks and Suchey 1990 (os pubis, nonmetric)",
+    "Hartnett 2010 (os pubis, nonmetric)",
+    "Hartnett 2010 (ribs, nonmetric)",
+    "Iscan and Loth 1989 (ribs)",
+    "Iscan et al. 1987 (American Black males and females)",
+    "Kasper et al. 2009 Hispanic, third molar",
+    "Langley-Shirley and Jantz 2010 (clavicle, nonmetric)",
+    "Mincer et al. 1993 (third molar, nonmetric)",
+    "Shirley and Jantz 2011 (cranium, nonmetric)",
+    "Todd 1921 (os pubis, nonmetric)"
+));
+
+DEFINE("PHASE_PROMPTS", array(
+     "Berg 2008 (os pubis, nometric)",
+    "Buckberry and Chamberlain 2002 (ilium, nonmetric)",
+    "Garvin 2008 (cartilage, nonmetric)",
+    "Gilbert and McKern 1973 (os pubis)",
+    "Ginter 2005 (cranium, nonmetric)",
+    "Iscan et al. 1984 (White male, ribs, nonmetric)",
+    "Iscan et al. 1985 (White females, ribs, nonmetric)",
+    "Langley 2016 (clavicle, nonmetric)",
+    "Lovejoy et al. 1985 (os coxa, nonmetric)",
+    "Mann et al. 1991 (cranium, nonmetric)",
+    "Mckern and Stewart 1957 (os pubis, nonmetric)",
+    "Osborne et al. 2004 (os coxa, nonmetric)",
+    "Passalacqua 2009 (sacrum, nonmetric)",
+    "Rejtarova et al. 2009 (costal cartilage, nonmetric)",
+    "Todd 1920 (os pubis, nonmetric)"
+
+));
     
 DEFINE("MEASUREMENT_PROMPTS", array(
         "Lamendin et al. 1992 (dentition, metric)",
