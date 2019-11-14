@@ -182,9 +182,9 @@ class method_infos {
            }
 
            $output .= ("<BR>Estimated Stature from this method:");
-           $output .= ("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'>");
+           $output .= ("<input type='number' size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'>");
            $output .= (" to ");
-           $output .= ("<input size=6 id='estimated_outcome_2' name='estimated_outcome_2' value='$estimated_outcome_2'>");
+           $output .= ("<input type='number' size=6 id='estimated_outcome_2' name='estimated_outcome_2' value='$estimated_outcome_2'>");
            
            $output .= ("&nbsp;&nbsp;Units:");
            $output .= ("<select name='estimated_outcome_units'>");
@@ -206,8 +206,8 @@ class method_infos {
            $estimated_outcomes = $method->get_estimated_outcomes();
 
            $output .= ("<BR>Estimated Age range from this method:");
-           $output .= ("<input size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'> to ");
-           $output .= ("<input size=6 id='estimated_outcome_2' name='estimated_outcome_2' value='$estimated_outcome_2'> years");
+           $output .= ("<input type='number' size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'> to ");
+           $output .= ("<input type='number' size=6 id='estimated_outcome_2' name='estimated_outcome_2' value='$estimated_outcome_2'> years");
            $output .= ("<BR>");
            $output .= $prompt;
            
@@ -433,6 +433,14 @@ class method_infos {
         $method_infos = new method_infos($db, $method_infos_id);
         $options = $method_infos->get_method_info_options();
 
+        $mi_input_type = $method_infos->get_type();
+        $type = new input_type($db, $mi_input_type);
+        $tname= $type->get_input_type();
+
+        $typename="text";
+        if($tname == USER_INTERACTION_NUMERIC_ENTRY) {
+            $typename="number";
+        }
         $curr_option = $options[0];
         $value = "";
         
@@ -453,7 +461,7 @@ class method_infos {
         }
         $output .= "<table class=' td_spaced'>";
         foreach($options as $op) {
-            $output .= "<tr><td style='width:250px'>".$op->get_value().": </td><td class='align_left'><input size=$size type='text' name=output_data[][".$op->get_id()."] ".(($value != "") ? ("value ='$value'") : "" )."></input></td></tr>";
+            $output .= "<tr><td style='width:250px'>".$op->get_value().": </td><td class='align_left'><input size=$size type='$typename' name=output_data[][".$op->get_id()."] ".(($value != "") ? ("value ='$value'") : "" )."></input></td></tr>";
         }
         $output .= "</table>";
 
