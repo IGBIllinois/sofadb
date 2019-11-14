@@ -840,7 +840,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           </fieldset>
       
       <!-- Prior information -->
-            <fieldset class="caseinfobox"><legend class="boldlegend">Prior Case Knowledge</legend>
+            <fieldset class="caseinfobox"><legend class="boldlegend">Background Case Knowledge</legend>
                 <BR>
                 Please check any component of the biological profile that was known to the practitioner during or before the time of case analysis.
                 <BR><BR>
@@ -976,7 +976,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     <script language="JavaScript" type="text/javascript"
     xml:space="preserve">//<![CDATA[
-//You should create the validator only after the definition of the HTML form
+//You should create the validator only after the definition of the HTML form 
   var frmvalidator  = new Validator("casedata");
   
   frmvalidator.EnableOnPageErrorDisplaySingleBox();
@@ -990,7 +990,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
  
   frmvalidator.addValidation("caseyear","maxlen=4","Year must be entered in YYYY format");
   frmvalidator.addValidation("caseyear","numeric","Year must be entered in YYYY format");
-//  frmvalidator.addValidation("casename","req","You must provide a nickname for the case");
 
   
    frmvalidator.addValidation("faage","numeric","Ages must be entered as a number");
@@ -1011,7 +1010,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 frmvalidator.addValidation("farace_othertext","req","Please fill-in the Other Ancestry textbox",
         "VWZ_IsChecked(document.forms['casedata'].elements['farace_other'],'1')");
 
-	
 	//]]></script>
     
 <?php

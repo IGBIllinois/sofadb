@@ -611,7 +611,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   </fieldset>
       
       <!-- Prior information -->
-            <fieldset class="caseinfobox"><legend class="boldlegend">Prior Case Knowledge</legend>
+            <fieldset class="caseinfobox"><legend class="boldlegend">Background Case Knowledge</legend>
                 <BR>
                 Please check any component of the biological profile that was known to the practitioner during or before the time of case analysis.
                 <BR><BR>
