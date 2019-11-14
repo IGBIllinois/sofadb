@@ -7,9 +7,8 @@ $filepath = __DIR__ . "$ds..$ds..$ds";
 
 require_once($filepath. "conf". $ds. 'settings.inc.php');
 require_once($filepath . "conf". $ds. 'app.inc.php');
-error_reporting(E_ERROR | E_PARSE);
 
-ini_set('display_errors',1);
+error_reporting(0);
 
 set_include_path(get_include_path().";".$filepath."libs".$db.";".$filepath."conf".$db.";");
 
