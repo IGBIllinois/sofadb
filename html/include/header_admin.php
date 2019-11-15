@@ -67,10 +67,11 @@ elseif($_SESSION['loggedin']==1)
 <div id="navbar">
   <ul>
     <li><a href="<?php echo($root_url) ?>/">Home</a></li>
-    <li><a href="<?php echo($root_url) ?>">My Account</a></li>
+    
     <li><a href="<?php echo($root_url) ?>/logout.php">Logout</a></li>
     <li><a href="<?php echo($root_url) ?>/contact/">Contact Us</a></li>
   </ul>
+    <BR>
 </div>
 <div id="templatecontainer"><h1 style="text-align:center">Admin Tools</h1>
   <div id="leftnav"><h2 style="color:#00C ;font-weight: bold;font-size: 16pt;">Control Panel</h2>
