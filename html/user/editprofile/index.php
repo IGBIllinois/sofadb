@@ -37,13 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} else {
 		$ln = trim($_POST['lname']);
 	}
-        /*
-         * // Check if email is valid
-        if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-            $errors[] = "Email address '".$_POST['email']."' is not considered valid.\n";
-        }
-         * 
-         */
+
 	// Check for an email address:
 	if (!empty($_POST['email'])) {
 		if ($_POST['email'] != $_POST['email2']) {
@@ -221,19 +215,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if ($result) { // If it ran OK.
 		ob_start();
-		//header ("location: ../index.php"); 
-		exit();
+                echo('<span style="padding-left:100px; display:block;"><h2>User info updated successfully,<BR></span>');
+                $edit_member = new member($db, $memberid);
 		} else { // If it did not run OK
 		// Error message:
 			echo '<h2>System Error</h2>
 			<p class="error">Registration failed because of a system error. We apologize for any inconvenience.</p>'; 
 			// Debugging message:
-			echo '<p>' . mysqli_error($dbcon) . '<br><br>Query: ' . $q . '</p>';
+			echo '<p>' . $result['MESSAGE'] . '<br><br>Query: ' . $q . '</p>';
 		} // End of if ($result)
 
 		// Include the footer and stop the script
 		  
-		exit();
+		
 
 	} else { // Report the errors.
 		echo '<span style="padding-left:100px; 

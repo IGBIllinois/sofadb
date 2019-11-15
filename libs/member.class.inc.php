@@ -506,8 +506,7 @@ public static function update_member($db, $params, $pwd=null) {
     if($pwd != null) {
         $params['pwd'] = $pwd;
     }
-    echo("query = $q<BR>");
-    print_r($params);
+
     $result = $db->get_update_result($q, $params);
     if($result > 0) {
         return array("RESULT"=>TRUE,

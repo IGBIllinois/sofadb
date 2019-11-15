@@ -29,7 +29,7 @@ if (isset($_POST['delsubmit']))
                         echo '<h2>System Error</h2>
                         <p class="error">Did not delete case. We apologize for any inconvenience.</p>'; 
                         // Debugging message:
-                        echo '<p>' . $db->errorInfo[2] . '<br/><br/>:' . $result['MESSAGE'] . '</p>';
+                        echo '<p>' . $result['MESSAGE'] . '<br/><br/>:' . $result['MESSAGE'] . '</p>';
         exit();
         } else {
             echo($result['MESSAGE']);
@@ -98,8 +98,8 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
 // Fetch and print all the records:
 foreach($members as $member) {
 	echo '<tr>
-	<td><a href="edit_record.php?id=' . $member->get_id() . '">Edit</a></td>
-	<td><form action="index.php" method="post" id="deletemember" onsubmit="return confirm(\'Do you really want to delete this member?\nAll member data and cases associated with this user will be deleted.\')">
+	<td><a href="./editprofile/index.php?edit_member_id=' . $member->get_id() . '">Edit</a></td>
+	<td><form action="./index.php" method="post" id="deletemember" onsubmit="return confirm(\'Do you really want to delete this member?\nAll member data and cases associated with this user will be deleted.\')">
 	<input name="delid" type="hidden" value="'.$member->get_id().'"/>
 	<input name="delsubmit" type="submit" value="Delete" /> </form>
 	</td>
