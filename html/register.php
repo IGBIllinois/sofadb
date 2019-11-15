@@ -206,7 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if (!empty($_POST['degreeyear'])) {
 		$degreeyear = trim($_POST['degreeyear']);
 	} else {
-                $degreeyear = -1;
+                $degreeyear = 0;
 	}
 	
 	if (!empty($_POST['fieldofstudy'])) {
@@ -350,7 +350,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			echo '<h2>System Error</h2>
 			<p class="error">Registration failed because of a system error. We apologize for any inconvenience.</p>'; 
 			// Debugging message:
-			echo '<p>' . $db->errorInfo()[2]. '</p>';
+			echo '<p>' . $result['MESSAGE']. '</p>';
 		} // End of if ($result)
 
 		// Include the footer and stop the script
