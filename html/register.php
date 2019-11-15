@@ -18,14 +18,16 @@ require_once("include/main.inc.php");
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Register</title>
-<!-- CSS -->
- <link href="<?php echo(ROOT_URL) ?>/css/style.css" rel="stylesheet" type="text/css" />
- <link rel="stylesheet" type="text/css" href="/css/jquery.multiselect.css" />
 
- <!-- JS -->
-<script type="text/javascript" src="vendor/components/jquery/jquery.js"></script>
-<script type="text/javascript" src="vendor/components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
-<script type="text/javascript" src="js/gen_validatorv4.js"></script>
+<!-- JS -->
+	
+<script type="text/javascript" src='vendor/components/jquery/jquery.js'></script>
+<script type="text/javascript" src='vendor/components/jqueryui/jquery-ui.js'></script>
+
+<!-- CSS -->
+<link rel="stylesheet" href="css/style.css"  type="text/css" />
+<link rel="stylesheet" type="text/css" href="css/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="vendor/components/jqueryui/themes/base/jquery-ui.css" />
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
