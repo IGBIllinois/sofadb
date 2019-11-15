@@ -23,6 +23,7 @@ require_once("include/main.inc.php");
 	
 <script type="text/javascript" src='vendor/components/jquery/jquery.js'></script>
 <script type="text/javascript" src='vendor/components/jqueryui/jquery-ui.js'></script>
+<script type="text/javascript" src='js/gen_validatorv4.js'></script>
 
 <!-- CSS -->
 <link rel="stylesheet" href="css/style.css"  type="text/css" />
