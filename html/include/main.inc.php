@@ -10,7 +10,6 @@ require_once($filepath . "conf". $ds. 'app.inc.php');
 
 error_reporting(0);
 
-set_include_path(get_include_path().";".$filepath."libs".$db.";".$filepath."conf".$db.";");
 
 function my_autoloader($class_name) {
 global $filepath;
