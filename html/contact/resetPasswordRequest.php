@@ -35,12 +35,16 @@ $contactURL = "https://". $_SERVER['HTTP_HOST']. $root_url. "/contact/";
 <?php
 
 $success = false;
+
 if(isset($_POST['resetsubmit'])) {
     $email = $_POST['email'];
     if($email == null || $email == "" || (!filter_var($email, FILTER_VALIDATE_EMAIL))) {
         echo("Please enter a valid email address.<BR>");
         
-    } else {
+    } else if(!member::member_exists($db, $email)) {
+        echo("The given email address was not found as a registered user.<BR>");
+    }
+    else {
     // Create tokens
 $selector = bin2hex(random_bytes(8));
 $token = random_bytes(32);
