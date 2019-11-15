@@ -32,7 +32,7 @@ if(!isset($_POST['id']) &&  !isset($_GET['id'])) {
         $description = $method->get_description();
         $instructions = $method->get_instructions();
     
-        $features = $method->get_features();
+        //$features = $method->get_features();
 
     } else {
         $id = ($_POST['id']);
@@ -62,16 +62,18 @@ if(isset($_POST['edit_method_submit'])) {
     if(isset($_POST['instructions'])) {
     $instructions = $_POST['instructions'];
     }
-
+/*
     if(isset($_POST['features'])) {
         $new_features = $_POST['features'];
 
     } else {
         $new_features = array();
     }
+ * 
+ */
     $method->update_method($name, $type_name, $type_id, $measurement_type, $description, $instructions);
 
-    $method->edit_features($new_features);
+    //$method->edit_features($new_features);
 
 echo ("Method $name edited successfully.<BR>");
 }
