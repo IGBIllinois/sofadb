@@ -55,7 +55,7 @@ require_once("include/main.inc.php");
 
 <div id="navbar">
   <ul>
-    <li><a href="<?php echo(ROOT_URL);?>">Home</a></li>
+    <li><a href="index.php">Home</a></li>
 <?php
     if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1) {
 ?>
