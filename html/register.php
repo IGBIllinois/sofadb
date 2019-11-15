@@ -291,10 +291,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $result = member::add_member($db, $params);
         if($result['RESULT'] == TRUE) {
             echo($result['MESSAGE']);
-	  //$admin_email="hughesc@illinois.edu";
+
       $admin_email = ADMIN_EMAIL;              
       $to = $admin_email;
-   //$from="admin@sofainc.org";
+
       $from= $admin_email;
    $subject = "FADAMA DB ADMIN ALERT: Activate new user";
    $message = "New User:".$fn." ".$ln." is requesting activation.\n Email address is:".$e."\n\n";

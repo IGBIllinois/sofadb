@@ -68,11 +68,11 @@
   <?php 
    if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-	 //$admin_email="hughesc@illinois.edu";
+
        $admin_email = ADMIN_EMAIL;
     $to = $admin_email;
     $from = FROM_EMAIL;
-  //$from = "admin@sofainc.org";
+
    $subject = "SOFA DB ADMIN ALERT: Comments and Questions";
    $message = $_POST['emailmessage']."\n From email: ".$_POST['emailentry']."and Name: ".$_POST['nameentry'];
    $header = "From:".$from."\r\n";

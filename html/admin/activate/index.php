@@ -55,15 +55,10 @@ if($result['RESULT'] == FALSE)
 } else {
 
 
-
-//$emailrow = $result[0];
-   //$admin_email="hughesc@illinois.edu";
-   //$to = $emailrow['uname'];
    $to = $member->get_uname();
-$admin_email = ADMIN_EMAIL;
+   $admin_email = ADMIN_EMAIL;
 
    $subject = "FADAMA Membership Approved";
-   //$message = "Dear ".$member->get_firstname()." ".$member->get_lastname.",\n Welcome to the SOFA Database. Your account is now activated and you can add cases, search the database, and download case information from the database.\n Best regards,\n SOFA DB ADMIN\n http://www.sofadb.org";
    $message = "Dear New FADAMA Member, \n
               Your membership request has been approved. You may access          
                the database at http://sofainc.org/sofadb/. You can both 
