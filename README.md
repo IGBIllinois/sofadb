@@ -14,16 +14,18 @@
 2.  Create an alias in apache configs that points to the html folder.  
 ```
 Alias /sofadb /var/www/sofadb/html
-```
-3.  Run sql/sofadb.sql on the mysql server.
 
-```mysql -u root -p sofadb < sql/sofadb.sql```
-
-4.  Create a user/password on the mysql server which has select/insert/delete/update permissions on the cluster_accounting database.
+3.  Create the database and a user/password on the mysql server which has select/insert/delete/update permissions on the cluster_accounting database.
 ```
+CREATE DATABASE sofadb;
 CREATE USER 'sofadb_admin'@'localhost' IDENTIFIED BY 'STRONG_PASSWORD';
 GRANT SELECT,INSERT,DELETE,UPDATE ON sofadb.* to 'sofadb_admin'@'localhost';
 ```
+```
+4.  Run sql/sofadb.sql on the mysql server.
+
+```mysql -u root -p sofadb < sql/sofadb.sql```
+
 
 5. Run the additional .sql files to populate the information databases
 ```mysql -u root -p sofadb < sql/methods.sql
