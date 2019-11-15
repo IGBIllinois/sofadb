@@ -111,8 +111,11 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
 // Fetch and print all the records:
 foreach($found_members as $found_member) {
 	echo '<tr>
-	<td><a href="edit_record.php?id=' . $found_member->get_id() . '">Edit</a></td>
-	<td><a href="delete_record.php?id=' . $found_member->get_id() . '">Delete</a></td>
+	<td><a href="../editprofile/index.php?edit_member_id=' . $found_member->get_id() . '">Edit</a></td>
+	<td><form action="../index.php" method="post" id="deletemember" onsubmit="return confirm(\'Do you really want to delete this member?\nAll member data and cases associated with this user will be deleted.\')">
+	<input name="delid" type="hidden" value="'.$found_member->get_id().'"/>
+	<input name="delsubmit" type="submit" value="Delete" /> </form>
+	</td>
 	<td>' . $found_member->get_lastname() . '</td>
 	<td>' . $found_member->get_firstname(). '</td>
 	<td>' . $found_member->get_uname() . '</td>
