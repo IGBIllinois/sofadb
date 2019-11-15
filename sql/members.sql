@@ -1,2 +1,2 @@
-INSERT INTO members (uname, pwd, firstname, lastname, title, degree, degreeyear, fieldofstudy, aafsstatus, institution, yearsexperience, caseperyear, region, mailaddress, mailaddress2, city, `state`, zip, phone, lastlogin, permissionstatus, casessubmitted, caseswithdrawn, dateregistered, totalcases, affiliation, sponsor, sponsor_email, sponsor_affiliation) 
-	VALUES ('testname@test.com', 'fb8b85f34b29ba67180cc0c8158a9cde', 'Taylor', 'Hughes', 'Professor', 'Phd', 2009, '', 1, 'UIUC', 10, 5, 2, '1304 Broadmoor DrChampaign, IL', '', 'Champaign', 'IL', '61801', '', '2019-11-05', 2, 28, 0, '2014-06-10', 1032, NULL, NULL, NULL, NULL);
+insert into members (uname, pwd, firstname, lastname, title, degree, degreeyear, fieldofstudy, aafsstatus, institution, yearsexperience, caseperyear, region, mailaddress, city, state, zip, permissionstatus, dateregistered ) VALUES 
+('YOUR_EMAIL_HERE', '', 'Test', 'User', '', '',0, '', 0, '', 0, 0,0,'', '', '' ,'', 2, NOW());

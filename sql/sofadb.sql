@@ -88,10 +88,10 @@ CREATE TABLE `members` (
   `phone` varchar(25) CHARACTER SET latin1 DEFAULT NULL,
   `lastlogin` date DEFAULT NULL,
   `permissionstatus` int(11) UNSIGNED NOT NULL,
-  `casessubmitted` int(11) UNSIGNED NOT NULL,
-  `caseswithdrawn` int(11) UNSIGNED NOT NULL,
+  `casessubmitted` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `caseswithdrawn` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `dateregistered` date NOT NULL,
-  `totalcases` int(11) UNSIGNED NOT NULL,
+  `totalcases` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `affiliation` varchar(100) DEFAULT NULL,
   `sponsor` varchar(100) DEFAULT NULL,
   `sponsor_email` varchar(100) DEFAULT NULL,
@@ -258,6 +258,3 @@ ALTER TABLE `tier2data`
 
 ALTER TABLE `tier3data`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-COMMIT;
-
-
