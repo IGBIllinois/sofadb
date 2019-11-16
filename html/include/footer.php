@@ -11,7 +11,9 @@
   </div>
   <br /><br /><br /><br />
   </div>
+  <CENTER>
   <div id="footer">Copyright 2014 by <a href="http://www.sofainc.org/" target="_blank">SOFA</a>.</div>
+  </CENTER>
 </div>
 </div>
 
