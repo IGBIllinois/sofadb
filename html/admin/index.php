@@ -154,6 +154,6 @@ echo '</p>';
   
 </div>
 <?php
-    require_once("../../include/footer.php");
+    require_once("../include/footer.php");
 ?>
 
