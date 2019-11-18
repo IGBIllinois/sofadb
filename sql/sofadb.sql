@@ -74,7 +74,7 @@ CREATE TABLE `input_types` (
 CREATE TABLE `members` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uname` varchar(100) NOT NULL,
-  `pwd` text NOT NULL,
+  `pwd` varchar(255) NOT NULL,
   `firstname` varchar(50) NOT NULL,
   `lastname` varchar(50) NOT NULL,
   `title` varchar(50) NOT NULL,
