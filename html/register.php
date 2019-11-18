@@ -289,7 +289,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $admin_email = ADMIN_EMAIL;              
       $to = $admin_email;
 
-      $from= $admin_email;
+      $from= FROM_EMAIL;
    $subject = "FADAMA DB ADMIN ALERT: Activate new user";
    $message = "New User:".$fn." ".$ln." is requesting activation.\n Email address is:".$e."\n\n";
    
@@ -462,7 +462,6 @@ By requesting registration to the FADAMA Database, I agree to the following guid
 </ol>
 	</fieldset>
 
-    <?php echo("Email should go to ".ADMIN_EMAIL."<BR>"); ?>
   <br />	<br /> <label class="label" for="regsubmit">Click here to register</label>
     <input name="regsubmit" id="regsubmit" type="submit" value="Register"/>
     <div id="registration_errorloc" class="errorlocation">
