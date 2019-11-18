@@ -48,10 +48,11 @@ if(isset($_POST['resetsubmit'])) {
     // Create tokens
 $selector = bin2hex(random_bytes(8));
 $token = random_bytes(32);
+$validator = bin2hex($token);
 
 $url = sprintf('%sreset.php?%s', $contactURL, http_build_query([
     'selector' => $selector,
-    'validator' => bin2hex($token)
+    'validator' => $validator
 ]));
 
 // Token expiration
@@ -67,7 +68,7 @@ $insert = $db->get_insert_result("insert into password_reset (email, selector, t
     array(
         'email'     =>  $email,
         'selector'  =>  $selector, 
-        'token'     =>  hash('sha256', $token),
+        'token'     =>  password_hash($validator, PASSWORD_DEFAULT),
         'expires'   =>  $expires->format('U'),
     ));
         

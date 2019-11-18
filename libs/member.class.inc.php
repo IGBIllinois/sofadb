@@ -127,6 +127,7 @@ public function get_num_active_cases() {
 
 
 public function load_info_by_name($name, $hash_pass) {
+
     $query = "SELECT id from members where uname=:name and pwd=:pwd";
     $params = array("name"=>$name,
                     "pwd"=>$hash_pass);
@@ -158,13 +159,17 @@ public function update_login_time() {
 }
 
 /**
+ * Resets this user's password
  * 
  * @param type $new_pass hashed new password
+ * @return An array of the form ("RESULT"=>$result, "MESSAGE"=>$message)
+ * where $result is true or false, and $message is an output message.
  */
 public function reset_password($new_pass) {
-    echo("resetting password for ".$this->uname."<BR>");
+
+    $new_pass_hash = password_hash($new_pass, PASSWORD_DEFAULT);
     $query = "UPDATE members set pwd=:new_pass where id=:id";
-    $params = array("new_pass"=>$new_pass,
+    $params = array("new_pass"=>$new_pass_hash,
                     "id"=>$this->id);
     $result = $this->db->get_update_result($query, $params);
     if($result > 0) {
@@ -176,6 +181,13 @@ public function reset_password($new_pass) {
     }
 }
 
+/**
+ * Deletes a member from the database, and removes their data as well
+ * 
+ * @param id $delete_member_id ID of the user to delete
+ * @return An array of the form ("RESULT"=>$result, "MESSAGE"=>$message)
+ * where $result is true or false, and $message is an output message.
+ */
 public function delete_member($delete_member_id) {
     if($this->get_permissionstatus() != 2) {
         return array("RESULT"=>FALSE,
@@ -228,6 +240,29 @@ public function delete_member($delete_member_id) {
 }
 
 // Static functions
+
+/** Check a user's entered password matches the new encrypted version in database
+ * 
+ * @param db $db The database object
+ * @param string User's email
+ * @param string Password to check
+ * @return boolean True if the passwords match, else false
+ */
+public static function verify_user_new($db, $name, $chkpwd) {
+    $query = "SELECT pwd from members where uname=:name";
+    $params = array("name"=>$name);
+    
+    $pwd_result = $db->get_query_result($query, $params);
+    
+    $pwd = $pwd_result[0]['pwd'];
+
+    $result = password_verify($chkpwd, $pwd);
+
+    // Returns true if successful, else false;
+    return $result;
+    
+}
+
 /** Gets a list of database members
  * 
  * @param db $db The database object
@@ -468,6 +503,7 @@ public static function add_member($db, $params) {
  * 
  * @param db $db
  * @param array $params An array of parameters in $name=>$value form
+ * @param string $pwd New password (optional)
  * @return array An array of the form 
  * ("RESULT"=>TRUE|FALSE,
  *   "MESSAGE"=>$message,
@@ -504,7 +540,8 @@ public static function update_member($db, $params, $pwd=null) {
 
             . " WHERE id = :id";	
     if($pwd != null) {
-        $params['pwd'] = $pwd;
+        $hash_pwd = password_hash($pwd, PASSWORD_DEFAULT);
+        $params['pwd'] = $hash_pwd;
     }
 
     $result = $db->get_update_result($q, $params);

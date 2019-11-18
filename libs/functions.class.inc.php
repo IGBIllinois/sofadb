@@ -59,6 +59,15 @@ class functions {
     </script>";
     }
     
+    /**
+     * Resets a user's password from a password change page assigned to them
+     * 
+     * @param db $db The database object
+     * @param string $selector Generated ID in password_reset table
+     * @param string $validator URL Validator
+     * @param type $new_pass New password string
+     * @return type
+     */
     public static function reset_password($db, $selector, $validator, $new_pass) {
         // Get tokens
         $results = $db->get_query_result("SELECT * FROM password_reset WHERE selector = :selector AND expires >= :time", ['selector'=>$selector,'time'=>time()]);
@@ -71,42 +80,34 @@ class functions {
         $auth_token = $results[0];
         $token = $auth_token['token'];
         $email = $auth_token['email'];
-        $calc = hash('sha256', hex2bin($validator));
 
         // Validate tokens
-        if ( hash_equals( $calc, $token ) )  {
-            //$user = $this->user_exists($auth_token->email, 'email');
+        if ( password_verify($validator, $token) )  {
+
             if(member::member_exists($db, $email)) {
                 $user = member::load_member_by_name($db, $email);
                 if ( null === $user ) {
                     return array('RESULT'=>0,
-                        'MESSAGE'=>'There was an error processing your request. Error Code: 003');
+                        'MESSAGE'=>'There was an error processing your request.');
                 }
 
                 // Update password
                 $result = $user->reset_password($new_pass);
                 $update = $result['RESULT'];
-            /*
-            $update = $db->get_update_result('members', 
-                array(
-                    'password'  =>  password_hash($password, $new_pass),
-                ), $user->ID
-            );
-*/
-            // Delete any existing password reset AND remember me tokens for this user
-            //$db->delete('password_reset', 'email', $user->email);
-            //$db->delete('auth_tokens', 'username', $user->username);
+
 
             if ( $update == true ) {
                 // New password. New session.
-                //session_destroy();
 
                 return array('RESULT'=>TRUE,
-                    'MESSAGE'=>'Password updated successfully. <a href="../index.php">Login here</a>');
+                    'MESSAGE'=>'Password updated successfully. <BR><a href="../index.php">Login here</a>');
             } else {
                 return $result;
             }
             }
+        } else {
+            return array('RESULT'=>0,
+                        'MESSAGE'=>'There was an error processing your request.');
         }
 
     }
@@ -146,7 +147,7 @@ class functions {
 
         $elementName = "checkboxes_".urlencode($elementId);
         $divName = "checkbox_container_".urlencode($elementId);
-        //$elementId = "checkboxes[".$output_name."][".urlencode($od2)."]";
+
         $ref_text = '<div class="multiselect table_full" >';
         $ref_text .= '<div class="selectBox" onclick="showCheckboxes('.$divName.')">';
         $ref_text .= "<select name=".$select_name."[$elementId][] class='table_full'>";

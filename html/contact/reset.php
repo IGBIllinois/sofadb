@@ -39,13 +39,12 @@ if(isset($_POST['submitpass'])) {
             $success = false;
             echo("Please fill out the password fields.<BR>");
         } else {
-            echo("SUBMITTING...<BR>");
+
             $p = trim($_POST['psword1']);
-            $s = SALT;
-            $hash=md5($s . $p);
+            
             $validator = $_POST['validator'];
             $selector = $_POST['selector'];    
-            $result = functions::reset_password($db, $selector, $validator, $hash);    
+            $result = functions::reset_password($db, $selector, $validator, $p);    
 
             echo($result['MESSAGE']);
             $success = $result['RESULT'];

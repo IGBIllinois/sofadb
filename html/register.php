@@ -59,9 +59,9 @@ require_once("include/main.inc.php");
 <?php
     if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1) {
 ?>
-    <li><a href="<?php echo(ROOT_URL) ?>/user/searchdb/?search=1">Search</a></li>
-    <li><a href="<?php echo(ROOT_URL) ?>/faq.php">FAQ</a></li>
-    <li><a href="<?php echo(ROOT_URL) ?>/contact/">Contact Us</a></li>
+    <li><a href="user/searchdb/?search=1">Search</a></li>
+    <li><a href="faq.php">FAQ</a></li>
+    <li><a href="contact/">Contact Us</a></li>
 <?php
 
     }
@@ -110,13 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} else {
 		$ln = trim($_POST['lname']);
 	}
-        /*
-         * // Check if email is valid
-        if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-            $errors[] = "Email address '".$_POST['email']."' is not considered valid.\n";
-        }
-         * 
-         */
+
 	// Check for an email address:
 	if (!empty($_POST['email'])) {
 		if ($_POST['email'] != $_POST['email2']) {
@@ -136,8 +130,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$errors[] = 'Your two passwords did not match.';
 		} else {
 			$p = trim($_POST['psword1']);
-                        $s = SALT;
-                        $hash=md5($s . $p);
+                        $hash=password_hash($p,PASSWORD_DEFAULT );
+                        
 		}
 	} else {
 		$errors[] = 'You forgot to enter your password.';

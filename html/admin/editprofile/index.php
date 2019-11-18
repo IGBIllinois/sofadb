@@ -17,6 +17,15 @@ $edit_member = new member($db, $memberid);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$errors = array(); // Start an array to hold the errors
+        
+        // Check for existing email
+        if(member::member_exists($db, $_POST['email'])) {
+            $chk_mem = member::load_member_by_name($db, $_POST['email']);
+            if($chk_mem->get_id() != $memberid) {
+                $errors[] = "A user with that email already exists.";
+            }
+        }
+        
 	// Check for a title:
 	if (empty($_POST['title2'])) {
 		$errors[] = 'You forgot to enter your title.';
@@ -56,8 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$errors[] = 'Your two passwords did not match.';
 		} else {
 			$p = trim($_POST['psword1']);
-                        $s = SALT;
-                        $hash=md5($s . $p);
 		}
 	}
         
@@ -206,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	
 			
             if($pwdflag==1){
-                $result = $edit_member->update_member($db, $params, $hash);
+                $result = $edit_member->update_member($db, $params, $p);
             } else {
                 $result = $edit_member->update_member($db, $params);
             }

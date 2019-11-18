@@ -67,65 +67,91 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
   
 // This section processes submissions from the login form.
 // Check if the form has been submitted:
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	// Validate the email address:
 	if (!empty($_POST['email'])) {
-			$e = trim($_POST['email']);
+            $e = trim($_POST['email']);
+
 	} else {
-	$e = FALSE;
-		echo '<p class="error">You forgot to enter your email address.</p>';
+            $e = FALSE;
+            echo '<p class="error">You forgot to enter your email address.</p>';
+
 	}
-	// Validate the password:
-	if (!empty($_POST['psword'])) {
-			$p = trim($_POST['psword']);
-// below added code:
-$s = SALT;
-$hash=md5($s . $p);
-	} else {
-	$p = FALSE;
-		echo '<p class="error">You forgot to enter your password.</p>';
-	}
-	if ($e && $hash){//if no problems
-// Retrieve the user_id, first_name and user_level for that email/password combination:
+        if (!empty($_POST['psword'])) {
+            $p = trim($_POST['psword']);
+            
+            $chk_result = member::verify_user_new($db, $e, $p);
+            if($chk_result) {
                 $member = new member($db);
-                $result = $member->load_info_by_name($e, $hash);
-			
-        if($member->get_permissionstatus() > 0) {
+                $member = member::load_member_by_name($db, $e);
+            } else {
+                // try old way
+                $s = SALT;
+                $hash=md5($s . $p);
+                if ($e && $hash){//if no problems
+                    // Retrieve the user_id, first_name and user_level for that email/password combination:
+                    $member = new member($db);
+                    
+                    $result = $member->load_info_by_name($e, $hash);
+                    // reset to new version
+                    $member->reset_password($p);
+
+                }
+            }
+	} else {
+            $p = FALSE;
+            echo '<p class="error">You forgot to enter your password.</p>';
+	}
+if($member != null && $member->get_uname() != null && $member->get_permissionstatus() >= 0) {
 // Start the session, fetch the record and insert the three values in an array
 
-$_SESSION['permissionstatus'] = (int) $member->get_permissionstatus(); // Ensure that the user level is an integer
-if ($_SESSION['permissionstatus']!=0)
-{$_SESSION['loggedin']=1;
-$_SESSION['created']=time();
-$_SESSION['lastactivity']=time();
-$_SESSION['id'] = $member->get_id();
+    $_SESSION['permissionstatus'] = (int) $member->get_permissionstatus(); // Ensure that the user level is an integer
+    if ($_SESSION['permissionstatus']!=0) {
 
-$member->update_login_time();
+        $_SESSION['loggedin']=1;
+        $_SESSION['created']=time();
+        $_SESSION['lastactivity']=time();
+        $_SESSION['id'] = $member->get_id();
 
-}
+        $member->update_login_time();
+
+    } else {
+        // Registered, but not approved yet
+        echo '<p>Your account is not activated yet. <a href="contact/index.php">Contact</a> the administrator if you registered more than 48 hours ago.</p>';
+        $tmp=1;
+    }
 
 if(isset($_SESSION['loggedin'])){
- if($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==1)
-{header('Location: ' . './user/index.php');}
-elseif($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']=2){header('Location: ' . './admin/index.php');}}
-elseif($_SESSION['permissionstatus']==0)
-{echo '<p>Your account is not activated yet. <a href="contact/index.php">Contact</a> the administrator if you registered more than 48 hours ago.</p>';
+
+    if($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==1) {
+        header('Location: ' . './user/index.php');
+       
+    }
+    elseif($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']=2){
+        header('Location: ' . './admin/index.php');
+        
+    }
+    
+} else { // No match was made.
+    if(!$tmp){
+        echo '<p class="error">The email address and password entered do not match our records.<br>Perhaps you need to register, click the Register button on the header menu</p>';
+    }
+}
+} else { // No match was made.
+    echo '<p class="error">The email address and password entered do not match our records.<br>Perhaps you need to register, click the Register button on the header menu</p>';
+}
 }
 
 
 
 
-exit(); // Cancels the rest of the script.
 
-	} else { // No match was made.
-	echo '<p class="error">The email address and password entered do not match our records.<br>Perhaps you need to register, click the Register button on the header menu</p>';
-	}
-	} else { // If there was a problem.
-		echo '<p class="error">Please try again.</p>';
-	}
 
-	} // End of SUBMIT conditional.
+	
+
+
 ?>
   
   
