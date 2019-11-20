@@ -554,7 +554,7 @@ INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`,
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(566, 19, 'Typicality R', 'Typicality R', NULL, 5, NULL);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(567, 19, 'Reference Samples Used in Analysis', '', 'Reference Sample', 3, NULL);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(568, 19, 'Source of Metric Data Used in Analysis', '', 'Source', 3, NULL);
-INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(569, 24, 'Data', 'Data', NULL, 7, NULL);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(569, 24, 'Notes', 'Notes', NULL, 7, NULL);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(570, 26, 'Notes', 'Notes', NULL, 7, NULL);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(571, 122, 'Humerus', 'Bone', NULL, 8, NULL);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(572, 122, 'Radius', 'Bone', NULL, 8, NULL);
@@ -588,11 +588,11 @@ INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`,
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(600, 122, 'Acetabulum', 'Site', 'Fusion', 2, 580);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(601, 122, 'Iliac crest', 'Site', 'Fusion', 2, 580);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(602, 122, 'Ischial epiphysis', 'Site', 'Fusion', 2, 580);
-INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(603, 135, 'All Data', 'All Data', NULL, 8, NULL);
-INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(604, 135, 'All Data (corrected)', 'All Data', NULL, 8, NULL);
-INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(605, 135, 'Cranial', 'All Data', NULL, 8, NULL);
-INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(606, 135, 'Pubic', 'All Data', NULL, 8, NULL);
-INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(607, 135, 'Auricular Surface', 'All Data', NULL, 8, NULL);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(603, 135, 'All Data', 'Data Used', NULL, 8, NULL);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(604, 135, 'All Data (corrected)', 'Data Used', NULL, 8, NULL);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(605, 135, 'Cranial', 'Data Used', NULL, 8, NULL);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(606, 135, 'Pubic', 'Data Used', NULL, 8, NULL);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(607, 135, 'Auricular Surface', 'Data Used', NULL, 8, NULL);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(608, 135, 'Upper 95%', NULL, NULL, 4, 603);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(609, 135, 'Lower 95%', NULL, NULL, 4, 603);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(610, 135, 'Max L', NULL, NULL, 4, 603);

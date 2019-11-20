@@ -1742,8 +1742,8 @@ INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(1740
 INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(1741, 568, 'Innominate');
 INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(1742, 568, 'Femur');
 INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(1743, 568, 'Tibia');
-INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(1744, 569, 'Data');
-INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(1745, 570, 'Data');
+INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(1744, 569, 'Notes');
+INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(1745, 570, 'Notes');
 INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(1746, 581, 'Fused');
 INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(1747, 581, 'Fusing');
 INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(1748, 581, 'Unfused');
