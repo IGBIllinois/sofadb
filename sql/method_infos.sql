@@ -860,3 +860,4 @@ INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`,
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(900, 144, 'Ischium Epiphyseal Union', 'Site', NULL, 2, 881);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(901, 144, 'Iliac Crest Epiphyseal Union', 'Site', NULL, 2, 881);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(902, 144, 'Medial Clavicle Epiphyseal Union', 'Site', NULL, 2, 882);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(903, 21, 'Estimated Outcome', NULL, NULL, 9, NULL);

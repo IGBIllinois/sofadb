@@ -2866,3 +2866,6 @@ INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2932
 INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2933, 902, 'Stage 0');
 INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2934, 902, 'Stage 1');
 INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2935, 902, 'Stage 2');
+INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2936, 903, 'American Black');
+INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2937, 903, 'American Caucasoid');
+INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2938, 903, 'Southwestern Mongoloid');
