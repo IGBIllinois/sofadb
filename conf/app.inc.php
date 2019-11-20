@@ -83,8 +83,6 @@ DEFINE ("NO_PROMPTS", array(
         "3D-ID (cranial, metric)",
         "Buikstra and Ubelaker 1994 (skull, nonmetric)",
         "Rogers et al. 2000 (clavicle, nonmetric)",
-        "Walker 2005 (os coxa, nonmetric)",
-        "Walker 2008 (cranial, nonmetric)",
         "Edgar 2013 (detention, nonmetric)",
         "Raxter et al. (skeletal, metric)",
         "Demirjian et al. 1973 (dentition, nonmetric)",
