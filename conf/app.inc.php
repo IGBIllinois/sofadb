@@ -119,7 +119,8 @@ DEFINE("PHASE_REF_PROMPTS", array(
     "Langley-Shirley and Jantz 2010 (clavicle, nonmetric)",
     "Mincer et al. 1993 (third molar, nonmetric)",
     "Shirley and Jantz 2011 (cranium, nonmetric)",
-    "Todd 1921 (os pubis, nonmetric)"
+    "Todd 1921 (os pubis, nonmetric)",
+    "Webb and Suchey 1985 (os coxa and clavicle, nonmetric)"
 ));
 
 DEFINE("PHASE_PROMPTS", array(
