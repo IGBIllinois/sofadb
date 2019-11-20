@@ -711,12 +711,12 @@ INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`,
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(749, 2, 'Humeral epicondylar breadth (mm)', NULL, NULL, 6, 740);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(750, 2, 'Humerus maximum diameter at midshaft (mm)', NULL, NULL, 6, 740);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(751, 2, 'Humerus maximum length (mm)', NULL, NULL, 6, 740);
-INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(752, 2, '(0.04077*Humerus maximum length) + (0.5688*Humeral head diameter) + (0.59429*Humerus maximum diameter at midshaft) + (−48.91311)', 'Humerus DFA', NULL, 3, 740);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(752, 2, '(0.04077*Humerus maximum length) + (0.5688*Humeral head diameter) + (0.59429*Humerus maximum diameter at midshaft) + (-48.91311)', 'Humerus DFA', NULL, 3, 740);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(753, 2, 'Femur head diameter (mm)', NULL, NULL, 6, 741);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(754, 2, 'Femur epicondylar breadth (mm)', NULL, NULL, 6, 741);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(755, 2, 'Radius maximum length (mm)', NULL, NULL, 6, 742);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(756, 2, 'Radius anterior-posterior diameter at midshaft (mm)', NULL, NULL, 6, 742);
-INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(757, 2, '(0.1331*Radius maximum length) + (1.06951*Radius anterior–posterior diameter at midshaft) + (−42.7206)', 'Radius DFA', NULL, 3, 742);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(757, 2, '(0.1331*Radius maximum length) + (1.06951*Radius anterior-posterior diameter at midshaft) + (-42.7206)', 'Radius DFA', NULL, 3, 742);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(758, 2, 'Scapula height (mm)', NULL, NULL, 6, 743);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(759, 2, 'Scapula breadth (mm)', NULL, NULL, 6, 743);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(760, 2, 'Tibia circumference at nutrient foramen (mm)', NULL, NULL, 6, 744);
