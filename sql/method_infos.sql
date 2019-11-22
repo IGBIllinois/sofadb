@@ -824,7 +824,6 @@ INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`,
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(862, 142, 'GT-LT', NULL, NULL, 4, 859);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(863, 142, 'LT-FC', NULL, NULL, 4, 859);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(864, 142, 'Femur head diameter (mm)', NULL, NULL, 4, 859);
-INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(867, 143, 'Data', NULL, NULL, 7, NULL);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(868, 142, 'GT-FC', NULL, NULL, 4, 860);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(869, 142, 'GT-LT', NULL, NULL, 4, 860);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(870, 142, 'LT-FC', NULL, NULL, 4, 860);
@@ -861,3 +860,11 @@ INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`,
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(901, 144, 'Iliac Crest Epiphyseal Union', 'Site', NULL, 2, 881);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(902, 144, 'Medial Clavicle Epiphyseal Union', 'Site', NULL, 2, 882);
 INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(903, 21, 'Estimated Outcome', NULL, NULL, 9, NULL);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(905, 143, 'Reference Sample Used in Analysis', '', 'Reference Sample', 3, NULL);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(906, 143, 'Case Classified as', 'Case Classification', NULL, 2, NULL);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(907, 143, 'Posterior Probability', 'Posterior Probability', NULL, 5, NULL);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(908, 143, 'Typicality Chi', 'Typicality Chi', NULL, 5, NULL);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(909, 146, 'Estimated Outcome', NULL, NULL, 9, NULL);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(910, 146, 'Reference Sample Used in Analysis', '', 'Reference Sample', 3, NULL);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(912, 146, 'Posterior Probability', 'Posterior Probability', NULL, 5, NULL);
+INSERT INTO `method_infos` (`id`, `methodid`, `name`, `header`, `option_header`, `input_type`, `parent_id`) VALUES(913, 146, 'Typicality Chi', 'Typicality Chi', NULL, 5, NULL);

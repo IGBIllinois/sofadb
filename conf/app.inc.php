@@ -87,7 +87,8 @@ DEFINE ("NO_PROMPTS", array(
         "Raxter et al. (skeletal, metric)",
         "Demirjian et al. 1973 (dentition, nonmetric)",
         "Transition Analysis (skeletal, nonmetric)",
-        "Berg and Kennyhercz 2017 (mandible)"));
+        "Berg and Kennyhercz 2017 (mandible, metric)",
+        ));
     
 DEFINE ("FORMULA_PROMPTS", array(
         "Fully 1956 (skeletal, metric)",
