@@ -2900,7 +2900,7 @@ INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2981
 INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2982, 906, 'Cambodian Females');
 INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2983, 906, 'Cambodian Males');
 INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2984, 907, 'Posterior Probability');
-INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2985, 907, 'Typicality Chi');
+INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2985, 908, 'Typicality Chi');
 INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2986, 909, 'Black Females');
 INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2987, 909, 'Black Males');
 INSERT INTO `method_info_options` (`id`, `method_infos_id`, `value`) VALUES(2988, 909, 'White Females');
