@@ -134,7 +134,7 @@ echo '</p>';
 }
 
 echo '<br/> <a href="index.php?search=1">Search Again</a>';
-echo '<form action="index.php" method="post" id="export">
+echo '<form action="index.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="export">
 <br/><p>Click here to export results to CSV File
    <input name="exportsubmit" id="exportsubmit" type="submit" value="Export Case Data"/></p>
    </form>';
