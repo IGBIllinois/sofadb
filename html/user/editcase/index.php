@@ -63,7 +63,6 @@ elseif(isset($_SESSION['caseid']))
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $numerrors = 0;
     $errors = array(); // Start an array to hold the errors
     if(isset($_POST['methodtype'])) {
         $selmethodtype = $_POST['methodtype'][0];
@@ -82,7 +81,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     } else if(isset($_POST['add_method'])) {
 
+        $method_id = $_POST['drop_2'];
+        $method = new method($db, $method_id);
         
+        // check if this method has already been added
+        $tier2s = $casedata->get_case_methods();
+        foreach($tier2s as $tier2) {
+            if($tier2->get_methodid() == $method_id) {
+                $method = new method($db, $method_id);
+                $errors[] = "You have already added a method for ".$method->get_name().". Only one instance of each method can be used per case.";
+            }
+        }
         $estimated_outcome_1 = null;
         $estimated_outcome_2 = null;
         $estimated_outcome_units = null;
@@ -96,17 +105,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if(isset($_POST['estimated_outcome_units'])) {
             $estimated_outcome_units = $_POST['estimated_outcome_units'];
         }
-        
-        
-        $method_id = $_POST['drop_2'];
-        $method = new method($db, $method_id);
-
 
         if($method->get_method_type() == "Stature" ||
                 $method->get_method_type() == "Age") {
             if(($estimated_outcome_1 != null && $estimated_outcome_1 !=  "" && !is_numeric($estimated_outcome_1)) ||
                     ($estimated_outcome_2 != null && $estimated_outcome_2 !=  "" && !(is_numeric($estimated_outcome_2)))) {
-                $numerrors++;
                 $errors[] = "Estimated outcome must be numeric.";
 
             }
@@ -127,14 +130,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 $value != "" &&
                                 !is_numeric($value)) {
                             $errors[] = ("Value for ".$opt->get_value() . " must be numeric.");
-                            $numerrors++;
                         }
 
                     }
                 }
             }
         }
-        if($numerrors == 0) {
+        if(count($errors) == 0) {
         $caseid = $_POST['caseid'];
         
         $this_case = new sofa_case($db, $caseid);
@@ -157,20 +159,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $output_data = $_POST['output_data'];
 
 
-        if($numerrors == 0) {
+        if(count($errors) == 0) {
         foreach($output_data as $od) {
 
                 if(is_array($od)) {
                     foreach($od as $id=>$value) {
                         if($id != null && $id != '') {
+                            if($value != null && $value != "") {
 
-
-                        $this_case->add_tier3($t2id, $id, $value);
+                                $this_case->add_tier3($t2id, $id, $value);
+                            }
                         }
                     }
                 } else {
                     if($od != null && $od != '') {
-                    $this_case->add_tier3($t2id, $od);
+                        $this_case->add_tier3($t2id, $od);
                     }
                 }
             }
@@ -208,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
         }
         }
-        if($numerrors == 0) {
+        if(count($errors) == 0) {
             //header ("location:index.php#tabs-2");
         } else {
          // Report the errors.
