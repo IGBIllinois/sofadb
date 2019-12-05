@@ -470,6 +470,12 @@ public function submit_case($submitstatus) {
      * output message, and "id" is the id of the newly inserted tier3, if successful
   */
     public function add_tier3($tier2id, $method_info_option_id, $value=null) {
+        $mi_option = new method_info_option($this->db, $method_info_option_id);
+        $method_infos = new method_infos($this->db, $mi_option->get_method_infos_id());
+        if($method_infos->get_type() == input_type::get_input_type_by_name($this->db, USER_INTERACTION_CATEGORY)) {
+            //Don't input a category
+            return;
+        }
         $fields = "(tier2id, method_info_option_id ";
         $values = "(:tier2id, :method_info_option_id ";
         $params = array("tier2id"=>$tier2id, "method_info_option_id"=>$method_info_option_id);
