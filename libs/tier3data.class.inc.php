@@ -45,6 +45,17 @@ class tier3data {
         return $this->method_info_option_id;
     }
     
+    
+    /** Gets the method_info associated with this tier3 data
+     * 
+     */
+    public function get_method_infos() {
+        $method_info_option  = new method_info_option($this->db, $this->method_info_option_id);
+        $method_infos_id = $method_info_option->get_method_infos_id();
+        $method_infos = new method_infos($this->db, $method_infos_id);
+        return $method_infos;
+    }
+    
     // static functions
 
     /** Gets a Tier 3 data by its tier2id and method_info_option id

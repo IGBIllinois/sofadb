@@ -1045,8 +1045,10 @@ public function submit_case($submitstatus) {
             
 
         // Add methods to header row
+        $method_info_ids = $headerrow2; // for proper order of method_infos
         $all_methods = method::get_methods($db);
         foreach($all_methods as $method) {
+            
             //$headerrow[] = $method->get_name() . "[".$method->get_id()."]";
             $headerrow[] = $method->get_name();
             $headerrow[] = $method->get_name(). ": Estimated outcome";
@@ -1054,8 +1056,22 @@ public function submit_case($submitstatus) {
             $headerrow2[] = '';
             $method_infos = $method->get_method_infos();
             foreach($method_infos as $method_info) {
-                $headerrow[] = '';
-                $headerrow2[] = $method_info->get_name();
+                if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id()) {
+                    $headerrow[] = '';
+                    $name = $method_info->get_name();
+                    if($method_info->get_parent_id() != null) {
+                        $parent = new method_infos($db, $method_info->get_parent_id());
+                        if($parent->get_name() != $name) {
+                            $name = $parent->get_name() . ": ". $name;
+                        }
+                        if($method_info->get_header() != null && $method_info->get_header() != $name) {
+                            $name .= "(".$method_info->get_header() . ")";
+                        }
+
+                    }
+                    $headerrow2[] = $name;
+                    $method_info_ids[] = $method_info->get_id();
+                }
                 
                    
             }
@@ -1118,6 +1134,7 @@ public function submit_case($submitstatus) {
             $case_method_ids = array_keys($case_method_data);
             //print_r($case_method_ids);
             $i = 0;
+
             foreach($all_methods as $tmp_method) {
                 if(in_array($tmp_method->get_id(), $case_method_ids)) {
                     $curr_row[] = "Y";
@@ -1146,6 +1163,10 @@ public function submit_case($submitstatus) {
                     $method_infos = $tmp_method->get_method_infos();
                     
                     foreach($method_infos as $method_info) {
+                        if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id()) {
+                        $id = $method_info->get_id();
+                        $index = array_search($id, $method_info_ids);
+                        
                         $options = $method_info->get_method_info_options();
                         $opt_ids = array();
                         foreach($options as $opt) {
@@ -1166,10 +1187,11 @@ public function submit_case($submitstatus) {
                             } 
                         }
                         if(!$found) {
-                            $curr_row[] = '';
+                            $curr_row[] = '' ;
                         } else {
                             $curr_row[] = $txt;
                         }
+                    }
                     }
                 } else {
                     $curr_row[]= "N";
@@ -1177,7 +1199,9 @@ public function submit_case($submitstatus) {
                     $curr_row[] = '';
                     $method_infos = $tmp_method->get_method_infos();
                     foreach($method_infos as $method_info) {
-                        $curr_row[] = '';
+                        if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id()) {
+                            $curr_row[] = '';
+                        }
                     }
                 }
                 $i++;

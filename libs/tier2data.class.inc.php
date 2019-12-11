@@ -89,7 +89,7 @@ class tier2data {
     }
     
  
-        /** Formats Tier3 data for display in the table, in the form:
+    /** Formats Tier3 data for display in the table, in the form:
      *  ($output_data_1, $value), for each $output_data_1 for this Tier2 data.
      *  $value may either be an $output_data_2, a value within a range, or a 
      *  user-specified value, depending on the user_interaction type.
@@ -110,17 +110,19 @@ class tier2data {
         foreach($info as $tier_info) {
             
             $method = new method($this->db, $this->get_methodid());
+            
             $mi_option_id = $tier_info->get_method_info_option_id();
 
             $option = new method_info_option($this->db, $mi_option_id);
 
-            $method_infos = new method_infos($this->db, $option->get_method_infos_id());
-
+            $method_infos = $tier_info->get_method_infos();
+            
             if($tier_info->get_value() != null && $tier_info->get_value() != "") {
                 $output .= $tier_info->get_value();
             } else {
                 $output .= $option->get_value();
             }
+            
             if($for_web) {
                 $output .= "<BR>";
             }
@@ -149,9 +151,9 @@ class tier2data {
             $params = array("tier2id"=>$tier2id, "est1"=>$estimated_outcome_1, "est2"=>$estimated_outcome_2);
             
             if($units != null) {
-            $query = "update tier2data set estimated_outcome_1=:est1 , estimated_outcome_2=:est2, estimated_outcome_units=:units where id=:tier2id";
-            $params = array("tier2id"=>$tier2id, "est1"=>$estimated_outcome_1, "est2"=>$estimated_outcome_2, "units"=>$units);
-        }
+                $query = "update tier2data set estimated_outcome_1=:est1 , estimated_outcome_2=:est2, estimated_outcome_units=:units where id=:tier2id";
+                $params = array("tier2id"=>$tier2id, "est1"=>$estimated_outcome_1, "est2"=>$estimated_outcome_2, "units"=>$units);
+            }
         }
         
         
@@ -160,6 +162,11 @@ class tier2data {
         return $result;
     }
     
+    
+    /** Gets the estimated outcome(s) for this method, and units, if applicable
+     * 
+     * @return string The estimated outcome for this tier2data
+     */
     public function show_estimated_outcome() {
         
         $est1 = $this->estimated_outcome_1;
@@ -233,6 +240,25 @@ class tier2data {
             $return_result[] = $reference;
         }
         return $return_result; 
+    }
+    
+    /** Gets a list of all possible method_infos associated with this tier2 data
+     * 
+     */
+    public function get_method_infos() {
+        $query = 'select * from method_infos where id in (SELECT method_infos_id from method_info_options where id in(SELECT method_info_option_id FROM tier3data where tier2id=:t2id))';
+        $params = array("t2id"=>$this->id);
+        
+        $result = $this->db->get_query_result($query, $params);
+        
+        $return_result = array();
+        
+        foreach($result as $mi) {
+            $mi_id = $mi['id'];
+            $method_infos = new method_infos($this->db, $mi_id);
+            $return_result[] = $method_infos;
+        }
+        return $method_infos;
     }
     
     
