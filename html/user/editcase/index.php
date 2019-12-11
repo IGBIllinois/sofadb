@@ -89,7 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         foreach($tier2s as $tier2) {
             if($tier2->get_methodid() == $method_id) {
                 $method = new method($db, $method_id);
-                $errors[] = "You have already added a method for ".$method->get_name().". Only one instance of each method can be used per case.";
+                $errors[] = "You have already added a method for ".$method->get_name().". Only one instance of each method can be used per case.<BR>".
+                        "Please scroll down and use the \"Edit\" function to make any modifications to this method.";
             }
         }
         $estimated_outcome_1 = null;
@@ -115,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
         
-        // Check for errors
+        
         $output_data = $_POST['output_data'];
         foreach($output_data as $od) {
 
@@ -222,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         { // Print each error.
 			echo " - $msg<br/>\n";
 		}
-		echo '</p><h3>Please try again.</h3><p><br/></p></span>';
+                echo("</p><BR></span>");
 
         }
     } else {
@@ -701,7 +702,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         { // Print each error.
 			echo " - $msg<br/>\n";
 		}
-		echo '</p><h3>Please try again.</h3><p><br/></p></span>';
+                echo("</p><BR></span>");
+
 	   }// End of else (empty($errors))
 } // End of the main Submit conditional.
 }
