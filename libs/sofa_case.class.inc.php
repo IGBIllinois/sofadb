@@ -970,6 +970,8 @@ public function submit_case($submitstatus) {
 
         $query .= $param_string;
         
+        $query .= " ORDER BY id ";
+        
         //echo("Query = $query<BR>");
         //print_r($case_data);
         $result = $db->get_query_result($query, $params);
@@ -1049,15 +1051,32 @@ public function submit_case($submitstatus) {
         $all_methods = method::get_methods($db);
         foreach($all_methods as $method) {
             
-            //$headerrow[] = $method->get_name() . "[".$method->get_id()."]";
-            $headerrow[] = $method->get_name();
+            $headerrow[] = $method->get_name() . "(".$method->get_method_info_type() . ")";
             $headerrow[] = $method->get_name(). ": Estimated outcome";
             $headerrow2[] = '';
             $headerrow2[] = '';
+            $method_info_ids[] = '';
+            $method_info_ids[] = '';
             $method_infos = $method->get_method_infos();
+            $sj = input_type::get_input_type_by_name($db, METHOD_INFO_TYPE_SPRADLEY_JANTZ);
+            $sj_id = $sj->get_id();
             foreach($method_infos as $method_info) {
-                if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id()) {
-                    $headerrow[] = '';
+                if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
+                    if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id() &&
+                            $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)->get_id()) {
+                    $name = $method_info->get_name();
+                    if($method_info->get_header() != null && $method_info->get_name() != $method_info->get_header()) {
+                        $name .= ": ". $method_info->get_header();
+                    }
+
+                    $headerrow2[] = $name;
+                    $headerrow[] = $name;
+                    $method_info_ids[] = $method_info->get_id();
+                    }
+                } else {
+                if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id() &&
+                        $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)->get_id()) {
+                    //$headerrow[] = '';
                     $name = $method_info->get_name();
                     if($method_info->get_parent_id() != null) {
                         $parent = new method_infos($db, $method_info->get_parent_id());
@@ -1070,7 +1089,9 @@ public function submit_case($submitstatus) {
 
                     }
                     $headerrow2[] = $name;
+                    $headerrow[] = $name;
                     $method_info_ids[] = $method_info->get_id();
+                }
                 }
                 
                    
@@ -1082,7 +1103,6 @@ public function submit_case($submitstatus) {
         
         // output the column headings
         fputcsv($output,$headerrow);
-        fputcsv($output,$headerrow2);
 
         foreach($case_list as $curr_case) {
             $curr_row = array();
@@ -1154,7 +1174,7 @@ public function submit_case($submitstatus) {
                         $est .=  " ".$est_units;
                     }
                     $curr_row[] = $est;
-                            
+                    
                             
                     //$curr_row[] = '';
                     $tier3s = $tier2->get_tier3data();
@@ -1163,7 +1183,8 @@ public function submit_case($submitstatus) {
                     $method_infos = $tmp_method->get_method_infos();
                     
                     foreach($method_infos as $method_info) {
-                        if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id()) {
+                        if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id() &&
+                                $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)->get_id()) {
                         $id = $method_info->get_id();
                         $index = array_search($id, $method_info_ids);
                         
@@ -1175,7 +1196,12 @@ public function submit_case($submitstatus) {
                         $found = false;
                         $txt = "";
                         foreach($tier3s as $tier3) {
+
                             if(in_array($tier3->get_method_info_option_id(), $opt_ids)) {
+                            if($tier3->get_value() != null) {
+                                $txt .= $tier3->get_value();
+                                $found = true;
+                            } else {
                                 //$curr_row[] = "Y";
                                 //$curr_row[] = $tier2->format_tier3data($tier3->get_id(), false);
                                 if($txt != "") {
@@ -1184,15 +1210,24 @@ public function submit_case($submitstatus) {
                                 $txt .= $tier2->format_tier3data($tier3->get_id(), false);
                                 $found = true;
                                 //break;
-                            } 
+                            }
+                            }
                         }
+                            
+                        
                         if(!$found) {
-                            $curr_row[] = '' ;
+                            //$curr_row[$index] = "(".$method_info->get_id().") ".$tier3->get_id() . ", ".$tier3->get_value(). ", ".$tier3->get_method_info_option_id() ;
+                            $curr_row[$index] = '';
                         } else {
-                            $curr_row[] = $txt;
+                            //$curr_row[$index] = "(".$method_info->get_id().") ".$txt;
+                            $curr_row[$index] = $txt;
                         }
+                            } else {
+                                //$curr_row[$index] = 'x';
+                            } 
+                    
                     }
-                    }
+                    
                 } else {
                     $curr_row[]= "N";
                     // Estimated outcome is blank if not used

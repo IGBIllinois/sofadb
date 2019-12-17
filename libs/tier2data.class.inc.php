@@ -75,6 +75,7 @@ class tier2data {
             $params['method_info_option_id'] = $method_info_option_id;
             
         }
+        $query .= " ORDER BY id";
 
         $result = $this->db->get_query_result($query, $params);
         $tier3s = array();
