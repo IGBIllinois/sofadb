@@ -234,7 +234,7 @@ class method {
         
         // New version
         public function get_method_infos() {
-            $query = "SELECT id from method_infos where methodid=:methodid";
+            $query = "SELECT id from method_infos where methodid=:methodid ORDER BY id";
             $params = array("methodid"=>$this->id);
             $result = $this->db->get_query_result($query, $params);
             
@@ -281,27 +281,7 @@ class method {
                 }
                 $return_array[$input_type] = $info_array;
             }
-            /*
-            //print_r("orig return array = ");
-            //print_r($return_array);
-            $text_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_TEXT_ENTRY);
-            $numeric_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY);
-            //echo("text_type = $text_type<BR>");
-            //echo("num_type = $numeric_type<BR>");
-            echo("orig keys = ");
-            print_r(array_keys($return_array));
-            $i=0;
-            foreach($return_array as $id=>$info_array) {
-                echo("id = $id");
-                if($id == $text_type->get_id() || $id == $numeric_type->get_id()) {
-                    echo("found id $id");
-                    $out = array_splice($return_array, $i, 1);
-                    array_splice($return_array, 0,0,$out);
-                }
-            }
-            echo("new keys = ");
-            print_r(array_keys($return_array));
-            */
+
             return $return_array;
         }
      // Private functions
