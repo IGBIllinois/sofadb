@@ -1072,7 +1072,6 @@ public function submit_case($submitstatus) {
                     
                     $headerrow[] = $methodname;
                     $headerrow2[] = $name;
-                    
                     $method_info_ids[] = $method_info->get_id();
                     }
                 } else {
@@ -1085,15 +1084,23 @@ public function submit_case($submitstatus) {
                         if($parent->get_name() != $name) {
                             $name = $parent->get_name() . ": ". $name;
                         }
-                        if($method_info->get_header() != null && $method_info->get_header() != $name) {
-                            $name .= "(".$method_info->get_header() . ")";
-                        }
+                        //if($method_info->get_header() != null && $method_info->get_header() != $name) {
+                        //    $name .= "(".$method_info->get_header() . ")";
+                        //}
 
                     }
                     $headerrow[] = $methodname;
                     $headerrow2[] = $name;
-                    
                     $method_info_ids[] = $method_info->get_id();
+                    
+                                        
+                    if(count($method_info->get_references()) > 0) {
+                        // Add column for references
+                        $headerrow[] = $methodname;
+                        $headerrow2[] = $name . " References";
+                        $method_info_ids[] = '';
+                    }
+                    
                 }
                 }
                 
@@ -1206,14 +1213,13 @@ public function submit_case($submitstatus) {
                                 $txt .= $tier3->get_value();
                                 $found = true;
                             } else {
-                                //$curr_row[] = "Y";
-                                //$curr_row[] = $tier2->format_tier3data($tier3->get_id(), false);
+
                                 if($txt != "") {
                                     $txt .= ", ";
                                 }
                                 $txt .= $tier2->format_tier3data($tier3->get_id(), false);
                                 $found = true;
-                                //break;
+
                             }
                             }
                         }
@@ -1229,6 +1235,19 @@ public function submit_case($submitstatus) {
                             } else {
                                 //$curr_row[$index] = 'x';
                             } 
+                                            
+                    if(count($method_info->get_references()) > 0) {
+                        // Add column for references
+                        $refs = $tier2->get_selected_references($method_info->get_id());
+                        $ref_list = "";
+                        foreach($refs as $ref) {
+                            if($ref_list != "") {
+                                $ref_list .= "; ";
+                            }
+                            $ref_list .= $ref->get_reference_name();
+                        }
+                        $curr_row[$index + 1] = $ref_list;
+                    }    
                     
                     }
                     
@@ -1240,6 +1259,10 @@ public function submit_case($submitstatus) {
                     foreach($method_infos as $method_info) {
                         if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id()) {
                             $curr_row[] = '';
+                            if(count($method_info->get_references()) > 0) {
+                                // This method info uses references, so include a column for them
+                                $curr_row[] = '';
+                            }
                         }
                     }
                 }
