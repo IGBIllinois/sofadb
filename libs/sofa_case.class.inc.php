@@ -1050,11 +1050,12 @@ public function submit_case($submitstatus) {
         $method_info_ids = $headerrow2; // for proper order of method_infos
         $all_methods = method::get_methods($db);
         foreach($all_methods as $method) {
+            $methodname = $method->get_name();
             
-            $headerrow[] = $method->get_name() . "(".$method->get_method_info_type() . ")";
-            $headerrow[] = $method->get_name(). ": Estimated outcome";
-            $headerrow2[] = '';
-            $headerrow2[] = '';
+            $headerrow[] = $methodname;
+            $headerrow[] = $methodname;
+            $headerrow2[] = 'Method used?';
+            $headerrow2[] = 'Estimated outcome';
             $method_info_ids[] = '';
             $method_info_ids[] = '';
             $method_infos = $method->get_method_infos();
@@ -1068,9 +1069,10 @@ public function submit_case($submitstatus) {
                     if($method_info->get_header() != null && $method_info->get_name() != $method_info->get_header()) {
                         $name .= ": ". $method_info->get_header();
                     }
-
+                    
+                    $headerrow[] = $methodname;
                     $headerrow2[] = $name;
-                    $headerrow[] = $name;
+                    
                     $method_info_ids[] = $method_info->get_id();
                     }
                 } else {
@@ -1088,8 +1090,9 @@ public function submit_case($submitstatus) {
                         }
 
                     }
+                    $headerrow[] = $methodname;
                     $headerrow2[] = $name;
-                    $headerrow[] = $name;
+                    
                     $method_info_ids[] = $method_info->get_id();
                 }
                 }
@@ -1103,6 +1106,7 @@ public function submit_case($submitstatus) {
         
         // output the column headings
         fputcsv($output,$headerrow);
+        fputcsv($output,$headerrow2);
 
         foreach($case_list as $curr_case) {
             $curr_row = array();
