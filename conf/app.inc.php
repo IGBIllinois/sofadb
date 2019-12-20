@@ -68,11 +68,8 @@ DEFINE("METHOD_INFO_TYPE_STATURE_1", "Stature_1");
 // Method info type for Rios & Cardoza, and similiarly structured methods)
 DEFINE("METHOD_INFO_TYPE_RIOS_CARDOSO", "Rios_Cardoso");
 
-// User Interaction type for Rios & Cardoza, and similiarly structured methods)
-DEFINE("USER_INTERACTION_RIOS_CARDOSO", "Rios_Cardoso");
-
 // Method info type for "Spradley & Jantz 2011" method, and similar
-DEFINE("METHOD_INFO_TYPE_TRANSITION_ANALYSIS", "Transition_Analysis");
+DEFINE("METHOD_INFO_TYPE_RHINE", "Rhine");
 
 
     

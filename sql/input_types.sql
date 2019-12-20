@@ -1,4 +1,3 @@
-
 INSERT INTO `input_types` (`id`, `input_type`) VALUES(1, 'multiselect');
 INSERT INTO `input_types` (`id`, `input_type`) VALUES(2, 'singleselect');
 INSERT INTO `input_types` (`id`, `input_type`) VALUES(3, 'select_each');
@@ -13,3 +12,5 @@ INSERT INTO `input_types` (`id`, `input_type`) VALUES(11, 'Stature_1');
 INSERT INTO `input_types` (`id`, `input_type`) VALUES(12, 'Rios_Cardoso');
 INSERT INTO `input_types` (`id`, `input_type`) VALUES(13, 'two-column');
 INSERT INTO `input_types` (`id`, `input_type`) VALUES(14, 'checkbox_select');
+INSERT INTO `input_types` (`id`, `input_type`) VALUES(15, 'Rhine');
+

@@ -277,7 +277,11 @@ class method_infos {
                 echo $output;
                 return;
                         
-            }  
+            } else if($method->get_method_info_type() == METHOD_INFO_TYPE_RHINE) {
+                $output .= method_infos::show_method_info_rhine($db, $methodid, $tier2id);
+                echo $output;
+                return;
+            } 
        } 
        
 
@@ -1022,6 +1026,102 @@ class method_infos {
         
     }
    
+    public static function show_method_info_rhine($db, $method_id, $tier2id=NULL) {
+        $output = '';
+        
+        $method = new method($db, $method_id);
+        // Get main categories
+        $cat_type  = input_type::get_input_type_by_name($db, 'category');
+        $cat_type_id = $cat_type->get_id();
+        $cat_query = "SELECT * from method_infos where methodid = :methodid and input_type = :input_type and parent_id is null";
+
+        $cat_params = array("methodid"=>$method_id, 'input_type'=>$cat_type_id);
+
+        $categories = $db->get_query_result($cat_query, $cat_params);
+
+            foreach($categories as $category) {
+                // Get method_infos
+                $category_info = new method_infos($db, $category['id']);
+                $name = $category_info->get_name();
+
+                $info_query = "SELECT * from method_infos where methodid = :methodid and parent_id = :parentid";
+                
+                $info_params = array("methodid"=>$method_id, 'parentid'=>$category_info->get_id());
+
+                $infos = $db->get_query_result($info_query, $info_params);
+
+                
+                $output .= ("<fieldset class='methodinfobox'>");
+                $output .= ("<legend class='boldlegend'>".$name."</legend> ");
+                $output .= ("<table class='table_padded'><tr>");
+                //FInally, display infos
+                
+                $sorted_method_infos = array();
+                foreach($infos as $method_infos) {
+                    
+                    $mi_id = $method_infos['id'];
+                    $mi = new method_infos($db, $mi_id);
+                    $input_type_id = $mi->get_type();
+                    $input_type = new input_type($db, $input_type_id);
+                    if(!key_exists($input_type->get_input_type(), $sorted_method_infos)) {
+
+                        $sorted_method_infos[$input_type->get_input_type()] = array();
+                    }
+                    $sorted_method_infos[$input_type->get_input_type()][] = $method_infos;
+
+                            
+                }
+
+
+                foreach($sorted_method_infos as $input_type_name=>$infos) {
+                    $output .= "<td>";
+                    if($input_type_name == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
+                        $output .= "<table class='align_top'>";
+                        foreach($infos as $method_infos) {
+                            $output .= "<tr><td>";
+                        
+                            $method_info = new method_infos($db, $method_infos['id']);
+                            $id = $method_info->get_id();
+
+                            $output .= method_infos::show_method_infos_input_box_with_dropdown($db, $id, $tier2id, $default_option);
+                            $output .= "</td></tr>";
+                        }
+                        $output  .= "</table>";
+                }
+                else if($input_type_name == USER_INTERACTION_SELECT_EACH) {
+                    $output .= "<table>";
+                    foreach($infos as $method_infos) {
+                        $method_info = new method_infos($db, $method_infos['id']);
+                        $id = $method_info->get_id();
+                        
+                        $output .= "<tr><td class='td_spaced align_top'>";
+                        $output .= self::show_method_infos_select_each($db, $id, $tier2id);
+                        $output .= "</td></tr>";
+                    }
+                    $output .= "</table>";
+                }
+                
+                else if($input_type_name == USER_INTERACTION_SINGLESELECT) {
+                    $output .= "<table>";
+                    foreach($infos as $method_infos) {
+                        $method_info = new method_infos($db, $method_infos['id']);
+                        $id = $method_info->get_id();
+                        
+                        $output .= "<tr><td class='td_spaced align_top'>";
+                        $output .= self::show_method_infos_select($db, $id, $tier2id,true, false, '- Select One -');
+                        $output .= "</td></tr>";
+                    }
+                    $output .= "</table>";
+                }
+                
+                $output .= "</td>";
+            }
+            $output .= "</tr></table></fieldset>";
+            }
+            
+            return $output;
+            
+    }
  
     // Private
     private function load_method_infos($id) {
