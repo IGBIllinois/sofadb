@@ -12,6 +12,7 @@
           $case_data = array(
               "memberId"=>$_GET['mID'],
               "caseYear"=>$_GET['cyear'],
+              "yearRange"=>$_GET['yearrange'],
               "caseNumber"=>$_GET['cnum'],
               "caseAgency"=>$_GET['cagency'],
               "region"=>$_GET['region'],

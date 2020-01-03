@@ -1,6 +1,7 @@
 <?php
+require_once('../../include/session.inc.php') ;
 require_once('../../include/header_user.php');
- require_once('../../include/session.inc.php') ;
+ 
 ?>
 
 <BR/>
@@ -19,16 +20,16 @@ require_once('../../include/header_user.php');
 
   $error=0;
   
-  if (isset($_GET['search']))
-  {unset($_SESSION['searched']);
-  unset($_SESSION['searchstring']);}
+  if (isset($_GET['search'])){
+    unset($_SESSION['searched']);
+    unset($_SESSION['searchstring']);
+  }
   
-  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	  
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {  
        require('exportdata.php');
   }
 		  
-	if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['search'] != 1){//not export
+  if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['search'] != 1){//not export
 	  $first=0;
           $race_array = array();
           foreach($_GET['race'] as $race=>$value) {
@@ -37,6 +38,7 @@ require_once('../../include/header_user.php');
           $case_data = array(
               "memberId"=>$_GET['mID'],
               "caseYear"=>$_GET['cyear'],
+              "yearRange"=>$_GET['yearrange'],
               "caseNumber"=>$_GET['cnum'],
               "caseAgency"=>$_GET['cagency'],
               "region"=>$_GET['region'],
@@ -52,10 +54,8 @@ require_once('../../include/header_user.php');
               "est_anc"=>$_GET['est_anc'],
               "conjuction"=>$_GET['andor']
                   );
-              
-              $case_results = sofa_case::search_cases($db, $memberid, $case_data);
-              
-              //sofa_case::write_report($db, $case_results);
+             
+            $case_results = sofa_case::search_cases($db, $memberid, $case_data);
               
           
 
@@ -66,53 +66,56 @@ if(!$error){//if error start
  // Connect to the database.
 //set the number of rows per display page
 
-if (isset($_SESSION['searchstring']) && isset($_SESSION['searched'])){$searchstring=$_SESSION['searchstring'];}
+if (isset($_SESSION['searchstring']) && isset($_SESSION['searched'])){
+    $searchstring=$_SESSION['searchstring'];
+    
+}
 
 $pagerows = PAGEROWS;
 
 // Has the total number of pagess already been calculated?
 if (isset($_GET['p']) && is_numeric
-($_GET['p'])) 
-{//already been calculated
+(
+    $_GET['p'])) 
+{
+//already been calculated
 $pages=$_GET['p'];}
 else{//use the next block of code to calculate the number of pages
 //First, check for the total number of records
-$q = "SELECT COUNT(memberid) FROM cases WHERE ($searchstring) AND submissionstatus=1";
+$records = count($case_results);
 
-$result = @mysqli_query ($dbcon, $q);
-$row = @mysqli_fetch_array ($result, MYSQLI_NUM);
-$records = $row[0];
 //Now calculate the number of pages
 if ($records > $pagerows){ //if the number of records will fill more than one page
 //Calculatethe number of pages and round the result up to the nearest integer
-$pages = ceil ($records/$pagerows);}
-else{
+$pages = ceil ($records/$pagerows);
+}else{
 $pages = 1;
 }
 }//page check finished
 
 //Declare which record to start with
 if (isset($_GET['s']) && is_numeric
-($_GET['s'])) 
-{//already been calculated
+($_GET['s'])) {//already been calculated
 $start = $_GET['s'];
-}
-else{
+}else{
 $start = 0;
 }
 
 if(count($case_results) > 0) {
-$cases = count($case_results);
-$current_page = ($start/$pagerows) + 1;
-if ($pages==1)
-{$startingrecord=1;
-$endingrecord=$cases;}
-elseif ($current_page!= $pages)
-{$startingrecord=($current_page-1)*$pagerows+1;
-$endingrecord=($current_page)*$pagerows;}
-else
-{$startingrecord=($current_page-1)*$pagerows+1;
-$endingrecord=$cases;}
+    $cases = count($case_results);
+    $current_page = ($start/$pagerows) + 1;
+if ($pages==1) {
+    $startingrecord=1;
+    $endingrecord=$cases;
+}
+elseif ($current_page!= $pages) {
+    $startingrecord=($current_page-1)*$pagerows+1;
+    $endingrecord=($current_page)*$pagerows;}
+else {
+    $startingrecord=($current_page-1)*$pagerows+1;
+    $endingrecord=$cases;
+
+}
 
 
 
@@ -154,8 +157,10 @@ echo '<div class="scroll"><table id="hortable" summary="List of cases">
 
 // Fetch and print all the records:
 $regcount=1;
-foreach($case_results as $case) {
-	$regcount=$regcount+1;
+//foreach($case_results as $case) {
+for($i = $startingrecord; $i <= $endingrecord; $i++) {
+	//$regcount=$regcount+1;
+    $case = $case_results[($i-1)];
 	echo '<tr>
 	<td><a href="../viewcase.php?id=' . $case->get_id() . '">View</a></td>
 	<td>' . $case->get_casenumber() . '</td>
@@ -168,28 +173,29 @@ echo '</tbody></table></div>';
 } 
 else { // If it did not run OK.
 // Public message:
-	echo '<p class="error">No records found.  </p>';
-	
-	
-	
-	$_SESSION['searched']=1;
-unset($_GET['search']);
-echo '<br/> <a href="index.php?search=1">Search Again</a>';
-exit();
+    echo '<p class="error">No records found.  </p>';	
+    $_SESSION['searched']=1;
+    unset($_GET['search']);
+    echo '<br/> <a href="index.php?search=1">Search Again</a>';
+    exit();
 } // End of if ($result). 
 
 
 
 $current_page = ($start/$pagerows) + 1;
 if ($pages==1)
-{$startingrecord=1;
-$endingrecord=$cases;}
-elseif ($current_page!= $pages)
-{$startingrecord=($current_page-1)*$pagerows+1;
-$endingrecord=($current_page)*$pagerows;}
-else
-{$startingrecord=($current_page-1)*$pagerows+1;
-$endingrecord=$cases;}
+{
+    $startingrecord=1;
+    $endingrecord=$cases;
+    
+} elseif ($current_page!= $pages) {
+    $startingrecord=($current_page-1)*$pagerows+1;
+    $endingrecord=($current_page)*$pagerows;
+} else {
+    $startingrecord=($current_page-1)*$pagerows+1;
+    $endingrecord=$cases;
+
+}
 
 
 
