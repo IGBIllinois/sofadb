@@ -1075,6 +1075,7 @@ class method_infos {
 
                 foreach($sorted_method_infos as $input_type_name=>$infos) {
                     $output .= "<td>";
+                    
                     if($input_type_name == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
                         $output .= "<table class='align_top'>";
                         foreach($infos as $method_infos) {
@@ -1112,6 +1113,24 @@ class method_infos {
                         $output .= "</td></tr>";
                     }
                     $output .= "</table>";
+                } else if($input_type_name == USER_INTERACTION_NUMERIC_ENTRY) {
+                    foreach($infos as $method_infos) {
+                        $method_info = new method_infos($db, $method_infos['id']);
+                        $method_info_id = $method_info->get_id();
+                        $output .= self::show_method_infos_user_input($db, $method_info_id, $tier2id);
+                    }
+                }  else if($input_type_name == USER_INTERACTION_TEXT_ENTRY) {
+                    foreach($infos as $method_infos) {
+                        $method_info = new method_infos($db, $method_infos['id']);
+                         $method_info_id = $method_info->get_id();
+                        $output .= self::show_method_infos_user_input($db, $method_info_id, $tier2id, true);
+                    }
+                } else if($input_type_name == USER_INTERACTION_TEXT_AREA) {
+                    foreach($infos as $method_infos) {
+                        $method_info = new method_infos($db, $method_infos['id']);
+                        $method_info_id = $method_info->get_id();
+                        $output .= self::show_method_info_text_area($db, $method_info_id, $tier2id);
+                    }
                 }
                 
                 $output .= "</td>";
