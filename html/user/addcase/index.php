@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $errors[] = "Forensic Anthropology estimated age must be numeric.";
             } else {
 		$faage2 = $faage2_test;
-                $faageunits = trim($_POST['faageunits2']);
+                $faageunits2 = trim($_POST['faageunits2']);
             }
 	}
     
