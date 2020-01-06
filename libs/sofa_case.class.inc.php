@@ -999,7 +999,7 @@ public function submit_case($submitstatus) {
         
         // make header row for data
         $headerrow=array('Case ID', 
-            'Date Submitted to SOFA DB', 
+            'Date Submitted to FADAMA DB', 
             'Practioner Degree', 
             'Year Earned', 
             'Practioner Cases Per Year', 
@@ -1010,14 +1010,14 @@ public function submit_case($submitstatus) {
             'FA Report: Maximum age', 
             'FA Report: Maximum age units (years or fetal months)',
             'FA Report: Ancestry',
-            'FA Report: Minimum Stature (inches)',
-            'FA Report: Maximum Stature (inches)',
+            'FA Report: Minimum Stature',
+            'FA Report: Maximum Stature',
             'Identified Sex',
             'Identified Age',
             'Identified Age Units (years or fetal months)',
             'Identified Race/Ethnicity',
             'Race/Ethnicity Notes',
-            'Identified Stature (inches)',
+            'Identified Stature',
             'Information Source',
             'Case Notes');
         
@@ -1064,7 +1064,8 @@ public function submit_case($submitstatus) {
             foreach($method_infos as $method_info) {
                 if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
                     if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id() &&
-                            $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)->get_id()) {
+                            $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)->get_id() &&
+                            $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME)->get_id()) {
                     $name = $method_info->get_name();
                     if($method_info->get_header() != null && $method_info->get_name() != $method_info->get_header()) {
                         $name .= ": ". $method_info->get_header();
@@ -1076,7 +1077,8 @@ public function submit_case($submitstatus) {
                     }
                 } else {
                 if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id() &&
-                        $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)->get_id()) {
+                        $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)->get_id() &&
+                        $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME)->get_id()) {
                     //$headerrow[] = '';
                     $name = $method_info->get_name();
                     if($method_info->get_parent_id() != null) {
@@ -1107,8 +1109,8 @@ public function submit_case($submitstatus) {
                    
             }
         }
-        
-        // create a file pointer connected to the output stream
+         
+       // create a file pointer connected to the output stream
         $output = fopen('php://output', 'w');
         
         // output the column headings
@@ -1130,16 +1132,26 @@ public function submit_case($submitstatus) {
             $curr_row[] = $curr_case->get_faage2();
             $curr_row[] = $curr_case->get_faageunits2();
             $faancestry = "";
-            if ($curr_case->get_faancestryas()!=0){$idancestry=$idancestry.'[Asian/Pacific Islander]';}
-            if ($curr_case->get_faancestryaf()!=0){$idancestry=$idancestry.'[African-American/Black]';}
-            if ($curr_case->get_faancestryhi()!=0){$idancestry=$idancestry.'[Hispanic]';}
-            if ($curr_case->get_faancestryna()!=0){$idancestry=$idancestry.'[Native Ameriacan]';}
-            if ($curr_case->get_faancestrywh()!=0){$idancestry=$idancestry.'[White]';}
-            if ($curr_case->get_faancestryot()!=0){$idancestry=$idancestry.'['.$curr_case->get_faancestryottext().']';}
+            if ($curr_case->get_faancestryas()!=0){$faancestry=$faancestry.'[Asian/Pacific Islander]';}
+            if ($curr_case->get_faancestryaf()!=0){$faancestry=$faancestry.'[African-American/Black]';}
+            if ($curr_case->get_faancestryhi()!=0){$faancestry=$faancestry.'[Hispanic]';}
+            if ($curr_case->get_faancestryna()!=0){$faancestry=$faancestry.'[Native Ameriacan]';}
+            if ($curr_case->get_faancestrywh()!=0){$faancestry=$faancestry.'[White]';}
+            if ($curr_case->get_faancestryottext()!= null &&
+                    $curr_case->get_faancestryottext() != '') {$faancestry=$faancestry.'['.$curr_case->get_faancestryottext().']';}
             $curr_row[] = $faancestry;
             
-            $curr_row[] = $curr_case->get_fastature();
-            $curr_row[] = $curr_case->get_fastature2();
+            $fastatureunits = $curr_case->get_fastatureunits();
+            $units = '';
+            if(!empty($fastatureunits)) {
+                $units = " ($fastatureunits)";
+            } else {
+                $units = " (in)"; // default
+            }
+
+            $curr_row[] = (empty($curr_case->get_fastature()) ? "" : ($curr_case->get_fastature() . $units));
+            
+            $curr_row[] = (empty($curr_case->get_fastature2()) ? "" : ($curr_case->get_fastature2() . $units));
             $curr_row[] = $curr_case->get_idsex();
             $curr_row[] = $curr_case->get_idage();
             $curr_row[] = $curr_case->get_idageunits();
@@ -1152,7 +1164,15 @@ public function submit_case($submitstatus) {
             if ($curr_case->get_idraceot()!=0){$idancestry=$idancestry.'['.$curr_case->get_idraceottext().']';}
             $curr_row[] = $idancestry;
             $curr_row[] = $curr_case->get_idancaddtext();
-            $curr_row[] = $curr_case->get_idstature();
+            
+            $idstatureunits = $curr_case->get_idstatureunits();
+            if(!empty($idstatureunits)) {
+                $idunits = " ($idstatureunits)";
+            } else {
+                $idunits = " (in)"; // default
+            }
+            
+            $curr_row[] = (empty($curr_case->get_idstature()) ? "" : ($curr_case->get_idstature()) . $idunits);
             $curr_row[] = $curr_case->get_idsource();
             $curr_row[] = $curr_case->get_casenotes();
             
@@ -1175,8 +1195,8 @@ public function submit_case($submitstatus) {
                     
                     // Estimated outcome
 
-                    $est = $tier2->get_estimated_outcome_1();
-                    $est2 = $tier2->get_estimated_outcome_2();
+                    $est = $tier2->format_estimated_outcome_1();
+                    $est2 = $tier2->format_estimated_outcome_2();
                     $est_units = $tier2->get_estimated_outcome_units();
                     if($est2 != null && $est2 != '') {
                         $est .= " - " . $est2;
@@ -1195,7 +1215,8 @@ public function submit_case($submitstatus) {
                     
                     foreach($method_infos as $method_info) {
                         if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id() &&
-                                $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)->get_id()) {
+                                $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)->get_id() &&
+                                $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME)->get_id()) {
                         $id = $method_info->get_id();
                         $index = array_search($id, $method_info_ids);
                         
@@ -1226,14 +1247,11 @@ public function submit_case($submitstatus) {
                             
                         
                         if(!$found) {
-                            //$curr_row[$index] = "(".$method_info->get_id().") ".$tier3->get_id() . ", ".$tier3->get_value(). ", ".$tier3->get_method_info_option_id() ;
                             $curr_row[$index] = '';
                         } else {
-                            //$curr_row[$index] = "(".$method_info->get_id().") ".$txt;
                             $curr_row[$index] = $txt;
                         }
                             } else {
-                                //$curr_row[$index] = 'x';
                             } 
                                             
                     if(count($method_info->get_references()) > 0) {
