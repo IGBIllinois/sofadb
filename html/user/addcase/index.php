@@ -382,17 +382,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		//Determine whether the case has already been registered	
 		$memberid=$_SESSION['id'];
 
-                
-                $q = "SELECT id FROM cases WHERE memberid=:memberid AND casename=:casename AND casenumber=:casenum";
-                $params = array("memberid"=>$memberid,
-                                "casename"=>$casename,
-                                "casenum"=>$casenum);
-                
-                $result = $db->get_query_result($q, $params);
-                
-
-			
-            if (count($result) == 0)
+                $exists = sofa_case::new_case_exists($db, $memberid, $casename, $casenum);
+	
+            if (!$exists)
             {//The case has not been registered already 
         
                
