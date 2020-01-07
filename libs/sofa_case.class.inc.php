@@ -1275,7 +1275,9 @@ public function submit_case($submitstatus) {
                     $curr_row[] = '';
                     $method_infos = $tmp_method->get_method_infos();
                     foreach($method_infos as $method_info) {
-                        if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id()) {
+                        if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id() &&
+                                $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)->get_id() &&
+                                $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME)->get_id()) {
                             $curr_row[] = '';
                             if(count($method_info->get_references()) > 0) {
                                 // This method info uses references, so include a column for them
