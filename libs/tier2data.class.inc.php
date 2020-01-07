@@ -61,6 +61,26 @@ class tier2data {
         return $this->estimated_outcome_units;
     }
     
+    public function format_estimated_outcome_1() {
+        if($this->methodtype == METHOD_DATA_ANCESTRY_ID) {
+            $method_info_option = new method_info_option($this->db, $this->estimated_outcome_1);
+            $text = $method_info_option->get_value();
+            return $text;
+        } else {
+            return $this->estimated_outcome_1;
+        }
+    }
+    
+    public function format_estimated_outcome_2() {
+        if($this->methodtype == METHOD_DATA_ANCESTRY_ID) {
+            $method_info_option = new method_info_option($this->db, $this->estimated_outcome_2);
+            $text = $method_info_option->get_value();
+            return $text;
+        } else {
+            return $this->estimated_outcome_2;
+        }
+    }
+    
     /** Gets all or one tier3 data for this tier2 object
      * 
      * @param type $methodinfoid method_info id to get tier3 data for; null to get all data

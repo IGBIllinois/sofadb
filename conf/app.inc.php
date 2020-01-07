@@ -16,6 +16,11 @@ DEFINE ("METHOD_DATA_SEX", "Sex");
 DEFINE ("METHOD_DATA_ANCESTRY", "Ancestry");
 DEFINE ("METHOD_DATA_STATURE", "Stature");
 
+DEFINE ("METHOD_DATA_AGE_ID", 2);
+DEFINE ("METHOD_DATA_SEX_ID", 1);
+DEFINE ("METHOD_DATA_ANCESTRY_ID", 3);
+DEFINE ("METHOD_DATA_STATURE_ID",4);
+
 // User interaction types
 
 // one or more multi-select boxes, multiple choices can be made from all
