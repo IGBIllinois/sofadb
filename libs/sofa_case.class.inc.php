@@ -803,7 +803,7 @@ public function submit_case($submitstatus) {
      * 
      * @return a list of case objects that fit the criteria
      */
-    public static function search_cases($db, $memberid, $case_data) {
+    public static function search_cases($db, $memberid, $case_data, $methods=null) {
         
         $query = "SELECT id from cases where submissionstatus=1  ";
         $param_string = "";
@@ -918,7 +918,7 @@ public function submit_case($submitstatus) {
                 }
                 $race_string .= "( idrace".$name."=1 )";
             }
-            $race_string .= ")";
+
             
             $param_string .= "(".$race_string.")";
         }
@@ -963,12 +963,42 @@ public function submit_case($submitstatus) {
             
         }
         
+        
+        if($methods !=  null && count($methods) > 0) {
+            $method_conj = $case_data['method_conj'];
+            if($method_conj == 'any') {
+                $method_ids = implode(",", $methods);
+                if($param_string != "") {
+                    $param_string .= $conjunction;
+                }
+                $param_string .= " id in (select tier2data.caseid from tier2data where tier2data.methodid in ($method_ids))";
+            } else {
+                // all
+                $method_ids = implode(",", $methods);
+                if($param_string != "") {
+                    $param_string .= $conjunction;
+                }
+                $tmp_str = "";
+                foreach($methods as $method) {
+                    if($tmp_str != "") {
+                        $tmp_str .= " AND ";
+                    }
+                    $tmp_str .= " (id in (select tier2data.caseid from tier2data where tier2data.methodid = $method))";
+                }
+                $param_string .= "(" . $tmp_str. ")";
+            }
+        }
+        
         if($param_string != "") {
             $param_string  = " AND (".$param_string . ")";
             
         }
 
+        
+        
         $query .= $param_string;
+        
+        
         
         $query .= " ORDER BY id ";
         
@@ -1048,7 +1078,14 @@ public function submit_case($submitstatus) {
 
         // Add methods to header row
         $method_info_ids = $headerrow2; // for proper order of method_infos
-        $all_methods = method::get_methods($db);
+        //$all_methods = method::get_methods($db);
+        $sx_methods = method::get_methods_by_type($db, METHOD_DATA_SEX_ID);
+        $age_methods = method::get_methods_by_type($db, METHOD_DATA_AGE_ID);
+        $anc_methods = method::get_methods_by_type($db, METHOD_DATA_ANCESTRY_ID);
+        $stat_methods = method::get_methods_by_type($db, METHOD_DATA_STATURE_ID);
+        
+        $all_methods = $sx_methods + $age_methods + $anc_methods + $stat_methods;
+        
         foreach($all_methods as $method) {
             $methodname = $method->get_name();
             
@@ -1079,16 +1116,13 @@ public function submit_case($submitstatus) {
                 if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id() &&
                         $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)->get_id() &&
                         $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME)->get_id()) {
-                    //$headerrow[] = '';
+
                     $name = $method_info->get_name();
                     if($method_info->get_parent_id() != null) {
                         $parent = new method_infos($db, $method_info->get_parent_id());
                         if($parent->get_name() != $name) {
                             $name = $parent->get_name() . ": ". $name;
                         }
-                        //if($method_info->get_header() != null && $method_info->get_header() != $name) {
-                        //    $name .= "(".$method_info->get_header() . ")";
-                        //}
 
                     }
                     $headerrow[] = $methodname;

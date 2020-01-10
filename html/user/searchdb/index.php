@@ -52,10 +52,19 @@ require_once('../../include/header_user.php');
               "est_age"=>$_GET['est_age'],
               "est_stat"=>$_GET['est_stat'],
               "est_anc"=>$_GET['est_anc'],
-              "conjuction"=>$_GET['andor']
+              "conjuction"=>$_GET['andor'],
+              "method_conj"=>$_GET['method_conj']
                   );
-             
-            $case_results = sofa_case::search_cases($db, $memberid, $case_data);
+             $methods = ($_GET['method_select']);
+             $method_list = array();
+             foreach($methods as $index=>$result) {
+                 foreach($result as $id=>$option) {
+                     if($id != 0) {
+                         $method_list[] = $id;
+                     }
+                 }
+             }
+            $case_results = sofa_case::search_cases($db, $memberid, $case_data, $method_list);
               
           
 
@@ -308,12 +317,73 @@ echo <<<_END
 	<option value="2">On or Before</option>
 	<option value="3">Only</option>
 	</select>
-      <br><label class="label" for="methodest">Practioner Estimated</label>
+      <br><label class="label" for="methodest">Practitioner Estimated</label>
       <input type="checkbox" name="est_sex" value="1" />Sex
       <input type="checkbox" name="est_age" value="1" />Age
       <input type="checkbox" name="est_anc" value="1" />Ancestry
        <input type="checkbox" name="est_stat" value="1" />Stature<br /><br>
      </fieldset>  
+        
+        <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Search By Method</legend>
+_END;
+    $sx_methods = method::get_methods_by_type($db, METHOD_DATA_SEX_ID);
+    $list = array();
+    foreach($sx_methods as $sx_method) {
+        $item = array($sx_method->get_id(), $sx_method->get_name());
+        $list[] = $item;
+    }
+    echo("<table><tr><th>Sex Methods</th><td>Age Methods</td><td>Ancestry Methods</td><td>Stature Methods</td></tr>");
+    echo("<td>");
+    echo(functions::checkbox_dropdown(METHOD_DATA_SEX_ID, 'sex_methods', $list, array(), 'method_select'));
+    echo("</td>");
+    
+    $age_methods = method::get_methods_by_type($db, METHOD_DATA_AGE_ID);
+    $list = array();
+    foreach($age_methods as $age_method) {
+        $item = array($age_method->get_id(), $age_method->get_name());
+        $list[] = $item;
+    }
+    
+    echo("<td>");
+    echo(functions::checkbox_dropdown(METHOD_DATA_AGE_ID, 'age_methods', $list, array(), 'method_select'));
+    echo("</td>");
+    
+    $anc_methods = method::get_methods_by_type($db, METHOD_DATA_ANCESTRY_ID);
+    $list = array();
+    foreach($anc_methods as $anc_method) {
+        $item = array($anc_method->get_id(), $anc_method->get_name());
+        $list[] = $item;
+    }
+    
+    echo("<td>");
+    echo(functions::checkbox_dropdown(METHOD_DATA_ANCESTRY_ID, 'anc_methods', $list, array(), 'method_select'));
+    echo("</td>");
+    
+    $stat_methods = method::get_methods_by_type($db, METHOD_DATA_STATURE_ID);
+    $list = array();
+    foreach($stat_methods as $stat_method) {
+        $item = array($stat_method->get_id(), $stat_method->get_name());
+        $list[] = $item;
+    }
+    
+    echo("<td>");
+    echo(functions::checkbox_dropdown(METHOD_DATA_STATURE_ID, 'stat_methods', $list, array(), 'method_select'));
+    echo("</td>");
+    
+    echo("</tr></table><BR>");
+    
+    
+
+    
+echo <<<_END
+    
+     <br><label class="label" for="searchtype">Search for cases that contain:</label>
+  <select name="method_conj">
+	<option value="all">All Selected Methods</option>
+	<option value="any">At Least One Selected Method</option></select> <br ><br>
+
+     </fieldset>  
+        
     
 <br> 
    <div id="search_errorloc" class="errorlocation">

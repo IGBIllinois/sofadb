@@ -26,10 +26,19 @@
               "est_age"=>$_GET['est_age'],
               "est_stat"=>$_GET['est_stat'],
               "est_anc"=>$_GET['est_anc'],
-              "conjuction"=>$_GET['andor']
+              "conjuction"=>$_GET['andor'],
+              "method_conj"=>$_GET['method_conj']
                   );
-              
-              $case_results = sofa_case::search_cases($db, null, $case_data);
+              $methods = ($_GET['method_select']);
+             $method_list = array();
+             foreach($methods as $index=>$result) {
+                 foreach($result as $id=>$option) {
+                     if($id != 0) {
+                         $method_list[] = $id;
+                     }
+                 }
+             }
+              $case_results = sofa_case::search_cases($db, null, $case_data, $method_list);
               
               sofa_case::write_report($db, $case_results);
               die();
