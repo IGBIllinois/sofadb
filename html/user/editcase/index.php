@@ -38,7 +38,6 @@ if(isset($_GET['id']))
 {
     $caseeditid=$_GET['id'];
     $_SESSION['caseid']=$caseeditid;
-    //unset($_GET['id']);
 
     $casedata = new sofa_case($db, $caseeditid);
 }
@@ -283,8 +282,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(!is_numeric($faage2_test)) {
                 $errors[] = "Forensic Anthropology estimated age must be numeric.";
             } else {
-                $faage2 = trim($_POST['faage2']);
-                $faageunits2 = trim($_POST['faageunits2']);
+                if($faage2_test > MAXAGE) {
+                    $errors[] = "Forensic Anthropology estimated age must be less than ".MAXAGE.".";
+                } else {
+                    $faage2 = trim($_POST['faage2']);
+                    $faageunits2 = trim($_POST['faageunits2']);
+                }
             }
         }
     
@@ -301,8 +304,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(!is_numeric($faage_test)) {
                 $errors[] = "Forensic Anthropology estimated age must be numeric.";
             } else {
-                $faage = trim($_POST['faage']);
-                $faageunits = trim($_POST['faageunits']);
+                if($faage2_test > MAXAGE) {
+                    $errors[] = "Forensic Anthropology estimated age must be less than ".MAXAGE.".";
+                } else {
+                    $faage = trim($_POST['faage']);
+                    $faageunits = trim($_POST['faageunits']);
+                }
             }
 	}
 
@@ -376,6 +383,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(!is_numeric($idage_test)) {
                 $errors[] = "Identified age must be numeric.";
             } else {
+                if($idage_test > MAXAGE) {
+                    $errors[] = "Identified age must be less than ". MAXAGE.".";
+                }
 		$idage = trim($_POST['idage']);
                 $idageunits = trim($_POST['idageunits']);
             }
@@ -792,13 +802,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <fieldset class="caseinfobox"><legend class="boldlegend">Biological Profile: Actual Identified Information</legend>
       
       <label class="label" for="idsex">Sex</label>
-      <!--
-      <select name="idsex">
-        <option value="">- Select -</option>
-        <option value="Female"<?php if($casedata->get_idsex() == 'Female') echo ' selected="selected"'; ?>>Female</option>
-        <option value="Male"<?php if($casedata->get_idsex()  == 'Male') echo ' selected="selected"'; ?>>Male</option>
-        </select>
-      -->
+
               <input type="radio" name="idsex" value="Female" <?php if ($casedata->get_idsex() == 'Female') echo ' checked'; ?>> Female
         <input type="radio" name="idsex" value="Male" <?php if ($casedata->get_idsex() == 'Male') echo ' checked'; ?>> Male
         <input type="radio" name="idsex" value="Other" <?php if (($casedata->get_idsex() != null) AND ($casedata->get_idsex() != 'Male') AND ($casedata->get_idsex() != 'Female')) echo ' checked'; ?>> Other: 
@@ -1000,6 +1004,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    frmvalidator.addValidation("faage","numeric","Ages must be entered as a number");
    
   frmvalidator.addValidation("faage2","numeric","Ages must be entered as a number");
+  
+    
+  frmvalidator.addValidation("faage", "lt=150", "Age should be less than 150.");
+  frmvalidator.addValidation("faage2", "lt=150", "Age should be less than 150.");
   
    frmvalidator.addValidation("fastature","numeric","Statures must be entered as a number");
    

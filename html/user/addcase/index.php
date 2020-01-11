@@ -81,8 +81,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(!is_numeric($faage2_test)) {
                 $errors[] = "Forensic Anthropology estimated age must be numeric.";
             } else {
-		$faage2 = $faage2_test;
-                $faageunits2 = trim($_POST['faageunits2']);
+                if($faage2_test > MAXAGE) {
+                    $errors[] = "Forensic Anthropology estimated age must be less than ".MAXAGE.".";
+                } else {
+                    $faage2 = $faage2_test;
+                    $faageunits2 = trim($_POST['faageunits2']);
+                }
             }
 	}
     
@@ -98,9 +102,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $faage_test = trim($_POST['faage']);
             if(!is_numeric($faage_test)) {
                 $errors[] = "Forensic Anthropology estimated age must be numeric.";
+            } else {
+                if($faage_test > MAXAGE) {
+                    $errors[] = "Forensic Anthropology estimated age must be less than ".MAXAGE.".";
+                } else {
+                    $faage = trim($_POST['faage']);
+                    $faageunits = trim($_POST['faageunits']);
+                }
             }
-            $faage = trim($_POST['faage']);
-            $faageunits = trim($_POST['faageunits']);
 	}
 
 	
@@ -161,8 +170,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(!is_numeric($idage_test)) {
                 $errors[] = "Identified age must be numeric.";
             } else {
-		$idage = trim($_POST['idage']);
-                $idageunits = trim($_POST['idageunits']);
+                if($idage_test > MAXAGE) {
+                    $errors[] = "Identified age must be less than ".MAXAGE.".";
+                } else {
+                    $idage = trim($_POST['idage']);
+                    $idageunits = trim($_POST['idageunits']);
+                }
             }
 	}
 
@@ -680,6 +693,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    frmvalidator.addValidation("faage","numeric","Ages must be entered as a number");
    
   frmvalidator.addValidation("faage2","numeric","Ages must be entered as a number");
+  
+  frmvalidator.addValidation("faage", "lt=150", "Age should be less than 150.");
+  frmvalidator.addValidation("faage2", "lt=150", "Age should be less than 150.");
   
    frmvalidator.addValidation("fastature","numeric","Statures must be entered as a number");
    
