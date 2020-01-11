@@ -1036,9 +1036,9 @@ public function submit_case($submitstatus) {
             'Case Year',
             'FA Report: Sex', 
             'FA Report: Minimum age', 
-            'FA Report: Minimum age units (years or fetal months)', 
+            //'FA Report: Minimum age units (years or fetal months)', 
             'FA Report: Maximum age', 
-            'FA Report: Maximum age units (years or fetal months)',
+            //'FA Report: Maximum age units (years or fetal months)',
             'FA Report: Ancestry',
             'FA Report: Minimum Stature',
             'FA Report: Maximum Stature',
@@ -1070,8 +1070,8 @@ public function submit_case($submitstatus) {
             '',
             '',
             '',
-            '',
-            '',
+            //'',
+            //'',
             ''
             );
             
@@ -1084,7 +1084,7 @@ public function submit_case($submitstatus) {
         $anc_methods = method::get_methods_by_type($db, METHOD_DATA_ANCESTRY_ID);
         $stat_methods = method::get_methods_by_type($db, METHOD_DATA_STATURE_ID);
         
-        $all_methods = $sx_methods + $age_methods + $anc_methods + $stat_methods;
+        $all_methods = array_merge($sx_methods, $age_methods, $anc_methods, $stat_methods);
         
         foreach($all_methods as $method) {
             $methodname = $method->get_name();
@@ -1161,10 +1161,8 @@ public function submit_case($submitstatus) {
             $curr_row[] = $member->get_caseperyear();
             $curr_row[] = $curr_case->get_caseyear();
             $curr_row[] = $curr_case->get_fasex();
-            $curr_row[] = $curr_case->get_faage();
-            $curr_row[] = $curr_case->get_faageunits();
-            $curr_row[] = $curr_case->get_faage2();
-            $curr_row[] = $curr_case->get_faageunits2();
+            $curr_row[] = $curr_case->get_faage() . " " . (empty($curr_case->get_faageunits()) ? "years" : $curr_case->get_faageunits());
+            $curr_row[] = $curr_case->get_faage2() . " " . (empty($curr_case->get_faageunits2()) ? "years" : $curr_case->get_faageunits2());
             $faancestry = "";
             if ($curr_case->get_faancestryas()!=0){$faancestry=$faancestry.'[Asian/Pacific Islander]';}
             if ($curr_case->get_faancestryaf()!=0){$faancestry=$faancestry.'[African-American/Black]';}
@@ -1233,7 +1231,16 @@ public function submit_case($submitstatus) {
                     $est2 = $tier2->format_estimated_outcome_2();
                     $est_units = $tier2->get_estimated_outcome_units();
                     if($est2 != null && $est2 != '') {
-                        $est .= " - " . $est2;
+                        $est .= " to " . $est2;
+                    } else {
+                        if(is_numeric($est)) {
+                            $est = ">= ".$est;
+                        }
+                    }
+                    if(empty($est) && !empty($est2)) {
+                        if(is_numeric($est2)) {
+                            $est = "<= ".$est2;
+                        }
                     }
                     if($est_units != null && $est_units != "") {
                         $est .=  " ".$est_units;
