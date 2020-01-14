@@ -142,7 +142,7 @@ class functions {
      * @param type $checked_list
      * @return string
      */
-       public static function checkbox_dropdown($elementId, $elementName, $list, $checked_list = array(), $select_name='select_option') {
+       public static function checkbox_dropdown($elementId, $elementName, $list, $checked_list = array(), $select_name='select_option', $alt_text = null) {
        
 
         $elementName = "checkboxes_".urlencode($elementId);
@@ -150,9 +150,12 @@ class functions {
 
         $ref_text = '<div class="multiselect table_full" >';
         $ref_text .= '<div class="selectBox" onclick="showCheckboxes('.$divName.')">';
-        $ref_text .= "<select name=".$select_name."[$elementId][] class='table_full'>";
+        $ref_text .= "<select name=".$select_name."[$elementId][]>";
         $ref_text .= '<option selected diasbled>Select an option</option>';
         $ref_text .= '</select>';
+        if(count($checked_list) > 0 && $alt_text != null) {
+            $ref_text .= " ". $alt_text;
+        }
         $ref_text .= '<div id="checkbox_label" class="overSelect"></div>';
         $ref_text .= '</div>';
         $ref_text.= '<div class="checkboxes" id="'.$divName.'">';
@@ -166,9 +169,10 @@ class functions {
             $curr_name = $select_name."[$elementId]"."[".$list_item[0]."]";
             $ref_text .= ("<input type='checkbox' id='$id' name='$curr_name'".(in_array($list_item[0], $checked_list)? " checked=1 " : "")." />$name</label>");
         }
-
-        $ref_text .= "</div></div>";
         
+        $ref_text .= "</div>";
+        
+        $ref_text .= "</div>";
         
         return $ref_text;
         

@@ -927,8 +927,8 @@ class method_infos {
                                 }
 
                         }
-
-                        $references = functions::checkbox_dropdown($mi->get_id(), $mi->get_name(), $ref_list, $selected_refs, 'references');
+                        $alt_text = "(Click to view selected references)";
+                        $references = functions::checkbox_dropdown($mi->get_id(), $mi->get_name(), $ref_list, $selected_refs, 'references', $alt_text);
                         }
                        $output .= "<td>$references</td></tr>";
                         
@@ -1026,6 +1026,13 @@ class method_infos {
         
     }
    
+    /** Displays input for a Rhine type method_infos object 
+    * 
+    * @param db $db The database object
+    * @param int $method_infos_id  ID of the method_infos object to display
+    * @param int $tier2id ID of tier2 object, if editing existing data
+     * @return string HTML for inputting data for this method_infos object
+     */
     public static function show_method_info_rhine($db, $method_id, $tier2id=NULL) {
         $output = '';
         
