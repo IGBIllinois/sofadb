@@ -340,7 +340,13 @@ class sofa_case {
  */
 public function submit_case($submitstatus) {
 
-	$q="UPDATE cases SET submissionstatus=:status,datesubmitted=NOW() WHERE id=:caseid";
+    if($submitstatus == 1) {
+        $datesubmitted = "NOW()";
+    } else {
+        $datesubmitted = "NULL";
+    }
+	$q="UPDATE cases SET submissionstatus=:status,datesubmitted=$datesubmitted WHERE id=:caseid";
+
 	$params = array("status"=>$submitstatus, "caseid"=>$this->get_id());
 	$result = $this->db->get_update_result($q, $params);
 
