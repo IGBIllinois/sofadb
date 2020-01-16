@@ -881,6 +881,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <form action="index.php#tabs-2" method="post" id="method_info_data">
         <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
+        <?php
+            if(!empty($_GET['success'])) {
+                echo("Method edited successfully.<BR>");
+            }
+            ?>
     <fieldset class="methodinfobox"><legend class="boldlegend">Add Methods</legend>
 
     <div name="methodholder" id="methodholder">

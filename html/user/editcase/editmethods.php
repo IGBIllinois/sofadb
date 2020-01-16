@@ -210,7 +210,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     echo("<div id='caseform'>");
     if($numerrors == 0) {
-        echo("Method info updated successfully.");
+        // Go back to case page
+        header ("location: index.php?id=$caseeditid&success=1#tabs-2");
     } else {
         foreach($result as $error_result) {
             echo($error_result['MESSAGE']. "<BR>");
