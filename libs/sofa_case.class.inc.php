@@ -813,7 +813,6 @@ public function submit_case($submitstatus) {
         
         $query = "SELECT id from cases where submissionstatus=1  ";
         $param_string = "";
-        echo("Main conjunction = ".$case_data['conjunction']."<BR>");
         $conjunction = " AND ";
         if($case_data['conjunction'] == 2) {
             $conjunction = " OR ";
@@ -1093,7 +1092,7 @@ public function submit_case($submitstatus) {
 
         // Add methods to header row
         $method_info_ids = $headerrow2; // for proper order of method_infos
-        //$all_methods = method::get_methods($db);
+
         $sx_methods = method::get_methods_by_type($db, METHOD_DATA_SEX_ID);
         $age_methods = method::get_methods_by_type($db, METHOD_DATA_AGE_ID);
         $anc_methods = method::get_methods_by_type($db, METHOD_DATA_ANCESTRY_ID);
