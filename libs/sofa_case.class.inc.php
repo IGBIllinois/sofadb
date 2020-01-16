@@ -547,7 +547,7 @@ public function submit_case($submitstatus) {
     }
     
     
-    /** Deletes Tier 3 data for a givet Tier 2 id and method_info id
+    /** Deletes Tier 3 data for a given Tier 2 id and method_info id
      * 
      * @param int $t2id Tier 2 ID
      * @param int $methodinfoid method_info id
@@ -813,9 +813,9 @@ public function submit_case($submitstatus) {
         
         $query = "SELECT id from cases where submissionstatus=1  ";
         $param_string = "";
-        
+        echo("Main conjunction = ".$case_data['conjunction']."<BR>");
         $conjunction = " AND ";
-        if($case_data['conjunction'] != 1) {
+        if($case_data['conjunction'] == 2) {
             $conjunction = " OR ";
         }
         
@@ -919,8 +919,12 @@ public function submit_case($submitstatus) {
                 $param_string .= $conjunction;
             }
             foreach ($case_data['race'] as $name=>$value) {
+                $race_join = " AND ";
+                if($case_data['race_join'] == 2) {
+                    $race_join = " OR ";
+                }
                 if($race_string != "") {
-                    $race_string .= " OR ";
+                    $race_string .= $race_join;
                 }
                 $race_string .= "( idrace".$name."=1 )";
             }
@@ -929,46 +933,57 @@ public function submit_case($submitstatus) {
             $param_string .= "(".$race_string.")";
         }
         
+        $est_string = "";
+        $est_join = " AND ";
+        if($case['est_join'] == 2) {
+            $est_join = " OR ";
+        }
         // Estimated sex
                 
         if ($case_data['est_sex'] != null && $case_data['est_sex'] == 1 ) {
-            if($param_string != "") {
-                $param_string .= $conjunction;
+            if($est_string != "") {
+                $est_string .= $est_join;
             }
-            $param_string .= " faxex <> '' ";
+            $est_string .= " fasex <> '' ";
 
         }
         
         // Estimated age
         if($case_data['est_age'] != null && $case_data['est_age'] == 1) {
-            if($param_string != "") {
-                $param_string .= $conjunction;
+            if($est_string != "") {
+                $est_string .= $est_join;
             }
             
-            $param_string .= " (faage <> '' OR faage2 <> '') ";
+            $est_string .= " (faage <> '' OR faage2 <> '') ";
             
         }
         
         // Estimated stature
         if($case_data['est_stat'] != null && $case_data['est_stat'] == 1) {
-            if($param_string != "") {
-                $param_string .= $conjunction;
+            if($est_string != "") {
+                $est_string .= $est_join;
             }
             
-            $param_string .= " (fastature <> '' OR fastature2 <> '') ";
+            $est_string .= " (fastature <> '' OR fastature2 <> '') ";
             
         }
         
         // Estimated ancestry
         if($case_data['est_anc'] != null && $case_data['est_anc'] == 1) {
-            if($param_string != "") {
-                $param_string .= $conjunction;
+            if($est_string != "") {
+                $est_string .= $est_join;
             }
             
-            $param_string .= " faancestryottext <> '' ";
+            $est_string .= " faancestryottext <> '' ";
             
         }
         
+        if($est_string != '') {
+            if($param_string != "") {
+                $param_string .= $conjunction;
+            }
+            $param_string .= " (".$est_string.") "; 
+        }
         
         if($methods !=  null && count($methods) > 0) {
             $method_conj = $case_data['method_conj'];
@@ -1008,8 +1023,6 @@ public function submit_case($submitstatus) {
         
         $query .= " ORDER BY id ";
         
-        //echo("Query = $query<BR>");
-        //print_r($case_data);
         $result = $db->get_query_result($query, $params);
         $results = array();
         foreach($result as $casedata) {
@@ -1020,7 +1033,7 @@ public function submit_case($submitstatus) {
         return $results;
 
 }
-    /** Creates an excel sheed with data from the given cases
+    /** Creates an excel sheet with data from the given cases
      * 
      * @param db $db The database object
      * @param \sofa_case $case_list List of case objects
@@ -1042,9 +1055,7 @@ public function submit_case($submitstatus) {
             'Case Year',
             'FA Report: Sex', 
             'FA Report: Minimum age', 
-            //'FA Report: Minimum age units (years or fetal months)', 
             'FA Report: Maximum age', 
-            //'FA Report: Maximum age units (years or fetal months)',
             'FA Report: Ancestry',
             'FA Report: Minimum Stature',
             'FA Report: Maximum Stature',
@@ -1076,8 +1087,6 @@ public function submit_case($submitstatus) {
             '',
             '',
             '',
-            //'',
-            //'',
             ''
             );
             
@@ -1221,7 +1230,7 @@ public function submit_case($submitstatus) {
                 $case_method_data[$tmp_case_method->get_methodid()] = $tmp_case_method->get_id();
             }
             $case_method_ids = array_keys($case_method_data);
-            //print_r($case_method_ids);
+
             $i = 0;
 
             foreach($all_methods as $tmp_method) {
@@ -1253,10 +1262,7 @@ public function submit_case($submitstatus) {
                     }
                     $curr_row[] = $est;
                     
-                            
-                    //$curr_row[] = '';
                     $tier3s = $tier2->get_tier3data();
-
 
                     $method_infos = $tmp_method->get_method_infos();
                     

@@ -8,10 +8,6 @@ require_once('../../include/header_user.php');
   <h1 class="cntr">Search Cases</h1>
 
  <div id="searchregion"> 
- 
- 
-  
-  
 
 <div name="searchresults">
  <?php 
@@ -52,8 +48,10 @@ require_once('../../include/header_user.php');
               "est_age"=>$_GET['est_age'],
               "est_stat"=>$_GET['est_stat'],
               "est_anc"=>$_GET['est_anc'],
-              "conjuction"=>$_GET['andor'],
-              "method_conj"=>$_GET['method_conj']
+              "conjunction"=>$_GET['andor'],
+              "method_conj"=>$_GET['method_conj'],
+              "race_join"=>$_GET['race_join'],
+              "prac_join"=>$_GET['prac_join']
                   );
              $methods = ($_GET['method_select']);
              $method_list = array();
@@ -166,9 +164,9 @@ echo '<div class="scroll"><table id="hortable" summary="List of cases">
 
 // Fetch and print all the records:
 $regcount=1;
-//foreach($case_results as $case) {
+
 for($i = $startingrecord; $i <= $endingrecord; $i++) {
-	//$regcount=$regcount+1;
+
     $case = $case_results[($i-1)];
 	echo '<tr>
 	<td><a href="../viewcase.php?id=' . $case->get_id() . '">View</a></td>
@@ -304,11 +302,15 @@ echo <<<_END
       <label class="label" for="idrace3"></label>
       <input type="checkbox" name="race[]" value="wh" id="raceWh"/>White
       <input type="checkbox" name="race[]" value="ot" id="raceOt"/>Other<br/><br>
-           
-    
-    
-      
-           
+      <label class="label" for="searchtype">List Cases That Meet:</label>
+        
+      <select name="race_join">
+	<option value="1">All Selected Races/Ethnicities</option>
+	<option value="2">At Least One of Selected Races/Ethnicities</option>
+      </select> 
+        
+        <BR><BR>
+
 	   </fieldset>  
 	<br>
      <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Search By Forensic Anthropology Report Information</legend>
@@ -321,8 +323,16 @@ echo <<<_END
       <input type="checkbox" name="est_sex" value="1" />Sex
       <input type="checkbox" name="est_age" value="1" />Age
       <input type="checkbox" name="est_anc" value="1" />Ancestry
-       <input type="checkbox" name="est_stat" value="1" />Stature<br /><br>
+       <input type="checkbox" name="est_stat" value="1" />Stature<br />
+        
+        <BR><label class="label" for="searchtype">Search for cases that contain:</label>
+        <select name="prac_join">
+	<option value="1">All Selected Estimations</option>
+	<option value="2">At Least One of Selected Estimations</option>
+      </select> 
+        <BR><BR>
      </fieldset>  
+
         
         <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Search By Method</legend>
 _END;
@@ -380,7 +390,7 @@ echo <<<_END
      <br><label class="label" for="searchtype">Search for cases that contain:</label>
   <select name="method_conj">
 	<option value="all">All Selected Methods</option>
-	<option value="any">At Least One Selected Method</option></select> <br ><br>
+	<option value="any">At Least One of Selected Methods</option></select> <br ><br>
 
      </fieldset>  
         
