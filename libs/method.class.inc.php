@@ -17,8 +17,6 @@ class method {
     private $instructions;
     private $methodinfotype;
     
-    private $tier2id;
-    
     private $db; // Database object
     
     public function __construct($db, $id = null) {
@@ -92,22 +90,6 @@ class method {
                 }
     }
     
-    /** Gets a list of data and corresponding data type for this method
-     * 
-     */
-    public function get_method_data() {
-        $query = "SELECT * from methoddata where methodid = :methodid";
-        $params = array("methodid"=>$this->id);
-        //$result = $this->dbcon->query($query);
-        $result = $this->db->get_query_result($query, $params);
-        $data = array();
-        foreach($result as $row) {
-            $method_data = new methoddata($this->db, $row['id']);
-            $data[] = $method_data;
-        }
-        return $data;
-    }
-    
     // Static functions
     
     public static function create_method(
@@ -176,6 +158,16 @@ class method {
     
     // Static functions
     
+    /** 
+     * Gets an array of methods from the database
+     * 
+     * @param db $db The database object
+     * @param int $start Starting index in the full list (optional)
+     * @param int $limit Number of records to return (optional)
+     * @return \method An array of method objects. If $start and $limit are given,
+     *  $limit is the number of records to return, starting at index $start.
+     *  Otherwise, all methods in the database will be returned.
+     */
     public static function get_methods($db, $start = -1, $limit = -1) {
         $query = "SELECT id from methods ";
         if(is_numeric($start) && $start >= 0) {
@@ -184,7 +176,7 @@ class method {
                 $query .= ", $limit";
             }
         }
-        //$result = mysqli_query ($dbcon, $query);
+
         $result = $db->get_query_result($query);
         $methods = array();
         foreach($result as $method) {
@@ -195,30 +187,37 @@ class method {
         return $methods;
     }
     
+    /**
+     * Get an array of methods based on their type.
+     * @param db $db The database object
+     * @param int $type_id Type ID for the type of method to return (1 for Sex, 2 for Age, etc.)
+     * @return \method An array of method objects of the given type. Some have a specific order,
+     *      with preferred methods being listed first for display purposes.
+     */
     public static function get_methods_by_type($db, $type_id) {
             $query = "SELECT methodname,id FROM methods WHERE methodtypenum=:methodtypenum ";
-            if($type_id == 1) {
+            if($type_id == METHOD_DATA_SEX_ID) {
                 // Specific order for Sex methods
                 $query .= "order by "
                         . "methodname = 'Fordisc (skeletal, metric)' desc, "
                         . "methodname = 'Generalized Morphology (skeleton, nonmetric)' desc, "
                         . "methodname = 'Soft Tissue Morphology (nonmetric)' desc, "
-                        . "methodname = '3D-ID' desc, "
+                        . "methodname = '3D-ID (cranial, metric)' desc, "
                         . "methodname ASC";
-            } else if($type_id == 2) {
+            } else if($type_id == METHOD_DATA_AGE_ID) {
                 // Specific order for Age methods
                 $query .= "Order by "
                         . "methodname = 'Epiphyseal Union (skeletal, nonmetric)' desc, "
                         . "methodname = 'Epiphyseal Union, McKern and Stuart (skeletal, nonmetric)' desc, "
                         . "methodname = 'Transition Analysis (skeletal, nonmetric)' desc, "
                         . "methodname ASC";
-            } else if($type_id == 3) {
+            } else if($type_id == METHOD_DATA_ANCESTRY_ID) {
                 // Specific order for Ancestry methods
                 $query .= "Order by ".
-                        "methodname = '3D-ID' desc, ".
+                        "methodname = '3D-ID (cranial, metric)' desc, ".
                         "methodname ='Fordisc (skeletal, metric)' desc,".
                         "methodname ASC";
-            } else if($type_id == 4) {
+            } else if($type_id == METHOD_DATA_STATURE_ID) {
                 // Specific order for Stature methods
                 $query .= "Order by methodname ASC";
             }
@@ -232,7 +231,10 @@ class method {
             return $methods;
         }
         
-        // New version
+        /**
+         * Returns an array of method_infos objects for this method
+         * @return \method_infos An array of method_infos objects for this method
+         */
         public function get_method_infos() {
             $query = "SELECT id from method_infos where methodid=:methodid ORDER BY id";
             $params = array("methodid"=>$this->id);
@@ -254,8 +256,10 @@ class method {
          */
         public function get_method_infos_by_type($type = null) {
             if($type == null) {
-                $type_query = "SELECT DISTINCT input_type from method_infos where methodid = :methodid ORDER BY FIELD(input_type,4,5,7)";
-                //echo("query = $type_query");
+                $text_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_TEXT_ENTRY)->get_id();
+                $number_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY)->get_id();
+                $type_query = "SELECT DISTINCT input_type from method_infos where methodid = :methodid ORDER BY FIELD(input_type,$text_type, $number_type) DESC";
+
                 $type_params =array("methodid"=>$this->id);
                 $type_result = $this->db->get_query_result($type_query, $type_params);
             } else {
@@ -265,8 +269,6 @@ class method {
             $text_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_TEXT_ENTRY);
             $numeric_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY);
             
-            $out = array_splice($type_result, $text_type, 1);
-            array_splice($type_result, 0, 0, $out);
             $return_array = array();
             foreach($type_result as $type) {
                 $info_array = array();

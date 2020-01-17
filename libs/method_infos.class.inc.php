@@ -249,12 +249,12 @@ class method_infos {
 
        //$method_infos = $method->get_method_infos();
        $method_infos_by_type = $method->get_method_infos_by_type();
-       
+
        if(count($method_infos_by_type) > 0) {
 
         if($method->get_method_info_type() != null) {
            $input_type = new input_type($db, $method->get_method_info_type());
-
+           
            // TODO: Ints in input_type table
            if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
 
@@ -301,6 +301,17 @@ class method_infos {
         $i=0;
 
         $output .= "<table><tr>";
+        // Add header title for specific methods
+        $input_type = new input_type($db, $type_id);
+        $input_type_name = $input_type->get_input_type();
+        if(($method_infos[0]->get_option_header() != null) &&
+                ($input_type_name == USER_INTERACTION_NUMERIC_ENTRY ||
+                   $input_type_name == USER_INTERACTION_TEXT_ENTRY)) {
+                $output .= "<td class='td_spaced align_top'>";
+                $output .= ("<B><U>".$method_infos[0]->get_option_header()."</U></B>");
+
+        }
+        
         $count = 0 ;
        foreach($method_infos as $method_info) {
            $method_info_id = $method_info->get_id();
@@ -354,9 +365,9 @@ class method_infos {
                }
                if(!$inner_table && $count == 0) {
                    // draw headers for all
-                   $method_infos = new method_infos($db, $method_info_id);
-                   $header = $method_infos->get_header();
-                   $option_header = $method_infos->get_option_header();
+                   $method_infos2 = new method_infos($db, $method_info_id);
+                   $header = $method_infos2->get_header();
+                   $option_header = $method_infos2->get_option_header();
                    $output .= "<tr><th class='td_spaced align_top align_right'><B><U>$header</U></B></th><th><B><U>$option_header</U></B></th></tr>";
                    
                }
@@ -369,6 +380,13 @@ class method_infos {
            $i++;
            $count++;
        }
+       if(($method_infos[0]->get_option_header() != null) &&
+                ($input_type_name == USER_INTERACTION_NUMERIC_ENTRY ||
+                   $input_type_name == USER_INTERACTION_TEXT_ENTRY)) {
+            $output .= "</td>";
+
+       }
+       
        $output .= "</tr></table>";
 }
         $output .= "</tr></table>";
