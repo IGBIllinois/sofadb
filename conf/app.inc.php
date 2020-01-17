@@ -11,6 +11,8 @@ DEFINE ("PAGEROWS", 20);
 // Number of columns for method_info fields
 DEFINE ("MAXCOLS", 5);
 
+DEFINE ("MAXAGE", 150);
+
 DEFINE ("METHOD_DATA_AGE", "Age");
 DEFINE ("METHOD_DATA_SEX", "Sex");
 DEFINE ("METHOD_DATA_ANCESTRY", "Ancestry");
