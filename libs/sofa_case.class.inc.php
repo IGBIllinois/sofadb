@@ -1122,6 +1122,12 @@ public function submit_case($submitstatus) {
                         $name .= ": ". $method_info->get_header();
                     }
                     
+                    // For formulas, just use the header text
+                    if($method_info->get_type() == input_type::get_input_type_by_name($db, USER_INTERACTION_SELECT_EACH)->get_id()) {
+                        $name = $method_info->get_header();
+                    }
+
+                    
                     $headerrow[] = $methodname;
                     $headerrow2[] = $name;
                     $method_info_ids[] = $method_info->get_id();
