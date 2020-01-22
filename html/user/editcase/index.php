@@ -106,8 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $estimated_outcome_units = $_POST['estimated_outcome_units'];
         }
 
-        if($method->get_method_type() == "Stature" ||
-                $method->get_method_type() == "Age") {
+        if($method->get_method_type_num() == METHOD_DATA_STATURE_ID ||
+                $method->get_method_type_num() == METHOD_DATA_AGE_ID) {
             if(($estimated_outcome_1 != null && $estimated_outcome_1 !=  "" && !is_numeric($estimated_outcome_1)) ||
                     ($estimated_outcome_2 != null && $estimated_outcome_2 !=  "" && !(is_numeric($estimated_outcome_2)))) {
                 $errors[] = "Estimated outcome must be numeric.";
@@ -892,10 +892,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
              <p><select name="methodtype[]" id="methodtype">
                      
                            <option value="" selected="selected" disabled="disabled">Add Method For</option>
-                           <option value="1" >Sex</option>
-                           <option value="2" >Age</option>
-                           <option value="3" >Ancestry</option>
-                           <option value="4" >Stature</option>
+                           <option value=<?php echo '"'.METHOD_DATA_SEX_ID.'"';?> ><?php echo METHOD_DATA_SEX;?></option>
+                           <option value=<?php echo '"'.METHOD_DATA_AGE_ID.'"';?> ><?php echo METHOD_DATA_AGE;?></option>
+                           <option value=<?php echo '"'.METHOD_DATA_ANCESTRY_ID.'"';?> ><?php echo METHOD_DATA_ANCESTRY;?></option>
+                           <option value=<?php echo '"'.METHOD_DATA_STATURE_ID.'"';?> ><?php echo METHOD_DATA_STATURE;?></option>
 
                             </select>
 

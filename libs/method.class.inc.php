@@ -10,7 +10,6 @@ class method {
     
     private $id;
     private $method_name;
-    private $method_type;
     private $method_type_num;
     private $measurement_type;
     private $description;
@@ -38,7 +37,25 @@ class method {
     }
     
     public function get_method_type() {
-        return $this->method_type;
+
+        switch($this->method_type_num) {
+            case METHOD_DATA_SEX_ID:
+                return METHOD_DATA_SEX;
+                break;
+            case METHOD_DATA_AGE_ID:
+                return METHOD_DATA_AGE;
+                break;
+            case METHOD_DATA_ANCESTRY_ID;
+                return METHOD_DATA_ANCESTRY;
+                break;
+            case METHOD_DATA_STATURE_ID:
+                return METHOD_DATA_STATURE;
+                break;
+            default:
+                return "Unknown method type";
+                break;
+                
+        }
     }
     
     public function get_method_type_num() {
@@ -154,8 +171,65 @@ class method {
         }
         
     }
-
     
+            /**
+         * Returns an array of method_infos objects for this method
+         * @return \method_infos An array of method_infos objects for this method
+         */
+        public function get_method_infos() {
+            $query = "SELECT id from method_infos where methodid=:methodid ORDER BY id";
+            $params = array("methodid"=>$this->id);
+            $result = $this->db->get_query_result($query, $params);
+            
+            $return_result = array();
+            if(count($result) > 0) {
+                foreach($result as $method_infos) {
+                    $mi = new method_infos($this->db, $method_infos['id']);
+                    $return_result[] = $mi;
+                }
+            }
+            return $return_result;
+        }
+    
+        /** Gets method_infos for a method sorted by type
+         * 
+         * @return \method_infos An array whose contents are arrays of method_infos, sorted by type
+         */
+        public function get_method_infos_by_type($type = null) {
+            if($type == null) {
+                $text_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_TEXT_ENTRY)->get_id();
+                $number_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY)->get_id();
+                $type_query = "SELECT DISTINCT input_type from method_infos where methodid = :methodid ORDER BY FIELD(input_type,$text_type, $number_type) DESC";
+
+                $type_params =array("methodid"=>$this->id);
+                $type_result = $this->db->get_query_result($type_query, $type_params);
+            } else {
+                $type_result = array('input_type'=>$type);
+            }
+
+            $text_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_TEXT_ENTRY);
+            $numeric_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY);
+            
+            $return_array = array();
+            foreach($type_result as $type) {
+                $info_array = array();
+                $input_type = $type['input_type'];
+                $infos_query = "SELECT id from method_infos where methodid= :methodid and input_type=:type";
+                $infos_params = array("methodid"=>$this->id, "type"=>$input_type);
+                $info_result = $this->db->get_query_result($infos_query, $infos_params);
+                
+                foreach($info_result as $info) {
+                    $method_infos = new method_infos($this->db, $info['id']);
+                    $info_array[] = $method_infos;
+                }
+                $return_array[$input_type] = $info_array;
+            }
+
+            return $return_array;
+        }
+        
+    
+ 
     // Static functions
     
     /** 
@@ -231,61 +305,8 @@ class method {
             return $methods;
         }
         
-        /**
-         * Returns an array of method_infos objects for this method
-         * @return \method_infos An array of method_infos objects for this method
-         */
-        public function get_method_infos() {
-            $query = "SELECT id from method_infos where methodid=:methodid ORDER BY id";
-            $params = array("methodid"=>$this->id);
-            $result = $this->db->get_query_result($query, $params);
-            
-            $return_result = array();
-            if(count($result) > 0) {
-                foreach($result as $method_infos) {
-                    $mi = new method_infos($this->db, $method_infos['id']);
-                    $return_result[] = $mi;
-                }
-            }
-            return $return_result;
-        }
+
     
-        /** Gets method_infos for a method sorted by type
-         * 
-         * @return \method_infos An array whose contents are arrays of method_infos, sorted by type
-         */
-        public function get_method_infos_by_type($type = null) {
-            if($type == null) {
-                $text_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_TEXT_ENTRY)->get_id();
-                $number_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY)->get_id();
-                $type_query = "SELECT DISTINCT input_type from method_infos where methodid = :methodid ORDER BY FIELD(input_type,$text_type, $number_type) DESC";
-
-                $type_params =array("methodid"=>$this->id);
-                $type_result = $this->db->get_query_result($type_query, $type_params);
-            } else {
-                $type_result = array('input_type'=>$type);
-            }
-
-            $text_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_TEXT_ENTRY);
-            $numeric_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY);
-            
-            $return_array = array();
-            foreach($type_result as $type) {
-                $info_array = array();
-                $input_type = $type['input_type'];
-                $infos_query = "SELECT id from method_infos where methodid= :methodid and input_type=:type";
-                $infos_params = array("methodid"=>$this->id, "type"=>$input_type);
-                $info_result = $this->db->get_query_result($infos_query, $infos_params);
-                
-                foreach($info_result as $info) {
-                    $method_infos = new method_infos($this->db, $info['id']);
-                    $info_array[] = $method_infos;
-                }
-                $return_array[$input_type] = $info_array;
-            }
-
-            return $return_array;
-        }
      // Private functions
 
      /** Loads database data into this method
@@ -302,7 +323,6 @@ class method {
          
          $this->id = $id;
          $this->method_name = $data['methodname'];
-         $this->method_type = $data['methodtype'];
          $this->method_type_num = $data['methodtypenum'];
          $this->measurement_type = $data['measurementtype'];
          $this->description = $data['description'];

@@ -75,8 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
 
-        if($method->get_method_type() == "Stature" ||
-                $method->get_method_type() == "Age") {
+        if($method->get_method_type_num() == METHOD_DATA_STATURE_ID ||
+                $method->get_method_type_num() == METHOD_DATA_AGE_ID) {
             if(($est1 != null && $est1 !=  "" && !is_numeric($est1)) ||
                     ($est2 != null && $est2 !=  "" && !(is_numeric($est2)))) {
                 $numerrors++;

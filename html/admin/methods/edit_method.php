@@ -7,15 +7,19 @@
  */
 
 require_once "../../include/header_admin.php";
+
+
 $name = null;
 $type_id = null;
-$type_name = null;
 $measurement_type=null;
 $description = null;
 $instructions = null;
 $features = null;
 
-$method_type_list = array("1"=>"Sex", "2"=>"Age", "3"=>"Ancestry", "4"=>"Stature");
+$method_type_list = array(METHOD_DATA_SEX_ID=>METHOD_DATA_SEX, 
+    METHOD_DATA_AGE_ID=>METHOD_DATA_AGE,
+    METHOD_DATA_ANCESTRY_ID=>METHOD_DATA_ANCESTRY, 
+    METHOD_DATA_STATURE_ID=>METHOD_DATA_STATURE);
 
 if(!isset($_POST['id']) &&  !isset($_GET['id'])) {
     echo("Please enter a valid method.");
@@ -27,12 +31,9 @@ if(!isset($_POST['id']) &&  !isset($_GET['id'])) {
         
         $name = $method->get_name();
         $type_id = $method->get_method_type_num();
-        $type_name = $method->get_method_type();
         $measurement_type = $method->get_measurement_type();
         $description = $method->get_description();
         $instructions = $method->get_instructions();
-    
-        //$features = $method->get_features();
 
     } else {
         $id = ($_POST['id']);
@@ -62,39 +63,18 @@ if(isset($_POST['edit_method_submit'])) {
     if(isset($_POST['instructions'])) {
     $instructions = $_POST['instructions'];
     }
-/*
-    if(isset($_POST['features'])) {
-        $new_features = $_POST['features'];
 
-    } else {
-        $new_features = array();
-    }
- * 
- */
     $method->update_method($name, $type_name, $type_id, $measurement_type, $description, $instructions);
 
-    //$method->edit_features($new_features);
 
 echo ("Method $name edited successfully.<BR>");
-}
-
-if(isset($_POST['add_method_type_submit'])) {
-    $method_data_name = $_POST['method_data_name'];
-    $method_data_type = $_POST['method_data_type'];
-    $method_id = $_POST['id'];
-    
-    $result = methoddata::add_method_data($db, $method_id, $method_data_name, $method_data_type);
-    if($result) {
-        echo("Method Data $method_data_name edited successfully.<BR>");
-    }
-    
 }
 
 
 echo(''
         . '<form action="edit_method.php" method="post" id="registration">
 
-<div id="registerform">
+
 <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
 
 <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend>Edit Method</legend>
@@ -128,73 +108,50 @@ echo('
 <input id="instructions" type="text" name="instructions" size="100" maxlength="100" value="'.$instructions.'">
         ');
         
-echo('<BR></fieldset><BR>');
+echo('<BR><BR>
+    <label class="label"><input name="edit_method_submit" id="edit_method_submit" type="submit" value="Edit"/></label><BR><BR>
+    </fieldset>
+   </form>');
 
-// Features
 
-echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend>Features (hold CTL to select multiple)</legend>');
 
-echo('<select name="features[]" size="5" multiple="multiple">');
+// Method infos
 
-$all_features = feature::get_features($db);
-$feature_ids = array();
-$features = $method->get_features();
-foreach($features as $curr_feature) {
-    $feature_ids[] = $curr_feature->get_id();
-}
+echo('<form action="edit_method.php" method="post" id="registration">');
 
-foreach($all_features as $feature) {
-    echo("<option value='".$feature->get_id() . "' ".
-            (in_array($feature->get_id(), array_values($feature_ids)) ? " SELECTED ": "" ) .
-            ">".$feature->get_name().
-            "</option>");
-}
-echo("</select>");
-echo("<BR></fieldset>");
+echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend>Method Info</legend>');
+$method_infos = $method->get_method_infos();
 
-echo('<BR>'
-        . '<input name="edit_method_submit" id="edit_method_submit" type="submit" value="Edit"/><BR>
-   </div></form>');
-
-// Method data
-
-echo('<form action="edit_method.php" method="post" id="registration">
-
-<div id="registerform">
-<fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">');
-
-echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend>Method Data</legend>');
-$method_data = $method->get_method_data();
-if(count($method_data) > 0) {
+if(count($method_infos) > 0) {
 echo("<table id='hortable'>");
 
-echo("<TR><TD>Name</TD><TD>Type</TD></TR>");
+echo("<TR><TD>Name</TD><TD>Type</TD><TD>Options</td></TR>");
 
-foreach($method_data as $method_datum) {
+foreach($method_infos as $method_info) {
     echo("<TR>");
-    echo("<TD>".$method_datum->get_name()."</TD>");
-    echo("<TD>".$method_datum->get_type()."</TD>");
+    echo("<TD>".$method_info->get_name()."</TD>");
+    $type = new input_type($db, $method_info->get_type());
+    echo("<TD>".$type->get_input_type()."</TD>");
+    echo("<TD>");
+      $options = $method_info->get_method_info_options();
+      foreach($options as $option) {
+          echo($option->get_value()."<BR>");
+      }
+    echo("</TD>");
     echo("</TR>");
 }
 echo("</table>");
 } 
 
-echo("");
-echo('
-    <input name="id" id="id" type="hidden" value="'.$method->get_id().'">
-        <BR><label class="label"><U>Edit method data:</U></label><BR>
-<label class="label" for="mID">Method Data Name</label>
-<input id="method_data_name" type="text" name="method_data_name" size="100" maxlength="100" ><BR>
-        <label class="label" for="mID">Method Data Type</label>
-<input id="method_data_type" type="text" name="method_data_type" size="100" maxlength="100"><BR>
-        ');
-echo('<BR>'
-        . '<input name="add_method_type_submit" id="edit_method_submit" type="submit" value="Add Method Type"/><BR>
-   </div></form>');
+
+echo('</form>');
+
 echo("<BR></fieldset>");
 
 
-echo('</fieldset>');
+
+
+
 }
 
 require_once "../../include/footer.php";

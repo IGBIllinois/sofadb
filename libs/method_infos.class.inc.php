@@ -120,7 +120,7 @@ class method_infos {
        }
        return $return_result;
    }
-   
+      
    // Static
     
    /** Displays input for a method information
@@ -155,7 +155,7 @@ class method_infos {
        }
        
        // Draw estimated outcomes
-       if($method->get_method_type() == "Sex") {
+       if($method->get_method_type_num() == METHOD_DATA_SEX_ID) {
 
            $selected = false;
            if($tier2id != null) {
@@ -174,7 +174,7 @@ class method_infos {
            $output .= ("</select><BR>");
 
            $output .= $prompt;
-       } else if($method->get_method_type() == "Stature") {
+       } else if($method->get_method_type_num() == METHOD_DATA_STATURE_ID) {
            $estimated_outcome_1 = "";
            $estimated_outcome_2 = "";
            $estimated_outcome_units = "";
@@ -198,7 +198,7 @@ class method_infos {
            $output .= ("</select><BR>");
 
            $output .= $prompt;
-       } else if($method->get_method_type() == "Age") {
+       } else if($method->get_method_type_num() == METHOD_DATA_AGE_ID) {
 
            if($tier2id != null) {
                $tier2 = new tier2data($db, $tier2id);
@@ -215,7 +215,7 @@ class method_infos {
            $output .= ("<BR>");
            $output .= $prompt;
            
-       } else if($method->get_method_type() == "Ancestry") {
+       } else if($method->get_method_type_num() == METHOD_DATA_ANCESTRY_ID) {
            if($tier2id != null) {
                $tier2 = new tier2data($db, $tier2id);
                $estimated_outcome_1 = $tier2->get_estimated_outcome_1();
@@ -239,7 +239,7 @@ class method_infos {
        
 
        $maxcols = MAXCOLS;
-       if($method->get_method_type() == "Stature" ||
+       if($method->get_method_type_num() == METHOD_DATA_STATURE_ID||
                $method->get_name() == 'Holland 1991 (proximal tibia, metric)' ||
                $method->get_name() == 'Birkby et al. 2008 (skeletal, nonmetric)' ||
                $method->get_name() == 'Rhine 1990 (skull, nonmetric)') {

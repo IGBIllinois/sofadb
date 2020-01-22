@@ -7,6 +7,8 @@
  */
 
 require_once "../../include/header_admin.php";
+
+
 $name = null;
 $type_id = null;
 $type_name = null;
@@ -17,7 +19,10 @@ $features = null;
 
 
 
-$method_type_list = array("1"=>"Sex", "2"=>"Age", "3"=>"Ancestry", "4"=>"Stature");
+$method_type_list = array(METHOD_DATA_SEX_ID=>METHOD_DATA_SEX, 
+    METHOD_DATA_AGE_ID=>METHOD_DATA_AGE,
+    METHOD_DATA_ANCESTRY_ID=>METHOD_DATA_ANCESTRY, 
+    METHOD_DATA_STATURE_ID=>METHOD_DATA_STATURE);
 
 if(isset($_POST['method_name'])) {
     $name = $_POST['method_name'];
