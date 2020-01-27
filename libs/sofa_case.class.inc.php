@@ -821,7 +821,7 @@ public function submit_case($submitstatus) {
         // Member ID
         if ($case_data['memberId'] != null && $case_data['memberId'] != "") { 
 		
-		$query .= " AND memberid =: memberId  ";
+		$query .= " AND memberid =:memberId  ";
                 $params["memberId"] = $case_data['memberId'];
 		
 	} else {
@@ -1021,9 +1021,10 @@ public function submit_case($submitstatus) {
         
         
         $query .= " ORDER BY id ";
-        
+
         $result = $db->get_query_result($query, $params);
         $results = array();
+        
         foreach($result as $casedata) {
             $case = new sofa_case($db, $casedata['id']);
             $results[] = $case;
