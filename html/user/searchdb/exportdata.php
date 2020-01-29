@@ -1,7 +1,15 @@
 <?php
 
  require_once('../../include/session.inc.php') ;
- 
+  if (isset($_POST['exportMy'])) {
+            $case_data = array("memberId"=>$_POST['mId']);
+
+            $case_results = sofa_case::search_cases($db, null, $case_data, null);
+              
+            sofa_case::write_report($db, $case_results);
+            die();
+            
+        } else
 	  if (isset($_POST['exportsubmit'])|| isset($_POST['exportall']))
 	  {
               
@@ -42,8 +50,7 @@
               
               sofa_case::write_report($db, $case_results);
               die();
-	
-		  }
+	} 
 
 
 

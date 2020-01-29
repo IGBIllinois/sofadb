@@ -421,7 +421,7 @@ echo <<<_END
 
 
 <form action="index.php" method="post" id="export">
-
+    
 <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
 	<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Export Database</legend>
 <br>
@@ -433,7 +433,27 @@ echo <<<_END
 	<br>
 	</fieldset>
 </form>
+<BR>
+<form action="index.php" method="post" id="exportMy">
 
+_END;
+
+echo("<input type=hidden name='mId' value='$memberid'>");
+
+echo <<<_END
+
+<fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
+	<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Export My Cases</legend>
+<br>
+<span><label class="label" for="exportMy">Click here to export all of the current user's submitted cases</label><input name="exportMy" type="submit" id="exportMy" title="Export My Cases" value="Export My Cases"></span><br>
+
+
+<br>
+</fieldset>
+	<br>
+	</fieldset>
+</form>
+    
 <script language="JavaScript" type="text/javascript"
     xml:space="preserve">//<![CDATA[
 //You should create the validator only after the definition of the HTML form
