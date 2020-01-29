@@ -103,7 +103,7 @@ class method {
 
                 $result = $this->db->get_update_result($query, $params);
                 if ($result) { // If it ran OK.
-                        //echo("Method $name updated successfully.<BR>");
+                    return $result;
                 }
     }
     
@@ -142,7 +142,6 @@ class method {
         $result = $db->get_insert_result($query, $params);
 
 	if ($result > 0) { // If it ran OK.
-            echo("Method $name added successfully");
             return $result;
         }
     }
@@ -229,7 +228,44 @@ class method {
         }
         
     
- 
+     /** Adds a method info to this method
+      * 
+      * @param string $name Name of the method_info
+      * @param string $header Header used for the method_info
+      * @param string $option_header Header for the option list (used in some input types)
+      * @param int $input_type Input type id
+      * @param int $parent_id Parent id (optional, used in some input types)
+      */
+    public function add_method_info($name, $header, $option_header, $input_type, $parent_id=null) {
+        $methodid=$this->id;
+        echo("parent id = ".$parent_id);
+        $query = "INSERT INTO method_infos (methodid, name, header, option_header, input_type " .
+                (($parent_id != null) ? ", parent_id" : "") 
+                . ") VALUES "
+                . "(:methodid, :name, :header, :option_header, :input_type ".
+                (($parent_id != null) ? ", :parent_id)" : ")");
+        $params = array("methodid"=>$methodid,
+                        "name"=>$name,
+                        "header"=>$header,
+                        "option_header"=>$option_header,
+                        "input_type"=>$input_type);
+
+        if($parent_id !=  null) {
+            $params["parent_id"] = $parent_id;
+        }
+        $result = $this->db->get_insert_result($query, $params);
+    } 
+    
+    public function remove_method_info($method_info_id) {
+        $query = "DELETE FROM method_infos where id = :method_info_id";
+        $params = array("method_info_id"=>$method_info_id);
+        
+        $result = $this->db->get_update_result($query, $params);
+        
+        return $result;
+    }
+
+    
     // Static functions
     
     /** 

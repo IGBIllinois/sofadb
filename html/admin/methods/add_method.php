@@ -8,7 +8,7 @@
 
 require_once "../../include/header_admin.php";
 
-
+    
 $name = null;
 $type_id = null;
 $type_name = null;
@@ -86,6 +86,20 @@ foreach($method_type_list as $id=>$name) {
 }
 echo("</select>");
 
+echo('
+<BR>
+<label class="label" for="mID">Method info type (used to display certain types of methods)</label>');
+
+echo('<select name="method_type" id="method_info_type">
+    
+    <option value="" selected="selected" disabled="disabled">Method Info Type</option>');
+$method_info_types = method_info_type::get_method_info_types($db);
+foreach($method_info_types as $type) {
+    $id = $type->get_id();
+    $name = $type->get_method_info_type();
+    echo("<option value='".$id."' ".(($method_info_type_id == $id)?" selected ": "").">".$name."</option>");
+}
+echo("</select>");
 
 echo('
     <BR>
@@ -95,7 +109,7 @@ echo('
 <label class="label" for="mID">Description</label>
 <input id="description" type="text" name="description" size="100" maxlength="100" value="'.$description.'">
 <BR>
-<label class="label" for="mID">Instruction</label>
+<label class="label" for="instructions">Instruction</label>
 <input id="instructions" type="text" name="instructions" size="100" maxlength="100" value="'.$instructions.'">
         ');
         

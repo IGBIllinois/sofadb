@@ -69,10 +69,36 @@ if(isset($_POST['edit_method_submit'])) {
 
 echo ("Method $name edited successfully.<BR>");
 }
+print_r($_POST);
+if(isset($_POST['add_method_info_submit'])) {
+
+    $methodid = $method->get_id();
+    $method_info_name = $_POST['method_info_name'];
+    $header = $_POST['method_info_header'];
+    $option_header = $_POST['method_info_option_header'];
+    $input_type = $_POST['input_type'];
+    
+
+    $result = $method->add_method_info($method_info_name, $header, $option_header, $input_type);
+    if($result > 0) {
+            echo("Added method info with data: $method_info_name, $header, $option_header, $input_type<BR>");
+    }
+}
+
+if(isset($_POST['add_method_info_option_submit'])) {
+
+    $method_info_id = $_POST['method_info_id'];
+    $value = $_POST['method_info_option_value'];
+    $method_info = new method_infos($db, $method_info_id);
+    $result = $method_info->add_option($value);
+    if($result > 0) {
+            echo("Added method info option to ".$method_info->get_name() . " with value: $value.<BR>");
+    }
+}
 
 
 echo(''
-        . '<form action="edit_method.php" method="post" id="registration">
+        . '<form action="edit_method.php?id='.$id.'" method="post" id="registration">
 
 
 <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
@@ -90,8 +116,8 @@ echo('<select name="method_type" id="method_type">
     
     <option value="" selected="selected" disabled="disabled">Method Type</option>');
 
-foreach($method_type_list as $id=>$name) {
-    echo("<option value='".$id."' ".(($type_id == $id)?" selected ": "").">".$name."</option>");
+foreach($method_type_list as $t_id=>$name) {
+    echo("<option value='".$t_id."' ".(($type_id == $t_id)?" selected ": "").">".$name."</option>");
 }
 echo("</select>");
 
@@ -113,11 +139,34 @@ echo('<BR><BR>
     </fieldset>
    </form>');
 
+// Add new method infos
+echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend>Add new Method Info</legend>');
+echo('<form action="edit_method.php?id='.$id.'" method="post" id="add_method_info">');
+echo('<input type="hidden" name="id" value="'.$id.'">');
+echo('<label class="label" for="method_info_name">Method info name</label>');
+echo("<input type=text id='method_info_name' name='method_info_name'>");
+echo("<BR>");
+echo('<label class="label" for="input_type">Input type</label>');
+echo("<select name='input_type' id='input_type'>");
+$input_types = input_type::get_input_types($db);
+foreach($input_types as $type) {
+    echo("<option value = '".$type->get_id()."' id='".$type->get_id()."'>".$type->get_input_type()."</option>");
+}
+echo("</select>");
+echo("<BR>");
+echo('<label class="label" for="method_info_header">Header</label>');
+echo("<input type=text id='method_info_header' name='method_info_header'>");
+echo("<BR>");
+echo('<label class="label" for="method_info_option_header">Option header</label>');
+echo("<input type=text id='method_info_option_header' name='method_info_option_header'>");
 
+echo("<BR><BR>");
+echo('<label class="label"><input name="add_method_info_submit" id="add_method_info_submit" type="submit" value="Add Method Info"/></label><BR><BR>');
+echo("</fieldset></form>");
 
 // Method infos
 
-echo('<form action="edit_method.php" method="post" id="registration">');
+//echo('<form action="edit_method.php?id='.$id.'" method="post" id="registration">');
 
 echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend>Method Info</legend>');
 $method_infos = $method->get_method_infos();
@@ -125,7 +174,7 @@ $method_infos = $method->get_method_infos();
 if(count($method_infos) > 0) {
 echo("<table id='hortable'>");
 
-echo("<TR><TD>Name</TD><TD>Type</TD><TD>Options</td></TR>");
+echo("<TR><TD>Name</TD><TD>Type</TD><TD>Options</td><TD>Add option</td></TR>");
 
 foreach($method_infos as $method_info) {
     echo("<TR>");
@@ -137,6 +186,15 @@ foreach($method_infos as $method_info) {
       foreach($options as $option) {
           echo($option->get_value()."<BR>");
       }
+      echo("<td>");
+      echo('<form action="edit_method.php?id='.$id.'" method="post" id="add_option">');
+      echo("<input type='hidden' name=method_info_id value='".$method_info->get_id()."'>");
+      echo("<BR>");
+      echo('Option value:');
+      echo("<input type=text id='method_info_option_value' name='method_info_option_value'>");
+    echo('<input name="add_method_info_option_submit" id="add_method_info_option_submit" type="submit" value="Add Option"/><BR><BR>');
+      echo("</form>");
+      echo("</td>");
     echo("</TD>");
     echo("</TR>");
 }
@@ -144,7 +202,7 @@ echo("</table>");
 } 
 
 
-echo('</form>');
+//echo('</form>');
 
 echo("<BR></fieldset>");
 

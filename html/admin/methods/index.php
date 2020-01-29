@@ -39,6 +39,8 @@ $start = 0;
 }
 
 echo("<div id='memberregion'> <h2 style='text-align:center'>List of methods</h2> ");
+
+echo("<a href='add_method.php'>Add new method</A><BR>");
 echo '<div class="scroll"><table id="hortable" summary="List of methods">
     <thead>
     	<tr>

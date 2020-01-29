@@ -120,7 +120,51 @@ class method_infos {
        }
        return $return_result;
    }
-      
+   
+   /** Adds a method_info_option to this method_info
+    * 
+    * @param string $value The value to add
+    * 
+    * @return int The id of the newly created method_info_option
+    */
+   public function add_option($value) {
+       $query = "INSERT INTO method_info_options (method_infos_id, value) VALUES"
+               . "(:method_infos_id, :value)";
+       $params = array("method_infos_id"=>$this->get_id(),
+                        "value"=>$value);
+       $result = $this->db->get_insert_result($query, $params);
+       
+       return $result; 
+   }
+   
+   /** Adds a method_info_option to this method_info
+    * 
+    * @param int $option_id The id of the option to remove
+    * 
+    * $return int The number of options removed
+    */
+   public function remove_option($option_id) {
+       $query = "DELETE FROM method_info_options where id=:id";
+       $params = array("id"=>$option_id);
+       $result = $this->db->get_update_result($query, $params);
+       
+       return $result; 
+   }
+   
+   /** Edits a method_info_option for this method_info
+    * 
+    * @param int $option_id ID of the option to edit
+    * @param string $new_value New value for the option
+    */
+   public function edit_option($option_id, $new_value) {
+       $query = "UPDATE method_info_options set value=:value where id=:option_id";
+       $params = array("value"=>$new_value,
+                       "option_id"=>$option_id);
+       $result = $this->db->get_update_result($query, $params);
+       return $result;
+       
+   }
+   
    // Static
     
    /** Displays input for a method information
@@ -253,9 +297,7 @@ class method_infos {
        if(count($method_infos_by_type) > 0) {
 
         if($method->get_method_info_type() != null) {
-           $input_type = new input_type($db, $method->get_method_info_type());
-           
-           // TODO: Ints in input_type table
+
            if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
 
                $output .= method_infos::show_method_info_spradley_jantz($db, $methodid, $tier2id);
@@ -337,8 +379,10 @@ class method_infos {
                $output .= self::show_method_infos_select($db, $method_info_id, $tier2id, true, $multiple, $default);
                $output .= "</td>";
            } else if($input_type_name == USER_INTERACTION_NUMERIC_ENTRY) {
-               
-               $output .= self::show_method_infos_user_input($db, $method_info_id, $tier2id);
+               if($method_info->get_parent_id() == null) {
+                   // numeric inputs with parent id will be displayed leter
+                   $output .= self::show_method_infos_user_input($db, $method_info_id, $tier2id);
+               }
            }  else if($input_type_name == USER_INTERACTION_TEXT_ENTRY) {
                
                $output .= self::show_method_infos_user_input($db, $method_info_id, $tier2id, true);
@@ -388,9 +432,15 @@ class method_infos {
        }
        
        $output .= "</tr></table>";
-}
+        }
+
         $output .= "</tr></table>";
        }
+        if($method->get_id() == 20) {
+            // For Fordisc (Ancestry), also show numeric entries in Rhine format
+            $output .= self::show_method_info_rhine($db, $method->get_id(), $tier2id);
+        }
+        
         echo($output);
        
        
@@ -487,7 +537,7 @@ class method_infos {
         }
         $output .= "<table class=' td_spaced'>";
         foreach($options as $op) {
-            $output .= "<tr><td style='width:250px'>".$op->get_value().": </td><td class='align_left'><input size=$size type='$typename' name=output_data[][".$op->get_id()."] ".(($value != "") ? ("value ='$value'") : "" )."></input></td></tr>";
+            $output .= "<tr><td style='width:250px'>".$op->get_value().": </td><td class='align_left'><input size=$size type='$typename' ".(($tname == USER_INTERACTION_NUMERIC_ENTRY) ? " step='0.01'" : "")." name=output_data[][".$op->get_id()."] ".(($value != "") ? ("value ='$value'") : "" )."></input></td></tr>";
         }
         $output .= "</table>";
 
@@ -773,7 +823,7 @@ class method_infos {
      * @return string HTML for inputting data for this method_infos object
      */
     public static function show_method_infos_input_box_with_dropdown($db, $method_infos_id, $tier2id=null, $default_option = null) {
-        // Method info bos with dropdown should have 2 method_infos whose parent_ids point back to it
+        // Method info box with dropdown should have 2 method_infos whose parent_ids point back to it
         // one numeric_entry, and one multiselect
         
         $output = '';
@@ -1075,7 +1125,6 @@ class method_infos {
 
                 $infos = $db->get_query_result($info_query, $info_params);
 
-                
                 $output .= ("<fieldset class='methodinfobox'>");
                 $output .= ("<legend class='boldlegend'>".$name."</legend> ");
                 $output .= ("<table class='table_padded'><tr>");
