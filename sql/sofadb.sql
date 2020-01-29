@@ -130,6 +130,12 @@ CREATE TABLE `method_infos` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `method_info_types` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `method_type` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
 CREATE TABLE `methods` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `methodname` varchar(100) CHARACTER SET latin1 NOT NULL,
