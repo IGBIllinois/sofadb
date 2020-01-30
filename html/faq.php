@@ -151,7 +151,7 @@ FADAMA is designed as a database for the broader forensic community. Currently o
 
 <h1 id="FADAMAresponsibilities">What are the FADAMA user responsibilities?</h1>
 <BR>
-Prior to submitting a case and its data to the database, it is the responsibility of each user to ensure they obtain permission from the entity which owns the case. For example, if you’re a contract forensic anthropologist working for a government agency, you should obtain permission from that agency before submitting cases. It is at the discretion of the user how to obtain that permission, but a template permission form is provided here if needed.
+    Prior to submitting a case and its data to the database, it is the responsibility of each user to ensure they obtain permission from the entity which owns the case. For example, if you’re a contract forensic anthropologist working for a government agency, you should obtain permission from that agency before submitting cases. It is at the discretion of the user how to obtain that permission, but a template permission form is provided <a target='blank' href='./docs/Agency Permissions for FADAMA Submissions.docx'>here</a> if needed.
 
 <h1 id="FADAMAuserprivacy">How does FADAMA ensure user privacy?</h1>
 <BR>
