@@ -94,6 +94,10 @@
     <ul class='ul-left'>
         <li><a href="#scope"><B>Goals, Scope and Impact</B></a></li>
         <BR>
+        <li><a href="#tutorial"><B>FADAMA User Tutorial</B></A></li>
+        <BR>
+        <li><a href="methods_reference"><B>Methods Reference List</B></A></li>
+        <BR>
         <li><a href="#faq"><B>FAQ</B></a></li>
 <ul>
     <li><a href="#FADAMAdev">How was FADAMA developed?</a></li>
@@ -131,6 +135,20 @@ With the participation of practitioners and the submission of the current and pa
 <BR>
 <BR>
 
+<h1 id=tutorial>FADAMA User Tutorial</h1>
+<ul>
+    <li>Wiki: <a href='https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial'>https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial</a></li>
+    <li>Videos:</li>
+</ul>
+    
+<BR>
+<BR>
+        
+<h1 id=scope>Methods Reference List</h1>
+<a href='docs/FADAMA_methods_list.html' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA.
+<BR>
+<BR>
+    
 <h1 id="faq">FAQs</h1>
 
 <BR>
@@ -284,9 +302,9 @@ Yes, there are Case Notes section available where you may make any notes. Howeve
 
 <h1 id="list">Is there a list of the methods currently included in FADAMA for data entry?</h1>
 <BR>
-Pending
-        
+<a href='docs/FADAMA_methods_list.html' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA.
 
+        
 
 
 </div></div>
