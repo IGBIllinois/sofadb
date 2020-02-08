@@ -112,7 +112,6 @@ class method {
     public static function create_method(
             $db,
             $name, 
-            $type, 
             $type_num, 
             $measurement_type, 
             $description,
@@ -120,14 +119,12 @@ class method {
         
         $query = "INSERT INTO methods (".
                 "methodname, ".
-            " methodtype, ".
             " methodtypenum, ".
             " measurementtype, ".
             " description, ".
             " instructions)".
             " VALUES (".
                ":methodname, ".
-               ":methodtype, ".
                ":methodtypenum, ".
                ":measurementtype, ".
                ":description, ".
@@ -171,7 +168,7 @@ class method {
         
     }
     
-            /**
+        /**
          * Returns an array of method_infos objects for this method
          * @return \method_infos An array of method_infos objects for this method
          */
@@ -238,7 +235,7 @@ class method {
       */
     public function add_method_info($name, $header, $option_header, $input_type, $parent_id=null) {
         $methodid=$this->id;
-        echo("parent id = ".$parent_id);
+
         $query = "INSERT INTO method_infos (methodid, name, header, option_header, input_type " .
                 (($parent_id != null) ? ", parent_id" : "") 
                 . ") VALUES "
@@ -254,6 +251,21 @@ class method {
             $params["parent_id"] = $parent_id;
         }
         $result = $this->db->get_insert_result($query, $params);
+        if($result > 0) {
+            if($input_type == input_type::get_input_id_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY) ||
+                    $input_type == input_type::get_input_id_by_name($this->db, USER_INTERACTION_TEXT_ENTRY) ||
+                    $input_type == input_type::get_input_id_by_name($this->db, USER_INTERACTION_TEXT_AREA)) {
+                // Just add one default option
+                $new_info = new method_infos($this->db, $result);
+                $new_info->add_option($name);
+
+            } else if($input_type == input_type::get_input_id_by_name($this->db, USER_INTERACTION_LEFT_RIGHT)) {
+                // Add default options to Left-Right type
+                $new_info = new method_infos($this->db, $result);
+                $new_info->add_option("Left");
+                $new_info->add_option("Right");
+            }
+        }
     } 
     
     public function remove_method_info($method_info_id) {
@@ -274,12 +286,13 @@ class method {
      * @param db $db The database object
      * @param int $start Starting index in the full list (optional)
      * @param int $limit Number of records to return (optional)
+     * @param string $order Database column name to order the methods by. Defaults to 'methodname'
      * @return \method An array of method objects. If $start and $limit are given,
      *  $limit is the number of records to return, starting at index $start.
      *  Otherwise, all methods in the database will be returned.
      */
-    public static function get_methods($db, $start = -1, $limit = -1) {
-        $query = "SELECT id from methods ";
+    public static function get_methods($db, $start = -1, $limit = -1, $order='methodname') {
+        $query = "SELECT id from methods ORDER BY $order ";
         if(is_numeric($start) && $start >= 0) {
             $query .= " LIMIT $start ";
             if(is_numeric($limit) && $limit > 0) {
