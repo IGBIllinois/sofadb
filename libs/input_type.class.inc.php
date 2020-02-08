@@ -42,7 +42,7 @@ class input_type {
         
     }
     
-        public static function get_input_type_by_name($db, $name) {
+    public static function get_input_type_by_name($db, $name) {
         
         $query = "SELECT id from input_types where input_type=:name";
         $params = array("name"=>$name);
@@ -59,7 +59,30 @@ class input_type {
         
     }
     
-            // Private functions
+    /**
+     * Gets an input_type id from its name
+     * 
+     * @param db $db The database object
+     * @param type Input type name to get id for
+     * @return int ID of the type, or null if none is found
+     */
+    public static function get_input_id_by_name($db, $name) {
+        
+        $query = "SELECT id from input_types where input_type=:name";
+        $params = array("name"=>$name);
+        $result = $db->get_query_result($query, $params);
+        if(count($result) > 0) {
+        
+            $input = $result[0];
+
+            $id = $input['id'];
+            return $id;
+        }
+        return null;
+        
+    }
+    
+    // Private functions
     
     private function load_input_type($id) {
        $query = "SELECT * from input_types where id=:id";
