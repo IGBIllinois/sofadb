@@ -140,11 +140,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if(is_array($od)) {
 
             foreach($od as $id=>$value) {
-                $new_ids[] = $id;
+                
                 if($id != null && $id != '') {
+                    $new_ids[] = $id;
 
                     tier3data::delete_tier3($db, $tier2id, $id);
                     $casedata->add_tier3($tier2id, $id, $value);
+                    $existing_ids[] = $id;
+                    
                 }
             }
         }
@@ -155,9 +158,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         
     }
+    
+    if($_POST['LR'] != null) {
+        
+        $lr = $_POST['LR'];
+        // process left/right options
+        // This is separate from the output_data, because the 'name' value must be the same for the entire set of radio buttons
+            foreach($lr as $value=>$id) {
+                
+                if($id != null && $id != '') {
+                    $new_ids[] = $id;
+
+                    tier3data::delete_tier3($db, $tier2id, $id);
+                    $casedata->add_tier3($tier2id, $id);
+
+                    $existing_ids[] = $id;
+                    
+                }
+        }
+    }
+
 
     
     foreach($new_ids as $new_id) {
+        
         if(!in_array($new_id, $existing_ids)) {
             $casedata->add_tier3($tier2id, $new_id);
         }
@@ -178,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     
     if($_POST['references'] != null) {
-            // add references
+        // add references
         $t2id = $tier2->get_id();
             $sel_refs = $_POST['references'];
             foreach($sel_refs as $id=>$ref_list) {
@@ -197,7 +221,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         if($_POST['check_select'] != null) {
             // used for checkbox arrays, like Rios & Cardoso
-            echo("t2id = $t2id<BR>");
             $check_select = $_POST['check_select'];
             foreach($check_select as $method_info_id=>$option_list) {
                 foreach($option_list as $option_id=>$option_name) {

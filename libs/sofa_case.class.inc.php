@@ -1014,7 +1014,7 @@ public function submit_case($submitstatus) {
             
         }
 
-        
+         
         
         $query .= $param_string;
         
@@ -1111,8 +1111,7 @@ public function submit_case($submitstatus) {
             $method_info_ids[] = '';
             $method_info_ids[] = '';
             $method_infos = $method->get_method_infos();
-            $sj = input_type::get_input_type_by_name($db, METHOD_INFO_TYPE_SPRADLEY_JANTZ);
-            $sj_id = $sj->get_id();
+
             foreach($method_infos as $method_info) {
                 if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
                     if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id() &&
@@ -1273,9 +1272,10 @@ public function submit_case($submitstatus) {
                     $method_infos = $tmp_method->get_method_infos();
                     
                     foreach($method_infos as $method_info) {
-                        if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id() &&
-                                $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)->get_id() &&
-                                $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME)->get_id()) {
+                        if($method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_CATEGORY) &&
+                                $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) &&
+                                $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME) &&
+                                $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_LEFT_RIGHT)) {
                         $id = $method_info->get_id();
                         $index = array_search($id, $method_info_ids);
                         
@@ -1302,6 +1302,25 @@ public function submit_case($submitstatus) {
 
                             }
                             }
+                        }
+                            // Add L/R
+
+                            if($method_info->get_type() == input_type::get_input_id_by_name($db, USER_INTERACTION_NUMERIC_ENTRY)) {
+
+                                if(count($method_info->get_children()) > 0) {
+
+                                    $children = $method_info->get_children();
+                                    $child = $children[0];
+                                    $options = $child->get_method_info_options();
+                                    
+                                    foreach($options as $opt) {
+                                        $t3 = tier3data::get_tier3_by_option($db, $tier2->get_id(), $opt->get_id());
+                                        if($t3 != null) {
+                                            $txt .= " (".$opt->get_value().")";
+                                        }
+                                    }
+                                }
+                            
                         }
                             
                         

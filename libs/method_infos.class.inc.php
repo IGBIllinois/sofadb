@@ -169,10 +169,10 @@ class method_infos {
     
    /** Displays input for a method information
     * 
-    * @param type $db The database object
-    * @param type $methodid ID of the method to add
-    * @param type $tier2id ID of tier2 object, if editing existing data
-    * @return type HTML output for inputting data
+    * @param db $db The database object
+    * @param int $methodid ID of the method to add
+    * @param int $tier2id ID of tier2 object, if editing existing data
+    * @return string HTML output for inputting data
     */
    public static function show_method_info($db, $methodid, $tier2id=null) {
        $method = new method($db, $methodid);
@@ -291,25 +291,23 @@ class method_infos {
            $maxcols = 1;
        }
 
-       //$method_infos = $method->get_method_infos();
+
        $method_infos_by_type = $method->get_method_infos_by_type();
 
        if(count($method_infos_by_type) > 0) {
 
         if($method->get_method_info_type() != null) {
 
+            // These are special method types requiring unique displays
+            
            if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
 
                $output .= method_infos::show_method_info_spradley_jantz($db, $methodid, $tier2id);
                echo $output;
                return;
-            } else if($method->get_method_info_type() == USER_INTERACTION_3_COL_W_REF) {
+            } else if($method->get_method_info_type() == METHOD_INFO_TYPE_3_COL_W_REF) {
 
                 $output .= method_infos::show_method_info_3_col_with_ref($db, $methodid, $tier2id);
-                echo $output;
-                return;
-            } else if($method->get_method_info_type() == METHOD_INFO_TYPE_TRANSITION_ANALYSIS) {
-                $output .= method_infos::show_method_info_transition_analysis($db, $methodid, $tier2id);
                 echo $output;
                 return;
             } else if($method->get_method_info_type() == METHOD_INFO_TYPE_RIOS_CARDOSO) {
@@ -436,10 +434,10 @@ class method_infos {
 
         $output .= "</tr></table>";
        }
-        if($method->get_id() == 20) {
-            // For Fordisc (Ancestry), also show numeric entries in Rhine format
-            $output .= self::show_method_info_rhine($db, $method->get_id(), $tier2id);
-        }
+       
+       
+        // If there are additional methods with categories, like Fordisc (Ancestry), also show entries in Rhine format
+        $output .= self::show_method_info_rhine($db, $method->get_id(), $tier2id);
         
         echo($output);
        
@@ -449,9 +447,9 @@ class method_infos {
    
     /** Displays input for a Selection method_infos object (Single-select, multi-select or checkbox)
     * 
-    * @param type $db The database object
-    * @param type $method_infos_id  ID of the method_infos object to display
-    * @param type $tier2id ID of tier2 object, if editing existing data
+    * @param db $db The database object
+    * @param int $method_infos_id  ID of the method_infos object to display
+    * @param int $tier2id ID of tier2 object, if editing existing data
      * @param boolean $header True if a header should be displayed, else false
      * @param boolean $multiple True if you can select multiple entries, else false
      * @param string $default_option The string for a default option (optional)
@@ -533,15 +531,29 @@ class method_infos {
         
         $size = 6;
         if($text != null && $text == true) {
-            $size = 30;
+            $size = 15;
         }
         $output .= "<table class=' td_spaced'>";
         foreach($options as $op) {
-            $output .= "<tr><td style='width:250px'>".$op->get_value().": </td><td class='align_left'><input size=$size type='$typename' ".(($tname == USER_INTERACTION_NUMERIC_ENTRY) ? " step='0.01'" : "")." name=output_data[][".$op->get_id()."] ".(($value != "") ? ("value ='$value'") : "" )."></input></td></tr>";
+            $output .= "<tr><td class='td_spaced width_250px'>".$op->get_value().": </td><td class='align_left'><input style='width:".$size."em' type='$typename' ".(($tname == USER_INTERACTION_NUMERIC_ENTRY) ? " step='0.01'" : "")." name=output_data[][".$op->get_id()."] ".(($value != "") ? ("value ='$value'") : "" )."></input></td>";
         }
+        
+        // Does this method have a Left/Right modifier?
+        $children = $method_infos->get_children();
+        if(count($children) > 0) {
+            foreach($children as $child) {
+                if($child->get_type() == (input_type::get_input_id_by_name($db, USER_INTERACTION_LEFT_RIGHT))) {
+                    $output .= "<td>".self::show_method_infos_left_right($db, $child->get_id(), $tier2id)."</td>";
+                }
+            }
+        }
+        
+        $output .= "</tr>";
+        
         $output .= "</table>";
 
         return $output;
+        
     }
     
     /** Displays input for a select_each method_infos object 
@@ -603,217 +615,7 @@ class method_infos {
         }
         return $output;
     }
-    
-    /** Displays input for a Spradley_Jantz type method_infos object 
-    * 
-    * @param db $db The database object
-    * @param int $method_infos_id  ID of the method_infos object to display
-    * @param int $tier2id ID of tier2 object, if editing existing data
-     * @return string HTML for inputting data for this method_infos object
-     */
-    public static function show_method_info_spradley_jantz($db, $method_id, $tier2id=null) {
 
-        $method = new method($db, $method_id);
-        // Get main categories
-        $cat_type  = input_type::get_input_type_by_name($db, 'category');
-        $cat_type_id = $cat_type->get_id();
-        $cat_query = "SELECT * from method_infos where methodid = :methodid and input_type = :input_type and parent_id is null";
-
-        $cat_params = array("methodid"=>$method_id, 'input_type'=>$cat_type_id);
-
-        $categories = $db->get_query_result($cat_query, $cat_params);
-        $output = "";
-        $output_header = $categories[0]['header'];
-
-        $output .= ("<B><U>$output_header</U></B><BR>");
-            $output .= ("<select id='category' name='category[]' onchange='showBoneRegion(this.value)'>");
-            $output .= ("<option name='none'></option>");
-        // Show initial dropdown box
-        foreach($categories as $category) {
-
-            $category_info = new method_infos($db, $category['id']);
-            $name = $category_info->get_name();
-            $output .= ("<option name='$name'>$name</option>");
-
-        }
-        $output .= ("</select>");
-
-        foreach($categories as $category) {
-            // Get subcategories
-            $category_info = new method_infos($db, $category['id']);
-            $category_name = $category_info->get_name();
-            $subcat_query = "SELECT * from method_infos where methodid = :methodid and input_type = :input_type and parent_id = :parentid";
-            $subcat_params = array("methodid"=>$method_id, 'input_type'=>$cat_type_id, 'parentid'=>$category_info->get_id());
-
-            $sub_categories = $db->get_query_result($subcat_query, $subcat_params);
-            
-            if(count($sub_categories) == 0) {
-                $sub_categories = array($category);
-            }
-            
-            $output .= ("<div name='$category_name' id='$category_name' style='display: none'>");
-            $default_option = "Sectioning point used?";
-            foreach($sub_categories as $subcategory) {
-                // Get method_infos
-                $subcategory_info = new method_infos($db, $subcategory['id']);
-                $subname = $subcategory_info->get_name();
-
-                $info_query = "SELECT * from method_infos where methodid = :methodid and parent_id = :parentid";
-                
-                $info_params = array("methodid"=>$method_id, 'parentid'=>$subcategory_info->get_id());
-
-                $infos = $db->get_query_result($info_query, $info_params);
-
-                
-                $output .= ("<fieldset class='methodinfobox'>");
-                $output .= ("<legend class='boldlegend'>".$subname."</legend> ");
-                $output .= ("<table class='table_padded'><tr>");
-                //FInally, display infos
-                
-                $sorted_method_infos = array();
-                foreach($infos as $method_infos) {
-                    
-                    $mi_id = $method_infos['id'];
-                    $mi = new method_infos($db, $mi_id);
-                    $input_type_id = $mi->get_type();
-                    $input_type = new input_type($db, $input_type_id);
-                    if(!key_exists($input_type->get_input_type(), $sorted_method_infos)) {
-
-                        $sorted_method_infos[$input_type->get_input_type()] = array();
-                    }
-                    $sorted_method_infos[$input_type->get_input_type()][] = $method_infos;
-
-                            
-                }
-
-
-                foreach($sorted_method_infos as $input_type_name=>$infos) {
-                    $output .= "<td>";
-                    if($input_type_name == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
-                        $output .= "<table class='align_top'>";
-                        foreach($infos as $method_infos) {
-                            $output .= "<tr><td>";
-                        
-                            $method_info = new method_infos($db, $method_infos['id']);
-                            $id = $method_info->get_id();
-
-                            $output .= method_infos::show_method_infos_input_box_with_dropdown($db, $id, $tier2id, $default_option);
-                            $output .= "</td></tr>";
-                        }
-                        $output  .= "</table>";
-                }
-                else if($input_type_name == USER_INTERACTION_SELECT_EACH) {
-                    $output .= "<table>";
-                    foreach($infos as $method_infos) {
-                        $method_info = new method_infos($db, $method_infos['id']);
-                        $id = $method_info->get_id();
-                        
-                        $output .= "<tr><td class='td_spaced align_top'>";
-                        $output .= self::show_method_infos_select_each($db, $id, $tier2id);
-                        $output .= "</td></tr>";
-                    }
-                    $output .= "</table>";
-                }
-                $output .= "</td>";
-            }
-            $output .= "</tr></table></fieldset>";
-            
-                    
-        }
-        $output .= "</div>";
-    }
-        return $output;
-    }
-    
-    /** Displays input for a Transition_analysis type method_infos object 
-    * @param db $db The database object
-    * @param int $method_infos_id  ID of the method_infos object to display
-    * @param int $tier2id ID of tier2 object, if editing existing data
-     * @return string HTML for inputting data for this method_infos object
-     */
-    public static function show_method_info_transition_analysis($db, $method_id, $tier2id=null) {
-
-        $method = new method($db, $method_id);
-        // Get main categories
-        $cat_type  = input_type::get_input_type_by_name($db, 'category');
-        $cat_type_id = $cat_type->get_id();
-        $cat_query = "SELECT * from method_infos where methodid = :methodid and input_type = :input_type and parent_id is null";
-
-        $cat_params = array("methodid"=>$method_id, 'input_type'=>$cat_type_id);
-
-        $categories = $db->get_query_result($cat_query, $cat_params);
-        $output = "";
-        $header = $categories[0]['header'];
-        $output .= ("<B><U>$header</U></B><BR>");
-            $output .= ("<select id='category' name='category[]' onchange='showBoneRegion(this.value)'>");
-            $output .= ("<option name='none'></option>");
-        // Show initial dropdown box
-        foreach($categories as $category) {
-
-            $category_info = new method_infos($db, $category['id']);
-            $name = $category_info->get_name();
-            $output .= ("<option name='$name'>$name</option>");
-
-        }
-        $output .= ("</select>");
-
-        foreach($categories as $category) {
-                // Get method_infos
-                $category_info = new method_infos($db, $category['id']);
-                $name = $category_info->get_name();
-
-                $info_query = "SELECT * from method_infos where methodid = :methodid and parent_id = :parentid";
-                
-                $info_params = array("methodid"=>$method_id, 'parentid'=>$category_info->get_id());
-
-                $infos = $db->get_query_result($info_query, $info_params);
-
-                
-                $output .= ("<div name='$name' id='$name' style='display: none'>");
-                $output .= ("<fieldset class='methodinfobox'>");
-                $output .= ("<legend class='boldlegend'>".$name."</legend> ");
-                
-                //Finally, display infos
-                
-                $sorted_method_infos = array();
-                foreach($infos as $method_infos) {
-                    $output .= ("<table class='table_padded'><tr>");
-                    $mi_id = $method_infos['id'];
-                    
-                    $mi = new method_infos($db, $mi_id);
-                    $input_type_id = $mi->get_type();
-                    $input_type = new input_type($db, $input_type_id);
-                    if(!key_exists($input_type->get_input_type(), $sorted_method_infos)) {
-
-                        $sorted_method_infos[$input_type->get_input_type()] = array();
-                    }
-                    $sorted_method_infos[$input_type->get_input_type()][] = $method_infos;
-
-                            
-                }
-
-
-                foreach($sorted_method_infos as $input_type_name=>$infos) {
-                    $output .= "<td>";
-
-                    if($input_type_name == USER_INTERACTION_NUMERIC_ENTRY) {
-                        foreach($infos as $method_infos) {
-                            //$method_info = new method_infos($db, $method_infos['id']);
-
-                            $method_info_id = $method_infos['id'];
-                            $output .= self::show_method_infos_user_input($db, $method_info_id, $tier2id);
-                        }
-                    }
-                    $output .= "</td>";
-
-                }
-                $output .= "</tr></table></fieldset>";
-                $output .= "</div>";
-            }
-
-        return $output;
-    }
-    
     /** Displays input for an input_box_with_dropdown method_infos object
     * 
     * @param db $db The database object
@@ -897,8 +699,63 @@ class method_infos {
         
         return $output;
            
-   
    }
+   
+       
+    /** Displays input for a left/right radio button
+    * 
+    * @param db $db The database object
+    * @param int $methodid ID of the method to add
+    * @param int $tier2id ID of tier2 object, if editing existing data (optional)
+    * @return string HTML output for inputting data
+    */
+    public static function show_method_infos_left_right($db, $method_infos_id, $tier2id=null) {
+        
+        return self::show_method_infos_radio($db, $method_infos_id, $tier2id);
+    }
+    
+    /** Displays input for a radio button
+    * 
+    * @param db $db The database object
+    * @param int $method_infos_id ID of the method to add
+    * @param int $tier2id ID of tier2 object, if editing existing data (optional)
+    * @param string $name Optional name for the html radio group. Defaults to "LR" for left/right radios
+    * @return type HTML output for inputting data
+    */
+    public static function show_method_infos_radio($db, $method_infos_id, $tier2id=null, $name = "LR") {
+        $output = '';
+
+        $value = '';
+        $method_info = new method_infos($db, $method_infos_id);
+        $options = $method_info->get_method_info_options();
+        if($tier2id !=null) {
+            $tier2 = new tier2data($db, $tier2id);
+            $t3s = $tier2->get_tier3data();
+            $t3_opt_ids = array();
+            foreach($t3s as $t3) {
+                $t3_opt_ids[] = $t3->get_method_info_option_id();
+            }
+        }
+        
+        foreach($options as $option) {
+            
+            $checked = "";
+            $optionid = $option->get_id();
+
+            if(in_array($optionid, $t3_opt_ids)) {
+
+                $checked = " checked ";
+            }
+        
+            $output .= "<nobr><input id=$optionid type='radio' ".$checked. " value='".$option->get_id()."' name=$name"."[$method_infos_id]>".$option->get_value()."</input></nobr>";
+
+        }
+
+        return $output;
+    }
+    
+ 
+    // Methods to display special method types
    
 
     /** Displays input for a 3 column with reference method_infos object 
@@ -906,8 +763,8 @@ class method_infos {
     * @param db $db The database object
     * @param int $method_infos_id  ID of the method_infos object to display
     * @param int $tier2id ID of tier2 object, if editing existing data
-     * @return string HTML for inputting data for this method_infos object
-     */
+    * @return string HTML for inputting data for this method_infos object
+    */
     public static function show_method_info_3_col_with_ref($db, $method_id, $tier2id=null) {
 
         $output = "";
@@ -944,8 +801,7 @@ class method_infos {
                        $sel_id = $tier_info->get_method_info_option_id();
                        $selected[] = $sel_id;
                    }
-                   
-                   
+
                }
 
                $output .= "";
@@ -1215,7 +1071,129 @@ class method_infos {
             return $output;
             
     }
- 
+    
+    
+    /** Displays input for a Spradley_Jantz type method_infos object 
+    * 
+    * @param db $db The database object
+    * @param int $method_infos_id  ID of the method_infos object to display
+    * @param int $tier2id ID of tier2 object, if editing existing data
+     * @return string HTML for inputting data for this method_infos object
+     */
+    public static function show_method_info_spradley_jantz($db, $method_id, $tier2id=null) {
+
+        $method = new method($db, $method_id);
+        // Get main categories
+        $cat_type  = input_type::get_input_type_by_name($db, 'category');
+        $cat_type_id = $cat_type->get_id();
+        $cat_query = "SELECT * from method_infos where methodid = :methodid and input_type = :input_type and parent_id is null";
+
+        $cat_params = array("methodid"=>$method_id, 'input_type'=>$cat_type_id);
+
+        $categories = $db->get_query_result($cat_query, $cat_params);
+        $output = "";
+        $output_header = $categories[0]['header'];
+
+        $output .= ("<B><U>$output_header</U></B><BR>");
+            $output .= ("<select id='category' name='category[]' onchange='showBoneRegion(this.value)'>");
+            $output .= ("<option name='none'></option>");
+        // Show initial dropdown box
+        foreach($categories as $category) {
+
+            $category_info = new method_infos($db, $category['id']);
+            $name = $category_info->get_name();
+            $output .= ("<option name='$name'>$name</option>");
+
+        }
+        $output .= ("</select>");
+
+        foreach($categories as $category) {
+            // Get subcategories
+            $category_info = new method_infos($db, $category['id']);
+            $category_name = $category_info->get_name();
+            $subcat_query = "SELECT * from method_infos where methodid = :methodid and input_type = :input_type and parent_id = :parentid";
+            $subcat_params = array("methodid"=>$method_id, 'input_type'=>$cat_type_id, 'parentid'=>$category_info->get_id());
+
+            $sub_categories = $db->get_query_result($subcat_query, $subcat_params);
+            
+            if(count($sub_categories) == 0) {
+                $sub_categories = array($category);
+            }
+            
+            $output .= ("<div name='$category_name' id='$category_name' style='display: none'>");
+            $default_option = "Sectioning point used?";
+            foreach($sub_categories as $subcategory) {
+                // Get method_infos
+                $subcategory_info = new method_infos($db, $subcategory['id']);
+                $subname = $subcategory_info->get_name();
+
+                $info_query = "SELECT * from method_infos where methodid = :methodid and parent_id = :parentid";
+                
+                $info_params = array("methodid"=>$method_id, 'parentid'=>$subcategory_info->get_id());
+
+                $infos = $db->get_query_result($info_query, $info_params);
+
+                
+                $output .= ("<fieldset class='methodinfobox'>");
+                $output .= ("<legend class='boldlegend'>".$subname."</legend> ");
+                $output .= ("<table class='table_padded'><tr>");
+                //FInally, display infos
+                
+                $sorted_method_infos = array();
+                foreach($infos as $method_infos) {
+                    
+                    $mi_id = $method_infos['id'];
+                    $mi = new method_infos($db, $mi_id);
+                    $input_type_id = $mi->get_type();
+                    $input_type = new input_type($db, $input_type_id);
+                    if(!key_exists($input_type->get_input_type(), $sorted_method_infos)) {
+
+                        $sorted_method_infos[$input_type->get_input_type()] = array();
+                    }
+                    $sorted_method_infos[$input_type->get_input_type()][] = $method_infos;
+
+                            
+                }
+
+
+                foreach($sorted_method_infos as $input_type_name=>$infos) {
+                    $output .= "<td>";
+                    if($input_type_name == USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) {
+                        $output .= "<table class='align_top'>";
+                        foreach($infos as $method_infos) {
+                            $output .= "<tr><td>";
+                        
+                            $method_info = new method_infos($db, $method_infos['id']);
+                            $id = $method_info->get_id();
+
+                            $output .= method_infos::show_method_infos_input_box_with_dropdown($db, $id, $tier2id, $default_option);
+                            $output .= "</td></tr>";
+                        }
+                        $output  .= "</table>";
+                }
+                else if($input_type_name == USER_INTERACTION_SELECT_EACH) {
+                    $output .= "<table>";
+                    foreach($infos as $method_infos) {
+                        $method_info = new method_infos($db, $method_infos['id']);
+                        $id = $method_info->get_id();
+                        
+                        $output .= "<tr><td class='td_spaced align_top'>";
+                        $output .= self::show_method_infos_select_each($db, $id, $tier2id);
+                        $output .= "</td></tr>";
+                    }
+                    $output .= "</table>";
+                }
+                $output .= "</td>";
+            }
+            $output .= "</tr></table></fieldset>";
+            
+                    
+        }
+        $output .= "</div>";
+    }
+        return $output;
+    }
+    
     // Private
     private function load_method_infos($id) {
 
