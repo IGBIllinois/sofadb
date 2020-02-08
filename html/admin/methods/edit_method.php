@@ -69,7 +69,7 @@ if(isset($_POST['edit_method_submit'])) {
 
 echo ("Method $name edited successfully.<BR>");
 }
-print_r($_POST);
+
 if(isset($_POST['add_method_info_submit'])) {
 
     $methodid = $method->get_id();
@@ -77,11 +77,13 @@ if(isset($_POST['add_method_info_submit'])) {
     $header = $_POST['method_info_header'];
     $option_header = $_POST['method_info_option_header'];
     $input_type = $_POST['input_type'];
-    
-
-    $result = $method->add_method_info($method_info_name, $header, $option_header, $input_type);
+    $parent = $_POST['parent'];
+    if($parent < 0) {
+        $parent = null;
+    }
+    $result = $method->add_method_info($method_info_name, $header, $option_header, $input_type, $parent);
     if($result > 0) {
-            echo("Added method info with data: $method_info_name, $header, $option_header, $input_type<BR>");
+            echo("Added method info with data: $method_info_name, $header, $option_header, $input_type, $parent<BR>");
     }
 }
 
@@ -141,6 +143,7 @@ echo('<BR><BR>
 
 // Add new method infos
 echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend>Add new Method Info</legend>');
+echo("<a href='methodFAQ.php'>New method FAQ</A><BR>");
 echo('<form action="edit_method.php?id='.$id.'" method="post" id="add_method_info">');
 echo('<input type="hidden" name="id" value="'.$id.'">');
 echo('<label class="label" for="method_info_name">Method info name</label>');
@@ -159,6 +162,17 @@ echo("<input type=text id='method_info_header' name='method_info_header'>");
 echo("<BR>");
 echo('<label class="label" for="method_info_option_header">Option header</label>');
 echo("<input type=text id='method_info_option_header' name='method_info_option_header'>");
+echo("<BR>");
+echo('<label class="label" for="parent">Parent (needed for certain method info types)</label>');
+echo("<select name='parent' id='parent'>");
+$tmp_method_infos = $method->get_method_infos();
+echo("<option value = '-1' id='-1'>Parent (optional)</option>");
+foreach($tmp_method_infos as $method_info) {
+    $type = (new input_type($db, $method_info->get_type()))->get_input_type();
+    echo("<option value = '".$method_info->get_id()."' id='".$method_info->get_id()."'>".$method_info->get_name()." (".$type.")".  "</option>");
+}
+echo("</select>");
+
 
 echo("<BR><BR>");
 echo('<label class="label"><input name="add_method_info_submit" id="add_method_info_submit" type="submit" value="Add Method Info"/></label><BR><BR>');
