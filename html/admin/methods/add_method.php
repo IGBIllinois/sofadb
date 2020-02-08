@@ -15,8 +15,6 @@ $type_name = null;
 $measurement_type=null;
 $description = null;
 $instructions = null;
-$features = null;
-
 
 
 $method_type_list = array(METHOD_DATA_SEX_ID=>METHOD_DATA_SEX, 
@@ -24,13 +22,19 @@ $method_type_list = array(METHOD_DATA_SEX_ID=>METHOD_DATA_SEX,
     METHOD_DATA_ANCESTRY_ID=>METHOD_DATA_ANCESTRY, 
     METHOD_DATA_STATURE_ID=>METHOD_DATA_STATURE);
 
-if(isset($_POST['method_name'])) {
+$errors = array();
+
+if(isset($_POST['method_name']) && $_POST['method_name'] != '') {
     $name = $_POST['method_name'];
+} else {
+    $errors[] = "Please input a Method Name.";
 }
 
 if(isset($_POST['method_type'])) {
     $type_id = $_POST['method_type'];
-    $type_name = $method_type_list[$type_id];
+    
+} else {
+    $errors[] = "Please select a Method Type. (Sex, Age, etc.)";
 }
 
 if(isset($_POST['measurement_type'])) {
@@ -45,22 +49,23 @@ if(isset($_POST['instructions'])) {
 $instructions = $_POST['instructions'];
 }
 
-if(isset($_POST['features'])) {
-    $features = $_POST['features'];
-}
 if(isset($_POST['add_method_submit'])) {
+    if(count($errors) == 0) {
+        $id = method::create_method($db, $name, $type_id, $measurement_type, $description, $instructions);
 
-$id = method::create_method($db, $name, $type_name, $type_id, $measurement_type, $description, $instructions);
+        if($id > 0) {
+            $method = new method($db, $id);
 
-if($id > 0) {
-$method = new method($db, $id);
+            echo ("Method $name created successfully.<BR>");
+        }
+    } else {
+        foreach($errors as $error) {
+            echo($error ."<BR>");
+        }
+    }
+}
 
-if(count($features) > 0) {
-    $method->add_features($features);
-}
-echo ("Method $name created successfully.<BR>");
-}
-}
+
 
 echo(''
         . '<form action="add_method.php" method="post" id="registration">
@@ -113,21 +118,10 @@ echo('
 <input id="instructions" type="text" name="instructions" size="100" maxlength="100" value="'.$instructions.'">
         ');
         
-echo('<BR></fieldset><BR>');
+echo('<BR><BR></fieldset><BR>');
 
-// Features
 
-echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend>Features (hold CTL to select multiple)</legend>');
-
-echo('<select name="features[]" size="5" multiple="multiple">');
-
-$features = feature::get_features($db);
-
-foreach($features as $feature) {
-    echo("<option value='".$feature->get_id()."'>".$feature->get_name()."</option>");
-}
-echo("</select>");
-echo("<BR></fieldset>");
+echo("</fieldset>");
 
 
 
