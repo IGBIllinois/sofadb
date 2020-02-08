@@ -685,6 +685,24 @@ a:hover { text-decoration: none; }
     width:250px;
 }
 
+.width_15em {
+    width:15em;
+}
+
+.width_60em {
+    width:60em;
+}
+
+.width_75em {
+    width:75em;
+}
+
+.bordered {
+    border:black;
+    border-width:thin;
+    border-style:solid;
+}
+
 .no_wrap {
     white-space:nowrap;
 }
