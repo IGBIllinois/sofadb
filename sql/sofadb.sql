@@ -145,6 +145,7 @@ CREATE TABLE `methods` (
   `description` varchar(100) DEFAULT NULL,
   `instructions` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
   `methodinfotype` varchar(100) DEFAULT NULL,
+  `prompt` int(10) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
