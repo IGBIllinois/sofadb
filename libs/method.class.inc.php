@@ -15,6 +15,7 @@ class method {
     private $description;
     private $instructions;
     private $methodinfotype;
+    private $prompt_id;
     
     private $db; // Database object
     
@@ -266,6 +267,8 @@ class method {
                 $new_info->add_option("Right");
             }
         }
+        
+        return $result;
     } 
     
     public function remove_method_info($method_info_id) {
@@ -355,7 +358,23 @@ class method {
         }
         
 
-    
+        // Prompts
+        public function get_method_prompt() {
+            if($this->prompt_id == null) {
+                $promptid = 1;
+            } else {
+                $promptid = $this->prompt_id;
+            }
+            $query = "SELECT prompt from prompts where id = :id";
+            $params = array("id"=>$promptid);
+            $result = $this->db->get_query_result($query, $params);
+            if(count($result) > 0) {
+                return $result[0]['prompt'];
+            } else {
+                return '';
+            }
+        }
+
      // Private functions
 
      /** Loads database data into this method
@@ -377,6 +396,7 @@ class method {
          $this->description = $data['description'];
          $this->instructions = $data['instructions'];
          $this->methodinfotype = $data['methodinfotype'];
+         $this->prompt_id = $data['prompt'];
          }
          
      }
