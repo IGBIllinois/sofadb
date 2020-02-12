@@ -152,8 +152,6 @@ echo '<form action="index.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="ex
 echo '<div class="scroll"><table id="hortable" summary="List of cases">
     <thead>
     	<tr>
-		    <th scope="col">View</th>
-			<th scope="col">Case ID</th>
             <th scope="col">Case Year</th>
             <th scope="col">Date Submitted</th>
              </tr>
@@ -169,8 +167,6 @@ for($i = $startingrecord; $i <= $endingrecord; $i++) {
 
     $case = $case_results[($i-1)];
 	echo '<tr>
-	<td><a href="../viewcase.php?id=' . $case->get_id() . '">View</a></td>
-	<td>' . $case->get_casenumber() . '</td>
 	<td>' . $case->get_caseyear(). '</td>
 	<td>' . $case->get_datesubmitted() . '</td>
 	</tr>';    
