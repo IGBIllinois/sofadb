@@ -328,10 +328,10 @@ class sofa_case {
                         return array("RESULT"=>FALSE,
                                     "MESSAGE"=>"Did not increment number of cases. We apologize for any inconvenience.");
                         } else {
-                            // okay
-                            return array("RESULT"=>TRUE,
-                                    "MESSAGE"=>"Method case added successfully.",
-                                    "id"=>$casemethodid);
+                            
+                    return array("RESULT"=>TRUE,
+                            "MESSAGE"=>"Method case added successfully.",
+                            "id"=>$casemethodid);
                         }
                  } else {
                      return array("RESULT"=>FALSE,
@@ -1123,9 +1123,10 @@ public function submit_case($submitstatus) {
 
             foreach($method_infos as $method_info) {
                 if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
-                    if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id() &&
-                            $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)->get_id() &&
-                            $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME)->get_id()) {
+                    if($method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_CATEGORY)&&
+                            $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) &&
+                            $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME) &&
+                            $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_LEFT_RIGHT)) {
                     $name = $method_info->get_name();
                     if($method_info->get_header() != null && $method_info->get_name() != $method_info->get_header()) {
                         $name .= ": ". $method_info->get_header();
@@ -1142,9 +1143,10 @@ public function submit_case($submitstatus) {
                     $method_info_ids[] = $method_info->get_id();
                     }
                 } else {
-                if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id() &&
-                        $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)->get_id() &&
-                        $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME)->get_id()) {
+                if($method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_CATEGORY) &&
+                        $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) &&
+                        $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME) &&
+                        $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_LEFT_RIGHT)) {
 
                     $name = $method_info->get_name();
                     if($method_info->get_parent_id() != null) {
@@ -1362,9 +1364,10 @@ public function submit_case($submitstatus) {
                     $curr_row[] = '';
                     $method_infos = $tmp_method->get_method_infos();
                     foreach($method_infos as $method_info) {
-                        if($method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY)->get_id() &&
-                                $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)->get_id() &&
-                                $method_info->get_type() != input_type::get_input_type_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME)->get_id()) {
+                        if($method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_CATEGORY) &&
+                                $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) &&
+                                $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME) &&
+                                $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_LEFT_RIGHT) ) {
                             $curr_row[] = '';
                             if(count($method_info->get_references()) > 0) {
                                 // This method info uses references, so include a column for them

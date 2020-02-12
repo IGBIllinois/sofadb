@@ -136,6 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             }
         }
+        
         if(count($errors) == 0) {
         $caseid = $_POST['caseid'];
         
@@ -176,6 +177,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $this_case->add_tier3($t2id, $od);
                     }
                 }
+            }
+        }
+        
+                // Add Left/Right data, if applicable
+        if($_POST['LR'] != null) {
+        
+            $lr = $_POST['LR'];
+            // process left/right options
+            // This is separate from the output_data, because the 'name' value must be the same for the entire set of radio buttons
+                foreach($lr as $value=>$id) {
+
+                    if($id != null && $id != '') {
+
+                        $casedata->add_tier3($t2id, $id);
+
+                    }
             }
         }
         
@@ -684,15 +701,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                                 
                 $result = $case->edit_case($data);
-        	if ($result["RESULT"] == FALSE) 
-                { // If it ran OK.
-                // If it did not run OK
-				// Error message:
-				echo '<h2>System Error</h2>
-				<p class="error">Registration failed because of a system error. We apologize for any inconvenience.</p>'; 
-				// Debugging message:
-				echo '<p>' . $db->errorInfo()[2] . '<br/><br/>Query: ' . $q . '</p>';
-                exit();
+        	if ($result["RESULT"] == FALSE) { 
+                    // If it did not run OK
+                    // Error message:
+                    echo '<h2>System Error</h2>
+                    <p class="error">Registration failed because of a system error. We apologize for any inconvenience.</p>'; 
+                    // Debugging message:
+                    echo '<p>' . $db->errorInfo()[2] . '<br/><br/>Query: ' . $q . '</p>';
+                    exit();
                 } else {
                     echo($result["MESSAGE"]);
                 }
@@ -700,27 +716,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
        		unset($_SESSION['caseid']); 
                 header ("location: ../index.php");
 
-			// Include the footer and stop the script
-		  
-			exit();
-		}
-	else
-    	{//The email address is already registered
-		echo	'<p class="error">The case name and number are not acceptable because it is already registered</p>';
-		}//end already registered if
-	} 
-    else
-     { // Report the errors.
-		echo '<span style="padding-left:100px; 
-                    display:block;"><h2>Error!</h2>
-		<p class="error">The following error(s) occurred:<br/>';
-		foreach ($errors as $msg) 
-        { // Print each error.
-			echo " - $msg<br/>\n";
-		}
-                echo("</p><BR></span>");
+                // Include the footer and stop the script
 
-	   }// End of else (empty($errors))
+                exit();
+                
+		}
+	else {
+            //The email address is already registered
+            echo '<p class="error">The case name and number are not acceptable because it is already registered</p>';
+        }//end already registered if
+    } else { 
+        // Report the errors.
+        echo '<span style="padding-left:100px; 
+            display:block;"><h2>Error!</h2>
+        <p class="error">The following error(s) occurred:<br/>';
+        foreach ($errors as $msg) { 
+            // Print each error.
+            echo " - $msg<br/>\n";
+	}
+        
+        echo("</p><BR></span>");
+
+    }// End of else (empty($errors))
 } // End of the main Submit conditional.
 }
 ?>

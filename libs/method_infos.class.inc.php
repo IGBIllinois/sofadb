@@ -590,8 +590,6 @@ class method_infos {
 
             $check_values = array();
                 foreach($options as $option) {
-                $id = $option->get_id();
-                $value = $option->get_value();
                 $check_values[] = array($option->get_id(),  $option->get_value());
             }
             $output .= functions::checkbox_dropdown($method_infos->get_id(), $method_infos->get_name(), $check_values, $selected, 'check_select');
