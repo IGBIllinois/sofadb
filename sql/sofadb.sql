@@ -41,6 +41,7 @@ CREATE TABLE `cases` (
   `known_ancestry` tinyint(1) unsigned DEFAULT NULL,
   `known_stature` tinyint(1) unsigned DEFAULT NULL,
   `known_unable_to_determine` tinyint(1) unsigned DEFAULT NULL,
+  `fdb_consent` varchar(20) DEFAULT NULL,
   `nummethods` int(11) DEFAULT NULL,
   `casenotes` text CHARACTER SET utf8,
   `datestarted` date DEFAULT NULL,

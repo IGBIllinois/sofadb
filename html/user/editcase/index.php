@@ -606,7 +606,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(($idOt==0 && $idothertext)||($idOt==1 && !$idothertext))
 	{$errors[] = 'You must Check the Other box and enter text.';}
     
-
+    if(empty($_POST['fdb_consent'])) {
+        $errors[] = "You must select an FDB Data Sharing Option.";
+    } else {
+        $fdb_consent = $_POST['fdb_consent'];
+    }
 
     
     if (empty($errors)) 
@@ -673,6 +677,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     "known_ancestry"=>$known_ancestry,
                     "known_stature"=>$known_stature,
                     "known_unable_to_determine"=>$known_unable_to_determine,
+                    
+                    "fdb_consent"=>$fdb_consent,
                                     
                     "caseeditid"=>$caseeditid);
 
@@ -846,7 +852,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       
   </fieldset>
         
-          </fieldset>
+          
       
       <!-- Prior information -->
             <fieldset class="caseinfobox"><legend class="boldlegend">Background Case Knowledge</legend>
@@ -863,10 +869,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
       </fieldset>
       
+            <fieldset class="caseinfobox"><legend class="boldlegend">FDB Data Sharing Option</legend>
+          <BR>
+        FADAMA provides the opportunity for users to share relevant case data, such as craniometric and postcranial measurements, with the Forensic Data Bank (FDB). 
+        In contrast to FADAMA's anonymous database, FDB sharing requires identifiable information about the case, including the case number and case agency. 
+        To review a complete list of data shared with the FDB if you choose to opt-in, please see the FAQs. 
+        <BR><BR>
+        Please choose one of the following options to apply to this case.
+        <BR><BR>
+        <label class="label" for="consent"></label><input type='radio' name='fdb_consent' value='consent' <?php if ($casedata->get_fdb_consent() == 'consent') echo ' checked'; ?>>I consent to share this case data with FDB.</input><BR>
+        <label class="label" for="already_submitted"></label><input type='radio' name='fdb_consent' value='already_submitted' <?php if ($casedata->get_fdb_consent() == 'already_submitted') echo ' checked'; ?>>I have already submitted this case data with FDB.</input><BR>
+        <label class="label" for="decline"></label><input type='radio' name='fdb_consent' value='decline' <?php if ($casedata->get_fdb_consent() == 'decline') echo ' checked'; ?>>I decline to share this case data with FDB.</input><BR>
+      </fieldset>
+      
     <fieldset class="caseinfobox"><legend class="boldlegend">Case Notes</legend>
       <label class="label" for="casenotes"></label>
       <textarea name="casenotes" cols="55" rows="7"><?php echo $casedata->get_casenotes(); ?></textarea>
 
+      </fieldset>
       </fieldset>
     </form>
 	  </div>

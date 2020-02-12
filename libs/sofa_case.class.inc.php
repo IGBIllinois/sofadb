@@ -61,6 +61,8 @@ class sofa_case {
     private $known_stature;
     private $known_unable_to_determine;
     
+    private $fdb_consent;
+    
     // getters
     public function get_id() { return $this->id; }
     public function get_casename() { return $this->casename; }
@@ -112,6 +114,8 @@ class sofa_case {
     public function get_known_ancestry() { return $this->known_ancestry; }
     public function get_known_stature() { return $this->known_stature; }
     public function get_known_unable_to_determine() { return $this->known_unable_to_determine; }
+    
+    public function get_fdb_consent() { return $this->fdb_consent; }
     
     public function __construct($db, $id = 0) {
 
@@ -185,7 +189,9 @@ class sofa_case {
                 . "known_age,"
                 . "known_ancestry,"
                 . "known_stature,"
-                . "known_unable_to_determine"
+                . "known_unable_to_determine,"
+                
+                . "fdb_consent"
                 
                 .") "
                 
@@ -241,9 +247,10 @@ class sofa_case {
                     . ":known_age,"
                     . ":known_ancestry,"
                     . ":known_stature,"
-                    . ":known_unable_to_determine"
+                    . ":known_unable_to_determine,"
                     
-
+                    . ":fdb_consent"
+                
                 . ")";	
         
 
@@ -433,7 +440,9 @@ public function submit_case($submitstatus) {
                 . "known_age=:known_age,"
                 . "known_ancestry=:known_ancestry,"
                 . "known_stature=:known_stature,"
-                . "known_unable_to_determine=:known_unable_to_determine"
+                . "known_unable_to_determine=:known_unable_to_determine,"
+
+                . "fdb_consent=:fdb_consent"
                 
                 . " WHERE id=:caseeditid";
 
@@ -1440,6 +1449,8 @@ public function submit_case($submitstatus) {
         $this->known_ancestry = $casedata['known_ancestry'];
         $this->known_stature = $casedata['known_stature'];
         $this->known_unable_to_determine = $casedata['known_unable_to_determine'];
+        
+        $this->fdb_consent = $casedata['fdb_consent'];
         }
     
 }

@@ -83,7 +83,7 @@ if(isset($_POST['add_method_info_submit'])) {
     }
     $result = $method->add_method_info($method_info_name, $header, $option_header, $input_type, $parent);
     if($result > 0) {
-            echo("Added method info with data: $method_info_name, $header, $option_header, $input_type, $parent<BR>");
+            echo("Added method info $method_info_name.<BR>");
     }
 }
 
@@ -180,8 +180,6 @@ echo("</fieldset></form>");
 
 // Method infos
 
-//echo('<form action="edit_method.php?id='.$id.'" method="post" id="registration">');
-
 echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend>Method Info</legend>');
 $method_infos = $method->get_method_infos();
 
@@ -216,13 +214,7 @@ echo("</table>");
 } 
 
 
-//echo('</form>');
-
 echo("<BR></fieldset>");
-
-
-
-
 
 }
 

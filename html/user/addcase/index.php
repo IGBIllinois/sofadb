@@ -385,12 +385,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $idothertext = trim($_POST['idrace_othertext']);
 	}
     
-    if(($idOt==0 && $idothertext)||($idOt==1 && !$idothertext))
-	{$errors[] = 'You must Check the Other box and enter text.';}
+    if(($idOt==0 && $idothertext)||($idOt==1 && !$idothertext)) {
+        $errors[] = 'You must Check the Other box and enter text.';
+    }
     
+    if(empty($_POST['fdb_consent'])) {
+        $errors[] = "You must select an FDB Data Sharing Option.";
+    } else {
+        $fdb_consent = $_POST['fdb_consent'];
+    }
+        
+        
     
-    
-		if (empty($errors)) 
+    if (empty($errors)) 
         { // If there were no errors
 		//Determine whether the case has already been registered	
 		$memberid=$_SESSION['id'];
@@ -450,7 +457,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     "known_sex"=>$known_sex,
                     "known_ancestry"=>$known_ancestry,
                     "known_stature"=>$known_stature,
-                    "known_unable_to_determine"=>$known_unable_to_determine
+                    "known_unable_to_determine"=>$known_unable_to_determine,
+                    
+                    "fdb_consent"=>$fdb_consent
                 
                         
                         
@@ -613,8 +622,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       
       <br/><label class="label" for="idsource">Information Source</label><input id="idsource" type="text" name="idsource" size="30" maxlength="60" value="<?php if (isset($_POST['idsource'])) echo $_POST['idsource']; ?>" /><br />
       
-  </fieldset>
-      
+  
+      </fieldset>
       <!-- Prior information -->
             <fieldset class="caseinfobox"><legend class="boldlegend">Background Case Knowledge</legend>
                 <BR>
@@ -642,15 +651,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <BR>
 
        </fieldset>
+      
+      <fieldset class="caseinfobox"><legend class="boldlegend">FDB Data Sharing Option</legend>
+          <BR>
+        FADAMA provides the opportunity for users to share relevant case data, such as craniometric and postcranial measurements, with the Forensic Data Bank (FDB). 
+        In contrast to FADAMA's anonymous database, FDB sharing requires identifiable information about the case, including the case number and case agency. 
+        To review a complete list of data shared with the FDB if you choose to opt-in, please see the FAQs. 
+        <BR><BR>
+        Please choose one of the following options to apply to this case.
+        <BR><BR>
+        <label class="label" for="consent"></label><input type='radio' name='fdb_consent' value='consent'>I consent to share this case data with FDB.</input><BR>
+        <label class="label" for="already_submitted"></label><input type='radio' name='fdb_consent' value='already_submitted'>I have already submitted this case data with FDB.</input><BR>
+        <label class="label" for="decline"></label><input type='radio' name='fdb_consent' value='decline'>I decline to share this case data with FDB.</input><BR>
+      </fieldset>
            
     <fieldset class="caseinfobox"><legend class="boldlegend">Case Notes</legend>
       <label class="label" for="casenotes"></label>
       <textarea name="casenotes" cols="55" rows="7"><?php if (isset($_POST['casenotes'])) echo $_POST['casenotes']; ?></textarea>
-      
-      
-     
-      
-      
+
       
       
       </fieldset>
