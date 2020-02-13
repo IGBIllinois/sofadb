@@ -79,27 +79,43 @@ class method {
         return $this->methodinfotype;
     }
     
+    public function get_prompt_id() {
+        return $this->prompt_id;
+    }
+    
 
+    /**
+     * Updates a method with new data
+     * 
+     * @param string $name
+     * @param int $type_num
+     * @param string $measurement_type
+     * @param string $description
+     * @param string $instructions
+     * @param int $prompt_id
+     * @return type
+     */
     public function update_method(
             $name, 
-            $type, 
             $type_num, 
             $measurement_type, 
             $description,
-            $instructions) {
+            $instructions,
+            $prompt_id = null) {
                 $query = "UPDATE methods SET ".
                     "methodname = :methodname,".
-                    " methodtype = :methodtype, ".
                     " methodtypenum = :methodtypenum, ".
                     " measurementtype = :measurementtype, ".
                     " description = :description, ".
-                    " instructions = :instructions where id = :id ";
+                    " instructions = :instructions, ".
+                    " prompt = :prompt" .
+                    " where id = :id ";
                 $params = array("methodname"=>$name,
-                                "methodtype"=>$type,
                                 "methodtypenum"=>$type_num,
                                 "measurementtype"=>$measurement_type,
                                 "description"=>$description,
                                 "instructions"=>$instructions,
+                                "prompt"=>$prompt_id,
                                 "id"=>$this->id);
 
                 $result = $this->db->get_update_result($query, $params);
@@ -110,37 +126,65 @@ class method {
     
     // Static functions
     
+    /**
+     * 
+     * @param db $db The database object
+     * @param string $name
+     * @param int $type_num
+     * @param string $measurement_type
+     * @param string $description
+     * @param string $instructions
+     * @param int $prompt_id
+     * @return array
+     */
     public static function create_method(
             $db,
             $name, 
             $type_num, 
             $measurement_type, 
             $description,
-            $instructions) {
+            $instructions, 
+            $prompt_id = null) {
+        
+        $check_query = "SELECT id from methods where methodname=:name and methodtypenum=:typenum";
+        $check_params = array("name"=>$name, "typenum"=>$type_num);
+        
+        $check_result = $db->get_query_result($check_query, $check_params);
+        
+        if(count($check_result)>0) {
+            // A method with this name already exists
+            return array("RESULT"=>FALSE,
+                        "MESSAGE"=>"A method with the name $name already exists. Please choose a different name and try again.");
+            
+        }
         
         $query = "INSERT INTO methods (".
                 "methodname, ".
             " methodtypenum, ".
             " measurementtype, ".
             " description, ".
-            " instructions)".
+            " instructions,".
+            " prompt)".
             " VALUES (".
                ":methodname, ".
                ":methodtypenum, ".
                ":measurementtype, ".
                ":description, ".
-               ":instructions) ";
+               ":instructions,".
+               ":prompt) ";
         $params = array("methodname"=>$name,
-                                "methodtype"=>$type,
                                 "methodtypenum"=>$type_num,
                                 "measurementtype"=>$measurement_type,
                                 "description"=>$description,
-                                "instructions"=>$instructions);
+                                "instructions"=>$instructions,
+                                "prompt"=>$prompt_id);
         
         $result = $db->get_insert_result($query, $params);
 
 	if ($result > 0) { // If it ran OK.
-            return $result;
+            return array("RESULT"=>TRUE,
+                        "MESSAGE"=>"The method $name has been added successfully.",
+                        "id"=>$result);
         }
     }
 
@@ -233,6 +277,8 @@ class method {
       * @param string $option_header Header for the option list (used in some input types)
       * @param int $input_type Input type id
       * @param int $parent_id Parent id (optional, used in some input types)
+      * 
+      * @return int The ID of the newly created method_info
       */
     public function add_method_info($name, $header, $option_header, $input_type, $parent_id=null) {
         $methodid=$this->id;
@@ -271,6 +317,11 @@ class method {
         return $result;
     } 
     
+    /** Delete a method_info from this method
+     * 
+     * @param id $method_info_id The ID of the method_info to delete
+     * @return int The number of deleted entries
+     */
     public function remove_method_info($method_info_id) {
         $query = "DELETE FROM method_infos where id = :method_info_id";
         $params = array("method_info_id"=>$method_info_id);
@@ -279,6 +330,29 @@ class method {
         
         return $result;
     }
+    
+    // Prompts
+    
+    /**
+     * Gets the full prompt text for this method
+     * 
+     * @return string The full prompt text for this method
+     */
+    public function get_method_prompt() {
+            if($this->prompt_id == null) {
+                $promptid = 1; // Default prompt
+            } else {
+                $promptid = $this->prompt_id;
+            }
+            $query = "SELECT prompt from prompts where id = :id";
+            $params = array("id"=>$promptid);
+            $result = $this->db->get_query_result($query, $params);
+            if(count($result) > 0) {
+                return $result[0]['prompt'];
+            } else {
+                return '';
+            }
+        }
 
     
     // Static functions
@@ -357,23 +431,28 @@ class method {
             return $methods;
         }
         
-
-        // Prompts
-        public function get_method_prompt() {
-            if($this->prompt_id == null) {
-                $promptid = 1;
-            } else {
-                $promptid = $this->prompt_id;
-            }
-            $query = "SELECT prompt from prompts where id = :id";
-            $params = array("id"=>$promptid);
-            $result = $this->db->get_query_result($query, $params);
-            if(count($result) > 0) {
-                return $result[0]['prompt'];
-            } else {
-                return '';
-            }
+        
+    /**
+     * Gets a list of all method prompts available as an array in $id=>$value format
+     * 
+     * @param db $db The database object
+     * 
+     * @return an array of prompt ids and texts in $id=>$value format
+     */    
+    public static function get_all_prompts($db) {
+        
+        $query = "SELECT * from prompts ";
+        $result = $db->get_query_result($query);
+        
+        $return_array = array();
+        foreach($result as $prompt) {
+            $return_array[$prompt['id']] = $prompt['prompt'];
         }
+        
+        return $return_array;
+        
+    }
+
 
      // Private functions
 

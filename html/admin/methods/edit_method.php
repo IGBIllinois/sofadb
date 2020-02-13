@@ -34,6 +34,7 @@ if(!isset($_POST['id']) &&  !isset($_GET['id'])) {
         $measurement_type = $method->get_measurement_type();
         $description = $method->get_description();
         $instructions = $method->get_instructions();
+        $prompt_id = $method->get_prompt_id();
 
     } else {
         $id = ($_POST['id']);
@@ -49,7 +50,6 @@ if(isset($_POST['edit_method_submit'])) {
 
     if(isset($_POST['method_type'])) {
         $type_id = $_POST['method_type'];
-        $type_name = $method_type_list[$type_id];
     }
 
     if(isset($_POST['measurement_type'])) {
@@ -61,10 +61,14 @@ if(isset($_POST['edit_method_submit'])) {
     }
 
     if(isset($_POST['instructions'])) {
-    $instructions = $_POST['instructions'];
+        $instructions = $_POST['instructions'];
+    }
+    
+    if(isset($_POST['prompt'])) {
+        $prompt_id = $_POST['prompt'];
     }
 
-    $method->update_method($name, $type_name, $type_id, $measurement_type, $description, $instructions);
+    $method->update_method($name, $type_id, $measurement_type, $description, $instructions, $prompt_id);
 
 
 echo ("Method $name edited successfully.<BR>");
@@ -135,7 +139,20 @@ echo('
 <label class="label" for="mID">Instruction</label>
 <input id="instructions" type="text" name="instructions" size="100" maxlength="100" value="'.$instructions.'">
         ');
-        
+echo('
+<BR>
+<label class="label" for="prompt">Method prompt (optional additional text)</label>');
+
+echo('<select name="prompt" id="prompt">
+    
+    <option value="" selected="selected" disabled="disabled">Prompt</option>');
+$prompts = method::get_all_prompts($db);
+foreach($prompts as $pid=>$prompt) {
+
+    echo("<option value='".$pid."'".(($pid == $prompt_id)  ? " selected " : "")." >".$prompt."</option>");
+}
+echo("</select>");
+
 echo('<BR><BR>
     <label class="label"><input name="edit_method_submit" id="edit_method_submit" type="submit" value="Edit"/></label><BR><BR>
     </fieldset>
