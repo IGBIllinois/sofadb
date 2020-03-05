@@ -88,15 +88,22 @@ $message .= sprintf('<a href="%s">%s</a></p>', $url, $url);
 $message .= '<p>Thanks!</p>';
 
 // Headers
-$headers = "From: " . ADMIN_EMAIL . " <" . ADMIN_EMAIL . ">\r\n";
+$headers = "From: " . FROM_EMAIL . " <" . FROM_EMAIL . ">\r\n";
 $headers .= "Reply-To: " . ADMIN_EMAIL . "\r\n";
 $headers .= "Content-type: text/html\r\n";
 
 // Send email
 $sent = mail($to, $subject, $message, $headers);
-echo("An email has been sent to $to with a link to reset the password for that account.");
-    $success = true;
+
+    if($sent) {
+    echo("An email has been sent to $to with a link to reset the password for that account.");
+        $success = true;
     }
+    else {
+        echo("An error occurred. The message was not sent.<BR>");
+    }
+    
+}
 }
     
 if(!$success) {
