@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
     else {
         $fastature2_test = trim($_POST['fastature2']);
-        if(!is_numeric($faage2_test)) {
+        if(!is_numeric($fastature2_test)) {
             $errors[] = "Forensic Anthropology estimated stature must be numeric.";
         } else {
             $fastature2 = trim($_POST['fastature2']);
