@@ -110,13 +110,28 @@ public function set_permission($status) {
     
 }
 
-/** Gets tne number of active (not deleted) cases for this user
+/** Gets the number of active (not deleted) cases for this user
  * 
  * @return int the number of active (not deleted) cases for this user
  * 
  */
 public function get_num_active_cases() {
     $q = "SELECT COUNT(id) as count FROM cases WHERE memberid=:memberid AND submissionstatus>=0";
+    $params = array("memberid"=>$this->id);
+    $result = $this->db->get_query_result($q, $params);
+    if(count($result)> 0) {
+        return $result[0]['count'];
+    }
+    
+}
+
+/** Gets the number of unsubmitted cases for this user
+ * 
+ * @return int the number of active cases for this user
+ * 
+ */
+public function get_num_unsubmitted_cases() {
+    $q = "SELECT COUNT(id) as count FROM cases WHERE memberid=:memberid AND submissionstatus=0";
     $params = array("memberid"=>$this->id);
     $result = $this->db->get_query_result($q, $params);
     if(count($result)> 0) {

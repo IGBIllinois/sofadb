@@ -1,7 +1,6 @@
 <?php 
 require_once('../include/header_user.php') ;
 
-
 ?>
     
   <div id="caseregion"> <h1 class="cntr">My Cases</h1>
@@ -11,7 +10,7 @@ require_once('../include/header_user.php') ;
 //set the number of rows per display page
 $pagerows = PAGEROWS;
 $memberid=$_SESSION['id'];
-
+$member = new member($db, $memberid);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -110,6 +109,7 @@ else {
 
 
 echo "<p class='dbresults'>Total number of cases: $num_cases. Showing records  $startingrecord - $endingrecord </p>";
+echo("<p class='dbresults'>You have ".$member->get_num_unsubmitted_cases(). " unsubmitted cases.</p>");
 if ($pages > 1) {
 echo '<p>';
 //What number is the current page?
@@ -138,7 +138,7 @@ echo '<div class="scroll"><table id="hortable" summary="List of cases">
             <th scope="col">Case Number</th>
             <th scope="col">Case Agency</th>
             <th scope="col">Date Modified</th>
-			<th scope="col">Date Submitted</th>
+			<th scope="col">Date Submitted to FADAMA</th>
            
 			
         </tr>
