@@ -55,37 +55,22 @@ $url = sprintf('%sreset.php?%s', $contactURL, http_build_query([
     'validator' => $validator
 ]));
 
-// Token expiration
-$expires = new DateTime('NOW');
-$expires->add(new DateInterval('PT24H')); // 24 hours
 
-// Delete any existing tokens for this user
-$db->get_update_result("DELETE from password_reset where email=:email", 
-        array("email"=>$email));
+$insert = functions::update_password_request($db, $email, $selector, $validator);
 
-// Insert reset token into database
-$insert = $db->get_insert_result("insert into password_reset (email, selector, token, expires) VALUES (:email, :selector, :token, :expires)",
-    array(
-        'email'     =>  $email,
-        'selector'  =>  $selector, 
-        'token'     =>  password_hash($validator, PASSWORD_DEFAULT),
-        'expires'   =>  $expires->format('U'),
-    ));
-        
-        // send email
+// send email
 
-// Recipient
 $to = $email;
+$subject = 'FADAMA password reset link';
 
-// Subject
-$subject = 'SOFADB password reset link';
+$user = member::load_member_by_name($db, $email);
+$name = $user->get_firstname() . " ". $user->get_lastname();
 
-// Message
-$message = 'We recieved a password reset request. The link to reset your password is below. ';
-$message .= 'If you did not make this request, you can ignore this email</p>';
-$message .= '<p>Here is your password reset link:</br>';
-$message .= sprintf('<a href="%s">%s</a></p>', $url, $url);
-$message .= '<p>Thanks!</p>';
+$params = array ("url"=>$url,
+                 "name"=>$name,
+                 "from_email"=>FROM_EMAIL);
+
+$message = renderTwigTemplate('email/change_password.html.twig', $params);
 
 // Headers
 $headers = "From: " . FROM_EMAIL . " <" . FROM_EMAIL . ">\r\n";

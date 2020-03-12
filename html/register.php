@@ -273,7 +273,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "sponsor_email"=>$sponsor_email,
             "sponsor_affiliation"=>$sponsor_affiliation);
  
-
+        $user_params = array("user_name"=>($fn . " ".$ln),
+                            "from_email"=>FROM_EMAIL);
 	
 	if (empty($errors)) { // If there were no errors
 //Determine whether the email address has already been registered	
@@ -291,6 +292,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
       $from= FROM_EMAIL;
    $subject = "FADAMA DB ADMIN ALERT: Activate new user";
+   $message = renderTwigTemplate('email/register_admin.html.twig', $params);
+   /*
    $message = "New User:".$fn." ".$ln." is requesting activation.\n Email address is:".$e."\n\n";
    
    $message .= "User data:\n".
@@ -316,7 +319,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "Sponsor: $sponsor\n".
             "Sponsor email: $sponsor_email\n".
             "Sponsor affiliation: $sponsor_affiliation\n";
-           
+           */
            
    $header = "From:".$from."\r\n";
    $retval = mail($to,$subject,$message,$header);
@@ -324,8 +327,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    // Also email user
    $user_to = $e;
    $user_subject = "FADAMA Membership Request";
-   $user_message = "Thank you for requesting membership approval to FADAMA. Your request is under review and may take up to 1 week to be approved.";
-   $user_header = "From:".$admin_email."\r\n";
+   //$user_message = "Thank you for requesting membership approval to FADAMA. Your request is under review and may take up to 1 week to be approved.";
+   $user_message = renderTwigTemplate("email/register_user.html.twig", $user_params);
+   $user_header = "From:".$from."\r\n";
    
    $user_retval = mail($user_to, $user_subject, $user_message, $user_header);
    

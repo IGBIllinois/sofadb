@@ -14,7 +14,7 @@ $idactivate=intval($_GET['id']);
 if(isset($_GET['deny'])) {
     // decline this user
     $member = new member($db, $idactivate);
-$result = $member->set_permission('0');
+    $result = $member->set_permission('0');
 
 
 if($result['RESULT'] == FALSE) 
@@ -22,20 +22,20 @@ if($result['RESULT'] == FALSE)
     echo '<p class="error">Activation failed. We apologize for any inconvenience.</p>';
     
 } else {
-       //$to = $emailrow['uname'];
+
     $to = $member->get_uname();
-$admin_email = ADMIN_EMAIL;
-
-   $subject = "FADAMA Membership Denied";
-   $message = "Your request for FADAMA membership was denied. For more information please review our policies on membership requirements.\n\nThank you,\nFADAMA Database Committee";
-   $header = "From:".$admin_email."\r\n";
+    $params = array("username"=>($member->get_firstname() . " " . $member->get_lastname()));
+    $from_email = FROM_EMAIL;
+    $subject = "FADAMA Membership Denied";
+    $message = renderTwigTemplate('email/request_denied.html.twig', $params);
+    $header = "From:".$from_email."\r\n";
 
    $retval = mail ($to,$subject,$message,$header);
 
    if( $retval == true )  
    {
      
-	  
+	echo "Email sent to ". $member->get_uname().".";  
    }
    else
    {
@@ -44,43 +44,38 @@ $admin_email = ADMIN_EMAIL;
 }
     
 } else {
-$member = new member($db, $idactivate);
-$result = $member->set_permission(1);
+    $member = new member($db, $idactivate);
+    $result = $member->set_permission(1);
 
 
-if($result['RESULT'] == FALSE) 
-{
-    echo '<p class="error">Activation failed. We apologize for any inconvenience.</p>';
-    
-} else {
+    if($result['RESULT'] == FALSE) 
+    {
+        echo '<p class="error">Activation failed. We apologize for any inconvenience.</p>';
+
+    } else {
+
+        $to = $member->get_uname();
+        $from_email = FROM_EMAIL;
+        $subject = "FADAMA Membership Approved";
+
+        $params = array("url"=>($_SERVER['HTTP_HOST']. $_SERVER['CONTEXT_PREFIX']));
+        $message = renderTwigTemplate("email/request_approved.html.twig", $params);
+        $header = "From:".$from_email."\r\n";
+        $retval = mail ($to,$subject,$message,$header);
+        
+        if( $retval == true )  
+        {
+          echo "Error: Activation email sent to ".$to;
+
+        }
+        else
+        {
+           echo "Error: Activation Email could not be sent.";
+        }
 
 
-   $to = $member->get_uname();
-   $admin_email = ADMIN_EMAIL;
-
-   $subject = "FADAMA Membership Approved";
-   $message = "Dear New FADAMA Member, \n
-              Your membership request has been approved. You may access          
-               the database at http://sofainc.org/sofadb/. You can both 
-               download case data and submit case data to be added to the  
-               database.  Please review our FAQ, Database 
-               Policies and Practices, and User Tutorial
-               to help get you started. ";
-   $header = "From:".$admin_email."\r\n";
-   $retval = mail ($to,$subject,$message,$header);
-   if( $retval == true )  
-   {
-     
-	  
-   }
-   else
-   {
-      echo "Error: Activation Email could not be sent.";
-   }
-
-
-}
-}
+    }
+    }
 }
 
 //set the number of rows per display page
@@ -104,7 +99,7 @@ $pages = ceil ($num_inactive_members/$pagerows);
 $pages = 1;
 }
 }//page check finished
-//Decalre which record to start with
+//Declare which record to start with
 if (isset($_GET['s']) && is_numeric
 ($_GET['s'])) {//already been calculated
 $start = $_GET['s'];

@@ -179,4 +179,34 @@ class functions {
 
 
    }
+   
+   /** Updates the password_reset database with unique data so a user can safely change their password
+    * 
+    * @param db $db The database object
+    * @param type $email The user's email/username
+    * @param type $selector
+    * @param type $validator
+    * @param type $expires
+    * @return type
+    */
+   public function update_password_request($db, $email, $selector, $validator) {
+       
+       // Token expiration
+        $expires = new DateTime('NOW');
+        $expires->add(new DateInterval('PT24H')); // 24 hours
+
+       $db->get_update_result("DELETE from password_reset where email=:email", 
+        array("email"=>$email));
+
+        // Insert reset token into database
+        $insert = $db->get_insert_result("insert into password_reset (email, selector, token, expires) VALUES (:email, :selector, :token, :expires)",
+            array(
+                'email'     =>  $email,
+                'selector'  =>  $selector, 
+                'token'     =>  password_hash($validator, PASSWORD_DEFAULT),
+                'expires'   =>  $expires->format('U'),
+            ));
+        
+        return $insert;
+   }
 }
