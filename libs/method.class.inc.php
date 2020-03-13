@@ -16,6 +16,7 @@ class method {
     private $instructions;
     private $methodinfotype;
     private $prompt_id;
+    private $active;
     
     private $db; // Database object
     
@@ -83,6 +84,10 @@ class method {
         return $this->prompt_id;
     }
     
+    public function get_active() {
+        return $this->active;
+    }
+    
 
     /**
      * Updates a method with new data
@@ -101,14 +106,18 @@ class method {
             $measurement_type, 
             $description,
             $instructions,
-            $prompt_id = null) {
+            $method_info_type,
+            $prompt_id = null,
+            $active = 1) {
                 $query = "UPDATE methods SET ".
                     "methodname = :methodname,".
                     " methodtypenum = :methodtypenum, ".
                     " measurementtype = :measurementtype, ".
                     " description = :description, ".
                     " instructions = :instructions, ".
-                    " prompt = :prompt" .
+                    " methodinfotype = :methodinfotype, ".
+                    " prompt = :prompt, " .
+                    " active = :active ".
                     " where id = :id ";
                 $params = array("methodname"=>$name,
                                 "methodtypenum"=>$type_num,
@@ -116,6 +125,8 @@ class method {
                                 "description"=>$description,
                                 "instructions"=>$instructions,
                                 "prompt"=>$prompt_id,
+                                "methodinfotype"=>$method_info_type,
+                                "active"=>$active,
                                 "id"=>$this->id);
 
                 $result = $this->db->get_update_result($query, $params);
@@ -129,12 +140,13 @@ class method {
     /**
      * 
      * @param db $db The database object
-     * @param string $name
-     * @param int $type_num
-     * @param string $measurement_type
-     * @param string $description
-     * @param string $instructions
-     * @param int $prompt_id
+     * @param string $name Method name
+     * @param int $type_num ID of the method type (for "Sex", "Age", etc)
+     * @param string $measurement_type Measurement type used
+     * @param string $description Description of the method
+     * @param string $instructions Additional instructions
+     * @param int $prompt_id ID of the prompt to use (from the 'prompts' table. Defaults to null
+     * $param bool $active Whether or not the method is active. Defaults to 0 when adding a new method.
      * @return array
      */
     public static function create_method(
@@ -144,7 +156,9 @@ class method {
             $measurement_type, 
             $description,
             $instructions, 
-            $prompt_id = null) {
+            $method_info_type,
+            $prompt_id = null,
+            $active = 0) {
         
         $check_query = "SELECT id from methods where methodname=:name and methodtypenum=:typenum";
         $check_params = array("name"=>$name, "typenum"=>$type_num);
@@ -164,19 +178,25 @@ class method {
             " measurementtype, ".
             " description, ".
             " instructions,".
-            " prompt)".
+            " methodinfotype,".    
+            " prompt,".
+            " active)".
             " VALUES (".
                ":methodname, ".
                ":methodtypenum, ".
                ":measurementtype, ".
                ":description, ".
                ":instructions,".
-               ":prompt) ";
+               ":methodinfotype,".
+               ":prompt, ".
+               ":active) ";
         $params = array("methodname"=>$name,
                                 "methodtypenum"=>$type_num,
                                 "measurementtype"=>$measurement_type,
                                 "description"=>$description,
                                 "instructions"=>$instructions,
+                                "methodinfotype"=>$method_info_type,
+                                "active"=>$active,
                                 "prompt"=>$prompt_id);
         
         $result = $db->get_insert_result($query, $params);
@@ -282,7 +302,11 @@ class method {
       */
     public function add_method_info($name, $header, $option_header, $input_type, $parent_id=null) {
         $methodid=$this->id;
-
+        if($input_type == input_type::get_input_id_by_name($this->db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)) {
+            $header2=$header;
+            $header = null;
+            
+        }
         $query = "INSERT INTO method_infos (methodid, name, header, option_header, input_type " .
                 (($parent_id != null) ? ", parent_id" : "") 
                 . ") VALUES "
@@ -311,6 +335,11 @@ class method {
                 $new_info = new method_infos($this->db, $result);
                 $new_info->add_option("Left");
                 $new_info->add_option("Right");
+            } else if($input_type == input_type::get_input_id_by_name($this->db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN)) {
+                // Add numeric entry
+                $this->add_method_info($name, $header2, $option_header, input_type::get_input_id_by_name($this->db, USER_INTERACTION_MULTISELECT), $result);
+                // Add dropdown
+                $this->add_method_info($name, $name, $option_header, input_type::get_input_id_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY), $result);
             }
         }
         
@@ -322,10 +351,17 @@ class method {
      * @param id $method_info_id The ID of the method_info to delete
      * @return int The number of deleted entries
      */
-    public function remove_method_info($method_info_id) {
+    public function delete_method_info($method_info_id) {
+        $method_info = new method_infos($this->db, $method_info_id);
+        $options = $method_info->get_method_info_options();
+        
+        // Delete options from database
+        foreach($options as $option) {
+            $method_info->delete_option($option->get_id());
+        }
+        
         $query = "DELETE FROM method_infos where id = :method_info_id";
         $params = array("method_info_id"=>$method_info_id);
-        
         $result = $this->db->get_update_result($query, $params);
         
         return $result;
@@ -368,8 +404,14 @@ class method {
      *  $limit is the number of records to return, starting at index $start.
      *  Otherwise, all methods in the database will be returned.
      */
-    public static function get_methods($db, $start = -1, $limit = -1, $order='methodname') {
-        $query = "SELECT id from methods ORDER BY $order ";
+    public static function get_methods($db, $start = -1, $limit = -1, $order='methodname', $active=1) {
+        // $active = 1: Only show active methods
+        // $active = 0: Only show inactive methods
+        // $active = -1: Show all methods
+        
+        $active_test = ($active >= 0) ? " where active=:active " : "";
+        $query = "SELECT id from methods $active_test  ORDER BY $order ";
+        $params = array("active"=>$active);
         if(is_numeric($start) && $start >= 0) {
             $query .= " LIMIT $start ";
             if(is_numeric($limit) && $limit > 0) {
@@ -377,7 +419,7 @@ class method {
             }
         }
 
-        $result = $db->get_query_result($query);
+        $result = $db->get_query_result($query, $params);
         $methods = array();
         foreach($result as $method) {
             $id = $method['id'];
@@ -394,8 +436,8 @@ class method {
      * @return \method An array of method objects of the given type. Some have a specific order,
      *      with preferred methods being listed first for display purposes.
      */
-    public static function get_methods_by_type($db, $type_id) {
-            $query = "SELECT methodname,id FROM methods WHERE methodtypenum=:methodtypenum ";
+    public static function get_methods_by_type($db, $type_id, $active=1) {
+            $query = "SELECT methodname,id FROM methods WHERE active=:active AND methodtypenum=:methodtypenum ";
             if($type_id == METHOD_DATA_SEX_ID) {
                 // Specific order for Sex methods
                 $query .= "order by "
@@ -421,7 +463,7 @@ class method {
                 // Specific order for Stature methods
                 $query .= "Order by methodname ASC";
             }
-            $params = array("methodtypenum"=>$type_id);
+            $params = array("methodtypenum"=>$type_id, "active"=>$active);
             $result = $db->get_query_result($query, $params);
             $methods = array();
             foreach($result as $method) {
@@ -476,6 +518,7 @@ class method {
          $this->instructions = $data['instructions'];
          $this->methodinfotype = $data['methodinfotype'];
          $this->prompt_id = $data['prompt'];
+         $this->active = $data['active'];
          }
          
      }

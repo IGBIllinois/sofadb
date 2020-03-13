@@ -49,13 +49,18 @@ if(isset($_POST['instructions'])) {
 $instructions = $_POST['instructions'];
 }
 
+if(isset($_POST['method_info_type'])) {
+$method_info_type = $_POST['method_info_type'];
+echo("METHODINFOTYPE = $method_info_type<BR>");
+}
+
 if(isset($_POST['prompt'])) {
 $prompt = $_POST['prompt'];
 }
 
 if(isset($_POST['add_method_submit'])) {
     if(count($errors) == 0) {
-        $result = method::create_method($db, $name, $type_id, $measurement_type, $description, $instructions, $prompt);
+        $result = method::create_method($db, $name, $type_id, $measurement_type, $description, $instructions, $method_info_type, $prompt);
 
         if($result['RESULT'] == TRUE) {
             $id = $result['id'];
@@ -63,6 +68,8 @@ if(isset($_POST['add_method_submit'])) {
             if($id > 0) {
                 $method = new method($db, $id);
                 echo($result['MESSAGE']);
+                $new_id = $result['id'];
+                echo("Its status is currently Inactve. You may edit and activate it on the <a href='edit_method.php?id=$id'>edit method</a> page.");
 
             }
         } else {
@@ -105,17 +112,17 @@ echo('
 <BR>
 <label class="label" for="mID">Method info type (used to display certain types of methods)</label>');
 
-echo('<select name="method_type" id="method_info_type">
+echo('<select name="method_info_type" id="method_info_type">
     
     <option value="" selected="selected" disabled="disabled">Method Info Type</option>');
 $method_info_types = method_info_type::get_method_info_types($db);
 foreach($method_info_types as $type) {
     $id = $type->get_id();
     $name = $type->get_method_info_type();
-    echo("<option value='".$id."' ".(($method_info_type_id == $id)?" selected ": "").">".$name."</option>");
+    echo("<option value='".$name."' ".(($method_info_type_id == $id)?" selected ": "").">".$name."</option>");
 }
 echo("</select>");
-
+echo(" <a href='methodFAQ.php' target='blank'>(More info on Method Info Types)</A>");
 echo('
     <BR>
 <label class="label" for="mID">Measurement Type</label>

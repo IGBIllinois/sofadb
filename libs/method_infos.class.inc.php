@@ -143,9 +143,10 @@ class method_infos {
     * 
     * $return int The number of options removed
     */
-   public function remove_option($option_id) {
+   public function delete_option($option_id) {
        $query = "DELETE FROM method_info_options where id=:id";
        $params = array("id"=>$option_id);
+       
        $result = $this->db->get_update_result($query, $params);
        
        return $result; 

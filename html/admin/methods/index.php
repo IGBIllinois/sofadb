@@ -51,11 +51,13 @@ echo '<div class="scroll"><table id="hortable" summary="List of methods">
             <th scope="col">Measurement Type</th>
             <th scope="col">Description</th>
             <th scope="col">Instructions</th>	
+            <th scope="col">Active</th>
         </tr>
     </thead>
     <tbody>';
 
-$methods = method::get_methods($db, $start, $pagerows);
+// Show all methods; Active and inactive
+$methods = method::get_methods($db, $start, $pagerows, 'methodname', -1);
 foreach($methods as $method) {
     echo("<tr>".
             "<td><a href='edit_method.php?id=". $method->get_id()."'>Edit</td>".
@@ -65,6 +67,7 @@ foreach($methods as $method) {
             "<td>".$method->get_measurement_type()."</td>".
             "<td>".$method->get_description()."</td>".
             "<td>".$method->get_instructions()."</td>".
+            "<td>".($method->get_active() ? "Active" : "Inactive")."</td>".
         "</tr>");
 }
 
