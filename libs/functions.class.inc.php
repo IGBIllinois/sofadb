@@ -40,7 +40,8 @@ class functions {
                     }
 
             echo '</select>';
-            echo('&nbsp;<input type="submit" class="showybutton"  name="add_method" value="Save Method" /><BR>');
+            echo('&nbsp;<input type="submit" class="showybutton"  name="add_method" value="Save Method" />'.
+                    ' (Don\'t see your method? <U><A target="blank" href="../../contact/index.php">Contact us.</A></U>)<BR>');
             
             echo "<script type=\"text/javascript\">
     $('#wait_2').hide();
