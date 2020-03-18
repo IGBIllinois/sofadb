@@ -217,9 +217,9 @@ class method_infos {
            }
 
            $output .= ("<BR>Estimated Stature from this method:");
-           $output .= ("<input type='number' size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'>");
+           $output .= ("<input type='number' step='0.01' size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'>");
            $output .= (" to ");
-           $output .= ("<input type='number' size=6 id='estimated_outcome_2' name='estimated_outcome_2' value='$estimated_outcome_2'>");
+           $output .= ("<input type='number' step='0.01' size=6 id='estimated_outcome_2' name='estimated_outcome_2' value='$estimated_outcome_2'>");
            
            $output .= ("&nbsp;&nbsp;Units:");
            $output .= ("<select name='estimated_outcome_units'>");
@@ -241,8 +241,8 @@ class method_infos {
            $estimated_outcomes = $method->get_estimated_outcomes();
 
            $output .= ("<BR>Estimated Age range from this method:");
-           $output .= ("<input type='number' size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'> to ");
-           $output .= ("<input type='number' size=6 id='estimated_outcome_2' name='estimated_outcome_2' value='$estimated_outcome_2'> years");
+           $output .= ("<input type='number' step='0.01' size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'> to ");
+           $output .= ("<input type='number' step='0.01' size=6 id='estimated_outcome_2' name='estimated_outcome_2' value='$estimated_outcome_2'> years");
            $output .= ("<BR>");
            $output .= $prompt;
            
