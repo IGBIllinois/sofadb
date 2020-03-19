@@ -243,49 +243,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         }
     } else {
-
-	
-	
+        // Edit case
+        // 
 	// Check for a casename:
 	if (empty($_POST['caseyear'])) {
-		$errors[] = 'You must enter a case year to save.';
+            $errors[] = 'You must enter a case year to save.';
 	} 
         else {
-		$caseyear = trim($_POST['caseyear']);
+            $caseyear = trim($_POST['caseyear']);
 	}
 
 	// Check for a casenumber:
 	if (empty($_POST['casenumber'])) {
-		$errors[] = 'You must enter a case number to save.';
+            $errors[] = 'You must enter a case number to save.';
 	} 
-    else {
-		$casenum = trim($_POST['casenumber']);
+        else {
+            $casenum = trim($_POST['casenumber']);
 	}
 	// Check for a casename:
 	if (!empty($_POST['casename'])) {
-			$casenam = trim($_POST['casename']);
+            $casenam = trim($_POST['casename']);
 	} 
-    else {
-	$casenam="";	
+        else {
+            $casenam="";	
 	}
     
     
 	// Check for a case agency:
 	if (empty($_POST['caseagency'])) {
-		$caseag=NULL;
+            $caseag=NULL;
         
 	} 
-    else {
-		$caseag = trim($_POST['caseagency']);
+        else {
+            $caseag = trim($_POST['caseagency']);
 	}
 	
-    // Check for a FA sex
-    if (empty($_POST['fasex'])) {
-		$fasex=NULL;
-	} 
-    else {
-		$fasex = trim($_POST['fasex']);
-	}
+        // Check for a FA sex
+        if (empty($_POST['fasex'])) {
+            $fasex=NULL;
+            } 
+        else {
+            $fasex = trim($_POST['fasex']);
+        }
 	
 	
     
@@ -310,12 +309,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     
     //check for a FA age 1
-	if (empty($_POST['faage'])) {
-            $faage=NULL;
-            $faageunits=NULL;
-            $faage2=NULL;
-            $faageunits2=NULL;
-	} 
+    if (empty($_POST['faage'])) {
+        $faage=NULL;
+        $faageunits=NULL;
+        $faage2=NULL;
+        $faageunits2=NULL;
+    } 
     else {
         $faage_test = trim($_POST['faage']);
             if(!is_numeric($faage_test)) {
@@ -328,26 +327,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $faageunits = trim($_POST['faageunits']);
                 }
             }
-	}
+    }
+    
+    if(isset($_POST['faage_notes'])) {
+        $faage_notes = $_POST['faage_notes'];
+    } else {
+        $faage_notes = null;
+    }
 
 	
-  //check for a FA stature 2 first 
-	if (empty($_POST['fastature2'])) {
-		
-            $fastature2=NULL;
-	} 
+     //check for a FA stature 2 first 
+    if (empty($_POST['fastature2'])) {
+
+        $fastature2=NULL;
+    } 
     else {
             $fastature2 = trim($_POST['fastature2']);
         
 	}
 
 
-	//check for a FA stature
-	if (empty($_POST['fastature'])) {
-            $fastature=NULL;
-            $fastature2=NULL;
-            $fastatureunits=NULL;
-	} 
+    //check for a FA stature
+    if (empty($_POST['fastature'])) {
+        $fastature=NULL;
+        $fastature2=NULL;
+        $fastatureunits=NULL;
+    } 
     else {
         $fastature_test = trim($_POST['fastature']);
         $fastature2_test = trim($_POST['fastature2']);
@@ -381,40 +386,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$idsex=NULL;
 	} 
     else {
-		$idsex = trim($_POST['idsex']);
-                if($idsex == "Other") {
-                    $idsex = trim($_POST['idsexother']);
-                    
-                }
-	}
+        $idsex = trim($_POST['idsex']);
+        if($idsex == "Other") {
+            $idsex = trim($_POST['idsexother']);
+        }
+    }
+    
+    if(isset($_POST['idsex_notes'])) {
+        $idsex_notes = $_POST['idsex_notes'];
+    } else {
+        $idsex_notes = null;
+    }
 
 
-  //check for a id age 
-	if (empty($_POST['idage'])) {
-		$idage=NULL;
+    //check for a id age 
+    if (empty($_POST['idage'])) {
+        $idage=NULL;
         $idageunits=NULL;
-        
-	} 
+
+    } 
     else {
         $idage_test = trim($_POST['idage']);
-            if(!is_numeric($idage_test)) {
-                $errors[] = "Identified age must be numeric.";
-            } else {
-                if($idage_test > MAXAGE) {
-                    $errors[] = "Identified age must be less than ". MAXAGE.".";
-                }
-		$idage = trim($_POST['idage']);
-                $idageunits = trim($_POST['idageunits']);
+        if(!is_numeric($idage_test)) {
+            $errors[] = "Identified age must be numeric.";
+        } else {
+            if($idage_test > MAXAGE) {
+                $errors[] = "Identified age must be less than ". MAXAGE.".";
             }
-	}
+            $idage = trim($_POST['idage']);
+            $idageunits = trim($_POST['idageunits']);
+        }
+    }
+    
+    if(isset($_POST['idage_notes'])) {
+        $idage_notes = $_POST['idage_notes'];
+    } else {
+        $idage_notes = null;
+    }
+    
 
 
 
-	//check for a id stature
-	if (empty($_POST['idstature'])) {
-		$idstature=NULL;
+    //check for a id stature
+    if (empty($_POST['idstature'])) {
+        $idstature=NULL;
         $idstatureunits=NULL;
-	} 
+    } 
     else {
         $idstature_test = trim($_POST['idstature']);
             if(!is_numeric($idstature_test)) {
@@ -428,81 +445,99 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $idstatureunits = "inches";
                 }
             }
-	}
+    }
+    
+    if(isset($_POST['idstature_notes'])) {
+        $idstature_notes = $_POST['idstature_notes'];
+    } else {
+        $idstature_notes = null;
+    }
    
    
    //check for a id source
-	if (empty($_POST['idsource'])) {
-		$idsource=NULL;
-        
-	} 
-    else {
-		
+    if (empty($_POST['idsource'])) {
+        $idsource=NULL;
+    } 
+    else {	
         $idsource = trim($_POST['idsource']);
-	}
+    }
 	
 	
-		 //check for a extra race/ethnicity info 
-	if (empty($_POST['idancaddtext'])) {
-		$idancaddtext=NULL;
-        
-	} 
-    else {
-		
+    //check for a extra race/ethnicity info 
+    if (empty($_POST['idancaddtext'])) {
+        $idancaddtext=NULL;
+
+    } 
+    else {	
         $idancaddtext = trim($_POST['idancaddtext']);
-	}
+    }
     
     //check for a  casenotes
-	if (empty($_POST['casenotes'])) {
-		$casenotes=NULL;
-        
-	} 
+    if (empty($_POST['casenotes'])) {
+            $casenotes=NULL;
+
+    } 
     else {
 		
         $casenotes = trim($_POST['casenotes']);
-	}
+    }
 	
-        if(isset($_POST['farace_asian']))
-	{
-      $faAs=$_POST['farace_asian'];
-	}
-	else{$faAs=0;}
+    if(isset($_POST['farace_asian']))
+    {
+        $faAs=$_POST['farace_asian'];
+    }
+    else {
+        $faAs=0;
+        
+    }
 	
-	 if(isset($_POST['farace_black']))
-	{
+    if(isset($_POST['farace_black'])) {
       $faBl=$_POST['farace_black'];
-	}
-	else{$faBl=0;}
+    }	
+    else {
+        $faBl=0;
+        
+    }
 	
-     if(isset($_POST['farace_white']))
-	{
-      $faWh=$_POST['farace_white'];
-	}
-	else{$faWh=0;}
+    if(isset($_POST['farace_white'])) {
+        $faWh=$_POST['farace_white'];
+    }
+    else{
+        $faWh=0;
+        
+    }
 	
-	 if(isset($_POST['farace_hispanic']))
-	{
+    if(isset($_POST['farace_hispanic'])) {
       $faHi=$_POST['farace_hispanic'];
-	}
-	else{$faHi=0;}
+    }
+    else{
+        $faHi=0;
+        
+    }
 	
-   if(isset($_POST['farace_native']))
-	{
+   if(isset($_POST['farace_native'])) {
       $faNa=$_POST['farace_native'];
-	}
-	else{$faNa=0;}
+    }
+    else{
+        $faNa=0;
+        
+    }
   
-   if(isset($_POST['farace_white']))
-	{
+   if(isset($_POST['farace_white'])) {
       $faWh=$_POST['farace_white'];
-	}
-	else{$faWh=0;}
+    }
+    else{
+        $faWh=0;
+        
+    }
    
-    if(isset($_POST['farace_other']))
-	{
-      $faOt=$_POST['farace_other'];
-	}
-	else{$faOt=0;}
+    if(isset($_POST['farace_other'])) {
+        $faOt=$_POST['farace_other'];
+    }
+    else{
+        $faOt=0;
+        
+    }
       
     
     
@@ -646,26 +681,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $case = new sofa_case($db, $caseeditid);
                 $data = array(
                     
-                   "casename"=>$casenam,
-                   "casenum"=>$casenum,
-                   "caseyear"=>$caseyear,
-                   "caseag"=>$caseag,
-                    
-                   "fasex"=>$fasex,
-                   "faage"=>$faage,
-                   "faage2"=>$faage2,
-                   "faageunits"=>$faageunits,
-                   "faageunits2"=>$faageunits2,
-                    
-                   "fastature"=>$fastature,
+                    "casename"=>$casenam,
+                    "casenum"=>$casenum,
+                    "caseyear"=>$caseyear,
+                    "caseag"=>$caseag,
+
+                    "fasex"=>$fasex,
+                    "faage"=>$faage,
+                    "faage2"=>$faage2,
+                    "faageunits"=>$faageunits,
+                    "faageunits2"=>$faageunits2,
+                    "faage_notes"=>$faage_notes,
+
+                    "fastature"=>$fastature,
                     "fastature2"=>$fastature2,
                     "fastatureunits"=>$fastatureunits,
                     
                     "idsex"=>$idsex,
+                    "idsex_notes"=>$idsex_notes,
                     "idage"=>$idage,
                     "idageunits"=>$idageunits,
+                    "idage_notes"=>$idage_notes,
                     "idstature"=>$idstature,
                     "idstatureunits"=>$idstatureunits,
+                    "idstature_notes"=>$idstature_notes,
                     
                     "idsource"=>$idsource,
                     "casenotes"=>$casenotes,
@@ -806,7 +845,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <option value="fetalmonths"<?php if ($casedata->get_faageunits2() == 'fetalmonths') echo ' selected="selected"'; ?>>fetal months</option>
       </select>
     
-    
+    <BR>
+    <label class="label" for="faage">Age Notes</label><input id="faage" type="text" name="faage_notes" size="30"  value="<?php echo ((isset($_POST['faage_notes'])) ? $_POST['faage_notes'] : $casedata->get_faage_notes()); ?>"/>
+    <BR>
     
     <br/><label class="label" for="faancestry">Ancestry/Group Affiliation</label><input id="farace_othertext" type="text" name="farace_othertext" size="30" maxlength="100" value="<?php  echo $casedata->get_faancestryottext(); ?>"/>
     
@@ -831,21 +872,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type="radio" name="idsex" value="Other" <?php if (($casedata->get_idsex() != null) AND ($casedata->get_idsex() != 'Male') AND ($casedata->get_idsex() != 'Female')) echo ' checked'; ?>> Other: 
         <input id="idsexother" name="idsexother" type="text" 
           <?php if (($casedata->get_idsex() != null) AND ($casedata->get_idsex() != 'Male') AND ($casedata->get_idsex() != 'Female')) { echo " value='".$casedata->get_idsex()."' ";}?>/>
-               <BR>
+        <BR>
+        <label class="label" for="idsex_notes">Sex Notes</label><input id="faage" type="text" name="idsex_notes" size="30"  value="<?php echo ((isset($_POST['idsex_notes'])) ? $_POST['idsex_notes'] : $casedata->get_idsex_notes()); ?>"/>
+        <BR>
+        <BR>
       
       
-      <br/><label class="label" for="idage">Age</label><input id="idage" type="text" name="idage" size="5" maxlength="5" value="<?php echo $casedata->get_idage(); ?>"/>
+      <label class="label" for="idage">Age</label><input id="idage" type="text" name="idage" size="5" maxlength="5" value="<?php echo $casedata->get_idage(); ?>"/>
       <select name="idageunits">
         <option value="years">years</option>
         <option value="months"<?php if ($casedata->get_idageunits() == 'months') echo ' selected="selected"'; ?>>months</option>
         <option value="fmonths"<?php if ($casedata->get_idageunits() == 'fmonths') echo ' selected="selected"'; ?>>fetal months</option>
         </select> 
-      
-      
-      
-      
-      
-      <br/><label class="label" for="idrace">Race/Ethnicity</label>
+      <BR>  
+        <label class="label" for="idage_notes">Age Notes</label><input id="faage" type="text" name="idage_notes" size="30"  value="<?php echo ((isset($_POST['idage_notes'])) ? $_POST['idage_notes'] : $casedata->get_idage_notes()); ?>"/>
+        <BR>
+        <BR> 
+
+      <label class="label" for="idrace">Race/Ethnicity</label>
       <input type="checkbox" name="race_asian" value="1" <?php if ($casedata->get_idraceas() == 1) echo ' checked'; ?>/>Asian/Pacific Islander
       <input type="checkbox" name="race_black" value="1" <?php if ($casedata->get_idraceaf() == 1) echo ' checked'; ?>/>Black/African-American
       <input type="checkbox" name="race_hispanic" value="1" <?php if ($casedata->get_idracehi()  == 1) echo ' checked'; ?>/>Hispanic<br />
@@ -862,8 +906,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           <option value="in" <?php if ($casedata->get_idstatureunits() == 'in') echo ' selected="selected"'; ?>>inches</option>
         <option value="cm" <?php if ($casedata->get_idstatureunits() == 'cm') echo ' selected="selected"'; ?>>cm</option>
         </select>
+      <BR>
+      <label class="label" for="idstature_notes">Stature Notes</label><input id="faage" type="text" name="idstature_notes" size="30"  value="<?php echo ((isset($_POST['idstature_notes'])) ? $_POST['idstature_notes'] : $casedata->get_idstature_notes()); ?>"/>
       
-      <br />
+      <BR>
+      <BR>
       
       <br/><label class="label" for="idsource">Information Source</label><input id="idsource" type="text" name="idsource" size="30" maxlength="60" value="<?php echo $casedata->get_idsource(); ?>" /><br />
       

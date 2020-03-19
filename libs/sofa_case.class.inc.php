@@ -22,14 +22,18 @@ class sofa_case {
     private $faage2;
     private $faageunits;
     private $faageunits2;
+    private $faage_notes;
     private $fastature;
     private $fastature2;
     private $fastatureunits;
     private $idsex;
+    private $idsex_notes;
     private $idage;
     private $idageunits;
+    private $idage_notes;
     private $idstature;
     private $idstatureunits;
+    private $idstature_notes;
     private $idsource;
     private $casenotes;
     private $datestarted;
@@ -73,6 +77,7 @@ class sofa_case {
     public function get_fasex() { return $this->fasex; }
     public function get_faage() { return $this->faage; }
     public function get_faage2() { return $this->faage2; }
+    public function get_faage_notes() { return $this->faage_notes; }
     public function get_faageunits() { return $this->faageunits; }
     public function get_faageunits2() { return $this->faageunits2; }
     public function get_fastature() { return $this->fastature; }
@@ -80,10 +85,13 @@ class sofa_case {
     public function get_fastatureunits() { return $this->fastatureunits; }
     
     public function get_idsex() { return $this->idsex; }
+    public function get_idsex_notes() { return $this->idsex_notes; }
     public function get_idage() { return $this->idage; }
     public function get_idageunits() { return $this->idageunits; }
+    public function get_idage_notes() { return $this->idage_notes; }
     public function get_idstature() { return $this->idstature; }
     public function get_idstatureunits() { return $this->idstatureunits; }
+    public function get_idstature_notes() { return $this->idstature_notes; }
     public function get_idsource() { return $this->idsource; }
     public function get_casenotes() { return $this->casenotes; }
     public function get_datestarted() { return $this->datestarted; }
@@ -149,16 +157,22 @@ class sofa_case {
                 . "faage2,"
                 . "faageunits,"
                 . "faageunits2,"
+                . "faage_notes,"
                 
                 . "fastature,"
                 . "fastature2,"
                 . "fastatureunits,"
                 . "idsex,"
-                . "idage,"
+                . "idsex_notes,"
                 
+                . "idage,"               
                 . "idageunits,"
+                . "idage_notes,"
+                
                 . "idstature,"
                 . "idstatureunits,"
+                . "idstature_notes,"
+                
                 . "idsource,"
                 . "casenotes,"
                 
@@ -207,16 +221,23 @@ class sofa_case {
                     . ":faage2,"
                     . ":faageunits,"
                     . ":faageunits2,"
+                    . ":faage_notes,"
                 
                     . ":fastature,"
                     . ":fastature2,"
                     . ":fastatureunits,"
+                
                     . ":idsex,"
+                    . ":idsex_notes,"
+                
                     . ":idage,"
-   
                     . ":idageunits,"
+                    . ":idage_notes,"
+                
                     . ":idstature,"
                     . ":idstatureunits,"
+                    . ":idstature_notes,"
+                
                     . ":idsource,"
                     . ":casenotes,"
                 
@@ -402,18 +423,22 @@ public function submit_case($submitstatus) {
                 . "faage2=:faage2,"
                 . "faageunits=:faageunits, "
                 . "faageunits2=:faageunits2,"
+                . "faage_notes=:faage_notes,"
                 
                 . "fastature=:fastature,"
                 . "fastature2=:fastature2,"
                 . "fastatureunits=:fastatureunits,"
                 
                 . "idsex=:idsex,"
+                . "idsex_notes=:idsex_notes,"
                 . "idage=:idage,"
                 . "idageunits=:idageunits,"
+                . "idage_notes=:idage_notes,"
                 
                 . "idsource=:idsource,"
                 . "idstature=:idstature,"
                 . "idstatureunits=:idstatureunits,"
+                . "idstature_notes=:idstature_notes,"
                 . "casenotes=:casenotes,"
                 . "datemodified=NOW(),"
                 
@@ -1065,19 +1090,27 @@ public function submit_case($submitstatus) {
             'FA Report: Sex', 
             'FA Report: Minimum age', 
             'FA Report: Maximum age', 
+            'FA Report: FA Age Notes',
             'FA Report: Ancestry',
             'FA Report: Minimum Stature',
             'FA Report: Maximum Stature',
             'Identified Sex',
+            'Identified Sex Notes',
             'Identified Age',
             'Identified Age Units (years or fetal months)',
+            'Identified Age Notes',
             'Identified Race/Ethnicity',
             'Race/Ethnicity Notes',
             'Identified Stature',
+            'Identified Stature Notes',
             'Information Source',
             'Case Notes');
         
         $headerrow2 = array('',
+            '',
+            '',
+            '',
+            '',
             '',
             '',
             '',
@@ -1194,6 +1227,7 @@ public function submit_case($submitstatus) {
             $curr_row[] = $curr_case->get_fasex();
             $curr_row[] = $curr_case->get_faage() . " " . (empty($curr_case->get_faageunits()) ? "years" : $curr_case->get_faageunits());
             $curr_row[] = $curr_case->get_faage2() . " " . (empty($curr_case->get_faageunits2()) ? "years" : $curr_case->get_faageunits2());
+            $curr_row[] = $curr_case->get_faage_notes();
             $faancestry = "";
             if ($curr_case->get_faancestryas()!=0){$faancestry=$faancestry.'[Asian/Pacific Islander]';}
             if ($curr_case->get_faancestryaf()!=0){$faancestry=$faancestry.'[African-American/Black]';}
@@ -1216,8 +1250,10 @@ public function submit_case($submitstatus) {
             
             $curr_row[] = (empty($curr_case->get_fastature2()) ? "" : ($curr_case->get_fastature2() . $units));
             $curr_row[] = $curr_case->get_idsex();
+            $curr_row[] = $curr_case->get_idsex_notes();
             $curr_row[] = $curr_case->get_idage();
             $curr_row[] = $curr_case->get_idageunits();
+            $curr_row[] = $curr_case->get_idage_notes();
             $idancestry = "";
             if ($curr_case->get_idraceas()!=0){$idancestry=$idancestry.'[Asian/Pacific Islander]';}
             if ($curr_case->get_idraceaf()!=0){$idancestry=$idancestry.'[African-American/Black]';}
@@ -1236,6 +1272,7 @@ public function submit_case($submitstatus) {
             }
             
             $curr_row[] = (empty($curr_case->get_idstature()) ? "" : ($curr_case->get_idstature()) . $idunits);
+            $curr_row[] = $curr_case->get_idstature_notes();
             $curr_row[] = $curr_case->get_idsource();
             $curr_row[] = $curr_case->get_casenotes();
             
@@ -1415,6 +1452,7 @@ public function submit_case($submitstatus) {
         $this->faage2 = $casedata['faage2'];
         $this->faageunits = $casedata['faageunits'];
         $this->faageunits2 = $casedata['faageunits2'];
+        $this->faage_notes = $casedata['faage_notes'];
         $this->faancestryas = $casedata['faancestryas'];
         $this->faancestryeuro = $casedata['faancestryeuro'];
         $this->faancestryaf = $casedata['faancestryaf'];
@@ -1426,8 +1464,10 @@ public function submit_case($submitstatus) {
         $this->fastature2 = $casedata['fastature2'];
         $this->fastatureunits = $casedata['fastatureunits'];
         $this->idsex = $casedata['idsex'];
+        $this->idsex_notes = $casedata['idsex_notes'];
         $this->idage = $casedata['idage'];
         $this->idageunits = $casedata['idageunits'];
+        $this->idage_notes = $casedata['idage_notes'];
         $this->idraceas = $casedata['idraceas'];
         $this->idraceaf = $casedata['idraceaf'];
         $this->idracewh = $casedata['idracewh'];
@@ -1438,6 +1478,7 @@ public function submit_case($submitstatus) {
         $this->idancaddtext = $casedata['idancaddtext'];
         $this->idstature = $casedata['idstature'];
         $this->idstatureunits = $casedata['idstatureunits'];
+        $this->idstature_notes = $casedata['idstature_notes'];
         $this->idsource = $casedata['idsource'];
         $this->nummethods = $casedata['nummethods'];
         $this->casenotes = $casedata['casenotes'];
