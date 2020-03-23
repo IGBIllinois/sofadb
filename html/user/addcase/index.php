@@ -1,5 +1,6 @@
 <?php 
 $addcase = 1;
+$title = "Add Case";
 require('../../include/header_user.php') ;
  
  if(!isset($_SESSION['num_methods']))

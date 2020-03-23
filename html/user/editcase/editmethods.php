@@ -1,11 +1,9 @@
 <?php 
+$title = "Edit Case Methods";
 require_once('../../include/header_user.php');
 require_once('../../include/session.inc.php') ;
 
 ?>
-
-<title>Edit Case Methods</title>
-
 
   <h1 class="cntr">Edit Case Methods</h1>
 

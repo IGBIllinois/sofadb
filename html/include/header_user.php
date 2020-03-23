@@ -43,7 +43,12 @@ elseif($_SESSION['loggedin']==1)
 <html >
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>My Account</title>
+<?php
+    if(!isset($title)) {
+        $title = "My Account";
+    }
+    ?>
+<title><?php echo $title ?></title>
 
 <!-- CSS -->
  <link href="<?php echo($root_url) ?>/css/style.css" rel="stylesheet" type="text/css" />

@@ -1,4 +1,5 @@
 <?php 
+$title = "Edit Profile";
 require_once("../../include/header_user.php");
 require_once('../../include/session.inc.php') ;
 ?>

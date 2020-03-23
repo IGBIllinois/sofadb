@@ -17,7 +17,7 @@ if(isset($_GET['func']) && $_GET['func'] == "drop_1"  ) {
     exit();
     
 }
-
+$title = "Edit Case";
 require_once('../../include/header_user.php');
 require_once('../../include/session.inc.php') ;
 

@@ -1,4 +1,5 @@
 <?php
+$title = "Search";
 require_once('../../include/session.inc.php') ;
 require_once('../../include/header_user.php');
  
