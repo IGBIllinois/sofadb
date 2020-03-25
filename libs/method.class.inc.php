@@ -495,6 +495,31 @@ class method {
         
     }
 
+    /** Adds a new prompt to the database
+     * 
+     * @param db $db The database object
+     * @param string  $prompt_name Name of the prompt
+     * @param string $prompt_text Display text of the prompt
+     */
+    public static function add_new_prompt($db, $prompt_name, $prompt_text) {
+        
+        $query = "INSERT INTO prompts (prompt_name, prompt) VALUES (:prompt_name, :prompt_text)";
+        $params = array("prompt_name"=>$prompt_name, "prompt_text"=>$prompt_text);
+        
+        $result = $db->get_insert_result($query, $params);
+        
+        if($result > 0) {
+            return array("RESULT"=>TRUE,
+                         "MESSAGE"=>"Prompt added successfully.",
+                         "id"=>$result);
+            
+        } else {
+            return array("RESULT"=>FALSE,
+                        "MESSAGE"=>"There was an error, the prompt was not added. Please check your input and try again."
+                );
+        }
+        
+    }
 
      // Private functions
 

@@ -184,6 +184,7 @@ foreach($prompts as $pid=>$prompt) {
     echo("<option value='".$pid."'".(($pid == $prompt_id)  ? " selected " : "")." >".$prompt."</option>");
 }
 echo("</select>");
+echo(" (<a href='prompts.php' target='blank'>Add a new prompt</a>)<BR>");
 echo("<BR>");
 echo('<label class="label" for="active">Is this method active?</label>');
 echo("<input name='active' id='active' type='checkbox' value=1". ($active ? " checked " : "") .">");

@@ -58,6 +58,10 @@ if(isset($_POST['prompt'])) {
 $prompt = $_POST['prompt'];
 }
 
+if(isset($_POST['new_prompt'])) {
+    $new_prompt = $_POST['new_prompt'];
+}
+
 if(isset($_POST['add_method_submit'])) {
     if(count($errors) == 0) {
         $result = method::create_method($db, $name, $type_id, $measurement_type, $description, $instructions, $method_info_type, $prompt);
@@ -149,7 +153,8 @@ foreach($prompts as $id=>$prompt) {
     echo("<option value='".$id."' >".$prompt."</option>");
 }
 echo("</select>");
-
+#echo("Add a new prompt:<input name='new_prompt' id='new_prompt' type='text' value='$new_prompt'></input>");
+echo(" (<a href='prompts.php' target='blank'>Add a new prompt</a>)<BR>");
 echo('<BR><BR></fieldset><BR>');
 
 
