@@ -176,8 +176,8 @@ class method {
             $instructions, 
             $method_info_type,
             $prompt_id = null,
-            $fdb = 0,
-            $top = 0,
+            $fdb,
+            $top,
             $active = 0) {
         
         $check_query = "SELECT id from methods where methodname=:name and methodtypenum=:typenum";
@@ -191,7 +191,7 @@ class method {
                         "MESSAGE"=>"A method with the name $name already exists. Please choose a different name and try again.");
             
         }
-        
+
         $query = "INSERT INTO methods (".
                 "methodname, ".
                 " methodtypenum, ".
@@ -464,6 +464,8 @@ class method {
      */
     public static function get_methods_by_type($db, $type_id, $active=1) {
             $query = "SELECT methodname,id FROM methods WHERE active=:active AND methodtypenum=:methodtypenum ";
+            $query .= " ORDER BY top desc, methodname";
+            /*
             if($type_id == METHOD_DATA_SEX_ID) {
                 // Specific order for Sex methods
                 $query .= "order by "
@@ -489,6 +491,8 @@ class method {
                 // Specific order for Stature methods
                 $query .= "Order by methodname ASC";
             }
+             * 
+             */
             $params = array("methodtypenum"=>$type_id, "active"=>$active);
             $result = $db->get_query_result($query, $params);
             $methods = array();

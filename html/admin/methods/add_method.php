@@ -59,16 +59,19 @@ $prompt = $_POST['prompt'];
 }
 
 if(isset($_POST['fdb'])) {
-    $fdb = $_POST['fdb'];
+    $fdb = 1;
+} else {
+    $fdb = 0;
 }
 
 if(isset($_POST['top'])) {
-    $top = $_POST['top'];
+    $top = 1;
+} else {
+    $top = 0;
 }
 
 if(isset($_POST['add_method_submit'])) {
     if(count($errors) == 0) {
-        
         $result = method::create_method($db, $name, $type_id, $measurement_type, $description, $instructions, $method_info_type, $prompt, $fdb, $top);
 
         if($result['RESULT'] == TRUE) {
