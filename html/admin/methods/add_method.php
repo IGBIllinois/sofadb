@@ -58,13 +58,18 @@ if(isset($_POST['prompt'])) {
 $prompt = $_POST['prompt'];
 }
 
-if(isset($_POST['new_prompt'])) {
-    $new_prompt = $_POST['new_prompt'];
+if(isset($_POST['fdb'])) {
+    $fdb = $_POST['fdb'];
+}
+
+if(isset($_POST['top'])) {
+    $top = $_POST['top'];
 }
 
 if(isset($_POST['add_method_submit'])) {
     if(count($errors) == 0) {
-        $result = method::create_method($db, $name, $type_id, $measurement_type, $description, $instructions, $method_info_type, $prompt);
+        
+        $result = method::create_method($db, $name, $type_id, $measurement_type, $description, $instructions, $method_info_type, $prompt, $fdb, $top);
 
         if($result['RESULT'] == TRUE) {
             $id = $result['id'];
@@ -153,8 +158,13 @@ foreach($prompts as $id=>$prompt) {
     echo("<option value='".$id."' >".$prompt."</option>");
 }
 echo("</select>");
-#echo("Add a new prompt:<input name='new_prompt' id='new_prompt' type='text' value='$new_prompt'></input>");
 echo(" (<a href='prompts.php' target='blank'>Add a new prompt</a>)<BR>");
+echo("<BR>");
+echo("<label class='label' for='fdb'>FDB sharing method?</label><input style='vertical-align: middle'  type='checkbox' name='fdb' value='1'". ($fdb ? " checked " : "") ." />");
+echo("<BR><BR>");
+echo("<label class='label' for='top'>Should this method be shown at the top when listing methods?</label><input type='checkbox' name='top' value='1'". ($top ? " checked " : "") ." />");
+
+
 echo('<BR><BR></fieldset><BR>');
 
 

@@ -36,6 +36,8 @@ if(!isset($_POST['id']) &&  !isset($_GET['id'])) {
         $method_info_type = $method->get_method_info_type();
         $prompt_id = $method->get_prompt_id();
         $active = $method->get_active();
+        $top = $method->get_top();
+        $fdb = $method->get_fdb();
 
     } else {
         $id = ($_POST['id']);
@@ -74,8 +76,29 @@ if(isset($_POST['edit_method_submit'])) {
     } else {
         $active = 0;
     }
+    
+    if(isset($_POST['fdb'])) {
+        $fdb = $_POST['fdb'];
+    } else {
+        $fdb = 0;
+    }
 
-    $method->update_method($name, $type_id, $measurement_type, $description, $instructions, $method_info_type, $prompt_id, $active);
+    if(isset($_POST['top'])) {
+        $top = $_POST['top'];
+    } else {
+        $top = 0;
+    }
+
+    $method->update_method($name, 
+            $type_id, 
+            $measurement_type, 
+            $description, 
+            $instructions, 
+            $method_info_type, 
+            $prompt_id, 
+            $fdb,
+            $top,
+            $active);
     
 
 
@@ -186,6 +209,13 @@ foreach($prompts as $pid=>$prompt) {
 echo("</select>");
 echo(" (<a href='prompts.php' target='blank'>Add a new prompt</a>)<BR>");
 echo("<BR>");
+
+echo("<label class='label' for='fdb'>FDB sharing method?</label><input style='vertical-align: middle'  type='checkbox' name='fdb' value='1'". ($fdb ? " checked " : "") ." />");
+echo("<BR><BR>");
+echo("<label class='label' for='top'>Should this method be shown at the top when listing methods?</label><input type='checkbox' name='top' value='1'". ($top ? " checked " : "") ." />");
+echo("<BR><BR>");
+
+
 echo('<label class="label" for="active">Is this method active?</label>');
 echo("<input name='active' id='active' type='checkbox' value=1". ($active ? " checked " : "") .">");
 

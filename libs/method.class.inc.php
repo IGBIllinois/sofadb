@@ -16,6 +16,8 @@ class method {
     private $instructions;
     private $methodinfotype;
     private $prompt_id;
+    private $fdb;
+    private $top;
     private $active;
     
     private $db; // Database object
@@ -84,6 +86,14 @@ class method {
         return $this->prompt_id;
     }
     
+    public function get_fdb() {
+        return $this->fdb;
+    }
+    
+    public function get_top() {
+        return $this->top;
+    }
+    
     public function get_active() {
         return $this->active;
     }
@@ -107,8 +117,10 @@ class method {
             $description,
             $instructions,
             $method_info_type,
-            $prompt_id = null,
-            $active = 1) {
+            $prompt_id,
+            $fdb,
+            $top,
+            $active) {
                 $query = "UPDATE methods SET ".
                     "methodname = :methodname,".
                     " methodtypenum = :methodtypenum, ".
@@ -117,6 +129,8 @@ class method {
                     " instructions = :instructions, ".
                     " methodinfotype = :methodinfotype, ".
                     " prompt = :prompt, " .
+                    " fdb = :fdb,".
+                    " top = :top,".
                     " active = :active ".
                     " where id = :id ";
                 $params = array("methodname"=>$name,
@@ -127,6 +141,8 @@ class method {
                                 "prompt"=>$prompt_id,
                                 "methodinfotype"=>$method_info_type,
                                 "active"=>$active,
+                                "fdb"=>$fdb,
+                                "top"=>$top,
                                 "id"=>$this->id);
 
                 $result = $this->db->get_update_result($query, $params);
@@ -146,6 +162,8 @@ class method {
      * @param string $description Description of the method
      * @param string $instructions Additional instructions
      * @param int $prompt_id ID of the prompt to use (from the 'prompts' table. Defaults to null
+     * @param bool $fdb Whether or not this method is included in FDB reports. Defaults to false
+     * @param bool $top Whether or not this method should be displayed at the top (Defaults to false)
      * $param bool $active Whether or not the method is active. Defaults to 0 when adding a new method.
      * @return array
      */
@@ -158,6 +176,8 @@ class method {
             $instructions, 
             $method_info_type,
             $prompt_id = null,
+            $fdb = 0,
+            $top = 0,
             $active = 0) {
         
         $check_query = "SELECT id from methods where methodname=:name and methodtypenum=:typenum";
@@ -174,13 +194,15 @@ class method {
         
         $query = "INSERT INTO methods (".
                 "methodname, ".
-            " methodtypenum, ".
-            " measurementtype, ".
-            " description, ".
-            " instructions,".
-            " methodinfotype,".    
-            " prompt,".
-            " active)".
+                " methodtypenum, ".
+                " measurementtype, ".
+                " description, ".
+                " instructions,".
+                " methodinfotype,".    
+                " prompt,".
+                " fdb, ".
+                " top, ".
+                " active)".
             " VALUES (".
                ":methodname, ".
                ":methodtypenum, ".
@@ -189,15 +211,19 @@ class method {
                ":instructions,".
                ":methodinfotype,".
                ":prompt, ".
+               ":fdb, ".
+               ":top, ".
                ":active) ";
         $params = array("methodname"=>$name,
-                                "methodtypenum"=>$type_num,
-                                "measurementtype"=>$measurement_type,
-                                "description"=>$description,
-                                "instructions"=>$instructions,
-                                "methodinfotype"=>$method_info_type,
-                                "active"=>$active,
-                                "prompt"=>$prompt_id);
+                        "methodtypenum"=>$type_num,
+                        "measurementtype"=>$measurement_type,
+                        "description"=>$description,
+                        "instructions"=>$instructions,
+                        "methodinfotype"=>$method_info_type,
+                        "active"=>$active,
+                        "fdb"=>$fdb,
+                        "top"=>$top,
+                        "prompt"=>$prompt_id);
         
         $result = $db->get_insert_result($query, $params);
 
@@ -543,6 +569,8 @@ class method {
          $this->instructions = $data['instructions'];
          $this->methodinfotype = $data['methodinfotype'];
          $this->prompt_id = $data['prompt'];
+         $this->fdb = $data['fdb'];
+         $this->top = $data['top'];
          $this->active = $data['active'];
          }
          

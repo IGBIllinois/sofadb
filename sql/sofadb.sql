@@ -142,17 +142,18 @@ CREATE TABLE `method_info_types` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 CREATE TABLE `methods` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `methodname` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `methodtype` varchar(100) CHARACTER SET latin1 NOT NULL,
   `methodtypenum` int(11) NOT NULL,
   `measurementtype` varchar(100) CHARACTER SET latin1 NOT NULL,
   `description` varchar(100) DEFAULT NULL,
   `instructions` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
   `methodinfotype` varchar(100) DEFAULT NULL,
   `prompt` int(10) UNSIGNED DEFAULT NULL,
-  `active` boolean,
-  PRIMARY KEY (`id`)
+  `active` tinyint(1) DEFAULT NULL,
+  `top` tinyint(1) DEFAULT NULL,
+  `fdb` tinyint(1) DEFAULT NULL,
+   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `password_reset` (
