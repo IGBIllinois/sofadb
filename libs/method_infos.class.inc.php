@@ -315,7 +315,10 @@ class method_infos {
        $j = 0;
        $output .= "<table class='table_full'><tr>";
        
-        foreach($method_infos_by_type as $type_id=>$method_infos) {    
+        foreach($method_infos_by_type as $type_id=>$method_infos) {
+            if($type_id == input_type::get_input_id_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME)) {
+                continue;
+            }
             $output .= "<td class='td_spaced align_top'>";
 
             $j++;
@@ -377,12 +380,9 @@ class method_infos {
                $output .= self::show_method_info_text_area($db, $method_info_id, $tier2id);
            }
            
-           else if($input_type_name == USER_INTERACTION_SELECT_EACH ||
-                   $input_type_name == USER_INTERACTION_CHECKBOX_SELECT) {
+           else if($input_type_name == USER_INTERACTION_SELECT_EACH) {
                $inner_table = true;
-               if($input_type_name == USER_INTERACTION_CHECKBOX_SELECT) {
-                   $maxcols = 1;
-               }
+               
                if($maxcols == 1 ) {
                    // draw vertically
                    $inner_table = false;
@@ -402,8 +402,22 @@ class method_infos {
                }
 
                $output .= "<td class='td_spaced align_top ".(!$inner_table ? " align_right ": "")."'>";
-               $output .= self::show_method_infos_select_each($db, $method_info_id, $tier2id, $inner_table, ($input_type_name == USER_INTERACTION_CHECKBOX_SELECT));
+               $output .= self::show_method_infos_select_each($db, $method_info_id, $tier2id, $inner_table, 0);
                $output .= "</td>";
+               
+           } else if($input_type_name == USER_INTERACTION_CHECKBOX_SELECT) {
+               $maxcols = 1;
+               if($i >= $maxcols) {
+                   $output .= "</tr><tr>";
+                   $i = 0;
+               }
+               $inner_table = false;
+               $method_infos2 = new method_infos($db, $method_info_id);
+               $header = $method_infos2->get_header();
+               $output .= "<table><tr><th class='td_spaced align_top'><B><U>$header</U></B></th></tr>";
+               $output .= "<tr>";
+               $output .= self::show_method_infos_select_each($db, $method_info_id, $tier2id, false, 1);
+               $output .= "</tr></table>";
            }
            
            $i++;
@@ -559,16 +573,18 @@ class method_infos {
         $output = "";
         // header
         if($inner_table) {
-        $output .= "<table><tr><th class='align_right align_top td_spaced'>";
-        $output .= "<B><U>".$method_infos->get_header() . "</U></B></th><th class='td_spaced align_left' ><B><U>". $method_infos->get_option_header() . "</U></B></th></tr><tr>";
-        $output .= "<tr><td class='align_right align_top td_spaced'>";
-        }
-        $output .= $method_infos->get_name();
-        if($method_infos->get_name() != null && $method_infos->get_name() != "") {
-            $output .= ":";
+            $output .= "<table><tr><th class='align_right align_top td_spaced'>";
+            $output .= "<B><U>".$method_infos->get_header() . "</U></B></th><th class='td_spaced align_left' ><B><U>". $method_infos->get_option_header() . "</U></B></th></tr><tr>";
+            $output .= "<tr><td class='align_right align_top td_spaced'>";
+        
+            $output .= $method_infos->get_name();
+            if($method_infos->get_name() != null && $method_infos->get_name() != "") {
+                $output .= ":";
+            }
+            $output .="</td>";
         }
 
-        $output .="</td><td class='align_left align_top td_spaced'>";
+        $output .="<td class='align_left align_top td_spaced'>";
         
         $values = array();
         $selected = array();
@@ -586,7 +602,7 @@ class method_infos {
             $values[$op->get_id()] = $op->get_value();
         }
         if(!$checkboxes) {
-        $output .= (functions::draw_select($values, $selected, true));
+            $output .= (functions::draw_select($values, $selected, true));
         } else {
 
             $check_values = array();
@@ -596,7 +612,7 @@ class method_infos {
             $output .= functions::checkbox_dropdown($method_infos->get_id(), $method_infos->get_name(), $check_values, $selected, 'check_select');
         }
         if($inner_table) {
-        $output .= "</td></tr></table>";
+            $output .= "</td></tr></table>";
         }
         return $output;
     }
