@@ -82,7 +82,7 @@ if ($current_page != 1) {
 echo '<a href="index.php?s=' . ($start - $pagerows) . '&p=' . $pages . '">Previous</a> ';
 }
 //Create a Next link
-if ($current_page != $pages) {
+if ($current_page != $pages+1) {
 echo '<a href="index.php?s=' . ($start + $pagerows) . '&p=' . $pages . '">Next</a> ';
 echo '&nbsp; &nbsp; &nbsp; &nbsp;';
 }
