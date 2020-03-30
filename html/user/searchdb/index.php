@@ -145,9 +145,19 @@ echo '</p>';
 }
 
 echo '<br/> <a href="index.php?search=1">Search Again</a>';
+echo("<BR><BR>");
+echo("If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in these tutorials that can help ensure that misinterpretation of the data is not occurring.");
+echo("<BR>");
 echo '<form action="index.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="export">
 <br/><p>Click here to export results to CSV File
+<input name="fdb" type="hidden" value="0">
    <input name="exportsubmit" id="exportsubmit" type="submit" value="Export Case Data"/></p>
+   </form>';
+
+echo '<form action="index.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="export">
+<br/><p>Click here to export FDB report results to a CSV file
+<input name="fdb" type="hidden" value="1">
+   <input name="exportsubmit" id="exportsubmitfdb" type="submit" value="Export FDB Case Data"/></p>
    </form>';
 
 echo '<div class="scroll"><table id="hortable" summary="List of cases">
@@ -422,6 +432,8 @@ echo <<<_END
 <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
 	<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Export Database</legend>
 <br>
+    If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in these tutorials that can help ensure that misinterpretation of the data is not occurring.
+    <BR><BR>
 <span><label class="label" for="exportall">Click here to export all cases</label><input name="exportall" type="submit" id="exportall" title="Export All" value="Export All"></span><br>
 
 
@@ -442,6 +454,8 @@ echo <<<_END
 <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
 	<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Export My Cases</legend>
 <br>
+If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in these tutorials that can help ensure that misinterpretation of the data is not occurring.
+<BR><BR>
 <span><label class="label" for="exportMy">Click here to export all of the current user's submitted cases</label><input name="exportMy" type="submit" id="exportMy" title="Export My Cases" value="Export My Cases"></span><br>
 
 

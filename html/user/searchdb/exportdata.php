@@ -9,11 +9,14 @@
             sofa_case::write_report($db, $case_results);
             die();
             
-        } else
-	  if (isset($_POST['exportsubmit'])|| isset($_POST['exportall']))
+    } else
+	  if (isset($_POST['exportsubmit']) || 
+                  isset($_POST['exportall']) ||
+                  isset($_POST['exportallfdb'])
+                  )
 	  {
-              
-                              $race_array = array();
+              $fdb = $_POST['fdb'];
+          $race_array = array();
           foreach($_GET['race'] as $race=>$value) {
               $race_array[$value] = $race;
           }
@@ -48,7 +51,7 @@
              }
               $case_results = sofa_case::search_cases($db, null, $case_data, $method_list);
               
-              sofa_case::write_report($db, $case_results);
+              sofa_case::write_report($db, $case_results, $fdb);
               die();
 	} 
 

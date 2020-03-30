@@ -1072,21 +1072,24 @@ public function submit_case($submitstatus) {
      * @param db $db The database object
      * @param \sofa_case $case_list List of case objects
      */
-    public static function write_report($db, $case_list) {
+    public static function write_report($db, $case_list, $fdb=0) {
         header('Content-Type: text/csv; charset=utf-8');
          ob_end_clean();
         $today = date("m_d_Y_H_i_s");
         $filename='SOFADBExport_'.$today.".csv";
+        if($fdb) {
+            $filename = 'SOFADB_FDB_Export_'.$today.".csv";
+        }
         header("Content-type: application/octet-stream");
        header('Content-Disposition: attachment; filename='.$filename);
         
         // make header row for data
-        $headerrow=array('Case ID', 
+       if($fdb) {
+       $headerrow=array('Case ID', 
             'Date Submitted to FADAMA DB', 
-            'Practioner Degree', 
-            'Year Earned', 
-            'Practioner Cases Per Year', 
             'Case Year',
+           'Case Number',
+           'Case Agency',
             'FA Report: Sex', 
             'FA Report: Minimum age', 
             'FA Report: Maximum age', 
@@ -1128,10 +1131,54 @@ public function submit_case($submitstatus) {
             '',
             '',
             '',
+            ''
+            );  
+       } else {
+        $headerrow=array('Case ID', 
+            'Date Submitted to FADAMA DB', 
+            'Case Year',
+            'FA Report: Sex', 
+            'FA Report: Minimum age', 
+            'FA Report: Maximum age', 
+            'FA Report: FA Age Notes',
+            'FA Report: Ancestry',
+            'FA Report: Minimum Stature',
+            'FA Report: Maximum Stature',
+            'Identified Sex',
+            'Identified Sex Notes',
+            'Identified Age',
+            'Identified Age Units (years or fetal months)',
+            'Identified Age Notes',
+            'Identified Race/Ethnicity',
+            'Race/Ethnicity Notes',
+            'Identified Stature',
+            'Identified Stature Notes',
+            'Information Source',
+            'Case Notes');
+        
+        $headerrow2 = array('',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
             '',
             ''
             );
-            
+       }
 
         // Add methods to header row
         $method_info_ids = $headerrow2; // for proper order of method_infos
@@ -1144,6 +1191,11 @@ public function submit_case($submitstatus) {
         $all_methods = array_merge($sx_methods, $age_methods, $anc_methods, $stat_methods);
         
         foreach($all_methods as $method) {
+            if($fdb) {
+                if(!$method->get_fdb()) {
+                    continue;
+                }
+            }
             $methodname = $method->get_name();
             
             $headerrow[] = $methodname;
@@ -1220,10 +1272,11 @@ public function submit_case($submitstatus) {
             $member = new member($db, $curr_case->get_memberid());
             $curr_row[] = $curr_case->get_id();
             $curr_row[] = $curr_case->get_datesubmitted();
-            $curr_row[] = $member->get_degree();
-            $curr_row[] = $member->get_degreeyear();
-            $curr_row[] = $member->get_caseperyear();
             $curr_row[] = $curr_case->get_caseyear();
+            if($fdb) {
+                $curr_row[] = $curr_case->get_casenumber();
+                $curr_row[] = $curr_case->get_caseagency();
+            }
             $curr_row[] = $curr_case->get_fasex();
             $curr_row[] = $curr_case->get_faage() . " " . (empty($curr_case->get_faageunits()) ? "years" : $curr_case->get_faageunits());
             $curr_row[] = $curr_case->get_faage2() . " " . (empty($curr_case->get_faageunits2()) ? "years" : $curr_case->get_faageunits2());
@@ -1287,6 +1340,11 @@ public function submit_case($submitstatus) {
             $i = 0;
 
             foreach($all_methods as $tmp_method) {
+                if($fdb) {
+                    if(!$tmp_method->get_fdb()) {
+                        continue;
+                    }
+                }
                 if(in_array($tmp_method->get_id(), $case_method_ids)) {
                     $curr_row[] = "Y";
 
@@ -1421,6 +1479,7 @@ public function submit_case($submitstatus) {
         fclose($output);
 
     }
+    
             
 
 
