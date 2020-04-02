@@ -154,12 +154,6 @@ echo '<form action="index.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="ex
    <input name="exportsubmit" id="exportsubmit" type="submit" value="Export Case Data"/></p>
    </form>';
 
-echo '<form action="index.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="export">
-<br/><p>Click here to export FDB report results to a CSV file
-<input name="fdb" type="hidden" value="1">
-   <input name="exportsubmit" id="exportsubmitfdb" type="submit" value="Export FDB Case Data"/></p>
-   </form>';
-
 echo '<div class="scroll"><table id="hortable" summary="List of cases">
     <thead>
     	<tr>

@@ -38,9 +38,27 @@ $start = $_GET['s'];
 $start = 0;
 }
 
+
 echo("<div id='memberregion'> <h2 style='text-align:center'>List of methods</h2> ");
 
 echo("<a href='add_method.php'>Add new method</A><BR>");
+echo("<BR><BR>");
+
+if ($pages > 1) {
+
+//What number is the current page?
+$current_page = ($start/$pagerows) + 1;
+//If the page is not the first page then create a Previous link
+if ($current_page != 1) {
+echo '<a href="index.php?s=' . ($start - $pagerows) . '&p=' . $pages . '">Previous</a> | ';
+}
+//Create a Next link
+if ($current_page != $pages+1) {
+echo '<a href="index.php?s=' . ($start + $pagerows) . '&p=' . $pages . '">Next</a> ';
+}
+
+}
+
 echo '<div class="scroll"><table id="hortable" summary="List of methods">
     <thead>
     	<tr>
@@ -79,7 +97,7 @@ echo '<p>';
 $current_page = ($start/$pagerows) + 1;
 //If the page is not the first page then create a Previous link
 if ($current_page != 1) {
-echo '<a href="index.php?s=' . ($start - $pagerows) . '&p=' . $pages . '">Previous</a> ';
+echo '<a href="index.php?s=' . ($start - $pagerows) . '&p=' . $pages . '">Previous</a> | ';
 }
 //Create a Next link
 if ($current_page != $pages+1) {
