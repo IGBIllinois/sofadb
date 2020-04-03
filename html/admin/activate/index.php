@@ -27,7 +27,7 @@ if($result['RESULT'] == FALSE)
     $params = array("username"=>($member->get_firstname() . " " . $member->get_lastname()));
     $from_email = FROM_EMAIL;
     $subject = "FADAMA Membership Denied";
-    $message = renderTwigTemplate('email/request_denied.html.twig', $params);
+    $message = functions::renderTwigTemplate('email/request_denied.html.twig', $params);
     $header = "From:".$from_email."\r\n";
 
    $retval = mail ($to,$subject,$message,$header);
@@ -59,7 +59,7 @@ if($result['RESULT'] == FALSE)
         $subject = "FADAMA Membership Approved";
 
         $params = array("url"=>($_SERVER['HTTP_HOST']. $_SERVER['CONTEXT_PREFIX']));
-        $message = renderTwigTemplate("email/request_approved.html.twig", $params);
+        $message = functions::renderTwigTemplate("email/request_approved.html.twig", $params);
         $header = "From:".$from_email."\r\n";
         $retval = mail ($to,$subject,$message,$header);
         

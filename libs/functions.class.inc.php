@@ -190,7 +190,7 @@ class functions {
     * @param type $expires
     * @return type
     */
-   public function update_password_request($db, $email, $selector, $validator) {
+   public static function update_password_request($db, $email, $selector, $validator) {
        
        // Token expiration
         $expires = new DateTime('NOW');
@@ -210,4 +210,24 @@ class functions {
         
         return $insert;
    }
+   
+   /**
+    * Renders text based on a Twig template, and returns the final text string
+    * @param string $template
+    * @param array  $context
+    */
+   public static function renderTwigTemplate($template, $context) {
+       global $twig;
+       try {
+           $template = $twig->load($template);
+           return $template->render($context);
+       } catch (LoaderError $e) {
+           echo $e->getMessage();
+       } catch (RuntimeError $e) {
+           echo $e->getMessage();
+       } catch (SyntaxError $e) {
+           echo $e->getMessage();
+       }
+   }
+
 }

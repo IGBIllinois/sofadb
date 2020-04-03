@@ -1,6 +1,5 @@
 <?php
 
-
 require_once("../../conf/settings.inc.php");
 require_once("../include/main.inc.php");
 
@@ -70,7 +69,7 @@ $params = array ("url"=>$url,
                  "name"=>$name,
                  "from_email"=>FROM_EMAIL);
 
-$message = renderTwigTemplate('email/change_password.html.twig', $params);
+$message = functions::renderTwigTemplate('email/change_password.html.twig', $params);
 
 // Headers
 $headers = "From: " . FROM_EMAIL . " <" . FROM_EMAIL . ">\r\n";

@@ -292,7 +292,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
       $from= FROM_EMAIL;
    $subject = "FADAMA DB ADMIN ALERT: Activate new user";
-   $message = renderTwigTemplate('email/register_admin.html.twig', $params);
+   $message = functions::renderTwigTemplate('email/register_admin.html.twig', $params);
    /*
    $message = "New User:".$fn." ".$ln." is requesting activation.\n Email address is:".$e."\n\n";
    
@@ -328,7 +328,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    $user_to = $e;
    $user_subject = "FADAMA Membership Request";
    //$user_message = "Thank you for requesting membership approval to FADAMA. Your request is under review and may take up to 1 week to be approved.";
-   $user_message = renderTwigTemplate("email/register_user.html.twig", $user_params);
+   $user_message = functions::renderTwigTemplate("email/register_user.html.twig", $user_params);
    $user_header = "From:".$from."\r\n";
    
    $user_retval = mail($user_to, $user_subject, $user_message, $user_header);
