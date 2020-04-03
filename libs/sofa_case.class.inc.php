@@ -944,6 +944,15 @@ public function submit_case($submitstatus) {
             $params["idstature2"] = $case_data['idstature2'];
         }
         
+        // Submit date
+        if($case_data['datesubmitted'] != null) {
+            if($param_string != "") {
+                $param_string .= $conjunction;
+            }
+            $param_string .= " (datesubmitted >= :datesubmitted) ";
+            $params['datesubmitted'] = $case_data['datesubmitted'];
+        }
+        
         // Race
         // $case_data['race'] is an array of "idrace$value" as keys
         if ($case_data['race'] != null) {
@@ -1055,6 +1064,7 @@ public function submit_case($submitstatus) {
         
         
         $query .= " ORDER BY id ";
+        echo("query = $query<BR>");
 
         $result = $db->get_query_result($query, $params);
         $results = array();
@@ -1071,8 +1081,10 @@ public function submit_case($submitstatus) {
      * 
      * @param db $db The database object
      * @param \sofa_case $case_list List of case objects
+     * @param bool $fdb True if this is an FDB report (only show methods from the FDB database)
+     * @param bool $mine True if this is a report for the given user's cases (show case number and agency)
      */
-    public static function write_report($db, $case_list, $fdb=0) {
+    public static function write_report($db, $case_list, $fdb=0, $mine=0) {
         header('Content-Type: text/csv; charset=utf-8');
          ob_end_clean();
         $today = date("m_d_Y_H_i_s");
@@ -1083,7 +1095,7 @@ public function submit_case($submitstatus) {
         header("Content-type: application/octet-stream");
        header('Content-Disposition: attachment; filename='.$filename);
         
-        // make header row for data
+        // make header rows for data
        if($fdb) {
        $headerrow=array('Case ID', 
             'Date Submitted to FADAMA DB', 
@@ -1133,6 +1145,8 @@ public function submit_case($submitstatus) {
             '',
             ''
             );  
+        $pre_headerrow = $headerrow2;
+        
        } else {
         $headerrow=array('Case ID', 
             'Date Submitted to FADAMA DB', 
@@ -1178,6 +1192,7 @@ public function submit_case($submitstatus) {
             '',
             ''
             );
+        $pre_headerrow = $headerrow2;
        }
 
         // Add methods to header row
@@ -1198,6 +1213,11 @@ public function submit_case($submitstatus) {
             }
             $methodname = $method->get_name();
             
+            $method_type_name = $method->get_method_type() . " Method";
+            
+            $pre_headerrow[] = $method_type_name;
+            $pre_headerrow[] = $method_type_name;
+            
             $headerrow[] = $methodname;
             $headerrow[] = $methodname;
             $headerrow2[] = 'Method used?';
@@ -1207,6 +1227,7 @@ public function submit_case($submitstatus) {
             $method_infos = $method->get_method_infos();
 
             foreach($method_infos as $method_info) {
+
                 if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
                     if($method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_CATEGORY)&&
                             $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) &&
@@ -1222,7 +1243,7 @@ public function submit_case($submitstatus) {
                         $name = $method_info->get_header();
                     }
 
-                    
+                    $pre_headerrow[] = $method_type_name;
                     $headerrow[] = $methodname;
                     $headerrow2[] = $name;
                     $method_info_ids[] = $method_info->get_id();
@@ -1241,6 +1262,7 @@ public function submit_case($submitstatus) {
                         }
 
                     }
+                    $pre_headerrow[] = $method_type_name;
                     $headerrow[] = $methodname;
                     $headerrow2[] = $name;
                     $method_info_ids[] = $method_info->get_id();
@@ -1248,6 +1270,7 @@ public function submit_case($submitstatus) {
                                         
                     if(count($method_info->get_references()) > 0) {
                         // Add column for references
+                        $pre_headerrow[] = $method_type_name;
                         $headerrow[] = $methodname;
                         $headerrow2[] = $name . " References";
                         $method_info_ids[] = '';
@@ -1264,6 +1287,7 @@ public function submit_case($submitstatus) {
         $output = fopen('php://output', 'w');
         
         // output the column headings
+        fputcsv($output, $pre_headerrow);
         fputcsv($output,$headerrow);
         fputcsv($output,$headerrow2);
 

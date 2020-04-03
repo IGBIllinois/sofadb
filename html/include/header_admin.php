@@ -99,6 +99,7 @@ elseif($_SESSION['loggedin']==1)
     <li><a href="<?php echo($root_url) ?>/admin/index.php">Member List</a></li>
     <li><a href="<?php echo($root_url) ?>/admin/membersearch/?search=1">Search Members</a></li>
     <li><a href="<?php echo($root_url) ?>/admin/methods/">Methods</a></li>    
+    <li><a href="<?php echo($root_url) ?>/admin/admin_reports.php">Reports</a></li> 
     
   </ul>
     </div>
