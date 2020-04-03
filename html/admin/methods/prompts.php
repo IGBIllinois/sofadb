@@ -14,6 +14,16 @@ if(isset($_POST['add_prompt'])) {
     
 }
 
+if(isset($_POST['delete_prompt'])) {
+    $prompt_id = $_POST['del_prompt_id'];
+    
+    $result = method::delete_prompt($db, $prompt_id);
+    
+    echo($result['MESSAGE']);
+    
+    
+}
+
 $prompt_list = method::get_all_prompts($db);
 
 echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend>Add Prompt</legend>');
@@ -23,7 +33,11 @@ foreach($prompt_list as $id=>$prompt) {
     if($prompt == null || $prompt == "") {
         $prompt = "<I>(No prompt)</I>";
     }
-    echo(" <tr><td class='bordered td_spaced' > ".$prompt."</td></tr>");
+    echo(" <tr><td class='bordered td_spaced' > ".$prompt."</td>");
+    echo('
+	<td class="bordered td_spaced"><form action="prompts.php" method="post" id="delete_prompt" onsubmit="return confirm(\'Do you really want to delete this prompt?\nAll methods using this prompt will have their prompt set to the default.\')">
+	<input name="del_prompt_id" type="hidden" value="'.$id.'"/>
+	<input id="delete_prompt" name="delete_prompt" type="submit" value="Delete" /> </form>');
 }
 echo("</table>");
 echo("<BR><BR>");

@@ -502,6 +502,8 @@ class method {
      * @param db $db The database object
      * @param string  $prompt_name Name of the prompt
      * @param string $prompt_text Display text of the prompt
+     * @return array An Array of the form (RESULT=>$result, MESSAGE->$message),
+     *  where $result is TRUE if the operation was successful, and MESSAGE is an output message.
      */
     public static function add_new_prompt($db, $prompt_name, $prompt_text) {
         
@@ -518,6 +520,33 @@ class method {
         } else {
             return array("RESULT"=>FALSE,
                         "MESSAGE"=>"There was an error, the prompt was not added. Please check your input and try again."
+                );
+        }
+        
+    }
+    
+    /**
+     * 
+     * @param type $db
+     * @param type $prompt_id
+     * @return array An Array of the form (RESULT=>$result, MESSAGE->$message),
+     *  where $result is TRUE if the operation was successful, and MESSAGE is an output message.
+     */
+    public static function delete_prompt($db, $prompt_id) {
+        $update_query = "UPDATE methods set prompt=NULL where prompt=:prompt_id";
+        $params = array("prompt_id"=>$prompt_id);
+        $update_result = $db->get_update_result($update_query, $params);
+        
+        $query = "DELETE FROM prompts where id=:prompt_id";
+        $delete_result = $db->get_update_result($query, $params);
+        
+        if($delete_result > 0) {
+            return array("RESULT"=>TRUE,
+                        "MESSAGE"=>"The prompt was successfully deleted."
+                );
+        } else {
+            return array("RESULT"=>FALSE,
+                        "MESSAGE"=>"There was an error deleting the prompt. Please check your input and try again."
                 );
         }
         
