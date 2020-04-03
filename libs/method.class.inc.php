@@ -465,34 +465,6 @@ class method {
     public static function get_methods_by_type($db, $type_id, $active=1) {
             $query = "SELECT methodname,id FROM methods WHERE active=:active AND methodtypenum=:methodtypenum ";
             $query .= " ORDER BY top desc, methodname";
-            /*
-            if($type_id == METHOD_DATA_SEX_ID) {
-                // Specific order for Sex methods
-                $query .= "order by "
-                        . "methodname = 'Fordisc (skeletal, metric)' desc, "
-                        . "methodname = 'Generalized Morphology (skeleton, nonmetric)' desc, "
-                        . "methodname = 'Soft Tissue Morphology (nonmetric)' desc, "
-                        . "methodname = '3D-ID (cranial, metric)' desc, "
-                        . "methodname ASC";
-            } else if($type_id == METHOD_DATA_AGE_ID) {
-                // Specific order for Age methods
-                $query .= "Order by "
-                        . "methodname = 'Epiphyseal Union (skeletal, nonmetric)' desc, "
-                        . "methodname = 'Epiphyseal Union, McKern and Stuart (skeletal, nonmetric)' desc, "
-                        . "methodname = 'Transition Analysis (skeletal, nonmetric)' desc, "
-                        . "methodname ASC";
-            } else if($type_id == METHOD_DATA_ANCESTRY_ID) {
-                // Specific order for Ancestry methods
-                $query .= "Order by ".
-                        "methodname = '3D-ID (cranial, metric)' desc, ".
-                        "methodname ='Fordisc (skeletal, metric)' desc,".
-                        "methodname ASC";
-            } else if($type_id == METHOD_DATA_STATURE_ID) {
-                // Specific order for Stature methods
-                $query .= "Order by methodname ASC";
-            }
-             * 
-             */
             $params = array("methodtypenum"=>$type_id, "active"=>$active);
             $result = $db->get_query_result($query, $params);
             $methods = array();
