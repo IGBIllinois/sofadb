@@ -551,6 +551,38 @@ class method {
         }
         
     }
+    
+    /**
+     * Deletes a method from the database
+     * 
+     * @param type $db The database object
+     * @param type $method_id ID of the method to delete
+     * @return array An Array of the form (RESULT=>$result, MESSAGE->$message),
+     *  where $result is TRUE if the operation was successful, and MESSAGE is an output message.
+     */
+    public static function delete_method($db, $method_id) {
+        
+        $del_method = new method($db, $method_id);
+        $method_name = $del_method->get_name();
+        $method_infos = $del_method->get_method_infos();
+        
+        foreach($method_infos as $info) {
+            $del_method->delete_method_info($info->get_id());
+        }
+        
+        $del_query = "DELETE FROM methods where id = :method_id";
+        $del_params = array("method_id"=>$method_id);
+        
+        $result = $db->get_update_result($del_query, $del_params);
+        
+        if($result > 0) {
+            return array("RESULT"=>true,
+                        "MESSAGE"=>"The method $method_name was deleted successfully.");
+        } else {
+            return array("RESULT"=>false,
+                        "MESSAGE"=>"An error occurred. The method $method_name was not deleted. Please check your input and try again.");
+        }
+    }
 
      // Private functions
 

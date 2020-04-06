@@ -8,6 +8,15 @@
 
 require_once "../../include/header_admin.php";
 
+if(isset($_POST['delete_method'])) {
+    $method_id = $_POST['del_method_id'];
+    
+    $result = method::delete_method($db, $method_id);
+    
+    echo($result['MESSAGE']);
+    
+    
+}
 
 $pagerows = PAGEROWS;
 
@@ -77,10 +86,20 @@ echo '<div class="scroll"><table id="hortable" summary="List of methods">
 // Show all methods; Active and inactive
 $methods = method::get_methods($db, $start, $pagerows, 'methodname', -1);
 foreach($methods as $method) {
+    $method_id = $method->get_id();
+    $times_method_used = count(tier2data::get_used_methods($db, $method_id));
+    $delete_alert_message = 'Are you sure you want to delete this method?\nAll method data and method infos associated with it will be deleted.';
+    if($times_method_used > 0) {
+        $delete_alert_message .= '\nThis method is currently used in '.$times_method_used.' cases.';
+    }
     echo("<tr>".
-            "<td><a href='edit_method.php?id=". $method->get_id()."'>Edit</td>".
-            "<td>Delete</td>".
-             "<td>".$method->get_name()."</td>".
+            "<td><a href='edit_method.php?id=". $method->get_id()."'>Edit</td>");
+    echo('
+	<td><form action="index.php?s='.$start.'&p='.$pages.'" method="post" id="delete_method" onsubmit="return confirm(\''.$delete_alert_message.'\')">
+	<input name="del_method_id" type="hidden" value="'.$method_id.'"/>
+	<input id="delete_method" name="delete_method" type="submit" value="Delete" /> </form>');
+    echo("</td>".
+             "<td>".$method->get_name(). "</td>".
             "<td>".$method->get_method_type()."</td>".
             "<td>".$method->get_measurement_type()."</td>".
             "<td>".$method->get_description()."</td>".

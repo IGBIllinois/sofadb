@@ -297,7 +297,29 @@ class tier2data {
         }
     }
     
- 
+    /** Gets a s list of tier2 data that use a specific method
+     * 
+     * @param type $db The database object
+     * @param type $method_id ID of the method to search for
+     * 
+     * @return an array of tier2data that use the specified method
+     */
+    public static function get_used_methods($db, $method_id) {
+        $query = "SELECT id from tier2data where methodid=:method_id";
+
+        $params = array("method_id"=>$method_id);
+        
+        $result = $db->get_query_result($query, $params);
+        $return_result = array();
+        if(count($result) > 0) {
+            foreach($result as $data) {
+                $tier2 = new tier2data($db, $data['id']);
+                $return_result[] = $tier2;
+            }
+        }
+        return $return_result;
+        
+    }
     
     private function load_tier2data($id) {
        $query = "SELECT * from tier2data where id=:id";
