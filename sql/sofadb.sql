@@ -170,7 +170,7 @@ CREATE TABLE `prompts` (
   `prompt_name` varchar(50) DEFAULT NULL,
   `prompt` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `reference` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
