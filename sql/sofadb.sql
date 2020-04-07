@@ -139,7 +139,7 @@ CREATE TABLE `method_info_types` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `method_type` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `methods` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
