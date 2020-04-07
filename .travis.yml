@@ -11,9 +11,9 @@ php:
     - 7.3
 
 before_install:
-    - mysql -e 'CREATE DATABASE sofadb CHARACTER SET utf8;'
+    - mysql -e "CREATE DATABASE sofadb CHARACTER SET utf8;"
     - mysql -u root --password="" sofadb < sql/sofadb.sql
-    - mysql -u root --password="" sofadb < sql/imput_types.sql
+    - mysql -u root --password="" sofadb < sql/input_types.sql
     - mysql -u root --password="" sofadb < sql/method_info_options.sql
     - mysql -u root --password="" sofadb < sql/method_info_reference_list.sql
     - mysql -u root --password="" sofadb < sql/method_info_types.sql
