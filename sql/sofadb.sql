@@ -165,6 +165,13 @@ CREATE TABLE `password_reset` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `prompts` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `prompt_name` varchar(50) DEFAULT NULL,
+  `prompt` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
 CREATE TABLE `reference` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `reference_name` varchar(100) DEFAULT NULL,
