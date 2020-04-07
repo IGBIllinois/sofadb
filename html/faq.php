@@ -98,6 +98,7 @@
         <ul style='padding:revert'>
             <li><a href="#FADAMAdev">How was FADAMA developed?</a></li>
             <li><a href="#FADAMAmanage">Who manages FADAMA?</a></li>
+            <li><a href="#FDB">How does FADAMA relate to Forensic Anthropology Data Bank (FDB)?</a></li>
         </ul>  
         <BR>
         <li><B><a href='#userresponsibility'>FADAMA User Information and Responsibility</a></B></li>
@@ -150,8 +151,8 @@ With the participation of practitioners and the submission of the current and pa
 <BR>
 <BR>
     
-    <center><h1 id=scope>Methods Reference List</h1></center>
-<a href='docs/FADAMA_methods_list.html' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA.
+    <center><h1 id=scope>Method Reference List</h1></center>
+<a href='docs/FADAMA_methods_list.html' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
 <BR>
 <BR>
     
@@ -161,19 +162,25 @@ With the participation of practitioners and the submission of the current and pa
     <Center><h1 id="faq">FAQs</h1></center>
 
 <BR>
-    <h1 id="general"><U>Background</U></h1>
+    <h1 id="general"><U>General</U></h1>
 <BR>
     
 <h1 id="FADAMAdev">How was FADAMA developed?</h1>
 
-    In 2013, the database was proposed to the Society of Forensic Anthropologists (SOFA), with the original goal of creating a forensic anthropological community-wide collective resource for case data in order to observe trends in biological profile estimations and method preferences. For the next four years, SOFA’s database committee was tasked with understanding the logistical and data needs of the database and began working with developers to create a beta version. After a successful test phase where nearly 200 cases were submitted, SOFA database committee members Cris Hughes (University of Illinois at Urbana-Champaign, UIUC) and Chelsey Juarez (California State University, Fresno) applied for and received a National Institute of Justice (NIJ) grant (2019-2021) for improving the database. These improvements included a change in the interface to allow specific method outcome entry, the incorporation of a large number of methods into the database, and user optimization and efficiency.
+    In 2013, the database was proposed to the Society of Forensic Anthropologists (SOFA), with the original goal of creating a forensic anthropological community-wide collective resource for case data in order to observe trends in biological profile estimations and method preferences. For the next four years, SOFA’s database committee was tasked with understanding the logistical and data needs of the database and began working with developers to create a beta version. After a successful test phase where nearly 200 cases were submitted, SOFA database committee members Cris Hughes (University of Illinois at Urbana-Champaign, UIUC) and Chelsey Juarez (California State University, Fresno) applied for and received a National Institute of Justice (NIJ) grant (2018-DU-BX-0213) for improving the database. These improvements included a change in the interface to allow specific method outcome entry, the incorporation of a large number of methods into the database, and user optimization and efficiency.
 
 <h1 id="FADAMAmanage">Who manages FADAMA?</h1>
     <BR>
     Per the NIJ grant, SOFA will retain a database committee to oversee the upkeep and management of FADAMA. The committee has administrative privileges to the FADAMA website and database. The primary role of the committee is to review user membership requests and troubleshoot any issues. The database is hosted on the SOFA server and the UIUC Institute of Genome Biology (IGB)’s web-based public interface.
 
-    <BR><BR><BR>
-
+    <BR>
+<h1 id="FDB">How does FADAMA relate to Forensic Anthropology Data Bank (FDB)?</h1>
+	The Forensic Anthropology Data Bank (FDB) was developed by The University of Tennessee, Knoxville in 1986. The purpose of the FDB is to understand contemporary skeletal variation and to allow for development of pertinent identification criteria of contemporary skeletons. The FDB contains demographic information and skeletal information from many cases, including medical history, occupation, stature, weight, cranial and postcranial metrics, various aging criteria scores, and non-metric information.
+	FADAMA provides the opportunity for users to share relevant case data with the FDB. However, in contrast to FADAMA's anonymity, FDB sharing requires identifiable information about the case, including the case number and case agency. This is because the FDB needs to know who is submitting cases and what the case numbers are so that there is no duplication of cases.
+	The data FADAMA shared with FDB include: case year, case number, case agency, relevant craniometric data (such as the ones associated with FORDISC), and relevant postcranial metric data (such as the ones associated with various stature estimation methods).
+        
+        <BR><BR><BR>
+                    
 <h1 id='userresponsibility'><U>Users</U></h1>
     <BR>  
     <h1 id="FADAMAusers">Who are the targeted users of FADAMA?</h1>	
@@ -227,8 +234,7 @@ With the participation of practitioners and the submission of the current and pa
 
     <h1 id="whatCases">How should I choose what cases to submit? </h1>
     <BR>
-    Prioritize full biological profile, 
-    We suggest you prioritize cases with full biological profile. It is also encouraged that you do not cherry-pick your submitted cases (e.g. excluding cases where the estimated biological profile may not have matched the actual decedent’s biological profile). These kinds of discrepancies are important aspects to our field, and methods in general are not a reflection of the actual practitioners. In addition, each practitioners’ submitted cases are viewed/accessed for download as anonymous submissions to other practitioners interacting with FADAMA. 
+    Please prioritize cases with full biological profile. It is also encouraged that you do not cherry-pick your submitted cases (e.g. excluding cases where the estimated biological profile may not have matched the actual decedent’s biological profile). These kinds of discrepancies are important aspects to our field, and methods in general are not a reflection of the actual practitioners. In addition, each practitioners’ submitted cases are viewed/accessed for download as anonymous submissions to other practitioners interacting with FADAMA. 
 
     <BR><BR><BR>
 
@@ -255,13 +261,12 @@ With the participation of practitioners and the submission of the current and pa
 
     <h1 id="pictures">My case is very complicated and I want to use pictures or have details to explain my reasoning, is that allowed?</h1>
     <BR>
-    Yes, there are Case Notes section available where you may make any notes. However, we ask that you limit this to information pertinent to the interpretation of the data you have entered. In addition, under Case Information, there will be an option to upload pictures associated with your case. This picture will not be associated with one specific method, so please make sure user can understand the context easily when just viewing the content of the picture. Also, please note that you should remove any identifiable information (either about the agency or about the decedent) from your pictures before uploading.
-
+The Case Notes section is the ideal place to include case notes. However, we ask that you limit this to information pertinent to the interpretation of the data you have entered, and ensure that the information you include does not provide specifics that could compromise the anonymity on the case. Currently, a photo upload option is not available.
     <BR><BR>
 
     <h1 id="office">My office has many practicing forensic anthropologists, do we each upload our own cases?</h1>
     <BR>
-    Principal investigators that work in a single office can each have their own accounts to manage their cases. However, if the PIs manage other staff working on cases, we suggest that any case worked by these individuals submitted through their PIs’ accounts for tracking purposes.
+    Principal investigators that work in a single office can each have their own accounts to manage their cases. However, if the PIs manage other staff working on cases, we suggest that any case worked by these individuals submitted through their PIs’ accounts for tracking purposes. Ultimately, it is up to the office how they would like to track cases, with the key being that they are ensuring that duplicate cases are not being submitted under separate accounts.
 
     <BR><BR>
 
@@ -273,7 +278,7 @@ With the participation of practitioners and the submission of the current and pa
             
     <h1 id="howLong">How long does it take to submit a case?</h1>
     <BR>
-    The time commitment to submit a case varies depending on how many methods were applied to the case. However, in our beta testing, once a practitioner is familiar with the user-friendly interface the average time for submitting a case is approximately five minutes.
+    The time commitment to submit a case varies depending on how many methods were applied to the case. However, in our beta testing, once a practitioner is familiar with the user-friendly interface the average time for submitting a case is approximately 10-25 minutes depending on case complexity. 
 
     <BR><BR><BR>
         
@@ -281,7 +286,7 @@ With the participation of practitioners and the submission of the current and pa
 <BR>
     <h1 id="methodChoice">How did you choose methods to be included in the database?</h1>
     <BR>
-    In building this database, we consulted forensic anthropology laboratories that have high caseloads (for example, Harris Country Institute of Forensic Sciences, New York City Office of Chief Medical Examiners, University of Tennessee Forensic Anthropology Center, and Defense POW/MIA Accounting Agency) and conducted a thorough literature review of existing forensic anthropology methods. If your method does not fit with the available templates, please select the option to “request new method” and we will complete this in a timely manner.
+    In building this database, we consulted forensic anthropology laboratories that have high caseloads (for example, Harris Country Institute of Forensic Sciences, New York City Office of Chief Medical Examiners, University of Tennessee Forensic Anthropology Center, and Defense POW/MIA Accounting Agency) and conducted a thorough literature review of existing forensic anthropology methods. If your method does not fit with the available templates, please select the option to “request new method” and we will complete this in a timely manner. If your method does not fit with the available templates, please use the option to request a new method via the Contact Us page, and we will complete this in a timely manner.
 
     <BR><BR>
         
@@ -293,8 +298,7 @@ With the participation of practitioners and the submission of the current and pa
 
     <h1 id="unlistedMethod">What if the methods I use aren’t listed on FADAMA?</h1>
     <BR>
-    There will be an “Add New Method” button available when you are entering case and method information, simply click on this button and you will be prompted to enter the reference information and results associated with this method. Once the information you input is verified and approved by FADAMA administrators, the method will be available for all FADAMA users.
-    If your method does not fit with the available templates, please select the option to “request new method” and we will complete this in a timely manner.
+     Go to the Contact Us page and follow the prompt. Once the information you input is verified and the method is formatted by FADAMA administrators, the method will be available for all FADAMA users.
      <BR>
     Because some method literature is a compilation of methods from other primary sources, we ask FADAMA users to kindly consider reporting method outcomes using primary sources instead. For example, use Ascadi and Nemeskeri (1970) instead of Bass (2005) and/or Buikstra and Ubelaker (1994) for sexing of the skull, or use Phenice (1969) instead of Buikstra and Ubelaker (1994) for sexing of the pelvis. Please check our method list for more details.
 
@@ -302,7 +306,7 @@ With the participation of practitioners and the submission of the current and pa
 
     <h1 id="list">Is there a list of the methods currently included in FADAMA for data entry?</h1>
     <BR>
-    <a href='docs/FADAMA_methods_list.html' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA.
+    <a href='docs/FADAMA_methods_list.html' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
 
     <BR><BR><BR>
     <h1 id=tutorial><U>FADAMA User Tutorial</U></h1>
