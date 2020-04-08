@@ -1,6 +1,6 @@
 # SOFADB
 
-[![Build Status](https://travis-ci.com/IGBIllinois/sofadb.svg?branch=master)](https://www.travis-ci.com/IGBIllinois/sofadb)
+[![Build Status](https://www.travis-ci.com/IGBIllinois/sofadb.svg?token=6iWs5D1ivxnsY52hbye3&branch=master)](https://www.travis-ci.com/IGBIllinois/sofadb)
 
 - Society of Forensic Anthropologists
 - Forensic Anthropology Case Database (FADAMA)
