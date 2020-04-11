@@ -4,9 +4,12 @@
   if (isset($_POST['exportMy'])) {
             $case_data = array("memberId"=>$_POST['mId']);
 
+            $name=$_POST['name'];
+            $email = $_POST['email'];
+             
             $case_results = sofa_case::search_cases($db, null, $case_data, null);
               
-            sofa_case::write_report($db, $case_results);
+            sofa_case::write_report($db, $case_results, $name, $email);
             die();
             
     } else
@@ -14,7 +17,9 @@
               isset($_POST['exportall'])
              )
 	  {
-
+print_r($_POST);
+echo("<BR>");
+print_r($_GET);
           $race_array = array();
           foreach($_GET['race'] as $race=>$value) {
               $race_array[$value] = $race;
@@ -48,13 +53,12 @@
                      }
                  }
              }
+             $name=$_POST['name'];
+             $email = $_POST['email'];
               $case_results = sofa_case::search_cases($db, null, $case_data, $method_list);
-              
-              sofa_case::write_report($db, $case_results);
-              die();
+              //echo("Report written!<BR>");
+              sofa_case::write_report($db, $case_results, $name, $email);
+              //die();
 	} 
-
-
-
 
 ?>

@@ -21,7 +21,7 @@ require_once('../../include/header_user.php');
     unset($_SESSION['searched']);
     unset($_SESSION['searchstring']);
   }
-  /*
+  
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {  
        require('exportdata.php');
   }
@@ -69,7 +69,7 @@ require_once('../../include/header_user.php');
 
 	
 	  
-if(!$error) {//if error start	  
+if(!$error){//if error start	  
 // This script retrieves all the records from the users table.
  // Connect to the database.
 //set the number of rows per display page
@@ -148,8 +148,9 @@ echo '<br/> <a href="index.php?search=1">Search Again</a>';
 echo("<BR><BR>");
 echo("If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in these tutorials that can help ensure that misinterpretation of the data is not occurring.");
 echo("<BR>");
-echo '<form action="index.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="export">
-<br/><p>Click here to export results to CSV File
+//echo ('<form action="confirm.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="export" target="print_popup" onsubmit="window.open(\'about:blank\',\'print_popup\',\'width=500,height=500\');">');
+echo ('<form action="confirm.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="export">');
+echo'<br/><p>Click here to export results to CSV File
 <input name="fdb" type="hidden" value="0">
    <input name="exportsubmit" id="exportsubmit" type="submit" value="Export Case Data"/></p>
    </form>';
@@ -242,8 +243,6 @@ unset($_GET['search']);
 	  }//end export else
   
   //end main submit
- * 
- */
 ?>
 
 
@@ -402,9 +401,64 @@ echo <<<_END
    <div id="search_errorloc" class="errorlocation">
             </div>
    
+    </fieldset>
+	<br >
+	<fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
+	<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Search Options</legend>
+ <br><label class="label" for="searchtype">List Cases That Meet:</label>
+  <select name="andor">
+	<option value="1">All Selected Criteria</option>
+	<option value="2">At Least One of Selected Criteria</option></select> <br ><br>
+<label class="label" for="regsubmit">Click here to search</label>
+   <input name="regsubmit" id="regsubmit" type="submit" class="showybutton" value="Search"/><br />
+   
+    
+<br>
+</fieldset>
+	<br>
+	</fieldset>
+<br>
 
-<B>Search has been temporarily disabled.</B>
+</form>
+
+
+<form action="confirm.php" method="post" id="export">
+    
+<fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
+	<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Export Database</legend>
+<br>
+    If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in these tutorials that can help ensure that misinterpretation of the data is not occurring.
+    <BR><BR>
+<span><label class="label" for="exportall">Click here to export all cases</label><input name="exportall" type="submit" id="exportall" title="Export All" value="Export All"></span><br>
+
+
+<br>
+</fieldset>
+	<br>
+	</fieldset>
+</form>
+<BR>
+<form action="confirm.php" method="post" id="export">
+
+_END;
+
+echo("<input type=hidden name='mId' value='$memberid'>");
+
+echo <<<_END
+
+<fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
+	<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Export My Cases</legend>
+<br>
+If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in these tutorials that can help ensure that misinterpretation of the data is not occurring.
 <BR><BR>
+<span><label class="label" for="exportMy">Click here to export all of the current user's submitted cases</label><input name="exportMy" type="submit" id="exportMy" title="Export My Cases" value="Export My Cases"></span><br>
+
+
+<br>
+</fieldset>
+	<br>
+	</fieldset>
+</form>
     
 <script language="JavaScript" type="text/javascript"
     xml:space="preserve">//<![CDATA[

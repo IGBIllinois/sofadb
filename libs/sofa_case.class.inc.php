@@ -1064,7 +1064,6 @@ public function submit_case($submitstatus) {
         
         
         $query .= " ORDER BY id ";
-        echo("query = $query<BR>");
 
         $result = $db->get_query_result($query, $params);
         $results = array();
@@ -1081,10 +1080,12 @@ public function submit_case($submitstatus) {
      * 
      * @param db $db The database object
      * @param \sofa_case $case_list List of case objects
+     * @param string $name Name of the user making the request
+     * @param string $email Email of the user making the request
      * @param bool $fdb True if this is an FDB report (only show methods from the FDB database)
      * @param bool $mine True if this is a report for the given user's cases (show case number and agency)
      */
-    public static function write_report($db, $case_list, $fdb=0, $mine=0) {
+    public static function write_report($db, $case_list, $username, $email, $fdb=0, $mine=0) {
         header('Content-Type: text/csv; charset=utf-8');
          ob_end_clean();
         $today = date("m_d_Y_H_i_s");
@@ -1283,9 +1284,14 @@ public function submit_case($submitstatus) {
             }
         }
          
+        $download_query = "INSERT INTO downloads (name, email, date) VALUES (:name, :email, NOW())";
+        $download_params = array("name"=>$username,
+                                "email"=>$email);
+        $db->get_insert_result($download_query, $download_params);
+        
        // create a file pointer connected to the output stream
         $output = fopen('php://output', 'w');
-        
+
         // output the column headings
         fputcsv($output, $pre_headerrow);
         fputcsv($output,$headerrow);
@@ -1500,7 +1506,12 @@ public function submit_case($submitstatus) {
             fputcsv($output, $curr_row);
 
         }
+        
         fclose($output);
+        
+
+
+        
 
     }
     
