@@ -25,11 +25,11 @@ if (isset($_POST['delsubmit']))
       if ($result['RESULT'] == FALSE) 
         { 
         // If it did not run OK
-                        // Error message:
-                        echo '<h2>System Error</h2>
-                        <p class="error">Did not delete case. We apologize for any inconvenience.</p>'; 
-                        // Debugging message:
-                        echo '<p>' . $result['MESSAGE'] . '<br/><br/>:' . $result['MESSAGE'] . '</p>';
+        // Error message:
+        echo '<h2>System Error</h2>
+        <p class="error">Did not delete member. We apologize for any inconvenience.</p>'; 
+        // Debugging message:
+        echo '<p>' . $result['MESSAGE'] . '</p>';
         exit();
         } else {
             echo($result['MESSAGE']);
