@@ -1284,11 +1284,12 @@ public function submit_case($submitstatus) {
             }
         }
          
-        $download_query = "INSERT INTO downloads (name, email, date) VALUES (:name, :email, NOW())";
-        $download_params = array("name"=>$username,
-                                "email"=>$email);
-        $db->get_insert_result($download_query, $download_params);
-        
+        if(!$fdb) {
+            $download_query = "INSERT INTO downloads (name, email, date) VALUES (:name, :email, NOW())";
+            $download_params = array("name"=>$username,
+                                    "email"=>$email);
+            $db->get_insert_result($download_query, $download_params);
+        }
        // create a file pointer connected to the output stream
         $output = fopen('php://output', 'w');
 
