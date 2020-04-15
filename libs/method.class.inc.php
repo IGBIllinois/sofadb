@@ -286,7 +286,7 @@ class method {
             if($type == null) {
                 $text_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_TEXT_ENTRY)->get_id();
                 $number_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY)->get_id();
-                $type_query = "SELECT DISTINCT input_type from method_infos where methodid = :methodid ORDER BY FIELD(input_type,$text_type, $number_type) DESC";
+                $type_query = "SELECT DISTINCT input_type from method_infos where methodid = :methodid ORDER BY FIELD(input_type,$number_type, $text_type) DESC";
 
                 $type_params =array("methodid"=>$this->id);
                 $type_result = $this->db->get_query_result($type_query, $type_params);
