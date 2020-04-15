@@ -844,7 +844,6 @@ public function submit_case($submitstatus) {
      * @return a list of case objects that fit the criteria
      */
     public static function search_cases($db, $memberid, $case_data, $methods=null) {
-        
         $query = "SELECT id from cases where submissionstatus=1  ";
         $param_string = "";
         $conjunction = " AND ";
@@ -951,6 +950,16 @@ public function submit_case($submitstatus) {
             }
             $param_string .= " (datesubmitted >= :datesubmitted) ";
             $params['datesubmitted'] = $case_data['datesubmitted'];
+        }
+                
+        // FDB consent
+        if($case_data['fdb_consent'] != null && $case_data['fdb_consent'] == true) {
+            if($param_string != "") {
+                $param_string .= $est_join;
+            }
+            
+            $param_string .= " fdb_consent = 'consent'";
+            
         }
         
         // Race
@@ -1085,7 +1094,7 @@ public function submit_case($submitstatus) {
      * @param bool $fdb True if this is an FDB report (only show methods from the FDB database)
      * @param bool $mine True if this is a report for the given user's cases (show case number and agency)
      */
-    public static function write_report($db, $case_list, $username, $email, $fdb=0, $mine=0) {
+    public static function write_report($db, $case_list, $username=null, $email=null, $fdb=0, $mine=0) {
         header('Content-Type: text/csv; charset=utf-8');
          ob_end_clean();
         $today = date("m_d_Y_H_i_s");
@@ -1095,8 +1104,8 @@ public function submit_case($submitstatus) {
         }
         header("Content-type: application/octet-stream");
        header('Content-Disposition: attachment; filename='.$filename);
-        
-        // make header rows for data
+
+       // make header rows for data
        if($fdb) {
        $headerrow=array('Case ID', 
             'Date Submitted to FADAMA DB', 

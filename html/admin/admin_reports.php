@@ -13,9 +13,10 @@ require_once "../include/header_admin.php";
      } else {
          $params = array();
      }
+     $params['fdb_consent'] = true;
      $caselist = sofa_case::search_cases($db, null, $params, null);
      
-     sofa_case::write_report($db, $caselist, $memberid, 1,0);
+     sofa_case::write_report($db, $caselist, null, null, 1,0);
      die();
 
  } else if (isset($_POST['downloaddata'])) {
