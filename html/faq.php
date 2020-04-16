@@ -93,6 +93,7 @@
 <BR>
     <ul class='ul-left' style='padding:revert'>
         <li><a href="#scope"><B>Goals, Scope and Impact</B></a></li>
+        <li><a href="#tutorials"><B>Tutorials</B></a></li>
         <li><a href="#faq"><B>FAQ</B></a></li>
         <li><a href="#general"><B>General</B></a></li>
         <ul style='padding:revert'>
@@ -155,11 +156,18 @@ With the participation of practitioners and the submission of the current and pa
 <a href='docs/FADAMA_methods_list.html' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
 <BR>
 <BR>
+<BR>    
     
-   
+    <center><h1 id="tutorials">Tutorials</hi></center>
+    
+<ul style='padding:revert'>
+    <li>Wiki: <a href='https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial'>https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial</a></li>
+    <li>Videos:</li>
+</ul>
 
+    <BR><BR><BR>
     
-    <Center><h1 id="faq">FAQs</h1></center>
+    <center><h1 id="faq">FAQs</h1></center>
 
 <BR>
     <h1 id="general"><U>General</U></h1>
@@ -308,12 +316,7 @@ The Case Notes section is the ideal place to include case notes. However, we ask
     <BR>
     <a href='docs/FADAMA_methods_list.html' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
 
-    <BR><BR><BR>
-    <h1 id=tutorial><U>FADAMA User Tutorial</U></h1>
-<ul style='padding:revert'>
-    <li>Wiki: <a href='https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial'>https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial</a></li>
-    <li>Videos:</li>
-</ul>
+
     
 <BR>
 <BR>
