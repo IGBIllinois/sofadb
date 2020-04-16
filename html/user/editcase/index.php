@@ -30,6 +30,9 @@ require_once('../../include/session.inc.php') ;
 
 
   <h1 class="cntr">Edit Case Information</h1>
+  
+  <center>(<a href="https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial#Edit_case_information" target="_blank">Edit case tutorial</a>)</center>
+
 
   <?php
 

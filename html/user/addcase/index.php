@@ -17,7 +17,7 @@ require('../../include/header_user.php') ;
 
 
   <br/>
-  <h1 class="cntr">Case Information</h1>
+  <h1 class="cntr">Case Information</h1> <center>(<a href="https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial#Start_a_new_submission" target="_blank">New case tutorial</a>)</center>
 
   <?php
 

@@ -5,9 +5,9 @@ require_once('../../include/session.inc.php') ;
 
 ?>
 
-  <h1 class="cntr">Edit Case Methods</h1>
+<h1 class="cntr">Edit Case Methods</h1>
 
-
+<center>(<a href="https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial#Add_methods" target="_blank">Edit methods tutorial</a>)</center>
 
 
   <?php
