@@ -59,4 +59,4 @@ echo <<<_END
 
 _END;
  
-require_once "../include/footer_admin.php";
+require_once "../include/footer.php";
