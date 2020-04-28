@@ -17,7 +17,9 @@ require('../../include/header_user.php') ;
 
 
   <br/>
-  <h1 class="cntr">Case Information</h1> <center>(<a href="https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial#Start_a_new_submission" target="_blank">New case tutorial</a>)</center>
+  <h1 class="cntr">Case Information</h1>
+  
+  <center>(<a href="https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial#Start_a_new_submission" target="_blank">New case tutorial</a>)</center>
 
   <?php
 
@@ -589,6 +591,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <option value="fetalmonths"<?php if (isset($_POST['faageunits2']) AND ($_POST['faageunits2'] == 'fetalmonths')) echo ' selected="selected"'; ?>>fetal months</option>
       </select>
     
+    <div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
+        <span class="tooltiptext">If the estimated age is not a range (e.g. 55+ years), input "55" into the lower range text box provided here.</span>
+    </div>     
+    
     <BR>
     <label class="label" for="faage">Age Notes</label><input id="faage" type="text" name="faage_notes" size="30"  value="<?php if (isset($_POST['faage_notes'])) echo $_POST['faage_notes']; ?>"/>
     <BR>
@@ -664,7 +670,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <!-- Prior information -->
             <fieldset class="caseinfobox"><legend class="boldlegend">Background Case Knowledge</legend>
                 <BR>
-                Please check any component of the biological profile that was known to the practitioner during or before the time of case analysis.
+                Please check any component of the biological profile that was known to the practitioner during or before the time of case analysis. 
+            
                 <BR><BR>
 
 <label class="label" for="known_none"></label><input type="checkbox" name="known_none" value="1" />No biological profile information was known<BR>

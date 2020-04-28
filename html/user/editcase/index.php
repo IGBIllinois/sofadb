@@ -847,6 +847,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <option value="months"<?php if ($casedata->get_faageunits2() == 'months') echo ' selected="selected"'; ?>>months</option>
       <option value="fetalmonths"<?php if ($casedata->get_faageunits2() == 'fetalmonths') echo ' selected="selected"'; ?>>fetal months</option>
       </select>
+
+    <div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
+        <span class="tooltiptext">If the estimated age is not a range (e.g. 55+ years), input "55" into the lower range text box provided here.</span>
+    </div>      
     
     <BR>
     <label class="label" for="faage">Age Notes</label><input id="faage" type="text" name="faage_notes" size="30"  value="<?php echo ((isset($_POST['faage_notes'])) ? $_POST['faage_notes'] : $casedata->get_faage_notes()); ?>"/>
@@ -1024,6 +1028,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </th>
                             <th>
                                    Method Outcomes
+                                   
+                                <div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
+                                    <span class="tooltiptext">This only displays a summary of the data you entered.</span>
+                                </div>   
+                                   
                             </th>
                             </p>
                     </tr>
