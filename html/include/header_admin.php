@@ -76,7 +76,7 @@ elseif($_SESSION['loggedin']==1)
 <div id="header"><a href="#"><img src="<?php echo($root_url) ?>/images/customLogo.gif" width="351" height="147" alt="SOFA" /></a></div>
 
 <div id="title">
-<h1>Forensic Anthropology Case Database (FADAMA)</h1>
+<h1>Forensic Anthropology Database<BR>for Assessing Methods Accuracy (FADAMA)</h1>
 </div>
 
 <div id="hline">
@@ -100,6 +100,7 @@ elseif($_SESSION['loggedin']==1)
     <li><a href="<?php echo($root_url) ?>/admin/membersearch/?search=1">Search Members</a></li>
     <li><a href="<?php echo($root_url) ?>/admin/methods/">Methods</a></li>    
     <li><a href="<?php echo($root_url) ?>/admin/admin_reports.php">Reports</a></li> 
+    <li><a href="<?php echo($root_url) ?>/admin/email.php">Send email</a></li> 
     
   </ul>
     </div>
