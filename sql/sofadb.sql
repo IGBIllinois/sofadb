@@ -1,3 +1,10 @@
+CREATE TABLE `admin_notes` (
+ `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+ `user_id` int(11) unsigned DEFAULT NULL,
+ `message` varchar(500) DEFAULT NULL,
+ `date_added` timestamp NOT NULL DEFAULT current_timestamp(),
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 CREATE TABLE `cases` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
