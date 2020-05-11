@@ -936,8 +936,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <label class="label" for="known_age"></label><input type="checkbox" name="known_age" value="1" <?php if ($casedata->get_known_age() == 1) echo ' checked'; ?>/>Age was known<BR>
 <label class="label" for="known_ancestry"></label><input type="checkbox" name="known_ancestry" value="1" <?php if ($casedata->get_known_ancestry() == 1) echo ' checked'; ?>/>Ancestry/Group Affinity was known<BR>
 <label class="label" for="known_stature"></label><input type="checkbox" name="known_stature" value="1" <?php if ($casedata->get_known_stature() == 1) echo ' checked'; ?>/>Stature was known <BR>
-<label class="label" for="known_unable_to_determine"></label><input type="checkbox" name="known_unable_to_determine" value="1" <?php if ($casedata->get_known_unable_to_determine() == 1) echo ' checked'; ?>/>Unable to determine<BR>
-
+<label class="label" for="known_unable_to_determine"></label><input type="checkbox" name="known_unable_to_determine" value="1" />Unable to determine 
+<div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
+        <span class="tooltiptext">If the estimated age is not a range (e.g. 55+ years), input "55" into the lower range text box provided here.</span>
+</div> 
+<BR>
       </fieldset>
       
             <fieldset class="caseinfobox"><legend class="boldlegend">FDB Data Sharing Option</legend>

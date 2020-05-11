@@ -679,7 +679,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <label class="label" for="known_age"></label><input type="checkbox" name="known_age" value="1" />Age was known<BR>
 <label class="label" for="known_ancestry"></label><input type="checkbox" name="known_ancestry" value="1" />Ancestry/Group Affinity was known<BR>
 <label class="label" for="known_stature"></label><input type="checkbox" name="known_stature" value="1" />Stature was known <BR>
-<label class="label" for="known_unable_to_determine"></label><input type="checkbox" name="known_unable_to_determine" value="1" />Unable to determine<BR>
+<label class="label" for="known_unable_to_determine"></label><input type="checkbox" name="known_unable_to_determine" value="1" />Unable to determine 
+<div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
+        <span class="tooltiptext">If this information hasn't been documented, or you are entering data for a case completed by someone else at your agency, you may not know the context for assessing background knowledge and can check this box here.</span>
+</div> 
+<BR>
 
       </fieldset>
       
