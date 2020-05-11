@@ -228,7 +228,8 @@ body {
 	float: left;
 	margin-right: 15px;
 	margin-left: 200px;
-	width: 80%	
+	width: 80%;
+        min-width: min-content;
 }
 
 #memberregion {
@@ -281,8 +282,6 @@ body {
 
 .scroll {
 
-	overflow-x: scroll;
-	width: 110%;
 }
 
 .clear{
@@ -303,7 +302,6 @@ body {
 }
 .caseinfobox {
 	border: solid 1px #000000;
-	overflow: hidden;
 	border-radius: 15px;
 	padding-left: 20px;
 	padding-right: 20px;
@@ -821,7 +819,8 @@ body {
 	margin-left: 10px;
 	padding-left: 10px;
 	float: left;
-	padding-top: 90px;
+	padding-top: 40px;
+        line-height: 30px;
 }
 #hline {
 	clear: left;
@@ -1101,17 +1100,18 @@ input[type=number] {
   background-color: black;
   color: #fff;
   text-align: center;
-  padding: 5px 0;
+  padding: 5px 5px;
   border-radius: 6px;
   font-size: small;
   /* right tooltop */
-  top: -25px;
+  top: 50%;
   left: 130%; 
   font-size: 12px;
  
   /* Position the tooltip text - see examples below! */
   position: absolute;
   z-index: 1;
+  transform: translateY(-50%);
 }
 
 .tooltip .tooltiptext::after {
