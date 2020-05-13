@@ -9,7 +9,11 @@
 class functions {
     
 
-    
+    /** Creates a list of methods based on the method type selected (Age, Sex, etc.)
+     * 
+     * @global type $db The database object
+     * @param type $drop_var The id of the selected type
+     */
     public static function drop_1($drop_var)
     {  
         global $db;
@@ -18,22 +22,19 @@ class functions {
 
             echo '<script type=\"text/javascript\">
              $(function(){
-            //$("#drop_X").multiselect();
 
             $("#drop_X").multiselect({
-       multiple: false,
-       header: "Select an option",
-       noneSelectedText: "Select an Option",
-       selectedList: 1
-    });
+                multiple: false,
+                header: "Select an option",
+                noneSelectedText: "Select an Option",
+                selectedList: 1
+             });
 
-
-    });</script>
+            });</script>
       ';
 
             echo '<select name="drop_2" id="drop_2">
                   <option value="" disabled="disabled" selected="selected">Choose method</option>';
-
 
                     foreach($methods as $method) {
                         echo '<option value="'.$method->get_id().'">'.$method->get_name().'</option>';
@@ -44,18 +45,18 @@ class functions {
                     ' (Don\'t see your method? <U><A target="blank" href="../../contact/index.php">Contact us.</A></U>)<BR>');
             
             echo "<script type=\"text/javascript\">
-    $('#wait_2').hide();
-            $('#drop_2').change(function(){
-              $('#wait_2').show();
-              $('#result_2').hide();
-          $.get(\"index.php\", {
-                    func: \"show_method_info\",
-                    method_id: $('#drop_2').val()
-                    }, function(response){
-            $('#result_2').fadeOut();
-            setTimeout(\"finishAjax_tier_three('result_2', '\"+escape(response)+\"')\", 400);
-          });
-            return false;
+                    $('#wait_2').hide();
+                    $('#drop_2').change(function(){
+                    $('#wait_2').show();
+                    $('#result_2').hide();
+                    $.get(\"index.php\", {
+                        func: \"show_method_info\",
+                        method_id: $('#drop_2').val()
+                        }, function(response){
+                    $('#result_2').fadeOut();
+                    setTimeout(\"finishAjax_tier_three('result_2', '\"+escape(response)+\"')\", 400);
+                  });
+                return false;
             });
     </script>";
     }
@@ -270,4 +271,26 @@ class functions {
 
    }
 
+   /** Gets an array of emails for users
+    * 
+    * @param type $db The database object
+    * @param type $admin If true, get only admin emails, else get all emails
+    * @return type
+    */
+   public function get_emails($db, $admin=0) {
+       $query = "SELECT uname from members where permissionstatus ";
+       if($admin === 0) {
+           $query .= " != 0";
+       } else {
+           $query .= " = 2";
+       }
+       $result = $db->get_query_result($query);
+       
+       $return_result = array();
+       foreach($result as $data) {
+           $return_result[] = $data['uname'];
+       }
+       
+       return $return_result;
+   }
 }
