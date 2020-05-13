@@ -1432,14 +1432,25 @@ public function submit_case($submitstatus) {
                         }
                         $found = false;
                         $txt = "";
+                        $user_input = false;
+                        if($method_info->get_type() == input_type::get_input_id_by_name($db, USER_INTERACTION_NUMERIC_ENTRY) ||
+                             $method_info->get_type() == input_type::get_input_id_by_name($db, USER_INTERACTION_TEXT_ENTRY) ||
+                             $method_info->get_type() == input_type::get_input_id_by_name($db, USER_INTERACTION_TEXT_AREA)) {
+                            $user_input = true;
+                        }
                         foreach($tier3s as $tier3) {
 
                             if(in_array($tier3->get_method_info_option_id(), $opt_ids)) {
-                            if($tier3->get_value() != null) {
-                                $txt .= $tier3->get_value();
-                                $found = true;
-                            } else {
-
+                                if($user_input) {
+                                    if($tier3->get_value() != null) {
+                                        $txt .= $tier3->get_value();
+                                    } else {
+                                        $txt .= "";
+                                    }
+                                    $found = true;
+                            }
+                                
+                             else {
                                 if($txt != "") {
                                     $txt .= ", ";
                                 }
