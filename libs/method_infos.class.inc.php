@@ -319,31 +319,43 @@ class method_infos {
             if($type_id == input_type::get_input_id_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME)) {
                 continue;
             }
-            $output .= "<td class='td_spaced align_top'>";
-
-            $j++;
+            if(count($method_infos) > 0) {
+                $j++;
             if($j > $maxcols) {
                 $output .= "</tr><tr>";
                 $j = 0;
             }
+            //$output .= "<td class='td_spaced align_top'>";
+            //$output .= "TYPE_ID=$type_id";
+            
 
 
         $i=0;
 
-        $output .= "<table><tr>";
+        //$output .= "<table><tr>";
         // Add header title for specific methods
         $input_type = new input_type($db, $type_id);
         $input_type_name = $input_type->get_input_type();
-        if(($method_infos[0]->get_option_header() != null) &&
-                ($input_type_name == USER_INTERACTION_NUMERIC_ENTRY ||
+        if(($input_type_name == USER_INTERACTION_NUMERIC_ENTRY ||
                    $input_type_name == USER_INTERACTION_TEXT_ENTRY)) {
-                $output .= "<td class='td_spaced align_top'>";
+            
+            $output .= "<td class='td_spaced align_top'>";
+            //$output .= "TYPE_ID=$type_id";
+           if($method_infos[0]->get_option_header() != null) {
+                //$output .= "<td class='td_spaced align_top'>";
                 $output .= ("<B><U>".$method_infos[0]->get_option_header()."</U></B>");
+           }
 
         }
         
         $count = 0 ;
        foreach($method_infos as $method_info) {
+           if($input_type_name != USER_INTERACTION_NUMERIC_ENTRY &&
+                   $input_type_name != USER_INTERACTION_TEXT_ENTRY) {
+                    $output .= "<td class=align_top>";
+            }
+                   
+
            $method_info_id = $method_info->get_id();
            $input_type_id = $method_info->get_type();
            $input_type = new input_type($db, $input_type_id);
@@ -363,9 +375,11 @@ class method_infos {
                    $output .= "</tr><tr>";
                    $i = 0;
                }
+               $output .="<table><tr>";
                $output .= "<td class='td_spaced align_top'>";
                $output .= self::show_method_infos_select($db, $method_info_id, $tier2id, true, $multiple, $default);
                $output .= "</td>";
+               $output .="</tr></table>";
            } else if($input_type_name == USER_INTERACTION_NUMERIC_ENTRY) {
                if($method_info->get_parent_id() == null) {
                    // numeric inputs with parent id will be displayed leter
@@ -374,6 +388,8 @@ class method_infos {
            }  else if($input_type_name == USER_INTERACTION_TEXT_ENTRY) {
                
                $output .= self::show_method_infos_user_input($db, $method_info_id, $tier2id, true);
+               
+               
                
            } else if($input_type_name == USER_INTERACTION_TEXT_AREA) {
 
@@ -392,18 +408,26 @@ class method_infos {
                    $output .= "</tr><tr>";
                    $i = 0;
                }
+               //$output .= "<td class='align_top'>";
+               
                if(!$inner_table && $count == 0) {
                    // draw headers for all
+                   $output .= "<table>";
                    $method_infos2 = new method_infos($db, $method_info_id);
                    $header = $method_infos2->get_header();
                    $option_header = $method_infos2->get_option_header();
                    $output .= "<tr><th class='td_spaced align_top align_right'><B><U>$header</U></B></th><th><B><U>$option_header</U></B></th></tr>";
-                   
+                   $output .= "<tr>";
+                   $output .= "<td class='td_spaced align_top ".(!$inner_table ? " align_right ": "")."'></tr>";
                }
 
-               $output .= "<td class='td_spaced align_top ".(!$inner_table ? " align_right ": "")."'>";
                $output .= self::show_method_infos_select_each($db, $method_info_id, $tier2id, $inner_table, 0);
-               $output .= "</td>";
+               if(!$inner_table) {
+                    $output .= "</td>";
+                    $output .= "</tr>";
+                    $output .="</table>";
+               }
+               //$output .="</td>";
                
            } else if($input_type_name == USER_INTERACTION_CHECKBOX_SELECT) {
                $maxcols = 1;
@@ -422,20 +446,34 @@ class method_infos {
            
            $i++;
            $count++;
+           
+           if($input_type_name != USER_INTERACTION_NUMERIC_ENTRY &&
+                   $input_type_name != USER_INTERACTION_TEXT_ENTRY) {
+                    $output .= "</td>";
+            }
        }
        if(($method_infos[0]->get_option_header() != null) &&
                 ($input_type_name == USER_INTERACTION_NUMERIC_ENTRY ||
                    $input_type_name == USER_INTERACTION_TEXT_ENTRY)) {
             $output .= "</td>";
 
+            
        }
        
-       $output .= "</tr></table>";
+       //$output .= "</tr></table>";
+       if($input_type_name == USER_INTERACTION_TEXT_ENTRY) {
+               $output .= "</td></tr><tr>";
+       }
+       
+       $output .= "</td>";
+       
         }
 
-        $output .= "</tr></table>";
+        
        }
-       
+       $output .= "</tr></table>";
+       }
+       $output .= "</tr></table>";
        
         // If there are additional methods with categories, like Fordisc (Ancestry), also show entries in Rhine format
         $output .= self::show_method_info_rhine($db, $method->get_id(), $tier2id);
@@ -567,7 +605,7 @@ class method_infos {
      * @return string HTML for inputting data for this method_infos object
      */
     public static function show_method_infos_select_each($db, $method_infos_id, $tier2id = null, $inner_table = true, $checkboxes = false) {
-
+$inner_table=true;
         $method_infos = new method_infos($db, $method_infos_id);
         $options = $method_infos->get_method_info_options();
         $output = "";
@@ -575,14 +613,15 @@ class method_infos {
         if($inner_table) {
             $output .= "<table><tr><th class='align_right align_top td_spaced'>";
             $output .= "<B><U>".$method_infos->get_header() . "</U></B></th><th class='td_spaced align_left' ><B><U>". $method_infos->get_option_header() . "</U></B></th></tr><tr>";
-            $output .= "<tr><td class='align_right align_top td_spaced'>";
-        
-            $output .= $method_infos->get_name();
-            if($method_infos->get_name() != null && $method_infos->get_name() != "") {
-                $output .= ":";
-            }
-            $output .="</td>";
         }
+        $output .= "<tr><td class='align_right align_top td_spaced'>";
+        
+        $output .= $method_infos->get_name();
+        if($method_infos->get_name() != null && $method_infos->get_name() != "") {
+            $output .= ":";
+        }
+        $output .="</td>";
+        
 
         $output .="<td class='align_left align_top td_spaced'>";
         
@@ -611,8 +650,9 @@ class method_infos {
             }
             $output .= functions::checkbox_dropdown($method_infos->get_id(), $method_infos->get_name(), $check_values, $selected, 'check_select');
         }
+        $output .="</td></tr>";
         if($inner_table) {
-            $output .= "</td></tr></table>";
+            $output .= "</table>";
         }
         return $output;
     }
