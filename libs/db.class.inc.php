@@ -57,23 +57,7 @@ class db {
 		$this->link = null;
 	}
 
-	//non_select_query()
-	//$sql - sql string to run on the database
-	//For update and delete queries
-	//returns true on success, false otherwise
-	public function non_select_query($sql) {
-		$result = $this->link->exec($sql);
-		return $result;
-	}
-	//query()
-	//$sql - sql string to run on the database
-	//Used for SELECT queries
-	//returns an associative array of the select query results.
-	public function query($sql) {
-            //echo("query = $sql<BR>");
-		$result = $this->link->query($sql);
-		return $result->fetchAll(PDO::FETCH_ASSOC);
-	}
+
 	//getLink
 	//returns the mysql resource link
 	public function get_link() {
