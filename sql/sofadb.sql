@@ -122,6 +122,7 @@ CREATE TABLE `members` (
   `sponsor` varchar(100) DEFAULT NULL,
   `sponsor_email` varchar(100) DEFAULT NULL,
   `sponsor_affiliation` varchar(100) DEFAULT NULL,
+  `agree_to_terms` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
