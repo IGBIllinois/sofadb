@@ -24,10 +24,6 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-
-<title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
-
-
 <!-- // Load Javascipt -->
 </head>
 
@@ -36,9 +32,9 @@
 <div id="header"><a href="#"><img src="images/customLogo.gif" width="351" height="147" /></a></div>
 
 <div id="title">
-<h1>Forensic Anthropology Case Database (FADAMA)</h1>
+<h1>Forensic Anthropology Database<BR>for Assessing Methods Accuracy (FADAMA)</h1>
 </div>
-
+</div>
 <div id="hline">
 <hr size="3" />
 </div>
