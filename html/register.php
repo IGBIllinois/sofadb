@@ -33,7 +33,7 @@ require_once("include/main.inc.php");
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 
-<title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
+<title>Register</title>
 
 
 <!-- // Load Javascipt -->
@@ -44,9 +44,10 @@ require_once("include/main.inc.php");
 <div id="header"><a href="#"><img src="images/customLogo.gif" width="351" height="147" /></a></div>
 
 <div id="title">
-<h1>Forensic Anthropology Case Database (FADAMA)</h1>
+<h1>Forensic Anthropology Database<BR>for Assessing Methods Accuracy (FADAMA)</h1>
 </div>
-
+</div>
+    
 <div id="hline">
 <hr size="3" />
 </div>
@@ -72,7 +73,6 @@ require_once("include/main.inc.php");
 <div id="hline">
 <hr size="3" />
 </div>
-
 <?php
     if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1) {
 ?>
@@ -83,16 +83,25 @@ require_once("include/main.inc.php");
     }
 ?>
 <div id="templatecontainer"> 
-     <div id="caseform">
   </br>
+    
   <h1 class="cntr">Membership Registration</h1>
   
   <?php
 // This code inserts a record into the users table
 // Has the form been submitted?
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    
+    echo('<div id="wrapper" style="width:500px">');
 	$errors = array(); // Start an array to hold the errors
 	// Check for a title:
+        if(empty($_POST['agree_to_terms'])) {
+            $errors[] = "You must agree to the terms of service.";
+            $agree_to_terms = false;
+        } else {
+            $agree_to_terms = true;
+        }
+        
 	if (empty($_POST['title2'])) {
 		$errors[] = 'You forgot to enter your title.';
 	} else {
@@ -271,7 +280,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "affiliation"=>$affiliation,
             "sponsor"=>$sponsor,
             "sponsor_email"=>$sponsor_email,
-            "sponsor_affiliation"=>$sponsor_affiliation);
+            "sponsor_affiliation"=>$sponsor_affiliation,
+            "agree_to_terms"=>$agree_to_terms);
  
         $user_params = array("user_name"=>($fn . " ".$ln),
                             "from_email"=>FROM_EMAIL);
@@ -285,7 +295,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $result = member::add_member($db, $params);
         if($result['RESULT'] == TRUE) {
-            echo($result['MESSAGE']);
+
+            echo($result['MESSAGE']. "<BR>");
+
 
       $admin_email = ADMIN_EMAIL;              
       $to = $admin_email;
@@ -293,33 +305,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $from= FROM_EMAIL;
    $subject = "FADAMA DB ADMIN ALERT: Activate new user";
    $message = functions::renderTwigTemplate('email/register_admin.html.twig', $params);
-   /*
-   $message = "New User:".$fn." ".$ln." is requesting activation.\n Email address is:".$e."\n\n";
-   
-   $message .= "User data:\n".
-            "Email: $e\n" .
-            "First Name: $fn\n".
-            "Last Name: $ln\n".
-            "Title: $title\n".
-            "Degree: $degree\n".
-            "Degree Year: $degreeyear\n".
-            "Field of Study: $field\n".
-            "AAFS Status: $aafs\n".
-            "Institution: $inst\n".
-            "Years of Experience: $exp\n".
-            "Cases per year: $cases\n".
-            "Region: $region\n".
-            "Address 1: $ad1\n".
-            "Address 2: $ad2\n".
-            "City: $cty\n".
-            "State: $state\n".
-            "Zip: $pcode\n".
-            "Phone: $ph\n".
-            "Affiliation: $affiliation\n".
-            "Sponsor: $sponsor\n".
-            "Sponsor email: $sponsor_email\n".
-            "Sponsor affiliation: $sponsor_affiliation\n";
-           */
            
    $header = "From:".$from."\r\n";
    $retval = mail($to,$subject,$message,$header);
@@ -327,22 +312,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    // Also email user
    $user_to = $e;
    $user_subject = "FADAMA Membership Request";
-   //$user_message = "Thank you for requesting membership approval to FADAMA. Your request is under review and may take up to 1 week to be approved.";
+
    $user_message = functions::renderTwigTemplate("email/register_user.html.twig", $user_params);
    $user_header = "From:".$from."\r\n";
    
    $user_retval = mail($user_to, $user_subject, $user_message, $user_header);
-   
-   if( $retval == true )  
+   if( $user_retval == true )  
    {
      echo("Thank you for requesting membership approval to FADAMA. Your request is under review and may take up to 1 week to be approved.");
 	  
    }
    else
    {
-      echo "Error: Activation Email Not Sent Contact Administrator.";
+      echo "Error: Activation Email not sent. Please contact administrator.";
    }
-	
 	
 	
 		
@@ -369,18 +352,22 @@ echo	'<p class="error">The email address is not acceptable because it is already
 		echo '</p><h3>Please try again.</h3><p><br></p>';
 		}// End of if (empty($errors))
 }// End of the main Submit conditional.
+echo("</div>");
 ?>
   
   
   
   
-  <div id="registerform">
+  <div id="registerform" style="width:60%;padding-left:20%">
   <form action="register.php" method="post" id="registration">
     
     
   <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
   <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Basic Information</legend>
-    
+      <BR>
+      FADAMA is designed as a database for the broader forensic community, including researchers and practitioners at all levels of experience and education.  In order to ensure that individuals requesting FADAMA access are part of the forensic community, personal information and credentials are requested as part of this vetting process.  If you have questions or concerns about any part of this application please <a href='./contact/index.php' target='_blank'>Contact Us</a>.
+      <BR>
+      <BR>
     
      <center><strong class="outsidetext">* indicates required field</strong></center>
   <br>  <label class="label" for="fname">First Name*</label><input id="fname" type="text" name="fname" size="30" maxlength="30" value="<?php if (isset($_POST['fname'])) echo $_POST['fname']; ?>">
@@ -465,6 +452,13 @@ By requesting registration to the FADAMA Database, I agree to the following guid
  </li>
 </ol>
 	</fieldset>
+      
+      
+ <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Code of Conduct for Database Usage</legend>
+     <input type="checkbox" name="agree_to_terms" id="agree_to_terms" value="1"> I agree to the <a href="terms_of_service.php" target="_blank">terms of service</a>.
+<br/><br/>
+
+	</fieldset>
 
   <br />	<br /> <label class="label" for="regsubmit">Click here to register</label>
     <input name="regsubmit" id="regsubmit" type="submit" value="Register"/>
@@ -537,11 +531,12 @@ By requesting registration to the FADAMA Database, I agree to the following guid
    frmvalidator.addValidation("region","req","Please select your region");
    
    frmvalidator.addValidation("aafs","req","Please select your AAFS membership status");
+   
+   frmvalidator.addValidation("agree_to_terms", "shouldselchk", "You must agree to the terms and conditions.");
 
 //]]></script>
     
     
-  </div>
   
   
   
