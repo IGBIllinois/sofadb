@@ -146,9 +146,9 @@ echo '</p>';
 
 echo '<br/> <a href="index.php?search=1">Search Again</a>';
 echo("<BR><BR>");
-echo("If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in these tutorials that can help ensure that misinterpretation of the data is not occurring.");
+echo("If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial#Search_and_data_download' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.");
 echo("<BR>");
-//echo ('<form action="confirm.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="export" target="print_popup" onsubmit="window.open(\'about:blank\',\'print_popup\',\'width=500,height=500\');">');
+
 echo ('<form action="confirm.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="export">');
 echo'<br/><p>Click here to export results to CSV File
 <input name="fdb" type="hidden" value="0">
@@ -427,7 +427,7 @@ echo <<<_END
 <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
 	<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Export Database</legend>
 <br>
-    If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in these tutorials that can help ensure that misinterpretation of the data is not occurring.
+    If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial#Search_and_data_download' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.
     <BR><BR>
 <span><label class="label" for="exportall">Click here to export all cases</label><input name="exportall" type="submit" id="exportall" title="Export All" value="Export All"></span><br>
 
@@ -449,7 +449,7 @@ echo <<<_END
 <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
 	<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Export My Cases</legend>
 <br>
-If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in these tutorials that can help ensure that misinterpretation of the data is not occurring.
+If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial#Search_and_data_download' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.
 <BR><BR>
 <span><label class="label" for="exportMy">Click here to export all of the current user's submitted cases</label><input name="exportMy" type="submit" id="exportMy" title="Export My Cases" value="Export My Cases"></span><br>
 
