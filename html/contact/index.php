@@ -19,9 +19,6 @@
 <link href="../css/style.css" rel="stylesheet" type="text/css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-<title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
-
-
 <!-- // Load Javascipt -->
 </head>
 
@@ -30,7 +27,7 @@
 <div id="header"><a href="#"><img src="../images/customLogo.gif" width="351" height="147" /></a></div>
 
 <div id="title">
-<h1>Forensic Anthropology Case Database (FADAMA)</h1>
+<h1>Forensic Anthropology Database<BR>for Assessing Methods Accuracy (FADAMA)</h1>
 </div>
 
 <div id="hline">
@@ -66,45 +63,60 @@
 <div id="templatecontainer">
   <form method="post" name="contactus">
   <?php 
+  $errors = array();
+  $email = "";
+  $name = "";
+  $message = "";
    if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
+       $email = $_POST['emailentry'];
+       $name = $_POST['nameentry'];
+       $message = $_POST['emailmessage'];
 
-       $admin_email = ADMIN_EMAIL;
-    $to = $admin_email;
-    $from = FROM_EMAIL;
+       if(!isset($_POST['emailentry']) || $_POST['emailentry'] == "") {
+           $errors[] = "You must enter your email address.";
+       }
+       if(count($errors) > 0) {
+           foreach($errors as $error) {
+               echo($error ."<BR>");
+           }
+       } else {
+        $admin_email = ADMIN_EMAIL;
+        $to = $admin_email;
+        $from = FROM_EMAIL;
 
-   $subject = "SOFA DB ADMIN ALERT: Comments and Questions";
-   $message = $_POST['emailmessage']."\n From email: ".$_POST['emailentry']."and Name: ".$_POST['nameentry'];
-   $header = "From:".$from."\r\n";
-   $retval = mail ($to,$subject,$message,$header);
-   if( $retval == true )  
-   {
-      echo "Message sent successfully."; 
-	  
-   }
-   else
-   {
-      echo "Error: Message could not be sent.";
-   }
-   }
-else{
+       $subject = "SOFA DB ADMIN ALERT: Comments and Questions";
+       $message = $_POST['emailmessage']."\n From email: ".$_POST['emailentry']."and Name: ".$_POST['nameentry'];
+       $header = "From:".$from."\r\n";
+       $retval = mail ($to,$subject,$message,$header);
+       if( $retval == true )  
+       {
+          echo "Message sent successfully."; 
+
+       }
+       else
+       {
+          echo "Error: Message could not be sent.";
+       }
+    }
+}
     
-    echo '<div id="contactentry"><label for="emailentry">Your Email Address:</label> <input name="emailentry" id="emailentry" type="text" size="32" maxlength="200" /></div>
+    echo '<div id="contactentry"><label for="emailentry">Your Email Address:</label> <input name="emailentry" id="emailentry" type="text" size="32" maxlength="200" value="'.$email.'"/></div>
     <div id="contactname">
       <label for="nameentry">Your Name:</label>    
-      <input name="nameentry" id="nameentry" type="text" size="40" maxlength="200" /></div>
+      <input name="nameentry" id="nameentry" type="text" size="40" maxlength="200" value="'.$name.'"/></div>
     <div id="contactmessage"><label for="emailmessage">Comments and Questions:</label><br />
-  <textarea name="emailmessage" id="emailmessage" cols="60" rows="30">Leave Name and Email fields blank if you want to send an anonymous message.
-
-If requesting a password reset put the words Password Reset into the comments. 
-
-If requesting the addition of a method not currently available in the database, fill out the following information to include in your message:
+  <textarea name="emailmessage" id="emailmessage" cols="60" rows="30" ">'.
+(($message !== "") ? $message :
+           
+"If requesting the addition of a method not currently available in the database, fill out the following information to include in your message:
 Author(s):
 Year:
 Article/Chapter title:
 Biological profile component (age, sex, stature or ancestry):
-Bone(s) used by method:</textarea></div>
-    <div id="contactsend"><input name="SendMessage" type="submit" /></div>';} ?>
+Bone(s) used by method:") .
+'</textarea></div>
+    <div id="contactsend"><input name="SendMessage" type="submit" value="Send Email"/></div>'; ?>
 	
 	</form>
 </div>
