@@ -35,7 +35,11 @@ if($result['RESULT'] == FALSE)
    if( $retval == true )  
    {
      
-	echo "Email sent to ". $member->get_uname().".";  
+	echo "Email sent to ". $member->get_uname().".";
+        
+        // Delete user
+        $curr_user = new member($db, $_SESSION['id']);
+        $curr_user->delete_member($idactivate);
    }
    else
    {
@@ -65,7 +69,7 @@ if($result['RESULT'] == FALSE)
         
         if( $retval == true )  
         {
-          echo "Error: Activation email sent to ".$to;
+          echo "User activated. Activation email sent to ".$to;
 
         }
         else
