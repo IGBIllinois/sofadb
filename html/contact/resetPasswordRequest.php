@@ -13,10 +13,11 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
 $contactURL = "https://". $_SERVER['HTTP_HOST']. $root_url. "/contact/";
 
 ?>
-<title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
+<title>Reset Password</title>
 
+<link rel="stylesheet" type="text/css" href="../css/style.css" />
+<link rel="stylesheet" type="text/css" href="../css/jquery.multiselect.css" />
 
-<!-- // Load Javascipt -->
 </head>
 
 <body>
@@ -24,13 +25,13 @@ $contactURL = "https://". $_SERVER['HTTP_HOST']. $root_url. "/contact/";
 <div id="header"><a href="#"><img src="../images/customLogo.gif" width="351" height="147" /></a></div>
 
 <div id="title">
-<h1>Forensic Anthropology Case Database (FADAMA)</h1>
+<h1>Forensic Anthropology Database<BR>for Assessing Methods Accuracy (FADAMA)</h1>
 </div>
 
 <div id="hline">
 <hr size="3" />
 </div>
-
+<div id="wrapper" style="width:500px">
 <?php
 
 $success = false;
@@ -94,7 +95,10 @@ if(!$success) {
 echo("<form method='POST' action='resetPasswordRequest.php'>");
 echo("Please enter the email you used as your username when you registered:<BR>Submitting the form will send a link to the specified address.");
 ?>
-<br><label class="label" for="email">Email Address*</label><input id="email" type="text" name="email" size="30" maxlength="160" value="<?php if (isset($_POST['email'])) echo $_POST['email']; ?>" >
+    <br><BR>
+    <B>Email Address* </B>
+    <input id="email" type="text" name="email" size="30" maxlength="160" value="<?php if (isset($_POST['email'])) echo $_POST['email']; ?>" >
+<BR>
 <input name="resetsubmit" id="resetsubmit" type="submit" value="Send email"/>
 <?php
 
@@ -104,6 +108,7 @@ echo("</form>");
 
 echo("<BR><a href='../index.php'>Back to Main Page</A>");
     
+echo("</div>");
 require_once('../include/footer.php');
 
 ?>
