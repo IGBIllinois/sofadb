@@ -1,36 +1,10 @@
-<html>
-    <head>
-        
 <?php
-
-/* 
- * This page allows users to reset their password. It requires a link sent to them when they
- * requested to change it.
- */
-
+$title="Reset Password";
 require_once("../../conf/settings.inc.php");
+require_once("../include/header_general.php");
 require_once("../include/main.inc.php");
-
-
+$contactURL = "https://". $_SERVER['HTTP_HOST']. $root_url. "/contact/";
 ?>
-<title>Reset Password</title>
-
-<link rel="stylesheet" type="text/css" href="../css/style.css" />
-<link rel="stylesheet" type="text/css" href="../css/jquery.multiselect.css" />
-<!-- // Load Javascipt -->
-</head>
-
-<body>
-<div id="top">
-<div id="header"><a href="#"><img src="../images/customLogo.gif" width="351" height="147" /></a></div>
-
-<div id="title">
-<h1>Forensic Anthropology Database<BR>for Assessing Methods Accuracy (FADAMA)</h1>
-</div>
-
-<div id="hline">
-<hr size="3" />
-</div>
 <div id="wrapper" style="width:20%">
 <?php
 $success = false;
