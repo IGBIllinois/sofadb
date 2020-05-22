@@ -1,17 +1,22 @@
+<html>
+    <head>
+        
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This page allows users to reset their password. It requires a link sent to them when they
+ * requested to change it.
  */
 
 require_once("../../conf/settings.inc.php");
 require_once("../include/main.inc.php");
+
+
 ?>
-<title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
+<title>Reset Password</title>
 
-
+<link rel="stylesheet" type="text/css" href="../css/style.css" />
+<link rel="stylesheet" type="text/css" href="../css/jquery.multiselect.css" />
 <!-- // Load Javascipt -->
 </head>
 
@@ -20,13 +25,13 @@ require_once("../include/main.inc.php");
 <div id="header"><a href="#"><img src="../images/customLogo.gif" width="351" height="147" /></a></div>
 
 <div id="title">
-<h1>Forensic Anthropology Case Database (FADAMA)</h1>
+<h1>Forensic Anthropology Database<BR>for Assessing Methods Accuracy (FADAMA)</h1>
 </div>
 
 <div id="hline">
 <hr size="3" />
 </div>
-
+<div id="wrapper" style="width:20%">
 <?php
 $success = false;
 if(isset($_POST['submitpass'])) {
@@ -69,6 +74,7 @@ if ( false !== ctype_xdigit( $selector ) && false !== ctype_xdigit( $validator )
         <input type="hidden" name="validator" value="<?php echo $validator; ?>">
         <input type="password" class="text" name="psword1" placeholder="Enter your new password" required><BR>
         <input type="password" class="text" name="psword2" placeholder="Retype Password" required>
+        <BR>
         <input type="submit" name="submitpass" id="submitpass" class="submit" value="Submit">
     </form>
 <?php endif; 
@@ -77,7 +83,7 @@ if ( false !== ctype_xdigit( $selector ) && false !== ctype_xdigit( $validator )
 
 
 ?>
-
+</div>
   <script language="JavaScript" type="text/javascript"
     xml:space="preserve">//<![CDATA[
 //You should create the validator only after the definition of the HTML form
