@@ -81,7 +81,7 @@ class admin_note {
     }
     
     public static function get_all_admin_notes($db) {
-        $query = "SELECT id from admin_notes";
+        $query = "SELECT id from admin_notes ORDER BY id DESC";
         $result = $db->get_query_result($query);
         
         $return_result = array();
