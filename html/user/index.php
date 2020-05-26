@@ -108,7 +108,6 @@ else {
 }
 
 
-
 echo "<p class='dbresults'>Total number of cases: $num_cases. Showing records  $startingrecord - $endingrecord </p>";
 echo("<p class='dbresults'>You have ".$member->get_num_unsubmitted_cases(). " unsubmitted cases.</p>");
 if ($pages > 1) {
@@ -134,7 +133,11 @@ echo '<div class="scroll"><table id="hortable" summary="List of cases">
     	<tr>
 			<th scope="col">Edit</th>
                         <th scope="col">Delete</th>
-			<th scope="col">Submit</th>
+			<th scope="col" width="12%">Submit
+                        <span class="tooltip"><img class="img-bottom" src="../images/tooltip.png">
+        <span class="tooltiptext">When you "submit" your case data, it becomes part of FADAMA and accessible to all members. </span>
+    </span>                          
+</th>
 			<th scope="col">Case Year</th>
             <th scope="col">Case Number</th>
             <th scope="col">Case Agency</th>
