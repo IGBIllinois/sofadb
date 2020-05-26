@@ -33,9 +33,14 @@ elseif($_SESSION['loggedin']==1)
     header('Location: ' .  $root_url);
     exit();
 }
-
-
-
+try {
+    $member = new member($db, $_SESSION['id']);
+if(!$member->get_agree_to_terms()) {
+    header('Location: ' . '../terms_of_service.php?form=true');
+}
+} catch(Exception $e) {
+    echo("ERROR: Cannot find terms of service page.");
+}
 
 ?>
 
@@ -93,9 +98,9 @@ http://jquery.org/license
 <div id="header"><a href="http://www.sofainc.org" target="_blank"><img src="<?php echo($root_url) ?>/images/customLogo.gif" width="351" height="147" /></a></div>
 
 <div id="title">
-<h1>Forensic Anthropology Case Database (FADAMA)</h1>
+<h1>Forensic Anthropology Database<BR>for Assessing Methods Accuracy (FADAMA)</h1>
 </div>
-
+</div>
 <div id="hline">
 <hr size="3" />
 </div>
@@ -143,6 +148,22 @@ http://jquery.org/license
 
 
 
+<?php
+$member = new member($db, $_SESSION['id']);
+if($member->get_permissionstatus() == 2) {
+    ?>
+<li>
+    <a href="<?php echo($root_url) ?>/user/admin_view.php"><svg class="view" width="30px" height="30px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+        
+        <path d="M407.448,360.474c-59.036-13.617-113.989-25.541-87.375-75.717 c81.01-152.729,21.473-234.406-64.072-234.406c-87.231,0-145.303,84.812-64.072,234.406c27.412,50.482-29.608,62.393-87.375,75.717 c-59.012,13.609-54.473,44.723-54.473,101.176h411.838C461.919,405.196,466.458,374.083,407.448,360.474z"/>
+        
+        </svg>
+        <span title="View">Admin View</span></a></li>
+
+<?php
+}
+?>
+        
 <li><a href="<?php echo($root_url) ?>/logout.php"><svg class="lab" width="30px" height="30px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="202 16 539 524" enable-background="new 202 16 539 524" xml:space="preserve"><g>
 
 	<path d="M586.9,508.9H311.5c-43.2,0-81-37.8-81-81V128.2c0-45.9,37.8-81,81-81h275.4c45.9,0,81,35.1,81,81v299.7C667.9,471.1,632.8,508.9,586.9,508.9z"/>
@@ -152,6 +173,7 @@ http://jquery.org/license
 	<polygon  points="406,230.8 406,344.2 546.4,344.2 546.4,419.8 727.3,287.5 568,155.2 568,225.4 	"/>
 
 </g></svg><span title="Lab">Logout</span></a></li>
+
 </ul>
 
 

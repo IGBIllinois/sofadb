@@ -17,6 +17,14 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
     $root_url = ROOT_URL;
 }
 
+try {
+    $member = new member($db, $_SESSION['id']);
+if(!$member->get_agree_to_terms()) {
+    header('Location: ' . '../terms_of_service.php?form=true');
+}
+} catch(Exception $e) {
+    echo("ERROR: Cannot find terms of service page.");
+}
 
   if($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==2)
 {}
@@ -101,6 +109,8 @@ elseif($_SESSION['loggedin']==1)
     <li><a href="<?php echo($root_url) ?>/admin/methods/">Methods</a></li>    
     <li><a href="<?php echo($root_url) ?>/admin/admin_reports.php">Reports</a></li> 
     <li><a href="<?php echo($root_url) ?>/admin/email.php">Send email</a></li> 
+    <li><a href="<?php echo($root_url) ?>/admin/admin_notes.php">Admin notes</a></li>
+    <li><a href="<?php echo($root_url) ?>/admin/user_view.php">User View</a></li>
     
   </ul>
     </div>
