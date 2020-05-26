@@ -35,12 +35,13 @@ class member {
     private $casessubmitted;
     private $caseswithdrawn;
     private $dateregistered;
-    private $totalcases;
     
     private $affiliation;
     private $sponsor;
     private $sponsor_email;
     private $sponsor_affiliation;
+    
+    private $agree_to_terms;
     
     public function __construct($db, $id = null) {
         $this->db = $db;
@@ -69,7 +70,6 @@ public function get_state() { return $this->state; }
 public function get_zip() { return $this->zip; }
 public function get_phone() { return $this->phone; }
 public function get_casessubmitted() { return $this->casessubmitted; }
-//public function get_totalcases() { return $this->totalcases; }
 public function get_dateregistered() { return $this->dateregistered; }
 public function get_lastlogin() { return $this->lastlogin; }
 public function get_permissionstatus() { return $this->permissionstatus; }
@@ -77,10 +77,12 @@ public function get_affiliation() { return $this->affiliation; }
 public function get_sponsor() { return $this->sponsor; }
 public function get_sponsor_email() { return $this->sponsor_email; }
 public function get_sponsor_affiliation() { return $this->sponsor_affiliation; }
+public function get_agree_to_terms() { return $this->agree_to_terms; }
 
 public function get_totalcases() {
     return $this->get_num_active_cases();
 }
+
 /** Sets this user's permission status
  * 
  * @param int $status The users new status 
@@ -251,6 +253,16 @@ public function delete_member($delete_member_id) {
     } else {
         return array("RESULT"=>FALSE,
         "MESSAGE"=>"There was an error deleting $del_member_name ($del_member_email). Please check the information and try again.");       
+    }
+}
+
+public function update_terms_agreement($agree) {
+    $query = "UPDATE members set agree_to_terms = :agree where id=:id";
+    $params = array("agree"=>$agree,
+                    "id"=>$this->id);
+    $result = $this->db->get_update_result($query, $params);
+    if($result > 0) {
+        $this->agree_to_terms = $agree;
     }
 }
 
@@ -470,7 +482,8 @@ public static function add_member($db, $params) {
             . "affiliation,"
             . "sponsor,"
             . "sponsor_email,"
-            . "sponsor_affiliation"
+            . "sponsor_affiliation,"
+            . "agree_to_terms"
             . ") VALUES ("
                 . ":uname, "
                 . ":pwd, "
@@ -499,7 +512,8 @@ public static function add_member($db, $params) {
                 . ":affiliation,"
                 . ":sponsor,"
                 . ":sponsor_email,"
-                . ":sponsor_affiliation"
+                . ":sponsor_affiliation,"
+                . ":agree_to_terms"
             . ")";		
 
     $result = $db->get_insert_result($q, $params);
@@ -639,12 +653,13 @@ public static function update_member($db, $params, $pwd=null) {
             $this->casessubmitted = $member_data['casessubmitted'];
             $this->caseswithdrawn = $member_data['caseswithdrawn'];
             $this->dateregistered = $member_data['dateregistered'];
-            $this->totalcases = $member_data['totalcases'];
             
             $this->affiliation = $member_data['affiliation'];
             $this->sponsor = $member_data['sponsor'];
             $this->sponsor_email = $member_data['sponsor_email'];
             $this->sponsor_affiliation = $member_data['sponsor_affiliation'];
+            
+            $this->agree_to_terms = $member_data['agree_to_terms'];
             
         }
     }
