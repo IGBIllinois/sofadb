@@ -13,18 +13,18 @@ require_once "../include/header_admin.php";
        
         $admin_email = ADMIN_EMAIL;
 
-        $from = $_POST['emailentry'];
+        $memberid = $_SESSION['id'];
+        $curr_user = new member($db, $memberid);
+        $from = $curr_user->get_uname();
         $subject = $_POST['subject'];
 
         $message = $_POST['emailmessage'];
         $header = "From:".$from."\r\n";
 
-        $real_emails_array = functions::get_emails($db);
-        $real_emails = implode(",",$real_emails_array);
-        $test_emails_array = array("mbach@igb.illinois.edu", "m_g_bach@yahoo.com", "klatuujunk@yahoo.com", "test@test.test");
-        $test_emails = implode(",", $test_emails_array);
+        $emails_array = functions::get_emails($db);
+        $emails = implode(",",$emails_array);
         
-        $header .= "Bcc:$test_emails\r\n";
+        $header .= "Bcc:$emails\r\n";
 
         $retval = mail($from, $subject, $message, $header);
         if( $retval == true )  
@@ -41,8 +41,7 @@ require_once "../include/header_admin.php";
     echo("<fieldset>");
     echo("Submitting this form will send an email to all database users.");
 
-    echo '<div id="contactentry"><label for="emailentry">Your Email Address:</label> <input name="emailentry" id="emailentry" type="text" size="32" maxlength="200" /></div>
-    <div id="contactname">
+    echo '<div id="contactname">
       <label for="subject">Subject:</label>    
       <input name="subject" id="subject" type="text" size="40" maxlength="200" /></div>
     <div id="contactmessage"><label for="emailmessage">Message:</label><br />
