@@ -19,6 +19,30 @@ $edit_member = new member($db, $memberid);
 // Has the form been submitted?
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    
+    if(isset($_POST['deleteSelf'])) {
+        if(isset($_POST['deleteConfirm'])) {
+            echo("<span style='padding-left:100px; display:block;'>");
+            $del_member = new member($db, $memberid);
+            $params = array("uname"=>$del_member->get_uname());
+
+            echo("A notification has been sent to the administrators. You will be notified when your account is deleted.");
+
+            $admin_email = ADMIN_EMAIL;              
+            $to = $admin_email;
+
+            $from= FROM_EMAIL;
+            $subject = "FADAMA DB ADMIN ALERT: Delete user request";
+            $message = functions::renderTwigTemplate('email/user_delete_self_request.html.twig', $params);
+
+            $header = "From:".$from."\r\n";
+            $retval = mail($to,$subject,$message,$header);
+
+            echo("</span>");
+        } else {
+            echo("You must agree to the terms before requesting your account to be deleted.");
+        }
+    } else {
 	$errors = array(); // Start an array to hold the errors
 	// Check for password
         $pwd3 = $_POST['psword3'];
@@ -251,18 +275,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		}
 		echo '</p><h3>Please try again.</h3><p><br></p></span>';
 		}// End of if (empty($errors))
+    }
 } // End of the main Submit conditional.
+
 ?></div>
   
   
   
   <div id="editform">
-
-  <form action="index.php" method="post" id="registration">
-    
-    
+      
   <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
-  <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Basic Information</legend>
+   <form action="index.php" method="post" id="registration">
+    <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Basic Information</legend>
     
     
  <center><strong class="outsidetext">* indicates required field</strong></center>
@@ -340,11 +364,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <input name="regsubmit" id="regsubmit" type="submit" value="Update Profile"/>
     <div id="registration_errorloc" class="errorlocation">
       </div>
-    
+  </form>
+      <BR><BR>
+      
+        <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Delete Account</legend>
+            <form action='index.php' method='POST' id='deleteSelfPost'>
+                <BR>
+                Submitting this form will send an email to the administrators requesting that they delete your account. You will be notified when the account has been deleted. Once complete, all case data associated with your user profile will be deleted and not appear in any future data downloads or data backups.  
+                <BR><BR><input type='checkbox' name='deleteConfirm'>I agree to have this account deleted.<BR><BR>
+                <input type='submit' id='deleteSelf' name='deleteSelf' value='Delete account'>
+                <BR><BR>
+            </form>
+        </fieldset>
+      <BR><BR>
     </fieldset>
     
-  </form>
+ 
+      
     
+
     
   <script language="JavaScript" type="text/javascript"
     xml:space="preserve">//<![CDATA[
@@ -381,10 +419,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   
    frmvalidator.addValidation("pcode","numeric","Zip code must be a number");
     frmvalidator.addValidation("phone","numeric","Phone number must be a number");
-  
-  //frmvalidator.addValidation("degree","req","Please select your highest degree earned");
- 
- // frmvalidator.addValidation("degreeyear","req","Please enter your degree year");
  
  
   frmvalidator.addValidation("degreeyear","maxlen=4");
@@ -392,14 +426,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   frmvalidator.addValidation("degreeyear","numeric", "Degree year must be a number in YYYY format");
    frmvalidator.addValidation("degreeyear","gt=1900");
   
-  
-  // frmvalidator.addValidation("fieldofstudy","req","Please enter your field of study");
-   
- //  frmvalidator.addValidation("yearsexp","req","Please enter your years of experience");
+
    frmvalidator.addValidation("yearsexp","numeric","Years experience must be a number");
     frmvalidator.addValidation("yearsexp","gt=-1","Years experience must be greater than or equal to zero");
    
-  // frmvalidator.addValidation("casesperyear","req","Please enter your average number of cases per year");
    frmvalidator.addValidation("casesperyear","numeric","Cases per year must be a number");
    frmvalidator.addValidation("casesperyear","gt=-1","Cases per year must be greater than or equal to zero");
    
