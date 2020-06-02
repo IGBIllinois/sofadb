@@ -184,7 +184,7 @@ class method_infos {
        }
        $output = "";
 
-       $prompt = "<BR>".$method->get_method_prompt()."<BR>";
+       $prompt = "<BR><span class='prompt'>".$method->get_method_prompt()."</span><BR><BR>";
        // Draw estimated outcomes
        if($method->get_method_type_num() == METHOD_DATA_SEX_ID) {
 
@@ -313,7 +313,7 @@ class method_infos {
        
 
        $j = 0;
-       $output .= "<table class='table_full'><tr>";
+       $output .= "<table ><tr>";
        
         foreach($method_infos_by_type as $type_id=>$method_infos) {
             if($type_id == input_type::get_input_id_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME)) {
@@ -325,10 +325,6 @@ class method_infos {
                 $output .= "</tr><tr>";
                 $j = 0;
             }
-            //$output .= "<td class='td_spaced align_top'>";
-            //$output .= "TYPE_ID=$type_id";
-            
-
 
         $i=0;
 
@@ -427,21 +423,25 @@ class method_infos {
                     $output .= "</tr>";
                     $output .="</table>";
                }
-               //$output .="</td>";
                
            } else if($input_type_name == USER_INTERACTION_CHECKBOX_SELECT) {
                $maxcols = 1;
+               if($count == 0) {
+                   $method_infos2 = new method_infos($db, $method_info_id);
+                    $header = $method_infos2->get_header();
+                    $opt_header = $method_infos2->get_option_header();
+                   $output .= "<tr><th class='td_spaced align_top'><B><U>$header</U></B></th><th class='td_spaced align_top'><B><U>$opt_header</U></B></th></tr>";
+               }
                if($i >= $maxcols) {
                    $output .= "</tr><tr>";
                    $i = 0;
                }
                $inner_table = false;
-               $method_infos2 = new method_infos($db, $method_info_id);
-               $header = $method_infos2->get_header();
-               $output .= "<table><tr><th class='td_spaced align_top'><B><U>$header</U></B></th></tr>";
+               
+               
                $output .= "<tr>";
                $output .= self::show_method_infos_select_each($db, $method_info_id, $tier2id, false, 1);
-               $output .= "</tr></table>";
+               $output .= "</tr>";
            }
            
            $i++;
@@ -605,7 +605,7 @@ class method_infos {
      * @return string HTML for inputting data for this method_infos object
      */
     public static function show_method_infos_select_each($db, $method_infos_id, $tier2id = null, $inner_table = true, $checkboxes = false) {
-$inner_table=true;
+
         $method_infos = new method_infos($db, $method_infos_id);
         $options = $method_infos->get_method_info_options();
         $output = "";
