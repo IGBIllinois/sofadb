@@ -1141,3 +1141,9 @@ input[type=number] {
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+.prompt {
+    background-color: white;
+    color: #039;
+    font-style:italic;
+}
