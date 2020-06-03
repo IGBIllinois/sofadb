@@ -938,7 +938,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <label class="label" for="known_stature"></label><input type="checkbox" name="known_stature" value="1" <?php if ($casedata->get_known_stature() == 1) echo ' checked'; ?>/>Stature was known <BR>
 <label class="label" for="known_unable_to_determine"></label><input type="checkbox" name="known_unable_to_determine" value="1" />Unable to determine 
 <div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
-        <span class="tooltiptext">If the estimated age is not a range (e.g. 55+ years), input "55" into the lower range text box provided here.</span>
+        <span class="tooltiptext">If this information hasn't been documented, or you are entering data for a case completed by someone else at your agency, you may not know the context for assessing background knowledge and can check this box here.</span>
 </div> 
 <BR>
       </fieldset>
@@ -947,7 +947,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           <BR>
         FADAMA provides the opportunity for users to share relevant case data, such as craniometric and postcranial measurements, with the Forensic Data Bank (FDB). 
         In contrast to FADAMA's anonymous database, FDB sharing requires identifiable information about the case, including the case number and case agency. 
-        To review a complete list of data shared with the FDB if you choose to opt-in, please see the FAQs. 
+        To review a complete list of data shared with the FDB if you choose to opt-in, please see the <U style='color:#3A53BD'><a target='_blank' style='color:#3A53BD' href='https://mbach-windows7.igb.illinois.edu/sofadb/faq.php'>FAQs</a></U>. 
         <BR><BR>
         Please choose one of the following options to apply to this case.
         <BR><BR>
