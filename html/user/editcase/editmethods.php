@@ -282,7 +282,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <fieldset class="methodinfobox"><legend class="boldlegend">Edit Methods</legend>
 
         <?php
-        echo($method->get_name()."<BR>");
+        echo($method->get_name());
+        echo('  <input type="submit" class="showybutton" id="editmethoddatabutton" value="Save Edits" ><BR><BR>');
 
 
             method_infos::show_method_info($db, $tier2->get_methodid(), $tier2->get_id());
