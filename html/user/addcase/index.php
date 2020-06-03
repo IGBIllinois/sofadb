@@ -691,6 +691,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
            <BR>
            <input type="checkbox" name="certify_permission" value="1"/>
            I certify that I have permission from the appropriate agencies and/or personnel to add this case’s information to the FADAMA database.
+           <div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
+               <span class="tooltiptext"> It is at the discretion of the user how to obtain that permission, but a template permission form is provided <a href='https://www-app.igb.illinois.edu/sofadb/docs/Agency%20Permissions%20for%20FADAMA%20Submissions.docx' target='_blank'>here</a> if needed.</span>
+           </div>     
            <BR><BR>
            <input type="checkbox" name="certify_no_info" value="1" />
             I certify that no identifiable information (e.g. name, home address, relative’s names, driver’s license number etc) 
@@ -704,7 +707,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           <BR>
         FADAMA provides the opportunity for users to share relevant case data, such as craniometric and postcranial measurements, with the Forensic Data Bank (FDB). 
         In contrast to FADAMA's anonymous database, FDB sharing requires identifiable information about the case, including the case number and case agency. 
-        To review a complete list of data shared with the FDB if you choose to opt-in, please see the FAQs. 
+        To review a complete list of data shared with the FDB if you choose to opt-in, please see the <U style='color:#3A53BD'><a target='_blank' style='color:#3A53BD' href='https://mbach-windows7.igb.illinois.edu/sofadb/faq.php'>FAQs</a></U>. 
         <BR><BR>
         Please choose one of the following options to apply to this case.
         <BR><BR>
