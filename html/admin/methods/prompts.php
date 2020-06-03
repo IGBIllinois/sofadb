@@ -49,12 +49,12 @@ echo("<form method=POST action='prompts.php' >");
 echo('<label class="label" for="caseyear">Prompt Name</label>');
     
 
-echo('<input id="prompt_name" type="text" name="prompt_name" size="100" maxlength="100">');
+echo('<input id="prompt_name" type="text" name="prompt_name" size="100">');
 
 echo("<BR>");
 
 echo('<label class="label" for="caseyear">Prompt Text</label>');
-echo('<input id="prompt_text" type="text" name="prompt_text" size="100" maxlength="100">');
+echo('<input id="prompt_text" type="text" name="prompt_text" size="100">');
 
 echo("<BR>");
 echo('<input name="add_prompt" id="add_prompt" type="submit" value="Add Prompt"/><BR><BR>');
