@@ -10,8 +10,10 @@ if(isset($_POST['addMessageSubmit'])) {
 
 echo('<div id="memberregion"> 
   </br>');
-
-
+echo("
+This is a place where admins can post and keep track of modifications and tasks they have completed for FADAMA. 
+For a comprehensive list of the roles and responsibilities of the FADAMA Administrators, please see the Administrator Handbook <a target='blank' href='https://docs.google.com/document/d/1OW1R_Xms-2qMvjbuBTdESk9vTED8SwVVxCpttGSK5uE/edit?usp=sharing'>here</a>.
+");
 $notes = admin_note::get_all_admin_notes($db);
 
 echo("<table id='hortable'>");
@@ -19,7 +21,7 @@ echo("<tr><th width=20%>Date</th><th width=20%>Name</th><th>Message</th></tr>");
 foreach($notes as $note) {
     $member = new member($db, $note->get_member_id());
     $name = $member->get_firstname() . " ".$member->get_lastname();
-    echo("<tr><td>".date("Y-m-d", strtotime($note->get_date_added()))."</td><td>".$name."</td><td>".$note->get_message()."</td></tr>");
+    echo("<tr><td>".date("Y-m-d ", strtotime($note->get_date_added()))."</td><td>".$name."</td><td>".$note->get_message()."</td></tr>");
 }
 echo("</table>");
 
