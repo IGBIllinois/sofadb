@@ -50,7 +50,7 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
 
 <body>
 <div id="top">
-  <div id="header"><a href="#"><img src="images/customLogo.gif" width="351" height="147" /></a></div>
+  <div id="header"><a href="http://www.sofainc.org" target="_blank"><img src="images/customLogo.gif" width="351" height="147" /></a></div>
  
  <div id="title">
     <h1>Forensic Anthropology Database<BR>for Assessing Methods Accuracy (FADAMA)</h1>
