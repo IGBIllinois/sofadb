@@ -149,7 +149,7 @@ With the participation of practitioners and the submission of the current and pa
 <BR>
     
     <center><h1 id=scope>Method Reference List</h1></center>
-<a href='docs/FADAMA_methods_list.html' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
+<a href='https://andicyim.github.io/FADAMA/Method_list/method-list' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
 <BR>
 <BR>
 <BR>    
@@ -157,7 +157,7 @@ With the participation of practitioners and the submission of the current and pa
     <center><h1 id="tutorials">Tutorials</hi></center>
     
 <ul style='padding:revert'>
-    <li>Wiki: <a href='https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial'>https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial</a></li>
+    <li>Wiki: <a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial'>https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial</a></li>
     <li>Videos:</li>
 </ul>
 
@@ -310,7 +310,7 @@ The Case Notes section is the ideal place to include case notes. However, we ask
 
     <h1 id="list">Is there a list of the methods currently included in FADAMA for data entry?</h1>
     <BR>
-    <a href='docs/FADAMA_methods_list.html' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
+    <a href='https://andicyim.github.io/FADAMA/Method_list/method-list' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
 
 
     
