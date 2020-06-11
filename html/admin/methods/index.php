@@ -84,7 +84,7 @@ echo '<div class="scroll"><table id="hortable" summary="List of methods">
     <tbody>';
 
 // Show all methods; Active and inactive
-$methods = method::get_methods($db, $start, $pagerows, 'methodname', -1);
+$methods = method::get_methods($db, $start, $pagerows, 'methodname, id', -1);
 foreach($methods as $method) {
     $method_id = $method->get_id();
     $times_method_used = count(tier2data::get_used_methods($db, $method_id));

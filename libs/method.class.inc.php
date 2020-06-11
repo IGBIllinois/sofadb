@@ -280,7 +280,9 @@ class method {
     
         /** Gets method_infos for a method sorted by type
          * 
-         * @return \method_infos An array whose contents are arrays of method_infos, sorted by type
+         * @return \method_infos An 2D array whose contents are arrays of method_infos, sorted by type
+         * Each entry is of the form: $id->($method_info_array), where $id is the input_type, and
+         * $method_info_array is the array of method_infos objects
          */
         public function get_method_infos_by_type($type = null) {
             if($type == null) {
@@ -430,7 +432,7 @@ class method {
      *  $limit is the number of records to return, starting at index $start.
      *  Otherwise, all methods in the database will be returned.
      */
-    public static function get_methods($db, $start = -1, $limit = -1, $order='methodname', $active=1) {
+    public static function get_methods($db, $start = -1, $limit = -1, $order='methodname, id', $active=1) {
         // $active = 1: Only show active methods
         // $active = 0: Only show inactive methods
         // $active = -1: Show all methods
