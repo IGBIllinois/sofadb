@@ -1147,3 +1147,7 @@ input[type=number] {
     color: #039;
     font-style:italic;
 }
+
+.width_150px {
+    width:150px;
+}

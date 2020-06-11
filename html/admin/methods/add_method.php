@@ -152,7 +152,7 @@ echo('
 <BR>
 <label class="label" for="prompt">Method prompt (optional additional text)</label>');
 
-echo('<select name="prompt" id="prompt">
+echo('<select class="width_150px"  name="prompt" id="prompt">
     
     <option value="" selected="selected" disabled="disabled">Prompt</option>');
 $prompts = method::get_all_prompts($db);
