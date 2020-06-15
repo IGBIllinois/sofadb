@@ -83,37 +83,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } 
     else {
             $faage2_test = trim($_POST['faage2']);
-            if(!is_numeric($faage2_test)) {
-                $errors[] = "Forensic Anthropology estimated age must be numeric.";
-            } else {
-                if($faage2_test > MAXAGE) {
+                if(is_numeric($faage2_test) && $faage2_test > MAXAGE) {
                     $errors[] = "Forensic Anthropology estimated age must be less than ".MAXAGE.".";
                 } else {
                     $faage2 = $faage2_test;
                     $faageunits2 = trim($_POST['faageunits2']);
                 }
-            }
+            
 	}
 
     //check for a FA age 1
     if (empty($_POST['faage'])) {
         $faage=NULL;
         $faageunits=NULL;
-        $faage2=NULL;
-        $faageunits2=NULL;
     } 
     else {
         $faage_test = trim($_POST['faage']);
-        if(!is_numeric($faage_test)) {
-            $errors[] = "Forensic Anthropology estimated age must be numeric.";
-        } else {
-            if($faage_test > MAXAGE) {
+            if(is_numeric($faage_test) && $faage_test > MAXAGE) {
                 $errors[] = "Forensic Anthropology estimated age must be less than ".MAXAGE.".";
             } else {
                 $faage = trim($_POST['faage']);
                 $faageunits = trim($_POST['faageunits']);
             }
-        }
+        
     }
         
     if(isset($_POST['faage_notes'])) {
@@ -707,7 +699,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           <BR>
         FADAMA provides the opportunity for users to share relevant case data, such as craniometric and postcranial measurements, with the Forensic Data Bank (FDB). 
         In contrast to FADAMA's anonymous database, FDB sharing requires identifiable information about the case, including the case number and case agency. 
-        To review a complete list of data shared with the FDB if you choose to opt-in, please see the <U style='color:#3A53BD'><a target='_blank' style='color:#3A53BD' href='https://mbach-windows7.igb.illinois.edu/sofadb/faq.php'>FAQs</a></U>. 
+        To review a complete list of data shared with the FDB if you choose to opt-in, please see the FAQs. 
         <BR><BR>
         Please choose one of the following options to apply to this case.
         <BR><BR>
@@ -758,10 +750,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    
   frmvalidator.addValidation("caseyear","maxlen=4","Year must be entered in YYYY format");
   frmvalidator.addValidation("caseyear","numeric","Year must be entered in YYYY format");
-  
-   frmvalidator.addValidation("faage","numeric","Ages must be entered as a number");
-   
-  frmvalidator.addValidation("faage2","numeric","Ages must be entered as a number");
   
   frmvalidator.addValidation("faage", "lt=150", "Age should be less than 150.");
   frmvalidator.addValidation("faage2", "lt=150", "Age should be less than 150.");
