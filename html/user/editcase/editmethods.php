@@ -15,18 +15,28 @@ require_once('../../include/session.inc.php') ;
 $casedata = null;
 if(isset($_GET['id'])) 
 {
-    $caseeditid=$_GET['id'];
-    $_SESSION['caseid']=$caseeditid;
-    unset($_GET['id']);
+    $case = new sofa_case($db, $_GET['id']);
+    if($case->get_memberid() != $_SESSION['id']) {
+        echo('<span style="padding-left:100px; 
+                    display:block;">');
+        echo "You do not have permission to view this case.";
+        echo("</span>");
+        require_once("../../include/footer.php");
+        exit;
+    } else {
+        $caseeditid=$_GET['id'];
+        $_SESSION['caseid']=$caseeditid;
+        unset($_GET['id']);
 
-    $casedata = new sofa_case($db, $caseeditid);
-    
-    
-    if(isset($_GET['tier2id'])) {
-        $tier2id = $_GET['tier2id'];
-        $tier2 = new tier2data($db, $_GET['tier2id']);
-        $method = new method($db, $tier2->get_methodid());
-        
+        $casedata = new sofa_case($db, $caseeditid);
+
+
+        if(isset($_GET['tier2id'])) {
+            $tier2id = $_GET['tier2id'];
+            $tier2 = new tier2data($db, $_GET['tier2id']);
+            $method = new method($db, $tier2->get_methodid());
+
+        }
     }
 }
 

@@ -37,12 +37,24 @@ require_once('../../include/session.inc.php') ;
   <?php
 
 $casedata = null;
+$errors = array();
 if(isset($_GET['id'])) 
 {
-    $caseeditid=$_GET['id'];
-    $_SESSION['caseid']=$caseeditid;
+    $case = new sofa_case($db, $_GET['id']);
+    if($case->get_memberid() != $_SESSION['id']) {
+        echo('<span style="padding-left:100px; 
+                    display:block;">');
+        echo "You do not have permission to view this case.";
+        echo("</span>");
+        require_once("../../include/footer.php");
+        exit;
+    } else {
+        $caseeditid=$_GET['id'];
+        $_SESSION['caseid']=$caseeditid;
+    
 
     $casedata = new sofa_case($db, $caseeditid);
+    }
 }
 
 elseif(!isset($_SESSION['caseid']))
