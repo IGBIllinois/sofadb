@@ -28,18 +28,25 @@
 </head>
 
 <body>
-<div id="top">
-<div id="header"><a href="#"><img src="images/customLogo.gif" width="351" height="147" /></a></div>
+<div id="top" class='new_header'>
 
-<div id="title">
-<h1>Forensic Anthropology Database<BR>for Assessing Methods Accuracy (FADAMA)</h1>
+    <div class='header_logo'>
+            <img class='align_left' src="images/header.png">
+    </div>
+            <table style='float:right'><tr><td class='align_center' >
+              <a href="http://www.sofainc.org" target="_blank"><img  src="images/sofaLogo.png"></a>
+            </td></tr><tr><td class='align_center' >
+              <a href="https://illinois.edu" target="_blank"><img src="images/illinois.png"></a>
+            </td></tr><tr><td class='align_center' >
+              <a href="https://www.csufresno.edu" target="_blank"><img src="images/fresnostate.png"></a>
+            </td></tr></table>
+
+
 </div>
-</div>
+
 <div id="hline">
 <hr size="3" />
 </div>
-
-
 
 <div id="navbar">
   <ul>
@@ -101,12 +108,10 @@
         <li><B><a href='#userresponsibility'>FADAMA User Information and Responsibility</a></B></li>
         <ul style='padding:revert'>
             <li><a href="#FADAMAusers">Who are the targeted users of FADAMA?</a></li>
-      	    <li><a href="#codeofconduct">What is the FADAMA user code of conduct?</a></li>    
-	    <li><a href="#FADAMAresponsibilities">What are the FADAMA user responsibilities?</a></li>
+            <li><a href="#FADAMAresponsibilities">What are the FADAMA user responsibilities?</a></li>
             <li><a href="#FADAMAuserprivacy">How does FADAMA ensure user privacy?</a></li>
             <li><a href="#application">I applied for FADAMA membership a while ago, but my membership application is still pending, am I being denied?</a></li>
             <li><a href="#citation">How do I cite FADAMA if I want to use the data from the database in my research?</a></li>
-	    
         </ul>
         <BR>
 
@@ -151,7 +156,7 @@ With the participation of practitioners and the submission of the current and pa
 <BR>
     
     <center><h1 id=scope>Method Reference List</h1></center>
-<a href='https://andicyim.github.io/FADAMA/Method_list/method-list' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
+<a href='docs/FADAMA_methods_list.html' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
 <BR>
 <BR>
 <BR>    
@@ -159,7 +164,7 @@ With the participation of practitioners and the submission of the current and pa
     <center><h1 id="tutorials">Tutorials</hi></center>
     
 <ul style='padding:revert'>
-    <li>Wiki: <a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial'>https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial</a></li>
+    <li>Wiki: <a href='https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial'>https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial</a></li>
     <li>Videos:</li>
 </ul>
 
@@ -193,17 +198,9 @@ With the participation of practitioners and the submission of the current and pa
     <BR>
     FADAMA is designed as a database for the broader forensic community. Currently only individuals associated with a recognized national or international forensic governing body can request access to the database. An individual who wishes to access FADAMA must be a regular member or be sponsored by a regular member of a recognized forensic organization (e.g. graduate or undergraduate students). These organizations include, but are not limited to: American Academy of Forensic Sciences (AAFS), Lain American Association of Forensic Anthropology (ALAF), Forensic Anthropology Society of Europe (FASE), European Association of Forensic Sciences (EAFS) and International Association of Forensic Sciences (IAFS). FADAMA administrators reserve the right to remove membership to the database and the right to decline membership.
 
-    <h1 id="codeofconduct">What is the FADAMA user code of conduct?</h1>
-    <BR>
-    By requesting registration to and using the FADAMA Database, you agree to the following guidelines of professional conduct: 
-	    1) I shall seek and obtain permission from my institution to submit anonymous casework data to the FADAMA Database
-	    2) I shall cooperate with other professionals in the forensic sciences to promote the advancement of forensic anthropology through scientific research. Knowledge of any new discoveries, developments or techniques applicable to the forensic sciences shall be shared with the peer community
-	    3) I shall make examinations of FADAMA Database data utilizing generally accepted scientific techniques and methods which are reliable and accurate with appropriate standards, controls, and statistical frameworks
-	    4) I shall at all times demonstrate respect for human remains and authority, to include all aspects of recovery, analysis, data collection, research, teaching and proper disposition in accordance with applicable country, province, state, and local laws    
-   
     <h1 id="FADAMAresponsibilities">What are the FADAMA user responsibilities?</h1>
     <BR>
-    Prior to submitting a case and its data to the database, it is the responsibility of each user to ensure they obtain permission from the entity which owns the case. For example, if you’re a contract forensic anthropologist working for a government agency, you should obtain permission from that agency before submitting cases. It is at the discretion of the user how to obtain that permission, but a template permission form is provided <a target='blank' href='./docs/Agency Permissions for FADAMA Submissions.docx'>here</a> if needed.
+        Prior to submitting a case and its data to the database, it is the responsibility of each user to ensure they obtain permission from the entity which owns the case. For example, if you’re a contract forensic anthropologist working for a government agency, you should obtain permission from that agency before submitting cases. It is at the discretion of the user how to obtain that permission, but a template permission form is provided <a target='blank' href='./docs/Agency Permissions for FADAMA Submissions.docx'>here</a> if needed.
 
     <h1 id="FADAMAuserprivacy">How does FADAMA ensure user privacy?</h1>
     <BR>
@@ -218,7 +215,7 @@ With the participation of practitioners and the submission of the current and pa
     <BR><BR>
     <h1 id="citation">How do I cite FADAMA if I want to use the data from the database in my research?</h1>
     <BR>
-            Hughes, CE and Juarez CA. 2018. Learning from Our Casework: The Forensic Anthropology Database for Assessing Methods Accuracy (FADAMA). NIJ 2018-DU-BX-0213.
+            Pending.
 
     <BR><BR><BR>
         
@@ -320,7 +317,7 @@ The Case Notes section is the ideal place to include case notes. However, we ask
 
     <h1 id="list">Is there a list of the methods currently included in FADAMA for data entry?</h1>
     <BR>
-    <a href='https://andicyim.github.io/FADAMA/Method_list/method-list' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
+    <a href='docs/FADAMA_methods_list.html' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
 
 
     

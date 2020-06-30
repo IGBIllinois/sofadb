@@ -49,17 +49,22 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
 </head>
 
 <body>
-<div id="top">
-  <div id="header"><a href="http://www.sofainc.org" target="_blank"><img src="images/customLogo.gif" width="351" height="147" /></a></div>
- 
- <div id="title">
-    <h1>Forensic Anthropology Database<BR>for Assessing Methods Accuracy (FADAMA)</h1>
- </div>
+<div id="top" class='new_header'>
+
+    <div class='header_logo'>
+            <img class='align_left' src="images/header.png">
+    </div>
+            <table style='float:right'><tr><td class='align_center' >
+              <a href="http://www.sofainc.org" target="_blank"><img  src="<?php echo($root_url) ?>/images/sofaLogo.png"></a>
+            </td></tr><tr><td class='align_center' >
+              <a href="https://illinois.edu" target="_blank"><img src="<?php echo($root_url) ?>/images/illinois.png"></a>
+            </td></tr><tr><td class='align_center' >
+              <a href="https://www.csufresno.edu" target="_blank"><img src="<?php echo($root_url) ?>/images/fresnostate.png"></a>
+            </td></tr></table>
+
+
 </div>
- <div id="hline">
-   <hr size="3" />
- </div>
- 
+
   <div id="wrapper">
   
  
@@ -145,13 +150,6 @@ if(isset($_SESSION['loggedin'])){
 }
 
 
-
-
-
-
-	
-
-
 ?>
   
   
@@ -194,8 +192,8 @@ if(isset($_SESSION['loggedin'])){
 
 			<div id="submit">
 			
-				<input type="image" src="./images/submit_hover.png" name="submit" id="submit1" value="Sign In">
-				<input type="image" src="./images/submit.png" name="submit" id="submit2" value="Sign In">
+				<!--<input type="image" src="./images/submit_hover_new.png" name="submit" id="submit1" value="Sign In">-->
+				<input type="image" src="./images/submit_new.png" name="submit" id="submit2" value="Sign In">
 				</form>
 			</div>
 

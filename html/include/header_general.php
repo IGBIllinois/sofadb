@@ -33,11 +33,20 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
 </head>
 
 <body>
-<div id="top">
-<div id="header"><a href="http://www.sofainc.org" target="_blank"><img src="../images/customLogo.gif" width="351" height="147" /></a></div>
+<div id="top" class='new_header'>
 
-<div id="title">
-<h1>Forensic Anthropology Database<BR>for Assessing Methods Accuracy (FADAMA)</h1>
+    <div class='header_logo'>
+            <img class='align_left' src="<?php echo($root_url) ?>/images/header.png">
+    </div>
+            <table style='float:right'><tr><td class='align_center' >
+              <a href="http://www.sofainc.org" target="_blank"><img  src="<?php echo($root_url) ?>/images/sofaLogo.png"></a>
+            </td></tr><tr><td class='align_center' >
+              <a href="https://illinois.edu" target="_blank"><img src="<?php echo($root_url) ?>/images/illinois.png"></a>
+            </td></tr><tr><td class='align_center' >
+              <a href="https://www.csufresno.edu" target="_blank"><img src="<?php echo($root_url) ?>/images/fresnostate.png"></a>
+            </td></tr></table>
+
+
 </div>
 
 <div id="hline">

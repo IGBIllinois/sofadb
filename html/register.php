@@ -36,18 +36,26 @@ require_once("include/main.inc.php");
 <title>Register</title>
 
 
-<!-- // Load Javascipt -->
+<!-- // Load Javascript -->
 </head>
 
 <body>
-<div id="top">
-<div id="header"><a href="#"><img src="images/customLogo.gif" width="351" height="147" /></a></div>
+<div id="top" class='new_header'>
 
-<div id="title">
-<h1>Forensic Anthropology Database<BR>for Assessing Methods Accuracy (FADAMA)</h1>
+    <div class='header_logo'>
+            <img class='align_left' src="images/header.png">
+    </div>
+            <table style='float:right'><tr><td class='align_center' >
+              <a href="http://www.sofainc.org" target="_blank"><img  src="images/sofaLogo.png"></a>
+            </td></tr><tr><td class='align_center' >
+              <a href="https://illinois.edu" target="_blank"><img src="images/illinois.png"></a>
+            </td></tr><tr><td class='align_center' >
+              <a href="https://www.csufresno.edu" target="_blank"><img src="images/fresnostate.png"></a>
+            </td></tr></table>
+
+
 </div>
-</div>
-    
+
 <div id="hline">
 <hr size="3" />
 </div>
@@ -82,7 +90,7 @@ require_once("include/main.inc.php");
 
     }
 ?>
-<div id="templatecontainer"> 
+<div> 
   </br>
     
   <h1 class="cntr">Membership Registration</h1>
@@ -454,7 +462,7 @@ By requesting registration to the FADAMA Database, I agree to the following guid
 	</fieldset>
       
       
- <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Code of Conduct for Database Usage</legend>
+ <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Terms of Service</legend>
      <input type="checkbox" name="agree_to_terms" id="agree_to_terms" value="1"> I agree to the <a href="terms_of_service.php" target="_blank">terms of service</a>.
 <br/><br/>
 

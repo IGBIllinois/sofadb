@@ -80,26 +80,38 @@ elseif($_SESSION['loggedin']==1)
 
 
 <body>
-<div id="top">
-<div id="header"><a href="#"><img src="<?php echo($root_url) ?>/images/customLogo.gif" width="351" height="147" alt="SOFA" /></a></div>
+<div id="top" class='new_header'>
 
-<div id="title">
-<h1>Forensic Anthropology Database<BR>for Assessing Methods Accuracy (FADAMA)</h1>
+    <div class='header_logo'>
+            <img class='align_left' src="<?php echo($root_url) ?>/images/header.png">
+    </div>
+            <table style='float:right'><tr><td class='align_center' >
+              <a href="http://www.sofainc.org" target="_blank"><img  src="<?php echo($root_url) ?>/images/sofaLogo.png"></a>
+            </td></tr><tr><td class='align_center' >
+              <a href="https://illinois.edu" target="_blank"><img src="<?php echo($root_url) ?>/images/illinois.png"></a>
+            </td></tr><tr><td class='align_center' >
+              <a href="https://www.csufresno.edu" target="_blank"><img src="<?php echo($root_url) ?>/images/fresnostate.png"></a>
+            </td></tr></table>
+
+
 </div>
-
+    
 <div id="hline">
 <hr size="3" />
 </div>
-
+    
 <div id="navbar">
   <ul>
     <li><a href="<?php echo($root_url) ?>/">Home</a></li>
     
     <li><a href="<?php echo($root_url) ?>/logout.php">Logout</a></li>
     <li><a href="<?php echo($root_url) ?>/contact/">Contact Us</a></li>
+    <li><a class="noHover">&nbsp;</a></li>
   </ul>
     <BR>
 </div>
+    
+
 <div id="templatecontainer"><h1 style="text-align:center">Admin Tools</h1>
   <div id="leftnav"><h2 style="color:#00C ;font-weight: bold;font-size: 16pt;">Control Panel</h2>
   <ul>
