@@ -193,7 +193,7 @@ if(isset($_SESSION['loggedin'])){
 			<div id="submit">
 			
 				<!--<input type="image" src="./images/submit_hover_new.png" name="submit" id="submit1" value="Sign In">-->
-				<input type="image" src="./images/submit_new.png" name="submit" id="submit2" value="Sign In">
+				<input type="image" src="./images/submit.png" name="submit" id="submit2" value="Sign In">
 				</form>
 			</div>
 
