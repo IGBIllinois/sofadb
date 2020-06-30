@@ -1046,6 +1046,17 @@ public function submit_case($submitstatus) {
                 $param_string .= " id in (select tier2data.caseid from tier2data where tier2data.methodid in ($method_ids))";
             } else {
                 // all
+                $num_methods = count($methods);
+                $tmp_str = "";
+                foreach($methods as $method) {
+                    if($tmp_str != "") {
+                        $tmp_str .= " OR ";
+                    }
+                    $tmp_str .= "(methodid = $method)";
+                }
+                $param_string .= " id in (SELECT caseid FROM `tier2data` where ($tmp_str) ".
+                        " group by caseid having count( caseid)=$num_methods and caseid not in (select id from cases where id in (SELECT caseid FROM `tier2data` group by caseid having (count(methodid) > count(distinct methodid)))))";
+                /*
                 $method_ids = implode(",", $methods);
                 if($param_string != "") {
                     $param_string .= $conjunction;
@@ -1058,6 +1069,8 @@ public function submit_case($submitstatus) {
                     $tmp_str .= " (id in (select tier2data.caseid from tier2data where tier2data.methodid = $method))";
                 }
                 $param_string .= "(" . $tmp_str. ")";
+                 * 
+                 */
             }
         }
         
