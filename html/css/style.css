@@ -677,6 +677,16 @@ a:hover { text-decoration: none; }
     text-align:left;
 }
 
+.align_center {
+    text-align:center;
+    vertical-align:middle;
+}
+
+.align_center img { 
+    display:block; 
+    margin:0 auto; 
+}
+
 .width_250px {
     width:250px;
 }
@@ -749,6 +759,17 @@ a:hover { text-decoration: none; }
     margin-left:15px;  
 } 
 
+.new_header {
+    background-color: black;
+    display: table;
+    width: 100%;
+}
+
+.header_logo {
+    display: table-cell;
+    vertical-align: middle;
+}
+
 /* end checkbox dropdown */
 
 /* Stylesheet / CSS */
@@ -778,6 +799,12 @@ html {margin:0;padding:0;border:0;}body, div, span, object, iframe,  h2, h3, h4,
 	background-color: #099;
 	color: #C00;
 }
+
+#navbar a.noHover:hover {
+    color: #FFF;
+    background-color: #333;
+}
+
 #header {
 	background-color: #FFF;
 	float: left;
@@ -897,7 +924,7 @@ body {
 	height:45px;
 	background:transparent;
 	border:0;
-	color:#bdbdbd;
+	color:#666666;
 	font-family:helvetica, sans-serif;
 	font-size:14px;
 	padding-left:20px;
@@ -981,7 +1008,7 @@ body {
 }
 
 #links_left a{
-	color:#bbb;
+	color:#666666;
 	font-size:11px;
 	text-decoration:none;
 	transition: color 0.5s linear;
