@@ -313,9 +313,10 @@ class method_infos {
        
 
        $j = 0;
-       $output .= "<table ><tr>";
+       
        
         foreach($method_infos_by_type as $type_id=>$method_infos) {
+            $output .= "<table ><tr>";
             if($type_id == input_type::get_input_id_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME)) {
                 continue;
             }
@@ -334,7 +335,7 @@ class method_infos {
         $input_type_name = $input_type->get_input_type();
         if(($input_type_name == USER_INTERACTION_NUMERIC_ENTRY ||
                    $input_type_name == USER_INTERACTION_TEXT_ENTRY)) {
-            
+  
             $output .= "<td class='td_spaced align_top'>";
             //$output .= "TYPE_ID=$type_id";
            if($method_infos[0]->get_option_header() != null) {
@@ -346,11 +347,6 @@ class method_infos {
         
         $count = 0 ;
        foreach($method_infos as $method_info) {
-           if($input_type_name != USER_INTERACTION_NUMERIC_ENTRY &&
-                   $input_type_name != USER_INTERACTION_TEXT_ENTRY) {
-                    $output .= "<td class=align_top>";
-            }
-                   
 
            $method_info_id = $method_info->get_id();
            $input_type_id = $method_info->get_type();
@@ -358,9 +354,11 @@ class method_infos {
 
            $input_type_name = $input_type->get_input_type();
 
+           // MULTISELECT / TWO_COLUMN / SINGLESELECT
            if($input_type_name == USER_INTERACTION_MULTISELECT ||
                    $input_type_name == USER_INTERACTION_TWO_COLUMN ||
                    $input_type_name == USER_INTERACTION_SINGLESELECT ) {
+               $output .= "<td class=align_top>";
                $multiple = true;
                $default = null;
                if($input_type_name == USER_INTERACTION_SINGLESELECT) {
@@ -376,23 +374,29 @@ class method_infos {
                $output .= self::show_method_infos_select($db, $method_info_id, $tier2id, true, $multiple, $default);
                $output .= "</td>";
                $output .="</tr></table>";
+               $output .= "</td>";
+               // NUMERIC ENTRY
            } else if($input_type_name == USER_INTERACTION_NUMERIC_ENTRY) {
                if($method_info->get_parent_id() == null) {
                    // numeric inputs with parent id will be displayed leter
                    $output .= self::show_method_infos_user_input($db, $method_info_id, $tier2id);
                }
-           }  else if($input_type_name == USER_INTERACTION_TEXT_ENTRY) {
                
+               // TEXT_ENTRY
+           }  else if($input_type_name == USER_INTERACTION_TEXT_ENTRY) {
                $output .= self::show_method_infos_user_input($db, $method_info_id, $tier2id, true);
                
                
-               
+               // TEXT_AREA
            } else if($input_type_name == USER_INTERACTION_TEXT_AREA) {
-
+               $output .= "<td class=align_top>";
                $output .= self::show_method_info_text_area($db, $method_info_id, $tier2id);
+               $output .= "</td>";
            }
-           
+            // SELECT_EACH
            else if($input_type_name == USER_INTERACTION_SELECT_EACH) {
+               
+               $output .= "<td class=align_top>";
                $inner_table = true;
                
                if($maxcols == 1 ) {
@@ -401,14 +405,13 @@ class method_infos {
                }
                
                if($i >= $maxcols) {
-                   $output .= "</tr><tr>";
+                   $output .= "</td></tr><tr><td class=align_top>";
                    $i = 0;
                }
                //$output .= "<td class='align_top'>";
                
                if(!$inner_table && $count == 0) {
                    // draw headers for all
-                   $output .= "<table>";
                    $method_infos2 = new method_infos($db, $method_info_id);
                    $header = $method_infos2->get_header();
                    $option_header = $method_infos2->get_option_header();
@@ -421,10 +424,12 @@ class method_infos {
                if(!$inner_table) {
                     $output .= "</td>";
                     $output .= "</tr>";
-                    $output .="</table>";
                }
+               $output .= "</td>";
                
+               // CHECKBOX_SELECT
            } else if($input_type_name == USER_INTERACTION_CHECKBOX_SELECT) {
+               $output .= "<td class=align_top>";
                $maxcols = 1;
                if($count == 0) {
                    $method_infos2 = new method_infos($db, $method_info_id);
@@ -442,15 +447,13 @@ class method_infos {
                $output .= "<tr>";
                $output .= self::show_method_infos_select_each($db, $method_info_id, $tier2id, false, 1);
                $output .= "</tr>";
+               $output .= "</td>";
            }
            
            $i++;
            $count++;
            
-           if($input_type_name != USER_INTERACTION_NUMERIC_ENTRY &&
-                   $input_type_name != USER_INTERACTION_TEXT_ENTRY) {
-                    $output .= "</td>";
-            }
+
        }
        if(($method_infos[0]->get_option_header() != null) &&
                 ($input_type_name == USER_INTERACTION_NUMERIC_ENTRY ||
@@ -469,9 +472,9 @@ class method_infos {
        
         }
 
-        
+       $output .= "</tr></table>"; 
        }
-       $output .= "</tr></table>";
+       
        }
        $output .= "</tr></table>";
        
@@ -614,7 +617,7 @@ class method_infos {
             $output .= "<table><tr><th class='align_right align_top td_spaced'>";
             $output .= "<B><U>".$method_infos->get_header() . "</U></B></th><th class='td_spaced align_left' ><B><U>". $method_infos->get_option_header() . "</U></B></th></tr><tr>";
         }
-        $output .= "<tr><td class='align_right align_top td_spaced'>";
+        $output .= "<tr><td class='align_right align_top td_spaced_short'>";
         
         $output .= $method_infos->get_name();
         if($method_infos->get_name() != null && $method_infos->get_name() != "") {
