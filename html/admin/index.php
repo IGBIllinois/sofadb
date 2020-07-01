@@ -1,5 +1,4 @@
 <?php
-//require_once('../include/session_admin.php') ;
 require_once('../include/header_admin.php') ;
 ?>
 
@@ -20,7 +19,12 @@ if (isset($_POST['delsubmit']))
 {
     // Delete the user, and all associated case data
     $deleteid=$_POST['delid'];
+    $del_member = new member($db, $deleteid);
+    $user_email = $del_member->get_uname();
+    $full_name = $del_member->get_firstname() . " ".$del_member->get_lastname();
     $result = $member->delete_member($deleteid);
+    
+    
 
       if ($result['RESULT'] == FALSE) 
         { 
@@ -29,11 +33,39 @@ if (isset($_POST['delsubmit']))
         echo '<h2>System Error</h2>
         <p class="error">Did not delete member. We apologize for any inconvenience.</p>'; 
         // Debugging message:
-        echo '<p>' . $result['MESSAGE'] . '</p>';
+        echo '<p>' . $result['MESSAGE'] . '<br/><br/>:' . $result['MESSAGE'] . '</p>';
         exit();
         } else {
             echo($result['MESSAGE']);
         }
+        
+        // Send email
+        
+        $admin_email = ADMIN_EMAIL;
+        $to = $user_email;
+        $from = FROM_EMAIL;
+        $params = array("full_name"=>$full_name);
+
+       $subject = "SOFA DB ADMIN ALERT: Delete User Account";
+       $message = functions::renderTwigTemplate('email/user_delete.html.twig', $params);
+
+       $header = "From:".$from."\r\n";
+       $retval = mail ($to,$subject,$message,$header);
+       if( $retval == true )  
+       {
+          echo "Message sent successfully."; 
+
+       }
+       else
+       {
+          echo "Error: Message could not be sent.";
+       }
+} else if(isset($_POST['changeStatusSubmit'])) {
+    
+    $memberid = $_POST['user_id'];
+    $status = $_POST['status'];
+    $changemember = new member($db, $memberid);
+    $changemember->set_permission($status);
 }
 }
 
@@ -88,6 +120,7 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
             <th scope="col">Last Login</th>
             <th scope="col">Access</th>
             <th scope="col">Total Cases</th>
+            <th scope="col"></th>
 			
         </tr>
     </thead>
@@ -110,10 +143,29 @@ foreach($members as $member) {
 	<td>' . $member->get_dateregistered() . '</td>
 	<td>' . $member->get_lastlogin() . '</td>
 	<td>' . $member->get_permissionstatus() . '</td>
-	<td>' . $member->get_totalcases() . '</td>
-	
+	<td>' . $member->get_totalcases() . '</td>';
+        echo("<td>");
+        if($member->get_permissionstatus() == 2) {
+            // Change to regular user
+            $form = "<form action=index.php name=changestatus id=changestatus method=POST>"
+                    . "<input type=hidden name='status' value='1'>"
+                    . "<input type=hidden name='user_id' value='".$member->get_id()."'>"
+                    . "<input type=submit name=changeStatusSubmit value='Make regular user'>"
+                    . "</form>";    
+            echo($form);
+        } else if($member->get_permissionstatus() == 1) {
+            // Change to admin
+            $form = "<form action=index.php name=changestatus id=changestatus method=POST>"
+                    . "<input type=hidden name='status' value='2'>"
+                    . "<input type=hidden name='user_id' value='".$member->get_id()."'>"
+                    . "<input type=submit name=changeStatusSubmit value='Make Admin'>"
+                    . "</form>";   
+            echo($form);
+        }
+        
+	echo("</td>");
 
-	</tr>';
+	echo('</tr>');
 	}
 	echo '</tbody></table></div>'; // Close the table.
 } else { // If it did not run OK.
