@@ -164,7 +164,7 @@ With the participation of practitioners and the submission of the current and pa
     <center><h1 id="tutorials">Tutorials</hi></center>
     
 <ul style='padding:revert'>
-    <li>Wiki: <a href='https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial'>https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial</a></li>
+    <li>Wiki: <a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial'>https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial</a></li>
     <li>Videos:</li>
 </ul>
 
