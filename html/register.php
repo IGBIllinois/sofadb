@@ -373,7 +373,7 @@ echo("</div>");
   <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
   <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Basic Information</legend>
       <BR>
-      FADAMA is designed as a database for the broader forensic community, including researchers and practitioners at all levels of experience and education.  In order to ensure that individuals requesting FADAMA access are part of the forensic community, personal information and credentials are requested as part of this vetting process.  If you have questions or concerns about any part of this application please <a href='./contact/index.php' target='_blank'>Contact Us</a>.
+      FADAMA is a free database for the broader forensic community, including researchers and practitioners at all levels of experience and education.  In order to ensure that individuals requesting FADAMA access are part of the forensic community, personal information and credentials are requested as part of this vetting process.  If you have questions or concerns about any part of this application please <a href='./contact/index.php' target='_blank'>Contact Us</a>.
       <BR>
       <BR>
     
