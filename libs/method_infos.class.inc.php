@@ -10,12 +10,25 @@ class method_infos {
     
     private $db; // Database object
     
+    /** Unique id for the method_infos object */
     private $id;
+    
+    /** ID of the method this method_infos is for */
     private $methodid;
+    
+    /** Name of this method_infos object */
     private $name;
+    
+    /** Header used for this method_infos */
     private $header;
+    
+    /** Header used for the options used in certain method_infos */
     private $option_header;
+    
+    /** Type id of this method_info */
     private $type;
+    
+    /** ID of the parent method_infos object. Used in certain types like category or Left/Right */
     private $parent_id;
 
     
@@ -105,7 +118,7 @@ class method_infos {
    /** Gets the children of this method_infos object
      * 
      * @return \method_infos An array of method_infos that have
-     * this method_infos listed as thier parent
+     * this method_infos listed as their parent
      */
    public function get_children() {
        $query = "SELECT id from method_infos where parent_id = :parent_id";
@@ -329,7 +342,6 @@ class method_infos {
 
         $i=0;
 
-        //$output .= "<table><tr>";
         // Add header title for specific methods
         $input_type = new input_type($db, $type_id);
         $input_type_name = $input_type->get_input_type();
@@ -337,9 +349,7 @@ class method_infos {
                    $input_type_name == USER_INTERACTION_TEXT_ENTRY)) {
   
             $output .= "<td class='td_spaced align_top'>";
-            //$output .= "TYPE_ID=$type_id";
            if($method_infos[0]->get_option_header() != null) {
-                //$output .= "<td class='td_spaced align_top'>";
                 $output .= ("<B><U>".$method_infos[0]->get_option_header()."</U></B>");
            }
 
@@ -351,9 +361,8 @@ class method_infos {
            $method_info_id = $method_info->get_id();
            $input_type_id = $method_info->get_type();
            $input_type = new input_type($db, $input_type_id);
-
+           
            $input_type_name = $input_type->get_input_type();
-
            // MULTISELECT / TWO_COLUMN / SINGLESELECT
            if($input_type_name == USER_INTERACTION_MULTISELECT ||
                    $input_type_name == USER_INTERACTION_TWO_COLUMN ||
@@ -377,10 +386,11 @@ class method_infos {
                $output .= "</td>";
                // NUMERIC ENTRY
            } else if($input_type_name == USER_INTERACTION_NUMERIC_ENTRY) {
+               
                if($method_info->get_parent_id() == null) {
-                   // numeric inputs with parent id will be displayed leter
+                   // numeric inputs with parent id will be displayed later
                    $output .= self::show_method_infos_user_input($db, $method_info_id, $tier2id);
-               }
+               } 
                
                // TEXT_ENTRY
            }  else if($input_type_name == USER_INTERACTION_TEXT_ENTRY) {
@@ -408,7 +418,6 @@ class method_infos {
                    $output .= "</td></tr><tr><td class=align_top>";
                    $i = 0;
                }
-               //$output .= "<td class='align_top'>";
                
                if(!$inner_table && $count == 0) {
                    // draw headers for all
@@ -548,7 +557,10 @@ class method_infos {
     public static function show_method_infos_user_input($db, $method_infos_id, $tier2id = null, $text = null) {
         $method_infos = new method_infos($db, $method_infos_id);
         $options = $method_infos->get_method_info_options();
-
+        if($options == null  || count($options) == 0) {
+            // It has no options, not even a default, so there must be an error
+            return "";
+        }
         $mi_input_type = $method_infos->get_type();
         $type = new input_type($db, $mi_input_type);
         $tname= $type->get_input_type();
@@ -570,7 +582,7 @@ class method_infos {
                 }
             }
         }
-        
+
         $size = 6;
         if($text != null && $text == true) {
             $size = 15;
@@ -713,6 +725,8 @@ class method_infos {
     * @param method $method The method object
     * @param int $tier2id Existing info, if editing
     * @param string $user_interaction The user_interaction type
+    * 
+    * @return HTML output for the method
     */
    public static function show_method_info_text_area($db, $method_infos_id, $tier2id) {
         $method_infos = new method_infos($db, $method_infos_id);
@@ -720,6 +734,10 @@ class method_infos {
         
         $options = $method_infos->get_method_info_options();
 
+        if(count($options) == 0) {
+            // It has no options, not even a default, so there must be an error
+            return "";
+        }
         $curr_option = $options[0];
         $value = "";
         
