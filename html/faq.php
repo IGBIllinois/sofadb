@@ -108,6 +108,7 @@
         <li><B><a href='#userresponsibility'>FADAMA User Information and Responsibility</a></B></li>
         <ul style='padding:revert'>
             <li><a href="#FADAMAusers">Who are the targeted users of FADAMA?</a></li>
+            <li><a href="#codeofconduct">What is the FADAMA user code of conduct?</a></li>
             <li><a href="#FADAMAresponsibilities">What are the FADAMA user responsibilities?</a></li>
             <li><a href="#FADAMAuserprivacy">How does FADAMA ensure user privacy?</a></li>
             <li><a href="#application">I applied for FADAMA membership a while ago, but my membership application is still pending, am I being denied?</a></li>
@@ -156,7 +157,7 @@ With the participation of practitioners and the submission of the current and pa
 <BR>
     
     <center><h1 id=scope>Method Reference List</h1></center>
-<a href='docs/FADAMA_methods_list.html' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
+<a href='https://andicyim.github.io/FADAMA/Method_list/method-list' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
 <BR>
 <BR>
 <BR>    
@@ -164,7 +165,7 @@ With the participation of practitioners and the submission of the current and pa
     <center><h1 id="tutorials">Tutorials</hi></center>
     
 <ul style='padding:revert'>
-    <li>Wiki: <a href='https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial'>https://fadamahelp.miraheze.org/wiki/FADAMA_User_Tutorial</a></li>
+    <li>Wiki: <a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial'>https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial</a></li>
     <li>Videos:</li>
 </ul>
 
@@ -196,9 +197,19 @@ With the participation of practitioners and the submission of the current and pa
     <BR>  
     <h1 id="FADAMAusers">Who are the targeted users of FADAMA?</h1>	
     <BR>
-    FADAMA is designed as a database for the broader forensic community. Currently only individuals associated with a recognized national or international forensic governing body can request access to the database. An individual who wishes to access FADAMA must be a regular member or be sponsored by a regular member of a recognized forensic organization (e.g. graduate or undergraduate students). These organizations include, but are not limited to: American Academy of Forensic Sciences (AAFS), Lain American Association of Forensic Anthropology (ALAF), Forensic Anthropology Society of Europe (FASE), European Association of Forensic Sciences (EAFS) and International Association of Forensic Sciences (IAFS). FADAMA administrators reserve the right to remove membership to the database and the right to decline membership.
+    FADAMA is a free database for the broader forensic community. Currently only individuals associated with a recognized national or international forensic governing body can request access to the database. An individual who wishes to access FADAMA must be a regular member or be sponsored by a regular member of a recognized forensic organization (e.g. graduate or undergraduate students). These organizations include, but are not limited to: American Academy of Forensic Sciences (AAFS), Lain American Association of Forensic Anthropology (ALAF), Forensic Anthropology Society of Europe (FASE), European Association of Forensic Sciences (EAFS) and International Association of Forensic Sciences (IAFS). FADAMA administrators reserve the right to remove membership to the database and the right to decline membership.
 
-    <h1 id="FADAMAresponsibilities">What are the FADAMA user responsibilities?</h1>
+<h1 id="codeofconduct">What is the FADAMA user code of conduct?</h1>
+    <BR>
+    By requesting registration to and using the FADAMA Database, you agree to the following guidelines of professional conduct: 
+    <ol style='padding:revert'>
+        <li> I shall seek and obtain permission from my institution to submit anonymous casework data to the FADAMA Database
+	<li> I shall cooperate with other professionals in the forensic sciences to promote the advancement of forensic anthropology through scientific research. Knowledge of any new discoveries, developments or techniques applicable to the forensic sciences shall be shared with the peer community
+	<li> I shall make examinations of FADAMA Database data utilizing generally accepted scientific techniques and methods which are reliable and accurate with appropriate standards, controls, and statistical frameworks
+	<li> I shall at all times demonstrate respect for human remains and authority, to include all aspects of recovery, analysis, data collection, research, teaching and proper disposition in accordance with applicable country, province, state, and local laws    
+    </ol>
+    
+<h1 id="FADAMAresponsibilities">What are the FADAMA user responsibilities?</h1>
     <BR>
         Prior to submitting a case and its data to the database, it is the responsibility of each user to ensure they obtain permission from the entity which owns the case. For example, if you’re a contract forensic anthropologist working for a government agency, you should obtain permission from that agency before submitting cases. It is at the discretion of the user how to obtain that permission, but a template permission form is provided <a target='blank' href='./docs/Agency Permissions for FADAMA Submissions.docx'>here</a> if needed.
 
@@ -215,7 +226,7 @@ With the participation of practitioners and the submission of the current and pa
     <BR><BR>
     <h1 id="citation">How do I cite FADAMA if I want to use the data from the database in my research?</h1>
     <BR>
-            Pending.
+            Hughes, CE and Juarez CA. 2018. Learning from Our Casework: The Forensic Anthropology Database for Assessing Methods Accuracy (FADAMA). NIJ 2018-DU-BX-0213.
 
     <BR><BR><BR>
         
@@ -233,7 +244,7 @@ With the participation of practitioners and the submission of the current and pa
 
     <h1 id="casePrivacy">How does FADAMA ensure case privacy?</h1>
     <BR>
-    Prior to submitting a case and its data to the database, it is the responsibility of each user to ensure that any identifiable information of the decedent not be submitted to the user-accessible database as part of information contained in the biological profile methods or outcomes. This protects the decedent’s privacy. If identifiable information is found in the user-accessible database, the database committee will request that this information be removed by the user in 24 hours. If the user does not remove the identifiable information within the allotted time, the database committee will remove that case from the user-accessible database (but not from the user’s own private profile space).
+    Prior to submitting a case and its data to the database, it is the responsibility of each user to ensure they obtain permission from the entity which owns the case. For example, if you’re a contract forensic anthropologist working for a government agency, you should obtain permission from that agency before submitting cases. It is at the discretion of the user how to obtain that permission, but a template permission form is provided <a target='blank' href='./docs/Agency Permissions for FADAMA Submissions.docx'>here</a> if needed.
 
     <BR><BR>
 
@@ -317,8 +328,7 @@ The Case Notes section is the ideal place to include case notes. However, we ask
 
     <h1 id="list">Is there a list of the methods currently included in FADAMA for data entry?</h1>
     <BR>
-    <a href='docs/FADAMA_methods_list.html' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
-
+    <a href='https://andicyim.github.io/FADAMA/Method_list/method-list' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
 
     
 <BR>
