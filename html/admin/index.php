@@ -102,11 +102,6 @@ $total_members = count($all_members);
 
 if (count($members)>0)  { // If it ran OK, display the records.
 // Table header.
-
-
-
-
-
 echo '<div class="scroll"><table id="hortable" summary="List of members">
     <thead>
     	<tr>
@@ -118,6 +113,7 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
             <th scope="col">Institution</th>
             <th scope="col">Date Registered</th>
             <th scope="col">Last Login</th>
+            <th scope="col">Agree to TOS</th>
             <th scope="col">Access</th>
             <th scope="col">Total Cases</th>
             <th scope="col"></th>
@@ -142,6 +138,7 @@ foreach($members as $member) {
 	<td>' . $member->get_institution() . '</td>
 	<td>' . $member->get_dateregistered() . '</td>
 	<td>' . $member->get_lastlogin() . '</td>
+        <td>' . ($member->get_agree_to_terms() ? "Yes" : "No") . '</td>
 	<td>' . $member->get_permissionstatus() . '</td>
 	<td>' . $member->get_totalcases() . '</td>';
         echo("<td>");
