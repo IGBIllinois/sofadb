@@ -114,7 +114,7 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
             <th scope="col">Date Registered</th>
             <th scope="col">Last Login</th>
             <th scope="col">Agree to TOS</th>
-            <th scope="col">Access</th>
+            <th scope="col">Access Type</th>
             <th scope="col">Total Cases</th>
             <th scope="col"></th>
 			
@@ -126,6 +126,13 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
 
 // Fetch and print all the records:
 foreach($members as $member) {
+    $status = $member->get_permissionstatus();
+    $perm_status = "User";
+    if($status == 0) {
+        $perm_status = "Not yet registered";
+    } else if($status == 2) {
+        $perm_status = "Admin";
+    }
 	echo '<tr>
 	<td><a href="./editprofile/index.php?edit_member_id=' . $member->get_id() . '">Edit</a></td>
 	<td><form action="./index.php" method="post" id="deletemember" onsubmit="return confirm(\'Do you really want to delete this member?\nAll member data and cases associated with this user will be deleted.\')">
@@ -139,7 +146,7 @@ foreach($members as $member) {
 	<td>' . $member->get_dateregistered() . '</td>
 	<td>' . $member->get_lastlogin() . '</td>
         <td>' . ($member->get_agree_to_terms() ? "Yes" : "No") . '</td>
-	<td>' . $member->get_permissionstatus() . '</td>
+	<td>' . $perm_status . '</td>
 	<td>' . $member->get_totalcases() . '</td>';
         echo("<td>");
         if($member->get_permissionstatus() == 2) {
