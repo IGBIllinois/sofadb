@@ -58,9 +58,11 @@ echo <<<_END
 <BR>
 <input type="checkbox" name="data" id="data"> I will only use any data I download for scientific, educational or research purposes
 <BR>
-<input type="checkbox" name= "credit" id="credit">I will credit this database with any publications and share with the developers any publications that stem from its use
+<input type="checkbox" name= "credit" id="credit">I will credit this database with any publications and share with the developers any publications that stem from its use. Please use the following citation:
+<BR><BR>
+    <blockquote class=blockquote1>Hughes, CE and Juarez CA. 2018. Learning from Our Casework: The Forensic Anthropology Database for Assessing Methods Accuracy (FADAMA). NIJ 2018-DU-BX-0213.</blockquote>
 <BR>
-<input type="checkbox" name="conduct" id="conduct">I will not conduct any research that attempts to identify decedents, agencies, or practitioners linked to case data
+<input type="checkbox" name="conduct" id="conduct">I will not conduct any research that attempts to identify decedents, agencies, or practitioners linked to case data.
 <BR>
 <input type="checkbox" name="terms" id="terms"> By checking this box, I hereby agree to be bound by the terms and conditions contained within the agreement.
 <BR>
