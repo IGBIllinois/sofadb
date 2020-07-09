@@ -1,38 +1,80 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Member class for users and admins for the database
  */
 
 class member {
     
     private $db;
     
+    /** Member ID */
     private $id;
+    
+    /** email (username) */
     private $uname;
+    
+    /** Encrypted password */
     private $pwd;
+    
+    /** First name */
     private $firstname;
+    
+    /** Last name */
     private $lastname;
+    
+    /** Title */
     private $title;
+    
+    /** Academic degree */
     private $degree;
+    
+    /** Year degree was earned */
     private $degreeyear;
+    
+    /** Field of study */
     private $fieldofstudy;
+    
+    /** Status with AAFS */
     private $aafsstatus;
+    
+    /** Institution where the user works */
     private $institution;
+    
+    /** Years experience in field */
     private $yearsexperience;
+    
+    /** Avg. cases the user work on per year */
     private $caseperyear;
+    
+    /** Region user works in */
     private $region;
+    
+    /** Mailing address 1 */
     private $mailaddress;
+    
+    /** Mailing address 2 */
     private $mailaddress2;
+    
+    /** City */
     private $city;
+    
+    /** State */
     private $state;
+    
+    /** Zip code */
     private $zip;
+    
+    /** Phone number */
     private $phone;
+    
+    /** Last login date */
     private $lastlogin;
+    
+    /** User permission status (0 = not accepted, 1 = regular user, 2 = admin) */
     private $permissionstatus;
-    private $casessubmitted;
+    
+    
     private $caseswithdrawn;
     private $dateregistered;
     
@@ -69,7 +111,6 @@ public function get_city() { return $this->city; }
 public function get_state() { return $this->state; }
 public function get_zip() { return $this->zip; }
 public function get_phone() { return $this->phone; }
-public function get_casessubmitted() { return $this->casessubmitted; }
 public function get_dateregistered() { return $this->dateregistered; }
 public function get_lastlogin() { return $this->lastlogin; }
 public function get_permissionstatus() { return $this->permissionstatus; }
@@ -126,6 +167,7 @@ public function get_num_active_cases() {
     }
     
 }
+
 
 /** Gets the number of unsubmitted cases for this user
  * 
@@ -302,7 +344,7 @@ public static function get_members($db, $start=-1, $pagerows=-1) {
     $q = "SELECT id, lastname, firstname, uname, institution, 
     DATE_FORMAT(dateregistered, '%M %d, %Y') AS regdat, 
     DATE_FORMAT(lastlogin, '%M %d, %Y') AS logdat, 
-    permissionstatus, id, totalcases FROM members
+    permissionstatus, id FROM members
      ORDER BY dateregistered DESC ";
 
     if($start > -1) {
@@ -476,9 +518,6 @@ public static function add_member($db, $params) {
             . "phone,"
             . "permissionstatus,"
             . "dateregistered,"
-            . "casessubmitted,"
-            . "caseswithdrawn,"
-            . "totalcases,"
             . "affiliation,"
             . "sponsor,"
             . "sponsor_email,"
@@ -506,9 +545,6 @@ public static function add_member($db, $params) {
                 . ":phone,"
                 . "'0', "
                 . "NOW(), "
-                . "'0', "
-                . "'0', "
-                . "'0',"
                 . ":affiliation,"
                 . ":sponsor,"
                 . ":sponsor_email,"
@@ -650,7 +686,7 @@ public static function update_member($db, $params, $pwd=null) {
             $this->phone = $member_data['phone'];
             $this->lastlogin = $member_data['lastlogin'];
             $this->permissionstatus = $member_data['permissionstatus'];
-            $this->casessubmitted = $member_data['casessubmitted'];
+
             $this->caseswithdrawn = $member_data['caseswithdrawn'];
             $this->dateregistered = $member_data['dateregistered'];
             
