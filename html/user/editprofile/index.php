@@ -176,19 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} else {
 		$field="";
 	}
-	
-	if (!empty($_POST['yearsexp'])) {
-		$exp = trim($_POST['yearsexp']);
-	} else {
-		$exp=0;
-	}
-	
-	if (!empty($_POST['casesperyear'])) {
-		$cases = trim($_POST['casesperyear']);
-	} else {
-	$cases=0;	
-	}
-        
+
         if (!empty($_POST['affiliation'])) {
 		$affiliation = trim($_POST['affiliation']);
 	} else {
@@ -224,8 +212,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "fieldofstudy"=>$field,
             "aafsstatus"=>$aafs,
             "institution"=>$inst,
-            "yearsexperience"=>$exp,
-            "caseperyear"=>$cases,
             "region"=>$region,
             "mailaddress1"=>$ad1,
             "mailaddress2"=>$ad2,
@@ -310,8 +296,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <br><label class="label" for="phone">Telephone</label><input id="phone" type="text" name="phone" size="30" maxlength="30" value="<?php echo $edit_member->get_phone(); ?>"><br /><br>
       
   </fieldset>
-    <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Education and Experience</legend><br><center><strong class="outsidetext">** indicates information that may be downloaded by users for research purposes</strong></center>
-     <br> <label class="label" for="aafs">AAFS Membership Status*</label>
+    <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Education and Experience</legend>
+        <br> <label class="label" for="aafs">AAFS Membership Status*</label>
       <select name="aafs">
         <option value="">- Select -</option>
         <option value="1"<?php if ($edit_member->get_aafsstatus() == 1) echo ' selected="selected"'; ?>>Student Affiliate</option>
@@ -332,7 +318,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </select>
         
     
-      <br><label class="label" for="degree">Education**</label>
+      <br><label class="label" for="degree">Education*</label>
       <select name="degree">
         <option value="">- Select -</option>
         <option value="None"<?php if ($edit_member->get_degree() == "None") echo ' selected="selected"'; ?>>None</option>
@@ -340,13 +326,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <option value="MS"<?php if ($edit_member->get_degree() == "MS")  echo ' selected="selected"'; ?>>Masters Degree</option>
         <option value="Phd"<?php if ($edit_member->get_degree() == "Phd")  echo ' selected="selected"'; ?>>Phd</option>
         </select>
-      <br><label class="label" for="degreeyear">Year Earned (YYYY format)**</label><input id="degreeyear" type="text" name="degreeyear" size="30" maxlength="4" value="<?php echo $edit_member->get_degreeyear(); ?>" >
+      <br><label class="label" for="degreeyear">Year Earned (YYYY format)*</label><input id="degreeyear" type="text" name="degreeyear" size="30" maxlength="4" value="<?php echo $edit_member->get_degreeyear(); ?>" >
       <br><label class="label" for="fieldofstudy">Field of Study</label><input id="fieldofstudy" type="text" name="fieldofstudy" size="30" maxlength="60" value="<?php echo $edit_member->get_fieldofstudy(); ?>" >
       
-      <br><label class="label" for="yearsexp">Years of Forensic Casework</label><input id="yearsexp" type="text" name="yearsexp" size="30" maxlength="3" value="<?php echo $edit_member->get_years_exp(); ?>" >
-      
-      <br><label class="label" for="casesperyear">Average Number of Cases/Year**</label><input id="casesperyear" type="text" name="casesperyear" size="30" maxlength="8" value="<?php echo $edit_member->get_caseperyear(); ?>" ><br /><br>
-     
             <br><label class="label" for="affiliation">Other Forensic Governing Body Affiliation (e.g. FASE, ALAF):</label><input id="affiliation" type="text" name="affiliation" size="30"  value="<?php echo $edit_member->get_affiliation(); ?>" >
         <br>If you aren't a member of a forensic governing body, you are required to have a sponsor in order to access FADAMA. Fill out their name, email, and affiliated membership in the space below
         <br><label class="label" for="sponsor">Sponsor:</label><input id="sponsor" type="text" name="sponsor" size="30" value="<?php echo $edit_member->get_sponsor(); ?>" >
@@ -425,14 +407,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   frmvalidator.addValidation("degreeyear","minlen=4");
   frmvalidator.addValidation("degreeyear","numeric", "Degree year must be a number in YYYY format");
    frmvalidator.addValidation("degreeyear","gt=1900");
-  
 
-   frmvalidator.addValidation("yearsexp","numeric","Years experience must be a number");
-    frmvalidator.addValidation("yearsexp","gt=-1","Years experience must be greater than or equal to zero");
-   
-   frmvalidator.addValidation("casesperyear","numeric","Cases per year must be a number");
-   frmvalidator.addValidation("casesperyear","gt=-1","Cases per year must be greater than or equal to zero");
-   
    frmvalidator.addValidation("region","req","Please select your region");
    
    frmvalidator.addValidation("aafs","req","Please select your AAFS membership status");

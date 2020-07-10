@@ -41,12 +41,6 @@ class member {
     /** Institution where the user works */
     private $institution;
     
-    /** Years experience in field */
-    private $yearsexperience;
-    
-    /** Avg. cases the user work on per year */
-    private $caseperyear;
-    
     /** Region user works in */
     private $region;
     
@@ -75,7 +69,6 @@ class member {
     private $permissionstatus;
     
     
-    private $caseswithdrawn;
     private $dateregistered;
     
     private $affiliation;
@@ -102,8 +95,6 @@ public function get_degreeyear() { return $this->degreeyear; }
 public function get_fieldofstudy() { return $this->fieldofstudy; }
 public function get_aafsstatus() { return $this->aafsstatus; }
 public function get_institution() { return $this->institution; }
-public function get_years_exp() { return $this->yearsexperience; }
-public function get_caseperyear() { return $this->caseperyear; }
 public function get_region() { return $this->region; }
 public function get_mailaddress() { return $this->mailaddress; }
 public function get_mailaddress2() { return $this->mailaddress2; }
@@ -507,8 +498,6 @@ public static function add_member($db, $params) {
             . "fieldofstudy,"
             . "aafsstatus,"
             . "institution,"
-            . "yearsexperience,"
-            . "caseperyear,"
             . "region,"
             . "mailaddress,"
             . "mailaddress2,"
@@ -534,8 +523,6 @@ public static function add_member($db, $params) {
                 . ":fieldofstudy,"
                 . ":aafsstatus,"
                 . ":institution,"
-                . ":yearsexperience,"
-                . ":caseperyear,"
                 . ":region,"
                 . ":mailaddress1,"
                 . ":mailaddress2,"
@@ -589,8 +576,6 @@ public static function update_member($db, $params, $pwd=null) {
             . "fieldofstudy = :fieldofstudy,"
             . "aafsstatus = :aafsstatus,"
             . "institution = :institution,"
-            . "yearsexperience = :yearsexperience,"
-            . "caseperyear = :caseperyear,"
             . "region = :region,"
             . "mailaddress = :mailaddress1,"
             . "mailaddress2 = :mailaddress2,"
@@ -675,8 +660,6 @@ public static function update_member($db, $params, $pwd=null) {
             $this->fieldofstudy = $member_data['fieldofstudy'];
             $this->aafsstatus = $member_data['aafsstatus'];
             $this->institution = $member_data['institution'];
-            $this->yearsexperience = $member_data['yearsexperience'];
-            $this->caseperyear = $member_data['caseperyear'];
             $this->region = $member_data['region'];
             $this->mailaddress = $member_data['mailaddress'];
             $this->mailaddress2 = $member_data['mailaddress2'];
@@ -687,7 +670,6 @@ public static function update_member($db, $params, $pwd=null) {
             $this->lastlogin = $member_data['lastlogin'];
             $this->permissionstatus = $member_data['permissionstatus'];
 
-            $this->caseswithdrawn = $member_data['caseswithdrawn'];
             $this->dateregistered = $member_data['dateregistered'];
             
             $this->affiliation = $member_data['affiliation'];
