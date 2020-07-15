@@ -168,9 +168,9 @@ With the participation of practitioners and the submission of the current and pa
     <li>Wiki: <a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial'>https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial</a></li>
     <li>Videos:
     <ol style='padding:revert'>
-    <li><a href='https://drive.google.com/file/d/1xWtxPCBWRiJBPPtdgBphX-U0utIfbp9J/view?usp=sharing'> Video 1 (basic functionality)</a></il>
-    <li><a href='https://drive.google.com/file/d/1PD5ZeS0T45cQbcrLVj2owuKDTuYev951/view?usp=sharing'> Video 2 (case search and data download)</a></il>
-    <li><a href='https://drive.google.com/file/d/1q64ZEtBp7XWMz7iQhOGyLPGmLsd_yd7M/view?usp=sharing'> Video 3 (downloaded data sheet)</a></il>
+    <li><a href='https://andicyim.github.io/FADAMA/Videos/FADAMA_tutorial_1_0414.mp4'> Video 1 (basic functionality)</a></il>
+    <li><a href='https://andicyim.github.io/FADAMA/Videos/FADAMA_tutorial_2_0414.mp4'> Video 2 (case search and data download)</a></il>
+    <li><a href='https://andicyim.github.io/FADAMA/Videos/FADAMA_tutorial_3_0428.mp4'> Video 3 (downloaded data sheet)</a></il>
     </ol>
 	</li>
 
