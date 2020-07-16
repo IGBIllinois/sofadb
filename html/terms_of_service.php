@@ -13,15 +13,33 @@
 
 $errors = array();
 
-if(isset($_POST['agree'])) {
-    if(!isset($_POST['agree_to_terms'])) {
-        $errors[] = ("You must agree to the terms of service.");
-        $_GET['form'] = true;
-    } else {
+if(isset($_POST['regsubmit'])) {
+        if(empty($_POST['signature'])) {
+            $errors[] = "You must provide a signature.";
+            $agree_to_terms = false;
+            $_GET['form'] = true;
+        } else {
+            $signature = $_POST['signature'];
+        }
+        
+        if(empty($_POST['signature_date'])) {
+            $errors[] = "You must provide a signature date.";
+            $agree_to_terms = false;
+            $_GET['form'] = true;
+        } else {
+            $signature_date = $_POST['signature_date'];
+        }
+        
+        if(!empty($signature) && !empty($signature_date)) {
+            $agree_to_terms = true;
+        } else {
+            $agree_to_terms = false;
+        }
+        
+    if($agree_to_terms) {
         $member = new member($db, $_SESSION['id']);
-        echo("A");
         $member->update_terms_agreement(true);
-        echo("SUCCESS!");
+
     if($member->get_permissionstatus() == 2) {
         $_SESSION['permissionstatus'] = 2;
 
@@ -32,6 +50,7 @@ if(isset($_POST['agree'])) {
     }
     }
 }
+
 ?>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -44,6 +63,8 @@ if(isset($_POST['agree'])) {
 
 <script type="text/javascript" src="vendor/components/jquery/jquery.js"></script>
 <script type="text/javascript" src="vendor/components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+<script type="text/javascript" src='js/jquery.are-you-sure.js'></script>
+<script type="text/javascript" src='js/sofa_javascript.js'></script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
@@ -80,16 +101,31 @@ if(count($errors) > 0) {
     echo("<BR>");
 }
 ?>
-I agree to the terms of service.
+
 <?php  
 
 if(isset($_GET['form'])) {
     echo("<BR>");
+    echo("<fieldset style='border: solid 1px #000000;overflow: hidden;' class='roundedborder'><legend class='boldlegend'>Terms of Service</legend>");
     echo("<form action='terms_of_service.php' method=POST name='agree' id='agree'>");
-   echo('<input type="checkbox" name="agree_to_terms" id="agree_to_terms"> I agree to the terms of service.') ;
-   echo("<BR>");
-   echo('<input name="agree" id="agree" type="submit" value="Agree to terms"/>');
+
+    echo('     <BR>
+
+         Please review FADAMA\'s Terms of Service, Privacy Notice, and Contributor License Agreement <U><a href="docs/FADMA_FINAL combined CLA_ToS_Privacy Notice.docx" target="_blank" onclick="enableAfterClick(\'signature\');">here</a></U>.
+     <BR><BR>
+             By signing below, I acknowledge that I have read and agree to the Terms of Service, Privacy Notice, and Contributor License Agreement.<BR><BR>
+                     <label class="label" for="signature">Signature (Type your full name):</label><input type="text" name="signature" id="signature" disabled> <i>(activated once the link above has been clicked)</i><BR>
+             <label class="label" for="signature_date">Date:</label><input type="date" name="signature_date" id="signature_date">
+<br/><br/>
+
+
+  <br />	<label class="label" for="regsubmit">Click here to register</label>
+    <input name="regsubmit" id="regsubmit" type="submit" value="Register"/>
+    <BR><BR>');
+            
     echo("</form>");
+    echo("</fieldset>");
+
 }
 ?>
 </div>

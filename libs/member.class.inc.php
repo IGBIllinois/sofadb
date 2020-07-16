@@ -76,7 +76,14 @@ class member {
     private $sponsor_email;
     private $sponsor_affiliation;
     
+    /** User has agreed to terms */
     private $agree_to_terms;
+    
+    /** User's signature, signifying they've agreed to terms */
+    private $signature;
+    
+    /** Date of signature */
+    private $signature_date;
     
     public function __construct($db, $id = null) {
         $this->db = $db;
@@ -110,6 +117,8 @@ public function get_sponsor() { return $this->sponsor; }
 public function get_sponsor_email() { return $this->sponsor_email; }
 public function get_sponsor_affiliation() { return $this->sponsor_affiliation; }
 public function get_agree_to_terms() { return $this->agree_to_terms; }
+public function get_signature() { return $this->signature; }
+public function get_signature_date() { return $this->signature_date; }
 
 public function get_totalcases() {
     return $this->get_num_active_cases();
@@ -511,7 +520,9 @@ public static function add_member($db, $params) {
             . "sponsor,"
             . "sponsor_email,"
             . "sponsor_affiliation,"
-            . "agree_to_terms"
+            . "agree_to_terms,"
+            . "signature,"
+            . "signature_date"
             . ") VALUES ("
                 . ":uname, "
                 . ":pwd, "
@@ -536,7 +547,9 @@ public static function add_member($db, $params) {
                 . ":sponsor,"
                 . ":sponsor_email,"
                 . ":sponsor_affiliation,"
-                . ":agree_to_terms"
+                . ":agree_to_terms,"
+                . ":signature,"
+                . ":signature_date"
             . ")";		
 
     $result = $db->get_insert_result($q, $params);
@@ -678,6 +691,8 @@ public static function update_member($db, $params, $pwd=null) {
             $this->sponsor_affiliation = $member_data['sponsor_affiliation'];
             
             $this->agree_to_terms = $member_data['agree_to_terms'];
+            $this->signature = $member['signature'];
+            $this->signature_date = $member['signature_date'];
             
         }
     }

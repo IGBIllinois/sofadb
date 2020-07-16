@@ -24,6 +24,8 @@ require_once("include/main.inc.php");
 <script type="text/javascript" src='vendor/components/jquery/jquery.js'></script>
 <script type="text/javascript" src='vendor/components/jqueryui/jquery-ui.js'></script>
 <script type="text/javascript" src='js/gen_validatorv4.js'></script>
+<script type="text/javascript" src='js/jquery.are-you-sure.js'></script>
+<script type="text/javascript" src='js/sofa_javascript.js'></script>
 
 <!-- CSS -->
 <link rel="stylesheet" href="css/style.css"  type="text/css" />
@@ -103,11 +105,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo('<div id="wrapper" style="width:500px">');
 	$errors = array(); // Start an array to hold the errors
 	// Check for a title:
-        if(empty($_POST['agree_to_terms'])) {
-            $errors[] = "You must agree to the terms of service.";
+
+        
+        if(empty($_POST['signature'])) {
+            $errors[] = "You must provide a signature.";
             $agree_to_terms = false;
         } else {
+            $signature = $_POST['signature'];
+        }
+        
+        if(empty($_POST['signature_date'])) {
+            $errors[] = "You must provide a signature date.";
+            $agree_to_terms = false;
+        } else {
+            $signature_date = $_POST['signature_date'];
+        }
+        
+        if(!empty($signature) && !empty($signature_date)) {
             $agree_to_terms = true;
+        } else {
+            $agree_to_terms = false;
         }
         
 	if (empty($_POST['title2'])) {
@@ -275,7 +292,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "sponsor"=>$sponsor,
             "sponsor_email"=>$sponsor_email,
             "sponsor_affiliation"=>$sponsor_affiliation,
-            "agree_to_terms"=>$agree_to_terms);
+            "agree_to_terms"=>$agree_to_terms,
+            "signature"=>$signature,
+            "signature_date"=>$signature_date);
  
         $user_params = array("user_name"=>($fn . " ".$ln),
                             "from_email"=>FROM_EMAIL);
@@ -385,7 +404,7 @@ echo("</div>");
       
   </fieldset>
     <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Education and Experience</legend>
-      <center><strong class="outsidetext">** indicates information that may be downloaded by users for research purposes</strong></center>
+      
       <br ><label class="label" for="aafs">AAFS Membership Status*</label>
       <select name="aafs">
         <option value="">- Select -</option>
@@ -422,7 +441,7 @@ echo("</div>");
         <br>If you aren't a member of a forensic governing body, you are required to have a sponsor in order to access FADAMA. Fill out their name, email, and affiliated membership in the space below
         <br><label class="label" for="sponsor">Sponsor:</label><input id="sponsor" type="text" name="sponsor" size="30" value="<?php if (isset($_POST['sponsor'])) echo $_POST['sponsor']; ?>" >
         <br><label class="label" for="sponsor_email">Sponsor Email:</label><input id="sponsor_email" type="text" name="sponsor_email" size="30" value="<?php if (isset($_POST['sponsor_email'])) echo $_POST['sponsor_email']; ?>" >
-        <br><label class="label" for="sponsor_affiliation">Sponsor Affiliation:</label><input id="sponsor" type="text" name="sponsor_affiliation" size="30"  value="<?php if (isset($_POST['sponsor_affiliation'])) echo $_POST['sponsor_affiliation']; ?>" >
+        <br><label class="label" for="sponsor_affiliation">Sponsor Affiliation:</label><input id="sponsor_affiliation" type="text" name="sponsor_affiliation" size="30"  value="<?php if (isset($_POST['sponsor_affiliation'])) echo $_POST['sponsor_affiliation']; ?>" >
                 <BR><BR>
       
       
@@ -444,13 +463,19 @@ By requesting registration to the FADAMA Database, I agree to the following guid
       
       
  <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Terms of Service</legend>
-     <input type="checkbox" name="agree_to_terms" id="agree_to_terms" value="1"> I agree to the <a href="terms_of_service.php" target="_blank">terms of service</a>.
+     <BR>
+         Please review FADAMA's Terms of Service, Privacy Notice, and Contributor License Agreement <a href="docs/FADMA_FINAL combined CLA_ToS_Privacy Notice.docx" target="_blank" onclick="enableAfterClick('signature');">here</a>.
+     <BR><BR>
+             By signing below, I acknowledge that I have read and agree to the Terms of Service, Privacy Notice, and Contributor License Agreement.<BR><BR>
+                     <label class="label" for="signature">Signature (Type your full name):</label><input type="text" name="signature" id="signature" disabled> <i>(activated once the link above has been clicked)</i><BR>
+             <label class="label" for="signature_date">Date:</label><input type="date" name="signature_date" id="signature_date">
 <br/><br/>
 
 	</fieldset>
 
-  <br />	<br /> <label class="label" for="regsubmit">Click here to register</label>
+  <br />	<label class="label" for="regsubmit">Click here to register</label>
     <input name="regsubmit" id="regsubmit" type="submit" value="Register"/>
+    <BR><BR>
     <div id="registration_errorloc" class="errorlocation">
       </div>
     
@@ -506,7 +531,8 @@ By requesting registration to the FADAMA Database, I agree to the following guid
    
    frmvalidator.addValidation("aafs","req","Please select your AAFS membership status");
    
-   frmvalidator.addValidation("agree_to_terms", "shouldselchk", "You must agree to the terms and conditions.");
+   frmvalidator.addValidation("signature","req","You must provide a signature.");
+   frmvalidator.addValidation("signature_date","req","You must provide a signature date.");
 
 //]]></script>
     

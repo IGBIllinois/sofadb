@@ -177,6 +177,9 @@ function hideCheckboxes(){
 };
 // end checkbox dropdown
 
+function enableAfterClick(elementid) {
+    document.getElementById(elementid).disabled = false;
+}
 
 // Add "Are you sure?" confirmation when leaving add/edit case pages
   $(function() {

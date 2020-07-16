@@ -8,63 +8,160 @@
 
 class sofa_case {
     
+    /** Database object */
     private $db;
     
+    /** ID of the case */
     private $id;
     
+    /** Name of the case */
     private $casename;
+    
+    /** Case number */
     private $casenumber;
+    
+    /** Year of the case */
     private $caseyear;
+    
+    /** ID of the member who created the case */
     private $memberid;
+    
+    /** Case agency */
     private $caseagency;
+    
+    /** Forensic Anthropology estimated sex */
     private $fasex;
+    
+    /** Forensic Anthropology estimated start age */
     private $faage;
+    
+    /** Forensic Anthropology estimated end age */
     private $faage2;
+    
+    /** Forensic Anthropology estimated start age units */
     private $faageunits;
+    
+    /** Forensic Anthropology estimated end age units */
     private $faageunits2;
+    
+    /** Forensic Anthropology estimated age notes */
     private $faage_notes;
+    
+    /** Forensic Anthropology estimated start stature */
     private $fastature;
+    
+    /** Forensic Anthropology estimated end stature */
     private $fastature2;
+    
+    /** Forensic Anthropology estimated stature units */
     private $fastatureunits;
+    
+    /** Identified sex */
     private $idsex;
+    
+    /** Identified sex notes */
     private $idsex_notes;
+    
+    /** Identified age */
     private $idage;
+    
+    /** Identified age units */
     private $idageunits;
+    
+    /** Identified age notes */
     private $idage_notes;
+    
+    /** Identified stature */
     private $idstature;
+    
+    /** Identified stature units */
     private $idstatureunits;
+    
+    /** Identified stature notes */
     private $idstature_notes;
+    
+    /** Source of identification */
     private $idsource;
+    
+    /** Additional case notes */
     private $casenotes;
+    
+    /** Date case was started */
     private $datestarted;
+    
+    /** Date case was last modified */
     private $datemodified;
+    
+    /** Date case was submitted */
     private $datesubmitted;
+    
+    /** Current submission status */
     private $submissionstatus;
+    
+    /** Forensic Anthropology estimated ancestry: Asian */
     private $faancestryas;
+    /** Forensic Anthropology estimated ancestry: European */
     private $faancestryeuro;
+    
+    /** Forensic Anthropology estimated ancestry: African */
     private $faancestryaf;
+    
+    /** Forensic Anthropology estimated ancestry: North American */
     private $faancestryna;
+    
+    /** Forensic Anthropology estimated ancestry: Hispanic */
     private $faancestryhi;
+    
+    /** Forensic Anthropology estimated ancestry: Other */
     private $faancestryot;
+    
+    /** Forensic Anthropology estimated ancestry: Other text */
     private $faancestryottext;
+    
+    /** Identified ancestry: Asian */
     private $idraceas;
+    
+    /** Identified ancestry: African */
     private $idraceaf;
+    
+    /** Identified ancestry: White */
     private $idracewh;
+    
+    /** Identified ancestry: Hispanic */
     private $idracehi;
+    
+    /** Identified ancestry: Native American */
     private $idracena;
+    
+    /** Identified ancestry: Other */
     private $idraceot;
+    
+    /** Identified ancestry: Other text */
     private $idraceottext;
+    
+    /** Identified ancestry: Additional text */
     private $idancaddtext;
-    private $nummethods;
     
     // prior known data
+    /** No data was known prior to case creation */
     private $known_none;
+    
+    /** Sex was known prior to case creation */
     private $known_sex;
+    
+    /** Age was known prior to case creation */
     private $known_age;
+    
+    /** Ancestry was known prior to case creation */
     private $known_ancestry;
+    
+    /** Stature was known prior to case creation */
     private $known_stature;
+    
+    /** Some data was known prior to case creation, but it is impossible to determine which */
     private $known_unable_to_determine;
     
+    /** Option to give consent to share data with the FDB (Consent, already submitted, Do Not Consent) */
     private $fdb_consent;
     
     // getters
@@ -114,7 +211,6 @@ class sofa_case {
     public function get_idraceot()  { return $this->idraceot; }
     public function get_idraceottext()  { return $this->idraceottext; }
     public function get_idancaddtext() { return $this->idancaddtext; }
-    public function get_nummethods() { return $this->nummethods; }
 
     public function get_known_none() { return $this->known_none; }
     public function get_known_sex() { return $this->known_sex; }
@@ -337,23 +433,11 @@ class sofa_case {
                 
                  
                  if($casemethodid > 0) {
-                     // everything went okay, update nummethods
-                     $q="UPDATE members SET totalcases=totalcases + 1 WHERE id=:memberid";
-                     $data = array("memberid"=>$this->memberid);
-                     $result = $this->db->get_update_result($q, $data);
-                        if( count($result) == 0) {
-                                echo '<h2>System Error</h2>
-                        <p class="error">Did not increment number of cases. We apologize for any inconvenience.</p>'; 
-                        // Debugging message:
-                        echo '<p>'. '<br/><br/>Query: ' . $q . '</p>';
-                        return array("RESULT"=>FALSE,
-                                    "MESSAGE"=>"Did not increment number of cases. We apologize for any inconvenience.");
-                        } else {
                             
                     return array("RESULT"=>TRUE,
                             "MESSAGE"=>"Method case added successfully.",
                             "id"=>$casemethodid);
-                        }
+                        
                  } else {
                      return array("RESULT"=>FALSE,
                                     "MESSAGE"=>"Could not add method. We apologize for any inconvenience.");
@@ -364,7 +448,8 @@ class sofa_case {
 /** Marks a case for submission, or other status
  * 
  * @param int $submitstatus Submission status. "1" for submitted, "0" for unsubmitted
- * @return type
+ * @return array Array of the form ("RESULT"=>$result, "MESSAGE"=>$message)
+ *  where $result is true or false, and $message is an output message
  */
 public function submit_case($submitstatus) {
 
@@ -385,11 +470,6 @@ public function submit_case($submitstatus) {
 	
 	$this_member = new member($this->db, $this->memberid);
 
-        if($submitstatus == 1) {
-            $q="UPDATE members SET casessubmitted=casessubmitted+1 WHERE id=:memberid";
-        } else {
-            $q="UPDATE members SET casessubmitted=casessubmitted-1 WHERE id=:memberid";
-        }
 	$params = array("memberid"=>$this->memberid);
 	$result = $this->db->get_update_result($q, $params);
 
@@ -398,6 +478,10 @@ public function submit_case($submitstatus) {
 	return array("RESULT"=>FALSE,
 	"MESSAGE"=>'System Error: Could not update submit data.');
 	}
+        
+        
+        return array("RESULT"=>TRUE,
+            "MESSAGE"=>"Case status changed successfully.");
 }
 
 
@@ -725,7 +809,7 @@ public function submit_case($submitstatus) {
     public function delete_case() {
         $memberid = $this->memberid;
         $deleteid = $this->id;
-        //$q="UPDATE cases SET submissionstatus=-1 WHERE memberid=:memberid AND id=:deleteid";
+
         $delete_case_query = "DELETE FROM cases where memberid=:memberid AND id=:deleteid";
         $delete_case_params = array("memberid"=>$memberid,
                         "deleteid"=>$deleteid);
@@ -1056,21 +1140,6 @@ public function submit_case($submitstatus) {
                 }
                 $param_string .= " id in (SELECT caseid FROM `tier2data` where ($tmp_str) ".
                         " group by caseid having count( caseid)=$num_methods and caseid not in (select id from cases where id in (SELECT caseid FROM `tier2data` group by caseid having (count(methodid) > count(distinct methodid)))))";
-                /*
-                $method_ids = implode(",", $methods);
-                if($param_string != "") {
-                    $param_string .= $conjunction;
-                }
-                $tmp_str = "";
-                foreach($methods as $method) {
-                    if($tmp_str != "") {
-                        $tmp_str .= " AND ";
-                    }
-                    $tmp_str .= " (id in (select tier2data.caseid from tier2data where tier2data.methodid = $method))";
-                }
-                $param_string .= "(" . $tmp_str. ")";
-                 * 
-                 */
             }
         }
         
@@ -1608,7 +1677,6 @@ public function submit_case($submitstatus) {
         $this->idstatureunits = $casedata['idstatureunits'];
         $this->idstature_notes = $casedata['idstature_notes'];
         $this->idsource = $casedata['idsource'];
-        $this->nummethods = $casedata['nummethods'];
         $this->casenotes = $casedata['casenotes'];
         $this->datestarted = $casedata['datestarted'];
         $this->datemodified = $casedata['datemodified'];
