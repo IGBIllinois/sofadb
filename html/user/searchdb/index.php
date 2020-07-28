@@ -7,6 +7,7 @@ require_once('../../include/header_user.php');
 
 <BR/>
   <h1 class="cntr">Search Cases</h1>
+  <center>(<a target='blank' href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Search_cases'>Search tutorial</a>)</center><BR>
 
  <div id="searchregion"> 
 
@@ -146,7 +147,7 @@ echo '</p>';
 
 echo '<br/> <a href="index.php?search=1">Search Again</a>';
 echo("<BR><BR>");
-echo("If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.");
+echo("If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Downloaded_data_sheet' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.");
 echo("<BR>");
 
 echo ('<form action="confirm.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="export">');
@@ -205,6 +206,12 @@ if ($pages==1)
     $endingrecord=$cases;
 
 }
+
+
+
+echo "<p class='dbresults'>Total number of search results: $cases. Showing records  $startingrecord - $endingrecord </p>";
+
+
 
 
 if ($pages > 1) {
@@ -421,7 +428,7 @@ echo <<<_END
 <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
 	<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Export Database</legend>
 <br>
-    If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.
+    If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Downloaded_data_sheet' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.
     <BR><BR>
 <span><label class="label" for="exportall">Click here to export all cases</label><input name="exportall" type="submit" id="exportall" title="Export All" value="Export All"></span><br>
 
