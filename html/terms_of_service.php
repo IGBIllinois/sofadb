@@ -38,7 +38,7 @@ if(isset($_POST['regsubmit'])) {
         
     if($agree_to_terms) {
         $member = new member($db, $_SESSION['id']);
-        $member->update_terms_agreement(true);
+        $member->update_terms_agreement($signature, $signature_date, true);
 
     if($member->get_permissionstatus() == 2) {
         $_SESSION['permissionstatus'] = 2;

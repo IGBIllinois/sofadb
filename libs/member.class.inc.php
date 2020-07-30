@@ -298,9 +298,11 @@ public function delete_member($delete_member_id) {
     }
 }
 
-public function update_terms_agreement($agree) {
-    $query = "UPDATE members set agree_to_terms = :agree where id=:id";
-    $params = array("agree"=>$agree,
+public function update_terms_agreement($signature, $signature_date, $agree) {
+    $query = "UPDATE members set signature=:signature, signature_date=:signature_date, agree_to_terms = :agree where id=:id";
+    $params = array("signature"=>$signature,
+                    "signature_date"=>$signature_date,
+                    "agree"=>$agree,
                     "id"=>$this->id);
     $result = $this->db->get_update_result($query, $params);
     if($result > 0) {
