@@ -70,10 +70,7 @@ require_once('../../include/header_user.php');
 
 	
 	  
-if(!$error){//if error start	  
-// This script retrieves all the records from the users table.
- // Connect to the database.
-//set the number of rows per display page
+if(!$error){  
 
 if (isset($_SESSION['searchstring']) && isset($_SESSION['searched'])){
     $searchstring=$_SESSION['searchstring'];

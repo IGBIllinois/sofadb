@@ -17,9 +17,7 @@
               isset($_POST['exportall'])
              )
 	  {
-print_r($_POST);
-echo("<BR>");
-print_r($_GET);
+
           $race_array = array();
           foreach($_GET['race'] as $race=>$value) {
               $race_array[$value] = $race;
@@ -32,8 +30,8 @@ print_r($_GET);
               "caseAgency"=>$_GET['cagency'],
               "region"=>$_GET['region'],
               "idsex"=>$_GET['sexid'],
-              "ageid1"=>$_GET['ageid1'],
-              "ageid2"=>$_GET['ageid2'],
+              "idage1"=>$_GET['ageid1'],
+              "idage2"=>$_GET['ageid2'],
               "statureid1"=>$_GET['statureid1'],
               "statureid2"=>$_GET['statureid2'],
               "race"=>$race_array,
@@ -41,8 +39,10 @@ print_r($_GET);
               "est_age"=>$_GET['est_age'],
               "est_stat"=>$_GET['est_stat'],
               "est_anc"=>$_GET['est_anc'],
-              "conjuction"=>$_GET['andor'],
-              "method_conj"=>$_GET['method_conj']
+              "conjunction"=>$_GET['andor'],
+              "method_conj"=>$_GET['method_conj'],
+              "race_join"=>$_GET['race_join'],
+              "prac_join"=>$_GET['prac_join']
                   );
               $methods = ($_GET['method_select']);
              $method_list = array();
@@ -56,9 +56,9 @@ print_r($_GET);
              $name=$_POST['name'];
              $email = $_POST['email'];
               $case_results = sofa_case::search_cases($db, null, $case_data, $method_list);
-              //echo("Report written!<BR>");
+
               sofa_case::write_report($db, $case_results, $name, $email);
-              //die();
+
 	} 
 
 ?>
