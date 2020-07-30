@@ -120,9 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if($numerrors == 0) {
         
-        if($est1 != null) {
-            $tier2->update_estimated_outcomes($est1, $est2, $units);
-        }
+    $tier2->update_estimated_outcomes($est1, $est2, $units);
     
     $result = null;
     $numerrors = 0;
