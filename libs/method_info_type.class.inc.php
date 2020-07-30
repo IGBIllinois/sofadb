@@ -1,16 +1,19 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Method_info_type class for the various types of method_infos (select_each, numeric_entry, etc.)
+ * 
  */
 
 class method_info_type {
     
+    /** Database object */
     private $db;
     
+    /** ID of the method_info_type */
     private $id;
+    
+    /** Method type id of the method used by this method_info_type */
     private $method_type;
     
     public function __construct($db, $id = null) {
@@ -26,6 +29,12 @@ class method_info_type {
     public function get_id() { return $this->id; }
     public function get_method_info_type() { return $this->method_type; }
     
+    /**
+     * Gets a list of the method_info_types
+     * 
+     * @param db $db
+     * @return \method_info_type Array of method_info_type objects
+     */
     public static function get_method_info_types($db) {
         
         $query = "SELECT * from method_info_types";
@@ -42,7 +51,13 @@ class method_info_type {
         
     }
     
-        public static function get_method_info_type_by_name($db, $name) {
+    /** Gets a list of method_info_types by name
+     * 
+     * @param db $db the database object
+     * @param string $name Name of the type
+     * @return \method_info_type An array of method_info_type object with the given type name
+     */
+    public static function get_method_info_type_by_name($db, $name) {
         
         $query = "SELECT id from method_info_types where method_type=:name";
         $params = array("name"=>$name);

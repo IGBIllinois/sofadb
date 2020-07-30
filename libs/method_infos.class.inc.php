@@ -74,7 +74,7 @@ class method_infos {
         }  
     }
     
-        /** Get all options for this method_infos
+    /** Get all options for this method_infos
      * 
      * @return \method_info_option An array of method_info_option objects for this method_infos
      */

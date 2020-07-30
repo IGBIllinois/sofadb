@@ -1,16 +1,22 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The tier3data class is used to hold the actual information entered for each tier2data object.
+ * This includes which options were selected for each tier2data, and what values were entered for text inputs.
  */
 
 class tier3data {
     
+    /** tier3data object id */
     private $id;
+    
+    /** id of the tier2data object (method_info data) associated with this tier3data */
     private $tier2id;
+    
+    /** Value input. Only used for user input method_infos (text entry, numeric entry, text areas, etc.) */
     private $value;
+    
+    /** Id of the method_info_option selected */
     private $method_info_option_id;
 
     

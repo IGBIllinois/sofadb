@@ -1,23 +1,43 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Method class for inputting which methods where used in a case, and their associated information
+ * 
  */
 
 class method {
     
+    /** ID of the method */
     private $id;
+    
+    /** Name of the method */
     private $method_name;
+    
+    /** ID of the method type (Age, sex, etc.) */
     private $method_type_num;
+    
+    /** Measurement type */
     private $measurement_type;
+    
+    /** Description */
     private $description;
+    
+    /** Instructions */
     private $instructions;
+    
+    /** Method info type. Used for 'misfit' methods that require unique displays */
     private $methodinfotype;
+    
+    /** ID of the prompt to use */
     private $prompt_id;
+    
+    /** Is this an FDB method? */
     private $fdb;
+    
+    /** Should this method be displayed at the top when listing methods? */
     private $top;
+    
+    /** Is this method active? */
     private $active;
     
     private $db; // Database object
@@ -102,12 +122,12 @@ class method {
     /**
      * Updates a method with new data
      * 
-     * @param string $name
-     * @param int $type_num
-     * @param string $measurement_type
-     * @param string $description
-     * @param string $instructions
-     * @param int $prompt_id
+     * @param string $name Name of the method
+     * @param int $type_num ID of the method type (Age, Sex, etc.)
+     * @param string $measurement_type Measurement type
+     * @param string $description Method description
+     * @param string $instructions Instructions
+     * @param int $prompt_id ID of the prompt to use
      * @return type
      */
     public function update_method(
@@ -239,6 +259,7 @@ class method {
 
     
     /**
+     * Gets the Estimated outcomes for this method. Used in Ancestry methods where the possible outcomes are input by the user
      * 
      * @return type An array of estimated outcome possibilities for this method
      */
@@ -279,6 +300,8 @@ class method {
         }
     
         /** Gets method_infos for a method sorted by type
+         * 
+         * @param int $type ID of the type to get (Age, Sex, etc.)
          * 
          * @return \method_infos An 2D array whose contents are arrays of method_infos, sorted by type
          * Each entry is of the form: $id->($method_info_array), where $id is the input_type, and
@@ -529,8 +552,8 @@ class method {
     
     /**
      * 
-     * @param type $db
-     * @param type $prompt_id
+     * @param db $db
+     * @param int $prompt_id
      * @return array An Array of the form (RESULT=>$result, MESSAGE->$message),
      *  where $result is TRUE if the operation was successful, and MESSAGE is an output message.
      */

@@ -1,20 +1,35 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The tier2data class is used to store data about the methods used within the case
+ * This includes associating which methods were used for each case, and storing
+ * the estimated outcomes for the method used.
  */
 
 class tier2data {
     
+    /** ID of the tier2data object */
     private $id;
+    
+    /** ID of the owner of the case */
     private $memberid;
+    
+    /** ID of the case */
     private $caseid;
+    
+    /** ID of the method type */
     private $methodtype;
+    
+    /** ID of the method used */
     private $methodid;
+    
+    /** Estimated outcome (or beginning value for stature or age methods) */
     private $estimated_outcome_1;
+    
+    /** Ending estimated outcome (for stature or age methods) */
     private $estimated_outcome_2;
+    
+    /** Units used (only for stature or age methods) */
     private $estimated_outcome_units;
     
     private $db; // Database object
@@ -61,6 +76,11 @@ class tier2data {
         return $this->estimated_outcome_units;
     }
     
+    /** Formats text for estimated outcome. For ancestry methods, this gets the
+     *  associated data from the method_info_option table. Otherwise it returns
+     * the value in estimated_outcome_1.
+     * @return string The estimated outcome for this tier2data object.
+     */
     public function format_estimated_outcome_1() {
         if($this->methodtype == METHOD_DATA_ANCESTRY_ID) {
             $method_info_option = new method_info_option($this->db, $this->estimated_outcome_1);
@@ -71,6 +91,11 @@ class tier2data {
         }
     }
     
+    /** Formats text for the second estimated outcome. For ancestry methods, this gets the
+     *  associated data from the method_info_option table. Otherwise it returns
+     * the value in estimated_outcome_2.
+     * @return string The estimated outcome for this tier2data object.
+     */
     public function format_estimated_outcome_2() {
         if($this->methodtype == METHOD_DATA_ANCESTRY_ID) {
             $method_info_option = new method_info_option($this->db, $this->estimated_outcome_2);
@@ -164,6 +189,7 @@ class tier2data {
     public function update_estimated_outcomes($estimated_outcome_1, $estimated_outcome_2 = null, $units=null) {
         
         $tier2id = $this->id;
+        echo("est 1 = $estimated_outcome_1<BR>");
         $query = "update tier2data set estimated_outcome_1=:est1 where id=:tier2id";
         $params = array("tier2id"=>$tier2id, "est1"=>$estimated_outcome_1);
         
@@ -284,6 +310,15 @@ class tier2data {
     
     
     // static functions
+    
+    /** Deletes a tier2data object
+     * 
+     * @param db $db The database object
+     * @param id $tier2id ID of the tier2data to delete
+     * @return array Array of the form ("RESULT"=>$result,
+     * "MESSAGE"=>$message), where $result is true if successful, and 
+     * $message is an output message.
+     */
     public static function delete_tier2($db, $tier2id) {
         $query = "DELETE from tier2data where id=:tier2id ";
         $params = array("tier2id"=>$tier2id);

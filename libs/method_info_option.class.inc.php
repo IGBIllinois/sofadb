@@ -1,17 +1,21 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The method_info adds input data for a method object
  */
 
 class method_info_option {
     
-    private $db; // Database object
+    /** Database object */
+    private $db; 
     
+    /** ID of the method_info_option */
     private $id;
+    
+    /** ID of the method_infos object this option belongs to */
     private $method_infos_id;
+    
+    /** Text value of the option */
     private $value;
 
     
@@ -41,6 +45,10 @@ class method_info_option {
         }  
     }
     
+    /** Get the type of this method_info_option
+     * 
+     * @return int the ID of the method info type for the method info of this option
+     */
     public function get_type() {
         $method_infos = new method_infos($this->db, $this->method_infos_id);
         $type = $method_infos->get_type();

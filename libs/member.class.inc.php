@@ -184,7 +184,13 @@ public function get_num_unsubmitted_cases() {
     
 }
 
-
+/** Loads info from the database into this member object. Used when updating user password to new version
+ * 
+ * @param string email of the user
+ * @param string $hash_pass Hashed password of the user
+ * @return Array in the format ("RESULT"=>$result, "MESSAGE"=>$message) where
+ * $result is true if successful, and $message is an output message.
+ */
 public function load_info_by_name($name, $hash_pass) {
 
     $query = "SELECT id from members where uname=:name and pwd=:pwd";
@@ -204,6 +210,11 @@ public function load_info_by_name($name, $hash_pass) {
     
 }
 
+/** Updates then this user last logged in.
+ * 
+ * @return Array in the format ("RESULT"=>$result, "MESSAGE"=>$message) where
+ * $result is true if successful, and $message is an output message.
+ */
 public function update_login_time() {
     $q = "UPDATE members SET lastlogin=NOW() WHERE id=:id";
     $params = array("id"=>$this->id);
@@ -298,6 +309,12 @@ public function delete_member($delete_member_id) {
     }
 }
 
+/** Updates if a user has agreed to the terms of service
+ * 
+ * @param string $signature Signature the user provided, saying they agree to the terms
+ * @param string $signature_date Date the user provided
+ * @param bool $agree True if data is provided and they agree.
+ */
 public function update_terms_agreement($signature, $signature_date, $agree) {
     $query = "UPDATE members set signature=:signature, signature_date=:signature_date, agree_to_terms = :agree where id=:id";
     $params = array("signature"=>$signature,
