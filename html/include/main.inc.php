@@ -6,7 +6,6 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
-
 $root_dir = $_SERVER['SERVER_NAME'] . $_SERVER['CONTEXT_PREFIX'];
 $ds = DIRECTORY_SEPARATOR;
 
@@ -31,25 +30,18 @@ global $ds;
 }
 spl_autoload_register('my_autoloader');
 
-
 // Initialize Twig
 try {
-//require_once '../vendor/autoload.php';
-$loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../templates');
-$twig = new \Twig\Environment($loader, array());
-} catch(Exception $e) {
-    echo($e->getMessage());
-    echo($e->getTraceAsString());
+    $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../../templates');
+    $twig = new \Twig\Environment($loader, array());
+    } catch(Exception $e) {
+        echo($e->getMessage());
+        echo($e->getTraceAsString());
 }
-
-
-
 
 
 // database class
 $db = new db(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD) OR die ('Could not connect to MySQL' );
-
-
 
 // These lines allow a user to hit the Back button and return to a previously
 // submitted form
