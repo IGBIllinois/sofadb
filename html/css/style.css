@@ -80,14 +80,7 @@ html {margin:0;padding:0;border:0;}body, div, span, object, iframe,  h2, h3, h4,
 
 
 
-#header {
-	background-color: #FFF;
-	float: left;
-	margin-left: 10px;
-	margin-top: 10px;
-	margin-right: 0px;
-	margin-bottom: 0px;
-}
+
 article, aside, dialog, figure, footer, header, hgroup, nav, section {display:block;}body {line-height:1.5;background:white;}table {border-collapse:separate;border-spacing:0;}caption, th, td {text-align:left;font-weight:normal;float:none !important;}table, th, td {vertical-align:middle;}blockquote:before, blockquote:after, q:before, q:after {content:'';}blockquote, q {quotes:"" "";}a img {border:none;}:focus {outline:0;}
 
 
@@ -759,7 +752,7 @@ a:hover { text-decoration: none; }
     margin-left:15px;  
 } 
 
-.new_header {
+.header {
     background-color: black;
     display: table;
     width: 100%;
@@ -805,14 +798,7 @@ html {margin:0;padding:0;border:0;}body, div, span, object, iframe,  h2, h3, h4,
     background-color: #333;
 }
 
-#header {
-	background-color: #FFF;
-	float: left;
-	margin-left: 10px;
-	margin-top: 10px;
-	margin-right: 0px;
-	margin-bottom: 0px;
-}
+
 article, aside, dialog, figure, footer, header, hgroup, nav, section {display:block;}body {line-height:1.5;background:white;}table {border-collapse:separate;border-spacing:0;}caption, th, td {text-align:left;font-weight:normal;float:none !important;}table, th, td {vertical-align:middle;}blockquote:before, blockquote:after, q:before, q:after {content:'';}blockquote, q {quotes:"" "";}a img {border:none;}:focus {outline:0;}
 
 

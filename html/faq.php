@@ -28,7 +28,7 @@
 </head>
 
 <body>
-<div id="top" class='new_header'>
+<div id="top" class='header'>
 
     <div class='header_logo'>
             <img class='align_left' src="images/header.png">

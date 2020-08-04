@@ -80,7 +80,7 @@ elseif($_SESSION['loggedin']==1)
 
 
 <body>
-<div id="top" class='new_header'>
+<div id="top" class='header'>
 
     <div class='header_logo'>
             <img class='align_left' src="<?php echo($root_url) ?>/images/header.png">
@@ -106,7 +106,7 @@ elseif($_SESSION['loggedin']==1)
     
     <li><a href="<?php echo($root_url) ?>/logout.php">Logout</a></li>
     <li><a href="<?php echo($root_url) ?>/contact/">Contact Us</a></li>
-    <li><a class="noHover">&nbsp;</a></li>
+    <li class="noHover"><a class="noHover">&nbsp;</a></li>
   </ul>
     <BR>
 </div>
