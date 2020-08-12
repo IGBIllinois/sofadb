@@ -1066,6 +1066,7 @@ public function submit_case($submitstatus) {
 
             
             $param_string .= "(".$race_string.")";
+            $param_string .= $conjunction;
         }
         
         $est_string = "";
@@ -1609,7 +1610,6 @@ public function submit_case($submitstatus) {
             fputcsv($output, $curr_row);
 
         }
-        
         fclose($output);
         
 
