@@ -68,14 +68,16 @@ if(isset($_GET['id']))
 	
 	$this_case = new sofa_case($db, $casesubid);
 	
-        $this_case->submit_case($status);
-        
+        if($memberid != $this_case->get_memberid()) {
+            echo("You do not have permission to submit this case.");
+        } else {
+            $result = $this_case->submit_case($status);
 
 
-unset($_GET['id']);
-unset($_GET['status']);
+            echo($result['MESSAGE']);
+        }
 
-header('Location: ' . './index.php');exit();
+
 }
 
 $total_cases = sofa_case::get_member_cases($db, $memberid);
