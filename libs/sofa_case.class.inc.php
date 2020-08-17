@@ -461,18 +461,8 @@ public function submit_case($submitstatus) {
 	$q="UPDATE cases SET submissionstatus=:status,datesubmitted=$datesubmitted WHERE id=:caseid";
 
 	$params = array("status"=>$submitstatus, "caseid"=>$this->get_id());
+
 	$result = $this->db->get_update_result($q, $params);
-
-	if(count($result) == 0) {
-	return array("RESULT"=>FALSE,
-		"MESSAGE"=> 'System Error: Could not submit case, try again later.');
-	}
-	
-	$this_member = new member($this->db, $this->memberid);
-
-	$params = array("memberid"=>$this->memberid);
-	$result = $this->db->get_update_result($q, $params);
-
 
 	if(count($result) == 0) {
 	return array("RESULT"=>FALSE,
@@ -1007,24 +997,62 @@ public function submit_case($submitstatus) {
         if (($case_data['idage1'] != null && $case_data['idage1'] != "") &&
                 ($case_data['idage2'] != null && $case_data['idage2'] != "")) {
             
+            if($case_data['idageunits'] == 'years') {
+                $alt_ageunits = "months";
+                $alt_idage1 = $case_data['idage1'] * 12;
+                $alt_idage2 = $case_data['idage2'] * 12;
+            } else {
+                $alt_ageunits = "years";
+                $alt_idage1 = $case_data['idage1'] / 12;
+                $alt_idage2 = $case_data['idage2'] / 12;
+            }
             if($param_string != "") {
                 $param_string .= $conjunction;
             }
-            $param_string .= " ( idage between :idage1 AND :idage2 )";
+            if($case_data['idageunits'] == 'fmonths') {
+                $params["idage1"] = $case_data['idage1'];
+                $params["idage2"] = $case_data['idage2'];
+                $params['idageunits'] = $case_data['idageunits'];
+                $param_string .= ("( (idageunits = :idageunits AND (idage between :idage1 AND :idage2) ))");
+            } else {    
+                $param_string .= " ( (idageunits = :idageunits AND (idage between :idage1 AND :idage2) )".
+                    " OR (idageunits = :alt_idageunits AND (idage between :alt_idage1 AND :alt_idage2)))";
+
             $params["idage1"] = $case_data['idage1'];
             $params["idage2"] = $case_data['idage2'];
+            $params["idageunits"] = $case_data['idageunits'];
+            $params["alt_idage1"] = $alt_idage1;
+            $params["alt_idage2"] = $alt_idage2;
+            $params['alt_idageunits'] = $alt_ageunits;
+            }
         }
         
         // Stature
         if (($case_data['idstature1'] != null && $case_data['idstature1'] != "") &&
                 ($case_data['idstature2'] != null && $case_data['idstature2'] != "")) {
+
+            if($case_data['idstatureunits'] == 'in') {
+                $alt_idstatureunits = "cm";
+                $alt_idstature1 = $case_data['idstature1'] * 2.54;
+                $alt_idstature2 = $case_data['idstature2'] * 2.54;
+            } else {
+                $alt_statureunits = "in";
+                $alt_idstature1 = $case_data['idstature1'] / 2.54;
+                $alt_idstature2 = $case_data['idstature2'] / 2.54;
+            }
+            
             
             if($param_string != "") {
                 $param_string .= $conjunction;
             }
-            $param_string .= " ( idstature between :idstature1 AND :idstature2 )";
+            $param_string .= " ( (idstatureunits = :idstatureunits AND (idstature between :idstature1 AND :idstature2) )".
+                    " OR (idstatureunits = :alt_idstatureunits AND (idstature between :alt_idstature1 AND :alt_idstature2)))";
             $params["idstature1"] = $case_data['idstature1'];
             $params["idstature2"] = $case_data['idstature2'];
+            $params["idstatureunits"] = $case_data['idstatureunits'];
+            $params["alt_idstature1"] = $alt_idstature1;
+            $params["alt_idstature2"] = $alt_idstature2;
+            $params["alt_idstatureunits"] = $alt_idstatureunits;
         }
         
         // Submit date
@@ -1064,9 +1092,7 @@ public function submit_case($submitstatus) {
                 $race_string .= "( idrace".$name."=1 )";
             }
 
-            
             $param_string .= "(".$race_string.")";
-            $param_string .= $conjunction;
         }
         
         $est_string = "";
@@ -1139,8 +1165,11 @@ public function submit_case($submitstatus) {
                     }
                     $tmp_str .= "(methodid = $method)";
                 }
-                $param_string .= " id in (SELECT caseid FROM `tier2data` where ($tmp_str) ".
-                        " group by caseid having count( caseid)=$num_methods and caseid not in (select id from cases where id in (SELECT caseid FROM `tier2data` group by caseid having (count(methodid) > count(distinct methodid)))))";
+                if($param_string != "") {
+                    $param_string .= $conjunction;
+                }
+                $param_string .= "( id in (SELECT caseid FROM `tier2data` where ($tmp_str) ".
+                        " group by caseid having count( caseid)=$num_methods and caseid not in (select id from cases where id in (SELECT caseid FROM `tier2data` group by caseid having (count(methodid) > count(distinct methodid))))))";
             }
         }
         

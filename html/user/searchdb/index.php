@@ -43,8 +43,10 @@ require_once('../../include/header_user.php');
               "idsex"=>$_GET['sexid'],
               "idage1"=>$_GET['ageid1'],
               "idage2"=>$_GET['ageid2'],
-              "statureid1"=>$_GET['statureid1'],
-              "statureid2"=>$_GET['statureid2'],
+              "idageunits"=>$_GET['ageidunits'],
+              "idstature1"=>$_GET['statureid1'],
+              "idstature2"=>$_GET['statureid2'],
+              "idstatureunits"=>$_GET['statureunits'],
               "race"=>$race_array,
               "est_sex"=>$_GET['est_sex'],
               "est_age"=>$_GET['est_age'],
@@ -291,7 +293,11 @@ echo <<<_END
       </select>
     
      <br><label class="label" for="statureid1">Range of Identified Statures</label><input id="statureid1" type="text" name="statureid1" size="5" maxlength="8" value=""/>&nbsp; to &nbsp;
-    <input id="statureid2" type="text" name="statureid2" size="5" maxlength="8" value=""/>  <label>inches</label>
+    <input id="statureid2" type="text" name="statureid2" size="5" maxlength="8" value=""/> 
+        <select name="statureunits">
+      <option value="in">inches</option>
+      <option value="cm">cm</option>
+      </select>
       
         <br><label class="label" for="idrace">Identified Races/Ethnicities</label>
       <input type="checkbox" name="race[]" value="as" id="raceAs"/>Asian/Pacific Islander
