@@ -49,10 +49,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
 	
 	if (empty($_POST['caseyear'])) {
-		$errors[] = 'You must enter a case year to save.';
-	} 
-    else {
-        $caseyear = trim($_POST['caseyear']);
+            $errors[] = 'You must enter a case year to save.';
+	} else if(strlen("".$_POST['caseyear']) != 4) {
+            $errors[] = 'Please enter a 4-digit case year.';
+        }
+        else {
+            $caseyear = trim($_POST['caseyear']);
 	}
 	
     
@@ -67,12 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	
     // Check for a FA sex
     if (empty($_POST['fasex'])) {
-		$fasex=NULL;
-	} 
+        $fasex=NULL;
+    } 
     else {
         
-                $fasex = trim($_POST['fasex']);
-	}
+         $fasex = trim($_POST['fasex']);
+    }
 	
 	
     
@@ -538,7 +540,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     
   <fieldset class="caseinfobox"><legend class="boldlegend">General Case Information</legend>
-        <label class="label" for="caseyear">Case Year*</label><input id="caseyear" type="text" name="caseyear" size="5" maxlength="4" value="<?php if (isset($_POST['caseyear'])) echo $_POST['caseyear']; ?>"/><strong class="outsidetext">* indicates required field</strong>
+        <label class="label" for="caseyear">Case Year (YYYY)*</label><input id="caseyear" type="text" name="caseyear" size="5" maxlength="4" value="<?php if (isset($_POST['caseyear'])) echo $_POST['caseyear']; ?>"/><strong class="outsidetext">* indicates required field</strong>
   <br/>
   <label class="label" for="casenumber">Case Number*</label><input id="casenumber" type="text" name="casenumber" size="30" maxlength="30" value="<?php if (isset($_POST['casenumber'])) echo $_POST['casenumber']; ?>"/>
   <br />
