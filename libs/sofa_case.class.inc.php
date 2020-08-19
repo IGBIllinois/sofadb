@@ -1036,7 +1036,7 @@ public function submit_case($submitstatus) {
                 $alt_idstature1 = $case_data['idstature1'] * 2.54;
                 $alt_idstature2 = $case_data['idstature2'] * 2.54;
             } else {
-                $alt_statureunits = "in";
+                $alt_idstatureunits = "in";
                 $alt_idstature1 = $case_data['idstature1'] / 2.54;
                 $alt_idstature2 = $case_data['idstature2'] / 2.54;
             }
@@ -1656,7 +1656,7 @@ public function submit_case($submitstatus) {
     
     private function load_case($id) {
         
-        $query = "SELECT * from cases where id = :id";
+        $query = "SELECT * from cases where id=  :id";
 
         $mresult = $this->db->get_query_result($query, array("id"=>$id));
         if(!$mresult) {
