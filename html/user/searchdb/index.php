@@ -267,13 +267,13 @@ echo <<<_END
 <form action="index.php" method="get" id="search">
 
 
-<fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
+<fieldset class="enclosefieldset">
 
 
 
 
 	<br>
-   <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Search By Identification Information</legend>
+   <fieldset class="caseinfobox"><legend class="boldlegend">Search By Identification Information</legend>
     
     <br><label class="label" for="sexid">Identified Sex</label>
 	<select name="sexid" id="sexid">
@@ -315,11 +315,15 @@ echo <<<_END
 	<option value="2">At Least One of Selected Races/Ethnicities</option>
       </select> 
         
+      <span class="tooltip"><img class="img-bottom" src="../../images/tooltip.png">
+        <span class="tooltiptext">If you've selected multiple boxes for "Identified Races/Ethnicities," then use the dropdown menu here to clarify your search. For example, if you selected Asian and Black, clicking "All Selected Races/Ethnicities" will only return cases where the individual identified as black AND Asian. </span>
+      </span>
+        
         <BR><BR>
 
 	   </fieldset>  
 	<br>
-     <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Search By Forensic Anthropology Report Information</legend>
+     <fieldset class="caseinfobox"><legend class="boldlegend">Search By Forensic Anthropology Report Information</legend>
 	 <br><label class="label" for="cyear">Case Year</label><input id="cyear" type="text" name="cyear" size="5" maxlength="4" value="$fyear"> <select name="yearrange" id="yearrange">
 	<option value="1">On or After</option>
 	<option value="2">On or Before</option>
@@ -336,11 +340,14 @@ echo <<<_END
 	<option value="1">All Selected Estimations</option>
 	<option value="2">At Least One of Selected Estimations</option>
       </select> 
+        <span class="tooltip"><img class="img-bottom" src="../../images/tooltip.png">
+            <span class="tooltiptext">If you've selected multiple boxes for "Practitioner Estimated", then use the dropdown menu here to clarify your search. For example, if you selected Sex and Stature, clicking "All Selected Estimations" will only return cases where both sex AND stature were estimated. </span>
+        </span>
         <BR><BR>
      </fieldset>  
 
         
-        <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Search By Method</legend>
+        <fieldset class="caseinfobox"><legend class="boldlegend">Search By Method</legend>
 _END;
     $sx_methods = method::get_methods_by_type($db, METHOD_DATA_SEX_ID);
     $list = array();
@@ -396,10 +403,16 @@ echo <<<_END
      <br><label class="label" for="searchtype">Search for cases that contain:</label>
   <select name="method_conj">
 	<option value="all">All Selected Methods</option>
-	<option value="any">At Least One of Selected Methods</option></select> <br ><br>
+	<option value="any">At Least One of Selected Methods</option></select> 
+    
+        <span class="tooltip"><img class="img-bottom" src="../../images/tooltip.png">
+            <span class="tooltiptext">If you've selected multiple methods, then use the dropdown menu here to clarify your search. For example, if you selected Fordisc and Brooks & Suchey 1990, clicking "All Selected Methods" will only return cases where both methods were used.</span>
+        </span>   
+    
+        <br ><br>
 
      </fieldset>  
-        
+     
     
 <br> 
    <div id="search_errorloc" class="errorlocation">
@@ -407,12 +420,18 @@ echo <<<_END
    
     </fieldset>
 	<br >
-	<fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
-	<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Search Options</legend>
+	<fieldset class="enclosefieldset">
+	<fieldset class="caseinfobox"><legend class="boldlegend">Search Options</legend>
  <br><label class="label" for="searchtype">List Cases That Meet:</label>
   <select name="andor">
 	<option value="1">All Selected Criteria</option>
-	<option value="2">At Least One of Selected Criteria</option></select> <br ><br>
+	<option value="2">At Least One of Selected Criteria</option></select> 
+    
+    <span class="tooltip"><img class="img-bottom" src="../../images/tooltip.png">
+        <span class="tooltiptext"> If you've selected or entered multiple criteria for your above search query (e.g. female, white, black, case year 2009+, Fordisc, Brooks and Suchey 1990), you will need to specify the conditions of that search here.  Correctly indicating your specifications will improve the accuracy of your search. </span>
+     </span> 
+    
+    <br ><br>
 <label class="label" for="regsubmit">Click here to search</label>
    <input name="regsubmit" id="regsubmit" type="submit" class="showybutton" value="Search"/><br />
    
@@ -428,8 +447,8 @@ echo <<<_END
 
 <form action="confirm.php" method="post" id="export">
     
-<fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
-	<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Export Database</legend>
+<fieldset class="enclosefieldset">
+	<fieldset class="caseinfobox"><legend class="boldlegend">Export Database</legend>
 <br>
     If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Downloaded_data_sheet' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.
     <BR><BR>
@@ -450,8 +469,8 @@ echo("<input type=hidden name='mId' value='$memberid'>");
 
 echo <<<_END
 
-<fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
-	<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Export My Cases</legend>
+<fieldset class="enclosefieldset">
+	<fieldset class="caseinfobox"><legend class="boldlegend">Export My Cases</legend>
 <br>
 If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.
 <BR><BR>
