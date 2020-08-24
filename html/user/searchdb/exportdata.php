@@ -17,7 +17,7 @@
               isset($_POST['exportall'])
              )
 	  {
-
+              
           $race_array = array();
           foreach($_GET['race'] as $race=>$value) {
               $race_array[$value] = $race;
@@ -32,8 +32,10 @@
               "idsex"=>$_GET['sexid'],
               "idage1"=>$_GET['ageid1'],
               "idage2"=>$_GET['ageid2'],
-              "statureid1"=>$_GET['statureid1'],
-              "statureid2"=>$_GET['statureid2'],
+              "idageunits"=>$_GET['ageidunits'],
+              "idstature1"=>$_GET['statureid1'],
+              "idstature2"=>$_GET['statureid2'],
+              "idstatureunits"=>$_GET['statureunits'],
               "race"=>$race_array,
               "est_sex"=>$_GET['est_sex'],
               "est_age"=>$_GET['est_age'],

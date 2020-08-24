@@ -1186,6 +1186,9 @@ public function submit_case($submitstatus) {
         
         $query .= " ORDER BY id ";
 
+        //echo("serch query = $query<BR>");
+        //print_r($params);
+        
         $result = $db->get_query_result($query, $params);
         $results = array();
         
@@ -1207,20 +1210,19 @@ public function submit_case($submitstatus) {
      * @param bool $mine True if this is a report for the given user's cases (show case number and agency)
      */
     public static function write_report($db, $case_list, $username=null, $email=null, $fdb=0, $mine=0) {
-        //header('Content-Type: text/csv; charset=utf-8');
-        // header("Content-type: application/octet-stream");
-        //header('Content-Disposition: attachment; filename='.$filename);
         
+       header('Content-Type: text/csv; charset=utf-8');
          ob_end_clean();
         $today = date("m_d_Y_H_i_s");
         $filename='SOFADBExport_'.$today.".csv";
-        $zip_filename='SOFADBExport_'.$today.".zip";
         if($fdb) {
             $filename = 'SOFADB_FDB_Export_'.$today.".csv";
-            $zip_filename = 'SOFADB_FDB_Export_'.$today.".zip";
         }
+        
+        header("Content-type: application/octet-stream");
+        header('Content-Disposition: attachment; filename='.$filename);
 
-
+        
        // make header rows for data
        if($fdb) {
        $headerrow=array('Case ID', 
@@ -1415,10 +1417,9 @@ public function submit_case($submitstatus) {
                                     "email"=>$email);
             $db->get_insert_result($download_query, $download_params);
         }
-       // create a file pointer connected to the output stream
-        //$output = fopen('php://output', 'w');
-        //$output = fopen('php://temp', 'w');
-        $output = fopen('php://temp', 'w');
+        
+        // create a file pointer connected to the output stream
+        $output = fopen('php://output', 'w');
         
         // output the column headings
         fputcsv($output, $pre_headerrow);
@@ -1646,42 +1647,7 @@ public function submit_case($submitstatus) {
 
         }
         
-        
-        
-    //$str = $output->file_get_contents();
-    //$zip_file->add_from_string($filename, $str);
-    //$zip_file->addFile("test.csv", "test.csv");
-        //echo("A");
-        
-        try {
-            rewind($output);
-            $zip = new ZipArchive;
-            $zip_file = $zip->open($zip_filename, ZipArchive::CREATE);
-            $zip_file->addFile("../docs/FADMA_FINAL combined CLA_ToS_Privacy Notice.docx");
-        //echo(stream_get_contents($output));
-        //echo("B1");
-            //$zip_file->addFromString($filename, stream_get_contents($output));
-                 header('Content-Type: application/zip');
-     header('Content-Disposition: attachment; filename="'.$zip_filename.'"');
-     header('Content-Length: ' . filesize($zip_filename));
-
-     $zip_output = fopen('php://output', 'w');
-     fwrite($zip_output, $zip_filename);
-        } catch(Exception $e) {
-            
-            echo($e->getTraceAsString());
-            echo("B2");
-        }
-        //echo("C");
-
-     //flush();
-     //readfile($zip_filename);
-     //fclose($output);
-     //$zip->close();
-     // delete file
-     //unlink($zip_filename);
-
-        
+        fclose($output);
 
     }
     
