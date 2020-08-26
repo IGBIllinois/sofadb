@@ -7,7 +7,7 @@ require_once('../../include/header_user.php');
 
 <BR/>
   <h1 class="cntr">Search Cases</h1>
-  <center>(<a target='blank' href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Search_cases'>Search tutorial</a>)</center><BR>
+  <center>(<a target='blank' href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Downloaded_data_sheet'>Search tutorial</a>)</center><BR>
 
  <div id="searchregion"> 
 
@@ -134,11 +134,11 @@ echo '<p>';
 $current_page = ($start/$pagerows) + 1;
 //If the page is not the first page then create a Previous link
 if ($current_page != 1) {
-echo '<a href="index.php?s=' . ($start - $pagerows) . '&p=' . $pages . '">Previous</a> ';
+echo '<a href="index.php?s=' . ($start - $pagerows) . '&p=' . $pages . "&" . $_SERVER['QUERY_STRING']. '">Previous</a> ';
 }
 //Create a Next link
 if ($current_page != $pages) {
-echo '<a href="index.php?s=' . ($start + $pagerows) . '&p=' . $pages . '">Next</a> ';
+echo '<a href="index.php?s=' . ($start + $pagerows) . '&p=' . $pages . "&" . $_SERVER['QUERY_STRING'].'">Next</a> ';
 echo '&nbsp; &nbsp; &nbsp; &nbsp;';
 }
 echo '</p>';
@@ -219,11 +219,11 @@ echo '<p>';
 $current_page = ($start/$pagerows) + 1;
 //If the page is not the first page then create a Previous link
 if ($current_page != 1) {
-echo '<a href="index.php?s=' . ($start - $pagerows) . '&p=' . $pages . '">Previous Page</a> ';
+echo '<a href="index.php?s=' . ($start - $pagerows) . '&p=' . $pages . "&" . $_SERVER['QUERY_STRING']. '">Previous Page</a> ';
 }
 //Create a Next link
 if ($current_page != $pages) {
-echo '<a href="index.php?s=' . ($start + $pagerows) . '&p=' . $pages . '">Next Page</a> ';
+echo '<a href="index.php?s=' . ($start + $pagerows) . '&p=' . $pages . "&" . $_SERVER['QUERY_STRING']. '">Next Page</a> ';
 echo '&nbsp; &nbsp; &nbsp; &nbsp;';
 }
 echo '</p>';
