@@ -32,7 +32,7 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>SOFA Forensic Anthropology Case Database (FADAMA)</title>
+<title>Forensic Anthropology Case Database (FADAMA)</title>
 
         
 <!-- JS -->
