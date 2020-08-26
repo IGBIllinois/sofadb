@@ -1,6 +1,8 @@
 <?php
 
  require_once('../../include/session.inc.php') ;
+ set_time_limit ( 0 );
+ 
   if (isset($_POST['exportMy'])) {
             $case_data = array("memberId"=>$_POST['mId']);
 
