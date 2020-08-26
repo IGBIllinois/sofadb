@@ -19,7 +19,7 @@ require_once("include/main.inc.php");
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Register</title>
+<title>Forensic Anthropology Case Database (FADAMA) - Register</title>
 
 <!-- JS -->
 	

@@ -1,5 +1,5 @@
 <?php 
-$title = "Edit Case Methods";
+$title = "Forensic Anthropology Case Database (FADAMA) - Edit Case Methods";
 require_once('../../include/header_user.php');
 require_once('../../include/session.inc.php') ;
 

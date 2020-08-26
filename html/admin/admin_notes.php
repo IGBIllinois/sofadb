@@ -1,5 +1,5 @@
 <?php
-$title = "Admin Notes";
+$title = " Forensic Anthropology Case Database (FADAMA) - Admin Notes";
 require_once "../include/header_admin.php";
 
 if(isset($_POST['addMessageSubmit'])) {

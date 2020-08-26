@@ -16,7 +16,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>FAQ</title>
+<title>Forensic Anthropology Case Database (FADAMA) - FAQ</title>
 <!-- CSS -->
  <link href="css/style.css" rel="stylesheet" type="text/css" />
  <link rel="stylesheet" type="text/css" href="/css/jquery.multiselect.css" />

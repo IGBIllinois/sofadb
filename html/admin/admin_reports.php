@@ -1,5 +1,5 @@
 <?php
-$title = "Export FDB";
+$title = "Forensic Anthropology Case Database (FADAMA) - Reports";
 require_once "../include/header_admin.php";
 
 

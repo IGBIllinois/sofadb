@@ -1,5 +1,5 @@
 <?php
-$title = "Search";
+$title = "Forensic Anthropology Case Database (FADAMA) - Search";
 require_once('../../include/session.inc.php') ;
 require_once('../../include/header_user.php');
  

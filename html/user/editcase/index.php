@@ -17,7 +17,7 @@ if(isset($_GET['func']) && $_GET['func'] == "drop_1"  ) {
     exit();
     
 }
-$title = "Edit Case";
+$title = "Forensic Anthropology Case Database (FADAMA) - Edit Case";
 require_once('../../include/header_user.php');
 require_once('../../include/session.inc.php') ;
 
@@ -25,9 +25,6 @@ require_once('../../include/session.inc.php') ;
 
  
 ?>
-
-<title>Edit Case Information</title>
-
 
   <h1 class="cntr">Edit Case Information</h1>
   

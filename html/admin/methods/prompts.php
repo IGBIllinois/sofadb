@@ -1,5 +1,5 @@
 <?php
-$title = "Prompts";
+$title = "Forensic Anthropology Case Database (FADAMA) - Prompts";
 require_once "../../include/header_admin.php";
 
 

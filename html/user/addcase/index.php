@@ -1,6 +1,6 @@
 <?php 
 $addcase = 1;
-$title = "Add Case";
+$title = "Forensic Anthropology Case Database (FADAMA) -  Add Case";
 require('../../include/header_user.php') ;
  
  if(!isset($_SESSION['num_methods']))
@@ -11,7 +11,7 @@ require('../../include/header_user.php') ;
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Add Case</title>
+
 
 </head>
 

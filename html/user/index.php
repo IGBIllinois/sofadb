@@ -1,9 +1,9 @@
 <?php 
-$title = "My Cases";
+$title = "Forensic Anthropology Case Database (FADAMA) -  My Cases";
 require_once('../include/header_user.php') ;
 
 ?>
-  <title>My Cases</title>  
+
   <div id="caseregion"> <h1 class="cntr">My Cases</h1>
   <?php 
 // This script retrieves all the records from the users table.

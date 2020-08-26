@@ -50,7 +50,7 @@ if(!$member->get_agree_to_terms()) {
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <?php
     if(!isset($title)) {
-        $title = "My Account";
+        $title = "Forensic Anthropology Case Database (FADAMA) - My Account";
     }
     ?>
 <title><?php echo $title ?></title>

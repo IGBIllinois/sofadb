@@ -1,5 +1,5 @@
 <?php
-$title = "Email";
+$title = "Forensic Anthropology Case Database (FADAMA) - Email";
 require_once "../include/header_admin.php";
 
 

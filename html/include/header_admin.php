@@ -50,7 +50,7 @@ elseif($_SESSION['loggedin']==1)
 <html >
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Admin</title>
+<title>Forensic Anthropology Case Database (FADAMA) Admin</title>
 <link href="<?php echo($root_url) ?>/css/style.css" rel="stylesheet" type="text/css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
