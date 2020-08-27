@@ -52,6 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors[] = 'You must enter a case year to save.';
 	} else if(strlen("".$_POST['caseyear']) != 4) {
             $errors[] = 'Please enter a 4-digit case year.';
+        } else if($_POST['caseyear'] > date('Y')) {
+            $errors[] = 'You cannot add a case year for a future date.';
         }
         else {
             $caseyear = trim($_POST['caseyear']);
