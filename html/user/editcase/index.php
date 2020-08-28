@@ -260,7 +260,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	// Check for a casename:
 	if (empty($_POST['caseyear'])) {
             $errors[] = 'You must enter a case year to save.';
-	}  else if(strlen("".$_POST['caseyear']) != 4) {
+	} else if(!is_numeric($_POST['caseyear'])) {
+            $errors[] = 'Case year must be numeric.';
+        } else if(strlen("".$_POST['caseyear']) != 4) {
             $errors[] = 'Please enter a 4-digit case year.';
         } else if($_POST['caseyear'] > date('Y')) {
             $errors[] = 'Cannot add a case year for a future date.';
