@@ -1211,17 +1211,24 @@ public function submit_case($submitstatus) {
      */
     public static function write_report($db, $case_list, $username=null, $email=null, $fdb=0, $mine=0) {
         
-       header('Content-Type: text/csv; charset=utf-8');
+       //header('Content-Type: text/csv; charset=utf-8');
          ob_end_clean();
         $today = date("m_d_Y_H_i_s");
         $filename='SOFADBExport_'.$today.".csv";
+        $zip_filename='SOFADBExport_'.$today.".zip";
         if($fdb) {
             $filename = 'SOFADB_FDB_Export_'.$today.".csv";
+            $zip_filename = 'SOFADB_FDB_Export_'.$today.".zip";
         }
         
-        header("Content-type: application/octet-stream");
-        header('Content-Disposition: attachment; filename='.$filename);
+        //header("Content-type: application/octet-stream");
+        //header('Content-Disposition: attachment; filename='.$filename);
 
+        $zip_filepath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $zip_filename;
+        $zip = new ZipArchive();
+        if ($zip->open($zip_filepath, ZIPARCHIVE::CREATE )!==TRUE) {
+            exit("cannot open <$zip_filename>\n");
+        }
         
        // make header rows for data
        if($fdb) {
@@ -1296,9 +1303,11 @@ public function submit_case($submitstatus) {
             'Identified Stature',
             'Identified Stature Notes',
             'Information Source',
-            'Case Notes');
+            'Case Notes',
+            'Background Case Knowledge');
         
         $headerrow2 = array('',
+            '',
             '',
             '',
             '',
@@ -1419,7 +1428,8 @@ public function submit_case($submitstatus) {
         }
         
         // create a file pointer connected to the output stream
-        $output = fopen('php://output', 'w');
+        //$output = fopen('php://output', 'w');
+        $output = fopen('php://temp', 'w');
         
         // output the column headings
         fputcsv($output, $pre_headerrow);
@@ -1487,6 +1497,44 @@ public function submit_case($submitstatus) {
             $curr_row[] = $curr_case->get_idstature_notes();
             $curr_row[] = $curr_case->get_idsource();
             $curr_row[] = $curr_case->get_casenotes();
+            
+            $background_knowledge = "";
+            
+            if($curr_case->get_known_none()== 1) {
+                $background_knowledge .= "No biological profile information was known";
+            }
+            if($curr_case->get_known_sex() == 1) {
+                if($background_knowledge != "") {
+                    $background_knowledge .= ", ";
+                }
+                $background_knowledge .= "Sex was known";
+            }
+            if($curr_case->get_known_age()== 1) {
+                if($background_knowledge != "") {
+                    $background_knowledge .= ", ";
+                }
+                $background_knowledge .= "Age was known";
+            }
+            if($curr_case->get_known_ancestry()== 1) {
+                if($background_knowledge != "") {
+                    $background_knowledge .= ", ";
+                }
+                $background_knowledge .= "Ancestry/Group Affinity was known";
+            }
+            if($curr_case->get_known_stature()== 1) {
+                if($background_knowledge != "") {
+                    $background_knowledge .= ", ";
+                }
+                $background_knowledge .= "Stature was known";
+            }
+            if($curr_case->get_known_unable_to_determine()== 1) {
+                if($background_knowledge != "") {
+                    $background_knowledge .= ", ";
+                }
+                $background_knowledge .= "Unable to determine";
+            }
+            
+            $curr_row[] = $background_knowledge;
             
             $case_methods = $curr_case->get_case_methods();
             $case_method_ids = array();
@@ -1646,8 +1694,24 @@ public function submit_case($submitstatus) {
             fputcsv($output, $curr_row);
 
         }
-        
+        rewind($output);
+        $data = stream_get_contents($output);
         fclose($output);
+        try {
+            $zip->addFromString($filename, $data);
+            $zip->addFile("../../docs/Report_Info.docx", "Report_Info.docx");
+
+            $zip->close();
+
+            header("Content-type: application/zip"); 
+            header("Content-Disposition: attachment; filename=$zip_filename"); 
+            header("Pragma: no-cache"); 
+            header("Expires: 0"); 
+            readfile($zip_filepath);
+            unlink($zip_filepath);
+        } catch(Exception $e) {
+            echo("Error:".$e->getTraceAsString());
+        }
 
     }
     
