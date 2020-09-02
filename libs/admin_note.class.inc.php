@@ -1,12 +1,21 @@
 <?php
-
+/** Class for admins to add notes regarding document changes, etc.
+ * 
+ */
 class admin_note {
     
     private $db;
     
+    /** ID of the note */
     private $id;
+    
+    /** ID of the user who made the change */
     private $user_id;
+    
+    /** Text of the message */
     private $message;
+    
+    /* Date the message was added */
     private $date_added;
     
     public function __construct($db, $id = null) {
@@ -36,6 +45,10 @@ class admin_note {
         return $this->date_added;
     }
     
+    /** Format the message, with user name and date
+     * 
+     * @return string The formatted message
+     */
     public function format_message() {
         $member = new member($this->db, $this->user_id);
         $member_name = $member->get_firstname(). " ".$member->get_lastname();
@@ -47,6 +60,12 @@ class admin_note {
     
     // Static functions
     
+    /** Adds a new admin note
+     * 
+     * @param db $db The database object
+     * @param int $user_id ID of the user adding the message
+     * @param string $message Text of the message
+     */
     public static function add_admin_note($db, $user_id, $message) {
         $query = "INSERT INTO admin_notes (user_id, message, date_added) VALUES (:user_id, :message, NOW())";
         $params = array("user_id"=>$user_id,
@@ -64,6 +83,11 @@ class admin_note {
         }
     }
     
+    /** Deletes an admin note
+     * 
+     * @param db $db The database object
+     * @param int $id ID of the message to delete
+     */
     public static function delete_admin_note($db, $id) {
         $query = "DELETE FROM admin_notes where id=:id";
         $params = array("id"=>$id);
@@ -72,6 +96,12 @@ class admin_note {
         
     }
     
+    /** Edits an admin note
+     * 
+     * @param db $db The database object
+     * @param int $id ID of the note to edit
+     * @param string $new_message Text of the new message
+     */
     public static function edit_admin_note($db, $id, $new_message) {
         $query = "UPDATE admin_notes set message = :message where id=:id";
         $params = array("message"=>$message,
@@ -80,6 +110,11 @@ class admin_note {
         $db->get_update_result($query, $params);
     }
     
+    /** Gets an array of all the admin notes
+     * 
+     * @param db $db The database object
+     * @return \admin_note Array of all the admin notes in the database, newest first
+     */
     public static function get_all_admin_notes($db) {
         $query = "SELECT id from admin_notes ORDER BY id DESC";
         $result = $db->get_query_result($query);

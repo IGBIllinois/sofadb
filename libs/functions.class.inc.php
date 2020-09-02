@@ -11,8 +11,10 @@ class functions {
 
     /** Creates a list of methods based on the method type selected (Age, Sex, etc.)
      * 
-     * @global type $db The database object
-     * @param type $drop_var The id of the selected type
+     * @global db $db The database object
+     * @param int $drop_var The id of the selected type (Age, Sex, etc)
+     * 
+     * Outputs Javascript and HTML select box to show methods of the selected method type
      */
     public static function drop_1($drop_var)
     {  
@@ -115,11 +117,12 @@ class functions {
     }
     
     /**
+     * Creates HTML text for a select box
      * 
      * @param type $options Array of $id->value elements ($id is the id of the method_info_option object, $value is the text displayed)
      * @param type $selected Array of selected ids
      * @param type $multiple True if multiselect, else false.
-     * @return string
+     * @return HTML text for the select input box
      */
     public static function draw_select($options, $selected, $multiple, $default_option = null) {
 
@@ -137,12 +140,13 @@ class functions {
     
     /** Creates a dropdown list of checkboxes
      * 
-     * @param type $elementId Label for checkbox list
-     * @param type $elementNumber
-     * @param type $elementId2
-     * @param type $list
-     * @param type $checked_list
-     * @return string
+     * @param int $elementId Label for checkbox list
+     * @param string $elementName Name of the checkbox element (no longer used)
+     * @param array $list Labels for each of the checkbox options
+     * @param array $checked_list Array of true/false options telling which options are selected
+     * @param string $select_name HTML attribute name for the select option. Defaults to 'select_option'.
+     * $param string $alt_text Additional text to display after the select box. Usually used to denote if a checkbox already has selected items. Defaults to null. 
+     * @return HTML for the checkbox dropdown option
      */
        public static function checkbox_dropdown($elementId, $elementName, $list, $checked_list = array(), $select_name='select_option', $alt_text = null) {
        
@@ -185,10 +189,9 @@ class functions {
    /** Updates the password_reset database with unique data so a user can safely change their password
     * 
     * @param db $db The database object
-    * @param type $email The user's email/username
-    * @param type $selector
-    * @param type $validator
-    * @param type $expires
+    * @param string $email The user's email/username
+    * @param string $selector Generated ID for password_reset table
+    * @param string $validator URL Validator. Will be hashed for security
     * @return type
     */
    public static function update_password_request($db, $email, $selector, $validator) {

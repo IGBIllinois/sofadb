@@ -1,8 +1,7 @@
 <?php
-$title = "Confirm";
+$title = "Forensic Anthropology Case Database (FADAMA) - Confirm";
 
 require_once('../../include/header_user.php');
-
 $errors = 0;
 $error_messages = array();
 echo("<div id='searchregion'>");

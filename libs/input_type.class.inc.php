@@ -1,9 +1,7 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Class for input types for method_info objects (
  */
 
 class input_type {
@@ -42,6 +40,12 @@ class input_type {
         
     }
     
+    /**
+     * 
+     * @param db $db The database object
+     * @param text $name Name of the new type
+     * @return \input_type Input type object, or null if none exists
+     */
     public static function get_input_type_by_name($db, $name) {
         
         $query = "SELECT id from input_types where input_type=:name";

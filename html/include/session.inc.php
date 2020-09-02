@@ -10,14 +10,14 @@ if(isset($_SESSION['loggedin'])) {
         echo '<p>Your account is not activated yet. <a href="contact/index.php">Contact</a> the administrator if you registered more than 48 hours ago.</p>';
         $_SESSION=array();
         session_destroy();
-        header('Location: ' .  ROOT_URL);
+        header('Location: ' .  $_SERVER['CONTEXT_PREFIX']);
         exit();
     }
 
   } else {
     $_SESSION=array();
     session_destroy();
-    header('Location: ' . ROOT_URL);
+    header('Location: ' . $_SERVER['CONTEXT_PREFIX']);
     exit();
 
   }
