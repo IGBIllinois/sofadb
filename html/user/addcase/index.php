@@ -616,8 +616,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       
       <label class="label" for="idsex">Sex</label>
 
-        <input type="radio" name="idsex" value="Female" <?php if (isset($_POST['idsex']) AND ($_POST['idsex'] == 'Female')) echo ' checked'; ?>> Male
-        <input type="radio" name="idsex" value="Male" <?php if (isset($_POST['idsex']) AND ($_POST['idsex'] == 'Male')) echo ' checked'; ?>> Female
+        <input type="radio" name="idsex" value="Female" <?php if (isset($_POST['idsex']) AND ($_POST['idsex'] == 'Female')) echo ' checked'; ?>> Female
+        <input type="radio" name="idsex" value="Male" <?php if (isset($_POST['idsex']) AND ($_POST['idsex'] == 'Male')) echo ' checked'; ?>> Male
         <input type="radio" name="idsex" value="Other" <?php if (isset($_POST['idsex']) AND ($_POST['idsex'] != 'Male') AND ($_POST['idsex'] != 'Female')) { echo " checked ";}?>> Other: 
         <input id="idsexother" name="idsexother" type="text" 
           <?php if (isset($_POST['idsex']) AND ($_POST['idsex'] != 'Male') AND ($_POST['idsex'] != 'Female')) { echo " value='".$_POST['idsex']."' ";}?>/>
