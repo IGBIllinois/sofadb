@@ -5,3 +5,19 @@ INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(4, 'FORMULA_OUTCOME
 INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(5, 'MEASUREMENT_PROMPT', 'Enter all measurements used below.');
 INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(6, 'PHASE_REF_PROMPT', 'Select corresponding phase/stage and reference sample used.');
 INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(7, 'PHASE_PROMPT', 'Select corresponding phase/stage used.');
+INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(12, '', 'Select any/all features and formulas used.');
+INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(13, '', 'Please enter an/all reference group, formulas, and measurements used. ');
+INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(14, '', 'Please enter any/all measurements, reference groups, and formulas used.');
+INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(15, 'text box prompt', 'Type any relevant notes on traits used ');
+INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(16, '', 'Please provide any relevant information on the methods used from this book. ');
+INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(17, '', 'Pleas enter any/all measurements and reference used.');
+INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(23, '', 'Select any/all outcomes for the method\'s feature.');
+INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(24, '', 'Please provide any/all measurements used for this method. If sectioning points were used, use the drop down menu to select the outcome of that analysis. If DFAs were used, locate the appropriate DFA (corresponding to the bone and reference sample) and select the outcome. ');
+INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(25, '', 'Please provide any/all measurements used for this method. If sectioning points were used, use the drop down menu to select the outcome of that analysis. If DFAs were used, locate the appropriate DFA and select the outcome.');
+INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(26, '', 'Provide the statistical outcome(s) for the type of analysis(es) performed. ');
+INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(27, '', 'Select any/all outcomes for this method.');
+INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(28, '', 'Select any/all outcomes for features used, and any/all equation(s) used in this method. ');
+INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(29, '', ' Select any/all outcomes for features used, and select the reference sample that the statistical analysis of sex for this case was based on. ');
+INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(30, '', 'In the boxes below, please select the details of the analysis. ');
+INSERT INTO `prompts` (`id`, `prompt_name`, `prompt`) VALUES(31, '', 'In the boxes below, please select or enter the details of the analysis.	');
+
