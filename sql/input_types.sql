@@ -9,3 +9,4 @@ INSERT INTO `input_types` (`id`, `input_type`) VALUES(8, 'category');
 INSERT INTO `input_types` (`id`, `input_type`) VALUES(9, 'estimated_outcome');
 INSERT INTO `input_types` (`id`, `input_type`) VALUES(13, 'two-column');
 INSERT INTO `input_types` (`id`, `input_type`) VALUES(14, 'checkbox_select');
+INSERT INTO `input_types` (`id`, `input_type`) VALUES(16, 'left_right');
