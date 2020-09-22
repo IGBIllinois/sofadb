@@ -1,2 +1,2 @@
-insert into members (uname, pwd, firstname, lastname, title, degree, degreeyear, fieldofstudy, aafsstatus, institution, yearsexperience, caseperyear, region, mailaddress, city, state, zip, permissionstatus, dateregistered ) VALUES 
-('YOUR_EMAIL_HERE', '', 'Test', 'User', '', '',0, '', 0, '', 0, 0,0,'', '', '' ,'', 2, NOW());
+insert into members (uname, pwd, firstname, lastname, title, degree, degreeyear, fieldofstudy, aafsstatus, institution, region, mailaddress, city, state, zip, permissionstatus, dateregistered ) VALUES 
+('YOUR_EMAIL_HERE', '', 'Test', 'User', '', '',0, '', 0, '', 0,'', '', '' ,'', 2, NOW());
