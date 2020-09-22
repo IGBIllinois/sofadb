@@ -19,7 +19,7 @@
 Alias /sofadb /var/www/sofadb/html
 ```
 
-3.  Create the database and a user/password on the mysql server which has select/insert/delete/update permissions on the cluster_accounting database.
+3.  Create the database and a user/password on the mysql server which has select/insert/delete/update permissions on the database.
 ```
 CREATE DATABASE sofadb;
 CREATE USER 'sofadb_admin'@'localhost' IDENTIFIED BY 'STRONG_PASSWORD';
@@ -32,12 +32,14 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON sofadb.* to 'sofadb_admin'@'localhost';
 
 
 5. Run the additional .sql files to populate the information databases
-```mysql -u root -p sofadb < sql/methods.sql
+```
+mysql -u root -p sofadb < sql/methods.sql
 mysql -u root -p sofadb < sql/method_infos.sql
 mysql -u root -p sofadb < sql/method_info_options.sql
 mysql -u root -p sofadb < sql/reference.sql
 mysql -u root -p sofadb < sql/method_info_reference_list.sql
 mysql -u root -p sofadb < sql/input_types.sql
+mysql -u root -p sofadb < sql/promtps.sql
 ```
 
 6.  Edit /conf/settings.inc.php to reflect your settings.
