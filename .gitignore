@@ -1,6 +1,8 @@
 /nbproject/private/
 /nbproject
 /conf/settings.inc.php
+/html/vendor/
+/vendor
 
 ._*
 .DS_Store
