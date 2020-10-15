@@ -98,6 +98,7 @@
 <BR>
     <ul class='ul-left' style='padding:revert'>
         <li><a href="#scope"><B>Goals, Scope and Impact</B></a></li>
+        <li><a href="#reflist"><B>Method Reference List</B></a></li>
         <li><a href="#tutorials"><B>Tutorials</B></a></li>
         <li><a href="#faq"><B>FAQ</B></a></li>
         <li><a href="#general"><B>General</B></a></li>
@@ -161,7 +162,7 @@ reflect those of the Department of Justice.
 <BR>
 <BR>
     
-    <center><h1 id=scope>Method Reference List</h1></center>
+    <center><h1 id=reflist>Method Reference List</h1></center>
 <a href='https://andicyim.github.io/FADAMA/Method_list/method-list' target='blank'>Click here</a> for a list of methods currently available in FADAMA. Please see individual method description for more details. This list will be updated as new methods are added to FADAMA. If you do not see the methods you use in casework listed, you are welcome to request method additions through the Contact Us page above.
 <BR>
 <BR>
