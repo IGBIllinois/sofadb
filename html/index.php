@@ -181,7 +181,7 @@ if(isset($_SESSION['loggedin'])){
 
 				<div id="password_inputmiddle">
 				
-					<input type="password" name="psword" id="url" value="Password" onclick="this.value = ''">
+					<input type="password" name="psword" id="url" value="" onclick="this.value = ''">
 					<img id="url_password" src="./images/passicon.png" alt="">
 				
 				</div>
