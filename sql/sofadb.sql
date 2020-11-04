@@ -114,7 +114,7 @@ CREATE TABLE `members` (
   `sponsor_affiliation` varchar(100) DEFAULT NULL,
   `agree_to_terms` tinyint(1) DEFAULT 0,
   `signature` varchar(100) DEFAULT NULL,
-  `signature_date` timestamp NOT NULL DEFAULT 0,
+  `signature_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
