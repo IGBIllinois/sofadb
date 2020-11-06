@@ -1,82 +1,11 @@
 <?php
 
-
-  if(isset($_SESSION['loggedin']))
-  {
-     require_once("include/session.inc.php"); 
-  } else {
-       session_start();
-  }
-    require_once("../conf/settings.inc.php");
+require_once("./include/header_general.php");
 
 ?>
-
-<!DOCTYPE html>
-<html>
-
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Forensic Anthropology Case Database (FADAMA) - FAQ</title>
-<!-- CSS -->
- <link href="css/style.css" rel="stylesheet" type="text/css" />
- <link rel="stylesheet" type="text/css" href="/css/jquery.multiselect.css" />
-
-<script type="text/javascript" src="vendor/components/jquery/jquery.js"></script>
-<script type="text/javascript" src="vendor/components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
-
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-<!-- // Load Javascipt -->
-</head>
-
-<body>
-<div id="top" class='header'>
-
-    <div class='header_logo'>
-            <img class='align_left' src="images/header.png">
-    </div>
-            <table style='float:right'><tr><td class='align_center' >
-              <a href="http://www.sofainc.org" target="_blank"><img  src="images/sofaLogo.png"></a>
-            </td></tr><tr><td class='align_center' >
-              <a href="https://illinois.edu" target="_blank"><img src="images/illinois.png"></a>
-            </td></tr><tr><td class='align_center' >
-              <a href="https://www.csufresno.edu" target="_blank"><img src="images/fresnostate.png"></a>
-            </td></tr></table>
-
-
-</div>
-
-<div id="hline">
-<hr size="3" />
-</div>
-
-<div id="navbar">
-  <ul>
-    
-<?php
-    if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1) {
-?>
-    <li><a href="index.php">My Cases</a></li>
-    <li><a href="user/searchdb/?search=1">Search</a></li>
-    <li><a href="faq.php">FAQ</a></li>
-    <li><a href="contact/">Contact Us</a></li>
-<?php
-
-    } else {
-?>
-    <li><a href="index.php">Home</a></li>
-<?php 
-    }
-?>
-  </ul>
-</div>
-
-<div id="hline">
-<hr size="3" />
-</div>
 
 <?php
-    if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1) {
+    if(isset($session) && $session->get_var('loggedin') == 1) {
 ?>
     
 <div id="navigation"></div>
