@@ -18,28 +18,32 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
 }
 
 try {
-    $member = new member($db, $_SESSION['id']);
-if(!$member->get_agree_to_terms()) {
-    header('Location: ' . '../terms_of_service.php?form=true');
-}
+    $member = new member($db, $session->get_var('id'));
+
+    if(!$member->get_agree_to_terms()) {
+
+        header('Location: ' . '../terms_of_service.php');
+
+    }
 } catch(Exception $e) {
     echo("ERROR: Cannot find terms of service page.");
 }
 
-  if($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==2)
-{}
-elseif($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==1)
-{
+if($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==2) {
+    
+}
+elseif($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==1) {
     // If they're a user, redirect to the user page.
     header('Location: ' . $root_url.'/user/index.php');
-exit();
-}
-elseif($_SESSION['loggedin']==1)
-{echo '<p>Your account is not activated yet. <a href="contact/index.php">Contact</a> the administrator if you registered more than 48 hours ago.</p>';
-    $_SESSION=array();
-    session_destroy();
+    exit();
+} elseif($session->get_var('loggedin')==1) {
+    echo '<p>Your account is not activated yet. <a href="contact/index.php">Contact</a> the administrator if you registered more than 48 hours ago.</p>';
+
+    $session->destroy_session();
     header('Location: ' .  $root_url);
     exit();
+} else {
+    
 }
 
 ?>

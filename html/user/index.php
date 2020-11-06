@@ -10,7 +10,7 @@ require_once('../include/header_user.php') ;
 
 //set the number of rows per display page
 $pagerows = PAGEROWS;
-$memberid=$_SESSION['id'];
+$memberid=$session->get_var('id');
 $member = new member($db, $memberid);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

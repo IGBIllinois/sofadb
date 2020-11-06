@@ -1,7 +1,8 @@
 <?php
 $title = "Forensic Anthropology Case Database (FADAMA) - Search";
-require_once('../../include/session.inc.php') ;
 require_once('../../include/header_user.php');
+require_once('../../include/session.inc.php') ;
+
  
 ?>
 
@@ -14,7 +15,7 @@ require_once('../../include/header_user.php');
 <div name="searchresults">
  <?php 
   
- $memberid=$_SESSION['id'];
+ $memberid=$session->get_var('id');
 
   $error=0;
   

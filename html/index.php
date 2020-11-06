@@ -1,4 +1,5 @@
 <?php
+
 if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
     $location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     header('HTTP/1.1 301 Moved Permanently');
@@ -8,17 +9,23 @@ if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
 
 require_once("../conf/settings.inc.php");
 require_once("include/main.inc.php");
-ob_start();
- session_start();
-  session_regenerate_id();
-  if(isset($_SESSION['loggedin']))
-  {
-  if($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==1)
-{header('Location: ' . './user/index.php');}
-elseif($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']=2){header('Location: ' . './admin/index.php');}
-elseif($_SESSION['loggedin']==1)
-{echo '<p>Your account is not activated yet. <a href="contact/index.php">Contact</a> the administrator if you registered more than 48 hours ago.</p>';
-}}
+
+  if($session->get_var('loggedin')) {
+
+    if($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==1){
+        header('Location: ' . './user/index.php');
+
+    } elseif($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==2) {
+        header('Location: ' . './admin/index.php');
+
+    } elseif($session->get_var('loggedin')==1) {   
+        echo '<p>Your account is not activated yet. <a href="contact/index.php">Contact</a> the administrator if you registered more than 48 hours ago.</p>';
+    }
+    
+  } else {
+    
+  }
+
 
 if(isset($_SERVER['CONTEXT_PREFIX'])) {
     $root_url = $_SERVER['CONTEXT_PREFIX'];
@@ -112,13 +119,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 if($member != null && $member->get_uname() != null && $member->get_permissionstatus() >= 0) {
 // Start the session, fetch the record and insert the three values in an array
 
-    $_SESSION['permissionstatus'] = (int) $member->get_permissionstatus(); // Ensure that the user level is an integer
-    if ($_SESSION['permissionstatus']!=0) {
+    $session->set_session_var('permissionstatus', (int) $member->get_permissionstatus()); // Ensure that the user level is an integer
+    if ($session->get_var('permissionstatus')!=0) {
 
-        $_SESSION['loggedin']=1;
-        $_SESSION['created']=time();
-        $_SESSION['lastactivity']=time();
-        $_SESSION['id'] = $member->get_id();
+        //$_SESSION['loggedin']=1;
+        //$_SESSION['created']=time();
+        //$_SESSION['lastactivity']=time();
+        //$_SESSION['id'] = $member->get_id();
+        
+        $session_vars = array(
+            'loggedin'=>1,
+            'created'=>time(),
+            'lastactivity'=>time(),
+            'timeout'=>time(),
+            'id'=>$member->get_id(),
+            'ipaddress'=>$_SERVER['REMOTE_ADDR']
+        );
+
+	$session->set_session($session_vars);
 
         $member->update_login_time();
 
@@ -128,13 +146,13 @@ if($member != null && $member->get_uname() != null && $member->get_permissionsta
         $tmp=1;
     }
 
-if(isset($_SESSION['loggedin'])){
+if($session->get_var('loggedin')){
 
-    if($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==1) {
+    if($session->get_var('permissionstatus')==1) {
         header('Location: ' . './user/index.php');
        
     }
-    elseif($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==2){
+    elseif($session->get_var('permissionstatus')==2){
         header('Location: ' . './admin/index.php');
         
     }
@@ -142,6 +160,8 @@ if(isset($_SESSION['loggedin'])){
 } else { // No match was made.
     if(!$tmp){
         echo '<p class="error">The email address and password entered do not match our records.<br>Perhaps you need to register, click the Register button on the header menu</p>';
+    } else {
+        
     }
 }
 } else { // No match was made.
@@ -215,5 +235,6 @@ if(isset($_SESSION['loggedin'])){
   
   
 <?php
+
 require_once("include/footer.php");
 ?>

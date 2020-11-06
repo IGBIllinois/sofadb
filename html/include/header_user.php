@@ -14,29 +14,29 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
     $root_url = ROOT_URL;
 }
 
-require_once('session.inc.php') ;
 require_once('main.inc.php');
+require_once('session.inc.php') ;
 
-if($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==1)
+if($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==1)
 {}
-elseif($_SESSION['loggedin']==1 &&$_SESSION['permissionstatus']==2)
+elseif($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==2)
 {
+    
     // If they're admin, redirect to the admin page
     header('Location: ' . $root_url.'/admin/index.php');
 exit();
 }
 
-elseif($_SESSION['loggedin']==1)
+elseif($session->get_var('loggedin')==1)
 {echo '<p>Your account is not activated yet. <a href="'.$root_url.'/contact/index.php">Contact</a> the administrator if you registered more than 48 hours ago.</p>';
-    $_SESSION=array();
-    session_destroy();
+    $session->destroy_session();
     header('Location: ' .  $root_url);
     exit();
 }
 try {
-    $member = new member($db, $_SESSION['id']);
+    $member = new member($db, $session->get_var('id'));
 if(!$member->get_agree_to_terms()) {
-    header('Location: ' . '../terms_of_service.php?form=true');
+    header('Location: ' . '../terms_of_service.php');
 }
 } catch(Exception $e) {
     echo("ERROR: Cannot find terms of service page.");
@@ -158,7 +158,7 @@ http://jquery.org/license
 
 
 <?php
-$member = new member($db, $_SESSION['id']);
+$member = new member($db, $session->get_var('id'));
 if($member->get_permissionstatus() == 2) {
     ?>
 <li>

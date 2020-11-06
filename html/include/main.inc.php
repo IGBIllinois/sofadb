@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ .'/../vendor/autoload.php';
 require_once(__DIR__ .'/../../libs/functions.class.inc.php');
 
@@ -16,18 +17,29 @@ require_once($filepath . "conf". $ds. 'app.inc.php');
 
 error_reporting(0);
 
-
+/** Automatically load clases from /libs folder
+ * 
+ * @global string $filepath
+ * @global type $ds
+ * @param type $class_name Class name to load
+ */
 function my_autoloader($class_name) {
-global $filepath;
-global $ds;
+    global $filepath;
+    global $ds;
+    if(file_exists($filepath."libs".$ds.$class_name . ".class.inc.php")) {
+            require_once $filepath."libs".$ds.$class_name . '.class.inc.php';
+    } else {
 
-	if(file_exists($filepath."libs".$ds.$class_name . ".class.inc.php")) {
-
-		require_once $filepath."libs".$ds.$class_name . '.class.inc.php';
-	}
-
-
+    }
 }
+
+if(isset($_SERVER['CONTEXT_PREFIX'])) {
+    $root_url = $_SERVER['CONTEXT_PREFIX'];
+    
+} else {
+    $root_url = ROOT_URL;
+}
+
 spl_autoload_register('my_autoloader');
 
 // Initialize Twig
@@ -42,6 +54,8 @@ try {
 
 // database class
 $db = new db(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD) OR die ('Could not connect to MySQL' );
+ 
+$session = new session(SESSION_NAME);
 
 // These lines allow a user to hit the Back button and return to a previously
 // submitted form

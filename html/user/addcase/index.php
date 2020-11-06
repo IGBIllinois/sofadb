@@ -2,9 +2,7 @@
 $addcase = 1;
 $title = "Forensic Anthropology Case Database (FADAMA) -  Add Case";
 require('../../include/header_user.php') ;
- 
- if(!isset($_SESSION['num_methods']))
- { $_SESSION['num_methods']=0;}
+
 
 ?>
 
@@ -192,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	}
         
     if(isset($_POST['idage_notes'])) {
-        $idage_notes = $_POST['faage_notes'];
+        $idage_notes = $_POST['idage_notes'];
     } else {
         $idage_notes = null;
     }
@@ -418,7 +416,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($errors)) 
         { // If there were no errors
 		//Determine whether the case has already been registered	
-		$memberid=$_SESSION['id'];
+		$memberid=$session->get_var('id');
 
                 $exists = sofa_case::new_case_exists($db, $memberid, $casename, $casenum);
 	

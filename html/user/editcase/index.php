@@ -38,7 +38,7 @@ $errors = array();
 if(isset($_GET['id'])) 
 {
     $case = new sofa_case($db, $_GET['id']);
-    if($case->get_memberid() != $_SESSION['id']) {
+    if($case->get_memberid() != $session->get_var('id')) {
         echo('<span style="padding-left:100px; 
                     display:block;">');
         echo "You do not have permission to view this case.";
@@ -566,7 +566,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $idAs=$_POST['race_asian'];
 	}
 	else{$idAs=0;}
-	
 	 if(isset($_POST['race_black']))
 	{
       $idBl=$_POST['race_black'];
@@ -678,7 +677,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($errors)) 
         { // If there were no errors
 		//Determine whether the case has already been registered	
-		$memberid=$_SESSION['id'];
+		$memberid=$session->get_var('id');
 
       $caseeditid=$_SESSION['caseid'];
       
@@ -767,7 +766,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 // Include the footer and stop the script
 
-                exit();
+                //exit();
                 
 		}
 	else {
@@ -938,16 +937,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 Please check any component of the biological profile that was known to the practitioner during or before the time of case analysis.
                 <BR><BR>
 
-<label class="label" for="known_none"></label><input type="checkbox" name="known_none" value="1" <?php if ($casedata->get_known_none() == 1) echo ' checked'; ?>/>No biological profile information was known or presumed<BR>
-<label class="label" for="known_sex"></label><input type="checkbox" name="known_sex" value="1" <?php if ($casedata->get_known_sex() == 1) echo ' checked'; ?>/>Sex was known or presumed<BR>
-<label class="label" for="known_age"></label><input type="checkbox" name="known_age" value="1" <?php if ($casedata->get_known_age() == 1) echo ' checked'; ?>/>Age was known or presumed<BR>
-<label class="label" for="known_ancestry"></label><input type="checkbox" name="known_ancestry" value="1" <?php if ($casedata->get_known_ancestry() == 1) echo ' checked'; ?>/>Ancestry/Group Affinity was known or presumed<BR>
-<label class="label" for="known_stature"></label><input type="checkbox" name="known_stature" value="1" <?php if ($casedata->get_known_stature() == 1) echo ' checked'; ?>/>Stature was known or presumed<BR>
-<label class="label" for="known_unable_to_determine"></label><input type="checkbox" name="known_unable_to_determine" value="1" />Unable to determine 
-<div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
-        <span class="tooltiptext">If this information hasn't been documented, or you are entering data for a case completed by someone else at your agency, you may not know the context for assessing background knowledge and can check this box here.</span>
-</div> 
-<BR>
+        <label class="label" for="known_none"></label><input type="checkbox" name="known_none" value="1" <?php if ($casedata->get_known_none() == 1) echo ' checked'; ?>/>No biological profile information was known or presumed<BR>
+        <label class="label" for="known_sex"></label><input type="checkbox" name="known_sex" value="1" <?php if ($casedata->get_known_sex() == 1) echo ' checked'; ?>/>Sex was known or presumed<BR>
+        <label class="label" for="known_age"></label><input type="checkbox" name="known_age" value="1" <?php if ($casedata->get_known_age() == 1) echo ' checked'; ?>/>Age was known or presumed<BR>
+        <label class="label" for="known_ancestry"></label><input type="checkbox" name="known_ancestry" value="1" <?php if ($casedata->get_known_ancestry() == 1) echo ' checked'; ?>/>Ancestry/Group Affinity was known or presumed<BR>
+        <label class="label" for="known_stature"></label><input type="checkbox" name="known_stature" value="1" <?php if ($casedata->get_known_stature() == 1) echo ' checked'; ?>/>Stature was known or presumed<BR>
+        <label class="label" for="known_unable_to_determine"></label><input type="checkbox" name="known_unable_to_determine" value="1" />Unable to determine 
+        <div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
+                <span class="tooltiptext">If this information hasn't been documented, or you are entering data for a case completed by someone else at your agency, you may not know the context for assessing background knowledge and can check this box here.</span>
+        </div> 
+        <BR>
       </fieldset>
       
             <fieldset class="caseinfobox"><legend class="boldlegend">FDB Data Sharing Option</legend>
@@ -980,7 +979,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                  
                      <!-- Add Method box -->    
 
-        <form action="index.php#tabs-2" method="post" id="method_info_data">
+    <form action="index.php#tabs-2" method="post" id="method_info_data">
         <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
         <?php
             if(!empty($_GET['success'])) {
@@ -1029,21 +1028,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 						
                         <th>Edit</th>
                         <th>Delete</th>
-                         <th>
-						
-                            Method Type
+                        <th>Method Type</th>
+                        <th>Method Name</th>
+                        <th>Method Outcomes
+                                   
+                            <div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
+                                <span class="tooltiptext">This only displays a summary of the data you entered.</span>
+                            </div>   
+                                   
                         </th>
-                            <th>
-                                   Method Name
-                            </th>
-                            <th>
-                                   Method Outcomes
-                                   
-                                <div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
-                                    <span class="tooltiptext">This only displays a summary of the data you entered.</span>
-                                </div>   
-                                   
-                            </th>
                             </p>
                     </tr>
                     

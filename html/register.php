@@ -1,7 +1,7 @@
 <?php
 
 
-  if(isset($_SESSION['loggedin']))
+  if(isset($session) && $session->get_var('loggedin') == 1)
   {
      require_once("include/session.inc.php"); 
   } else {
@@ -70,7 +70,7 @@ require_once("include/main.inc.php");
   <ul>
     <li><a href="index.php">Home</a></li>
 <?php
-    if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1) {
+    if(isset($session) && $session->get_var('loggedin') == 1) {
 ?>
     <li><a href="user/searchdb/?search=1">Search</a></li>
     <li><a href="faq.php">FAQ</a></li>
@@ -86,7 +86,7 @@ require_once("include/main.inc.php");
 <hr size="3" />
 </div>
 <?php
-    if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1) {
+    if(isset($session) && $session->get_var('loggedin') == 1) {
 ?>
     
 <div id="navigation"></div>
@@ -104,7 +104,7 @@ require_once("include/main.inc.php");
 // Has the form been submitted?
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
-    echo('<div id="wrapper" style="width:500px">');
+    echo('<div style="width:500px;padding-left:20%">');
 	$errors = array(); // Start an array to hold the errors
 	// Check for a title:
 
@@ -360,7 +360,7 @@ echo	'<p class="error">The email address is not acceptable because it is already
 }
 	} else { // Report the errors.
 		echo '<h2>Error!</h2>
-		<p class="error">The following error(s) occurred:<br>';
+		<BR><p class="error">The following error(s) occurred:<br>';
 		foreach ($errors as $msg) { // Print each error.
 			echo " - $msg<br>\n";
 		}

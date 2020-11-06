@@ -1,8 +1,7 @@
 <?php 
-ob_start();
-session_start();
-$_SESSION=array();
-session_destroy();
+require_once("../conf/settings.inc.php");
+require_once("include/main.inc.php");
+$session->destroy_session();
 header('Location: ' . './index.php');
 ?>
 

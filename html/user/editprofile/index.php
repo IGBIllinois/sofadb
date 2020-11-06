@@ -11,7 +11,7 @@ require_once('../../include/session.inc.php') ;
   <div id="phperror">
   <?php
 
-$memberid=$_SESSION['id'];
+$memberid=$session->get_var('id');
 $edit_member = new member($db, $memberid);
 
 // Connect to the database.
