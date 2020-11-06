@@ -11,12 +11,21 @@ require_once('../../include/session.inc.php') ;
   <div id="phperror">
   <?php
 
-$memberid=$_GET['edit_member_id'];
-$edit_member = new member($db, $memberid);
+
+
 
 // Has the form been submitted?
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
+    if(isset($_POST['editsubmit'])) {
+        
+        // Get member id and display current info
+        $memberid=$_POST['edit_member_id'];
+        $edit_member = new member($db, $memberid);
+    } else if(isset($_POST["submit"])){
+        //Update with new info
+        $memberid=$_POST['edit_member_id'];
+        $edit_member = new member($db, $memberid);
 	$errors = array(); // Start an array to hold the errors
         
         // Check for existing email
@@ -25,6 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if($chk_mem->get_id() != $memberid) {
                 $errors[] = "A user with that email already exists.";
             }
+        } else {
+            
         }
         
 	// Check for a title:
@@ -62,11 +73,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	// Check for a password and match it against the confirmed password:
 	if (!empty($_POST['psword1']) && !$_POST['psword1'] == "") {
             $pwdflag = 1;
-		if ($_POST['psword1'] != $_POST['psword2']) {
-			$errors[] = 'Your two passwords did not match.';
-		} else {
-			$p = trim($_POST['psword1']);
-		}
+            if ($_POST['psword1'] != $_POST['psword2']) {
+                    $errors[] = 'Your two passwords did not match.';
+            } else {
+                    $p = trim($_POST['psword1']);
+            }
 	}
         
 	if (empty($_POST['institution'])) {
@@ -84,90 +95,90 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	}
 	// Check for address2:
 	if (!empty($_POST['addr2'])) {
-		$ad2 = trim($_POST['addr2']);
+            $ad2 = trim($_POST['addr2']);
         }else{
             $ad2 = NULL;
 	}
 	// Check for city:
 	if (empty($_POST['city'])) {
-		$errors[] = 'You forgot to enter your City.';
+            $errors[] = 'You forgot to enter your City.';
 	} else {
-		$cty = trim($_POST['city']);
+            $cty = trim($_POST['city']);
 	}
 // Check for the county:
 	if (empty($_POST['state'])) {
-		$errors[] = 'You forgot to enter your state.';
+            $errors[] = 'You forgot to enter your state.';
 	} else {
-		$state = trim($_POST['state']);
+            $state = trim($_POST['state']);
 	}	
 	// Check for the post code:
 	if (empty($_POST['pcode'])) {
-		$errors[] = 'You forgot to enter your postal (ZIP) code.';
+            $errors[] = 'You forgot to enter your postal (ZIP) code.';
 	} else {
-		$pcode = trim($_POST['pcode']);
+            $pcode = trim($_POST['pcode']);
 	}
 	// Check for the phone number:
 	if (!empty($_POST['phone'])) {
-		$ph = trim($_POST['phone']);
+            $ph = trim($_POST['phone']);
         }else{
             $ph = NULL;
 	}
 	
 	if (empty($_POST['region'])) {
-		$errors[] = 'You forgot to enter your region of practice.';
+            $errors[] = 'You forgot to enter your region of practice.';
 	} else {
-		$region = trim($_POST['region']);
+            $region = trim($_POST['region']);
 	}
 	
 	if (empty($_POST['aafs'])) {
-		$errors[] = 'You forgot to enter your AAFS Membership Status';
+            $errors[] = 'You forgot to enter your AAFS Membership Status';
 	} else {
-		$aafs = trim($_POST['aafs']);
+            $aafs = trim($_POST['aafs']);
 	}
 	
 	
 	
 	if (empty($_POST['degree'])) {
-		$degree=NULL;
-		//$errors[] = 'You forgot to enter your level of education earned';
+            $degree=NULL;
+            //$errors[] = 'You forgot to enter your level of education earned';
 	} else {
-		$degree = trim($_POST['degree']);
+            $degree = trim($_POST['degree']);
 	}
 	
 	if (!empty($_POST['degreeyear'])) {
-		$degreeyear = trim($_POST['degreeyear']);
+            $degreeyear = trim($_POST['degreeyear']);
 	} else {
-		$degreeyear =0;
+            $degreeyear =0;
 	}
 	
 	if (!empty($_POST['fieldofstudy'])) {
-		$field = trim($_POST['fieldofstudy']);
+            $field = trim($_POST['fieldofstudy']);
 	} else {
-		$field="";
+            $field="";
 	}
         
         if (!empty($_POST['affiliation'])) {
-		$affiliation = trim($_POST['affiliation']);
+            $affiliation = trim($_POST['affiliation']);
 	} else {
-		$affiliation="";
+            $affiliation="";
 	}
         
         if (!empty($_POST['sponsor'])) {
-		$sponsor = trim($_POST['sponsor']);
+            $sponsor = trim($_POST['sponsor']);
 	} else {
-		$sponsor="";
+            $sponsor="";
 	}
         
         if (!empty($_POST['sponsor_email'])) {
-		$sponsor_email = trim($_POST['sponsor_email']);
+            $sponsor_email = trim($_POST['sponsor_email']);
 	} else {
-		$sponsor_email="";
+            $sponsor_email="";
 	}
         
         if (!empty($_POST['sponsor_affiliation'])) {
-		$sponsor_affiliation = trim($_POST['sponsor_affiliation']);
+            $sponsor_affiliation = trim($_POST['sponsor_affiliation']);
 	} else {
-		$sponsor_affiliation="";
+            $sponsor_affiliation="";
 	}
         
         $params = array(
@@ -196,9 +207,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	
 	if (empty($errors)) { // If there were no errors
 
-		// Make the query:
+            // Make the query:
 	
-			
             if($pwdflag==1){
                 $result = $edit_member->update_member($db, $params, $p);
             } else {
@@ -207,11 +217,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if ($result['RESULT']) { // If it ran OK.
                 echo("User updated successfully.<BR>");
-                $edit_member = new member($db, $_GET['edit_member_id']);
-		//ob_start();
-                
-                    //header ("location: ../index.php"); 
-		//exit();
+                $edit_member = new member($db, $_POST['edit_member_id']);
+
             } else { // If it did not run OK
 		// Error message:
 			echo '<h2>System Error</h2>
@@ -221,27 +228,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		} // End of if ($result)
 
 		// Include the footer and stop the script
-		  
-		//exit();
+
 
 	} else { // Report the errors.
-		echo '<span style="padding-left:100px; 
-    display:block;"><h2>Error!</h2>
-		<p class="error">The following error(s) occurred:<br>';
-		foreach ($errors as $msg) { // Print each error.
-			echo " - $msg<br>\n";
-		}
-		echo '</p><h3>Please try again.</h3><p><br></p></span>';
-		}// End of if (empty($errors))
-} // End of the main Submit conditional.
+            echo '<span style="padding-left:100px; 
+            display:block;"><h2>Error!</h2>
+            <p class="error">The following error(s) occurred:<br>';
+            foreach ($errors as $msg) { // Print each error.
+                    echo " - $msg<br>\n";
+            }
+            echo '</p><h3>Please try again.</h3><p><br></p></span>';
+            }// End of if (empty($errors))
+    } // End of the main Submit conditional.
+}
 ?></div>
   
   
   
   <div id="editform">
 
-  <form action="./index.php?edit_member_id=<?php echo($_GET['edit_member_id']); ?>" method="post" id="registration">
-    
+  <form action="./index.php" method="post" id="registration">
+    <input type="hidden" name="edit_member_id" value="<?php echo $memberid; ?>">
     
   <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
   <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Basic Information</legend>
@@ -306,15 +313,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <br><label class="label" for="sponsor_email">Sponsor Email:</label><input id="sponsor_email" type="text" name="sponsor_email" size="30" value="<?php echo $edit_member->get_sponsor_email(); ?>" >
         <br><label class="label" for="sponsor_affiliation">Sponsor Affiliation:</label><input id="sponsor" type="text" name="sponsor_affiliation" size="30"  value="<?php echo $edit_member->get_sponsor_affiliation(); ?>" >
                 <BR><BR>
-      
-    
-      
-      
-      
+
       </fieldset>
     
-  <br />	<br /> <label class="label" for="regsubmit">Click here to update</label>
-    <input name="regsubmit" id="regsubmit" type="submit" value="Update Profile"/>
+  <br /><br /> <label class="label" for="submit">Click here to update</label>
+    <input name="submit" id="submit" type="submit" value="Update Profile"/>
     <div id="registration_errorloc" class="errorlocation">
       </div>
     
@@ -358,10 +361,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    frmvalidator.addValidation("pcode","numeric","Zip code must be a number");
     frmvalidator.addValidation("phone","numeric","Phone number must be a number");
 
+  frmvalidator.addValidation("degreeyear","gt=1900","Degree must be post-1900");
+ 
   frmvalidator.addValidation("degreeyear","maxlen=4");
-  frmvalidator.addValidation("degreeyear","minlen=4");
-  frmvalidator.addValidation("degreeyear","numeric", "Degree year must be a number in YYYY format");
-   frmvalidator.addValidation("degreeyear","gt=1900");
+  frmvalidator.addValidation("degreeyear","numeric","Degree year must be a number");
 
    frmvalidator.addValidation("region","req","Please select your region");
    

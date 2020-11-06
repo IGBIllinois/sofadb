@@ -13,7 +13,7 @@ require_once "../include/header_admin.php";
        
         $admin_email = ADMIN_EMAIL;
 
-        $memberid = $_SESSION['id'];
+        $memberid = $session->get_var('id');
         $curr_user = new member($db, $memberid);
         $from = $curr_user->get_uname();
         $subject = $_POST['subject'];

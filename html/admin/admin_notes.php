@@ -4,7 +4,7 @@ require_once "../include/header_admin.php";
 
 if(isset($_POST['addMessageSubmit'])) {
     $message = $_POST['message'];
-    $result = admin_note::add_admin_note($db, $_SESSION['id'], $message);
+    $result = admin_note::add_admin_note($db, $session->get_var('id'), $message);
     echo($result['MESSAGE']);
 }
 

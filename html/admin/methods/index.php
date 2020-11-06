@@ -19,33 +19,34 @@ if(isset($_POST['delete_method'])) {
 }
 
 $pagerows = PAGEROWS;
+$all_methods = method::get_methods($db);
+$num_methods = count($all_methods);
 
-// Has the total number of pagess already been calculated?
-if (isset($_GET['p']) && is_numeric
-($_GET['p'])) {//already been calculated
-$pages=$_GET['p'];
-}else{//use the next block of code to calculate the number of pages
-//First, check for the total number of records
-    
+// Has the total number of pages already been calculated?
+if (isset($_POST['p']) && is_numeric ($_POST['p'])) { //already been calculated
+    $pages=$_POST['p'];
+} else { //use the next block of code to calculate the number of pages
+    //First, check for the total number of records
     $all_methods = method::get_methods($db);
     $num_methods = count($all_methods);
+ 
+    //Now calculate the number of pages
+    if ($records > $pagerows){ //if the number of records will fill more than one page
+    //Calculate the number of pages and round the result up to the nearest integer
+        $pages = ceil ($records/$pagerows);
+    }else{
+        $pages = 1;
+    }
 
-//Now calculate the number of pages
-if ($num_methods > $pagerows){ //if the number of records will fill more than one page
-//Calculatethe number of pages and round the result up to the nearest integer
-$pages = ceil ($num_methods/$pagerows);
+}//page check finished
+
+//Declare which record to start with
+if (isset($_POST['s']) && is_numeric($_POST['s'])) {//already been calculated
+    $start = $_POST['s'];
 }else{
-$pages = 1;
-}
+    $start = 0;
 }
 
-////page check finished
-//Decalre which record to start with
-if (isset($_GET['s']) && is_numeric($_GET['s'])) {//already been calculated
-$start = $_GET['s'];
-}else{
-$start = 0;
-}
 
 
 echo("<div id='memberregion'> <h2 style='text-align:center'>List of methods</h2> ");

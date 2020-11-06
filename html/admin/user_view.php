@@ -7,10 +7,10 @@ require_once('../include/header_admin.php') ;
  * and open the template in the editor.
  */
 
-$member = new member($db, $_SESSION['id']);
+$member = new member($db, $session->get_var('id'));
 
 if($member->get_permissionstatus() == 2) {
-    $_SESSION['permissionstatus'] = 1;
+    $session->set_session_var('permissionstatus', 1);
     
     header("Location: ../user/index.php");
 }

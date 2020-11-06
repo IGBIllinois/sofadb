@@ -13,7 +13,7 @@
 
 <div name="searchresults">
  <?php 
- 
+
 $id=null;
 $first_name = null;
 $last_name = null;
@@ -23,66 +23,70 @@ $region = null;
 $andor = " AND ";
 
   $error=0;
-  
-  if (isset($_GET['search']))
-  {unset($_SESSION['searched']);}
+
   $params = array();
-  
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && !empty($_GET['regsubmit']) ) {
+ 
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST'  ) {
       // new params
       $search_values = array();
 
-$id = (empty($_GET['mID']) ? null : $_GET['mID']);
-$first_name = (empty($_GET['fname']) ? null : $_GET['fname']);
-$last_name = (empty($_GET['lname']) ? null : $_GET['lname']);
-$email = (empty($_GET['email']) ? null : $_GET['email']);
-$institution = (empty($_GET['institution']) ? null : $_GET['institution']);
-$region = (empty($_GET['region']) ? null : $_GET['region']);
-$andor = ($_GET['andor'] == 1) ? " AND " : " OR ";
+    $id = (empty($_POST['mID']) ? null : $_POST['mID']);
+    $first_name = (empty($_POST['fname']) ? null : $_POST['fname']);
+    $last_name = (empty($_POST['lname']) ? null : $_POST['lname']);
+    $email = (empty($_POST['email']) ? null : $_POST['email']);
+    $institution = (empty($_POST['institution']) ? null : $_POST['institution']);
+    $region = (empty($_POST['region']) ? null : $_POST['region']);
+    $andor = ($_POST['andor'] == 1) ? " AND " : " OR ";
 
-	if ($id == null &&
-                $first_name == null &&
-                $last_name == null &&
-                $email == null &&
-                $institution == null &&
-                $region == null)
-	{
-            echo 'Please enter at least one search criterion';
-            $error=1;
-            
-        }
+    if ($id == null &&
+            $first_name == null &&
+            $last_name == null &&
+            $email == null &&
+            $institution == null &&
+            $region == null)
+    {
+        echo 'Please enter at least one search criterion';
+        $error=1;
+
+    }
 	  
 	  
 if(!$error){//if error start	  
 // This script retrieves all the records from the users table.
 
-//set the number of rows per display page
-$pagerows = PAGEROWS;
+    $found_members = member::search_members($db, $id, $first_name, $last_name, $email, $institution, $region, $andor);
+    $num_members = count($found_members);
+    //set the number of rows per display page
+    $pagerows = PAGEROWS;
 
-// Has the total number of pagess already been calculated?
-if (isset($_GET['p']) && is_numeric($_GET['p'])) {//already been calculated
-    $pages=$_GET['p'];
-} else {
-if($error == 0) {
-$found_members = member::search_members($db, $id, $first_name, $last_name, $email, $institution, $region, $andor);
+    // Has the total number of pages already been calculated?
+    if (isset($_POST['p']) && is_numeric ($_POST['p'])) { //already been calculated
+        $pages=$_POST['p'];
+    } else { //use the next block of code to calculate the number of pages
+        //First, check for the total number of records
 
-$num_members = count($found_members);
 
-//Now calculate the number of pages
-if ($num_members > $pagerows){ //if the number of records will fill more than one page
-//Calculatethe number of pages and round the result up to the nearest integer
-$pages = ceil ($num_members/$pagerows);
-}else{
-$pages = 1;
-}
-}//page check finished
-//Decalre which record to start with
-if (isset($_GET['s']) && is_numeric
-($_GET['s'])) {//already been calculated
-$start = $_GET['s'];
-}else{
-$start = 0;
-}
+        
+
+        //Now calculate the number of pages
+        if ($records > $pagerows){ //if the number of records will fill more than one page
+        //Calculate the number of pages and round the result up to the nearest integer
+            $pages = ceil ($records/$pagerows);
+        }else{
+            $pages = 1;
+        }
+
+    }//page check finished
+
+    //Declare which record to start with
+    if (isset($_POST['s']) && is_numeric($_POST['s'])) {//already been calculated
+        $start = $_POST['s'];
+    }else{
+        $start = 0;
+    }
+
+
 // Make the query:
 
 if ($num_members > -1) { // If it ran OK, display the records.
@@ -91,13 +95,13 @@ if ($num_members > -1) { // If it ran OK, display the records.
 echo '<div class="scroll"><table id="hortable" summary="List of members">
     <thead>
     	<tr>
-		    <th scope="col">Edit</th>
+	    <th scope="col">Edit</th>
             <th scope="col">Delete</th>
-        	<th scope="col">Last Name</th>
+            <th scope="col">Last Name</th>
             <th scope="col">First Name</th>
             <th scope="col">Email</th>
             <th scope="col">Institution</th>
-			<th scope="col">Date Registered</th>
+	    <th scope="col">Date Registered</th>
             <th scope="col">Last Login</th>
             <th scope="col">Access</th>
             <th scope="col">Total Cases</th>
@@ -133,34 +137,43 @@ foreach($found_members as $found_member) {
 // Public message:
 	echo '<p class="error">No records found.  </p>';
 	// Debugging message:
-		$_SESSION['searched']=1;
-unset($_GET['search']);
-echo '<br/> <a href="index.php?search=1">Search Again</a>';
-exit();
+	$session->set_session_variable('searched', 1);
+
+        echo '<br/> <a href="index.php?search=1">Search Again</a>';
+        exit();
 } // End of if ($result). Now display the total number of records/members.
 
 echo "<p>Total number of search results: $num_members</p>";
-if ($pages > 1) {
-echo '<p>';
-//What number is the current page?
 $current_page = ($start/$pagerows) + 1;
-//If the page is not the first page then create a Previous link
 if ($current_page != 1) {
-echo '<a href="index.php?s=' . ($start - $pagerows) . '&p=' . $pages . '">Previous</a> ';
+   // Create a Previous Link
+    echo("<form method=post action=index.php name='regsubmit'>"
+            . "<input type=submit value='Previous Page'>"
+            . "<input type=hidden name='p' value=$pages>"
+            . "<input type=hidden name='s' value=".($start-$pagerows).">"
+            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
+            . "</form>");
+} else {
+    
 }
-//Create a Next link
+
 if ($current_page != $pages) {
-echo '<a href="index.php?s=' . ($start + $pagerows) . '&p=' . $pages . '">Next</a> ';
-echo '&nbsp; &nbsp; &nbsp; &nbsp;';
+//Create a Next link
+    echo("<form method=post action=index.php name='regsubmit'>"
+            . "<input type=submit value='Next Page'>"
+            . "<input type=hidden name='p' value=$pages>"
+            . "<input type=hidden name='s' value=".($start+$pagerows).">"
+            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
+            . "</form>");
+} else {
 }
-echo '</p>';
-}
-$_SESSION['searched']=1;
-unset($_GET['search']);
+$session->set_session_variable('searched', 1);
+
 echo '<br/> <a href="index.php?search=1">Search Again</a>';
   }//end on error
 }
-}
+
+
 ?>
 
 
@@ -179,10 +192,13 @@ if(!isset($flname)) $flname="";
 if(!isset($finstitution)) $finstitution="";
 if(!isset($femail)) $femail="";
 
-if (!isset($_SESSION['searched']))
+
+$result = $session->get_var('searched');
+
+if( $result == false || $result != 1)
 {
 echo <<<_END
-<form action="index.php" method="get" id="registration">
+<form action="index.php" method="post" id="registration">
 
 
 <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
@@ -279,7 +295,10 @@ echo <<<_END
 
 
 _END;
-} ?>
+} 
+
+
+?>
 
 
   
