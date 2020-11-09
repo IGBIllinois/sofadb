@@ -3,9 +3,23 @@ $title = " Forensic Anthropology Case Database (FADAMA) - Admin Notes";
 require_once "../include/header_admin.php";
 
 if(isset($_POST['addMessageSubmit'])) {
-    $message = $_POST['message'];
-    $result = admin_note::add_admin_note($db, $session->get_var('id'), $message);
-    echo($result['MESSAGE']);
+    $errors = array();
+    if(!isset($_POST['message']) || $_POST['message'] == "") {
+        $errors[] = "Please input a message.";
+    } else {
+        $message = $_POST['message'];
+    }
+    
+    if(count($errors) == 0) {
+        
+        $result = admin_note::add_admin_note($db, $session->get_var('id'), $message);
+        echo($result['MESSAGE']);
+    } else {
+        echo("Error:<BR>");
+        foreach($errors as $error) {
+            echo($error."<BR>");
+        }
+    }
 }
 
 echo('<div id="memberregion"> 
