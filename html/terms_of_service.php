@@ -1,7 +1,7 @@
 <?php
 
 
-  if(isset($_SESSION['loggedin']))
+  if(isset($session) && $session->get_var('loggedin') == 1)
   {
      require_once("include/session.inc.php"); 
      
@@ -17,7 +17,7 @@ if(isset($_POST['regsubmit'])) {
         if(empty($_POST['signature'])) {
             $errors[] = "You must provide a signature.";
             $agree_to_terms = false;
-            $_GET['form'] = true;
+            unset($_POST['submitted']);
         } else {
             $signature = $_POST['signature'];
         }
@@ -25,7 +25,7 @@ if(isset($_POST['regsubmit'])) {
         if(empty($_POST['signature_date'])) {
             $errors[] = "You must provide a signature date.";
             $agree_to_terms = false;
-            $_GET['form'] = true;
+            unset($_POST['submitted']);
         } else {
             $signature_date = $_POST['signature_date'];
         }
@@ -37,15 +37,15 @@ if(isset($_POST['regsubmit'])) {
         }
         
     if($agree_to_terms) {
-        $member = new member($db, $_SESSION['id']);
+        $member = new member($db, $session->get_var('id'));
         $member->update_terms_agreement($signature, $signature_date, true);
 
     if($member->get_permissionstatus() == 2) {
-        $_SESSION['permissionstatus'] = 2;
+        $session->set_session_var('permissionstatus', 2);
 
         header("Location: ./admin/index.php");
     } else {
-        $_SESSION['permissionstatus'] = 1;
+        $session->set_session_var('permissionstatus', 1);
         header("Location: ./user/index.php");
     }
     }
@@ -106,22 +106,22 @@ if(count($errors) > 0) {
 
 <?php  
 
-if(isset($_GET['form'])) {
+if(!isset($POST['submitted'])) {
     echo("<BR>");
     echo("<fieldset style='border: solid 1px #000000;overflow: hidden;' class='roundedborder'><legend class='boldlegend'>Terms of Service</legend>");
     echo("<form action='terms_of_service.php' method=POST name='agree' id='agree'>");
+    echo("<input type=hidden name=submitted value=1>");
+    echo('<BR>
 
-    echo('     <BR>
-
-         Please review FADAMA\'s Terms of Service, Privacy Notice, and Contributor License Agreement <U><a href="docs/FADMA_FINAL combined CLA_ToS_Privacy Notice.docx" target="_blank" onclick="enableAfterClick(\'signature\');">here</a></U>.
-     <BR><BR>
-             By signing below, I acknowledge that I have read and agree to the Terms of Service, Privacy Notice, and Contributor License Agreement.<BR><BR>
-                     <label class="label" for="signature">Signature (Type your full name):</label><input type="text" name="signature" id="signature" disabled> <i>(activated once the link above has been clicked)</i><BR>
-             <label class="label" for="signature_date">Date:</label><input type="date" name="signature_date" id="signature_date">
-<br/><br/>
+        Please review FADAMA\'s Terms of Service, Privacy Notice, and Contributor License Agreement <U><a href="docs/FADMA_FINAL combined CLA_ToS_Privacy Notice.docx" target="_blank" onclick="enableAfterClick(\'signature\');">here</a></U>.
+         <BR><BR>
+            By signing below, I acknowledge that I have read and agree to the Terms of Service, Privacy Notice, and Contributor License Agreement.<BR><BR>
+            <label class="label" for="signature">Signature (Type your full name):</label><input type="text" name="signature" id="signature" disabled> <i>(activated once the link above has been clicked)</i><BR>
+            <label class="label" for="signature_date">Date:</label><input type="date" name="signature_date" id="signature_date">
+            <br/><br/>
 
 
-  <br />	<label class="label" for="regsubmit">Click here to register</label>
+    <br /><label class="label" for="regsubmit">Click here to register</label>
     <input name="regsubmit" id="regsubmit" type="submit" value="Register"/>
     <BR><BR>');
             

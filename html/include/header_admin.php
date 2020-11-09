@@ -22,7 +22,7 @@ try {
 
     if(!$member->get_agree_to_terms()) {
 
-        header('Location: ' . '../terms_of_service.php');
+        header('Location: ' . $root_url .'/terms_of_service.php');
 
     }
 } catch(Exception $e) {

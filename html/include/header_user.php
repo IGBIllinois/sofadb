@@ -7,12 +7,7 @@ if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
     exit;
 }
 
-if(isset($_SERVER['CONTEXT_PREFIX'])) {
-    $root_url = $_SERVER['CONTEXT_PREFIX'];
-    
-} else {
-    $root_url = ROOT_URL;
-}
+
 
 require_once('main.inc.php');
 require_once('session.inc.php') ;
@@ -36,7 +31,7 @@ elseif($session->get_var('loggedin')==1)
 try {
     $member = new member($db, $session->get_var('id'));
 if(!$member->get_agree_to_terms()) {
-    header('Location: ' . '../terms_of_service.php');
+    header('Location: ' . $root_url .'/terms_of_service.php');
 }
 } catch(Exception $e) {
     echo("ERROR: Cannot find terms of service page.");
