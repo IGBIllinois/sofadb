@@ -46,16 +46,16 @@ if(isset($_POST['description'])) {
 }
 
 if(isset($_POST['instructions'])) {
-$instructions = $_POST['instructions'];
+    $instructions = $_POST['instructions'];
 }
 
 if(isset($_POST['method_info_type'])) {
-$method_info_type = $_POST['method_info_type'];
-echo("METHODINFOTYPE = $method_info_type<BR>");
+    $method_info_type = $_POST['method_info_type'];
+
 }
 
 if(isset($_POST['prompt'])) {
-$prompt = $_POST['prompt'];
+    $prompt = $_POST['prompt'];
 }
 
 if(isset($_POST['fdb'])) {
@@ -82,6 +82,10 @@ if(isset($_POST['add_method_submit'])) {
                 echo($result['MESSAGE']);
                 $new_id = $result['id'];
                 echo("Its status is currently Inactve. You may edit and activate it on the <a href='edit_method.php?id=$id'>edit method</a> page.");
+                echo("<form action='edit_method.php' method=POST name=editmethod>"
+                        . "<input type=hidden name=id value='".$id."'>"
+                        . "<input type=submit name=submit value='Edit this method'>"
+                        . "</form>");
 
             }
         } else {
