@@ -1169,3 +1169,7 @@ input[type=number] {
     margin-left: 40px;
     margin-right: 40px;
 }
+
+.inline {
+     display: inline-block;
+}

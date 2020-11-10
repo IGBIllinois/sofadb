@@ -154,7 +154,7 @@ $current_page = ($start/$pagerows) + 1;
 
 if ($current_page != 1) {
    // Create a Previous Link
-    echo("<form method=post action=index.php name='regsubmit'>"
+    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
             . "<input type=submit value='Previous Page'>"
             . "<input type=hidden name='p' value=$pages>"
             . "<input type=hidden name='s' value=".($start-$pagerows).">"
@@ -166,7 +166,7 @@ if ($current_page != 1) {
 
 if ($current_page != $pages) {
 //Create a Next link
-    echo("<form method=post action=index.php name='regsubmit'>"
+    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
             . "<input type=submit value='Next Page'>"
             . "<input type=hidden name='p' value=$pages>"
             . "<input type=hidden name='s' value=".($start+$pagerows).">"
