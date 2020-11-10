@@ -19,6 +19,8 @@ if(isset($_POST['delete_method'])) {
 }
 
 $pagerows = PAGEROWS;
+
+//First, check for the total number of records
 $all_methods = method::get_methods($db);
 $num_methods = count($all_methods);
 
@@ -26,14 +28,11 @@ $num_methods = count($all_methods);
 if (isset($_POST['p']) && is_numeric ($_POST['p'])) { //already been calculated
     $pages=$_POST['p'];
 } else { //use the next block of code to calculate the number of pages
-    //First, check for the total number of records
-    $all_methods = method::get_methods($db);
-    $num_methods = count($all_methods);
- 
+
     //Now calculate the number of pages
-    if ($records > $pagerows){ //if the number of records will fill more than one page
+    if ($num_methods > $pagerows){ //if the number of records will fill more than one page
     //Calculate the number of pages and round the result up to the nearest integer
-        $pages = ceil ($records/$pagerows);
+        $pages = ceil ($num_methods/$pagerows);
     }else{
         $pages = 1;
     }
@@ -48,24 +47,39 @@ if (isset($_POST['s']) && is_numeric($_POST['s'])) {//already been calculated
 }
 
 
-
+$current_page = ($start/$pagerows) + 1;
 echo("<div id='memberregion'> <h2 style='text-align:center'>List of methods</h2> ");
 
 echo("<a href='add_method.php'>Add new method</A><BR>");
 echo("<BR><BR>");
-
 if ($pages > 1) {
 
 //What number is the current page?
-$current_page = ($start/$pagerows) + 1;
-//If the page is not the first page then create a Previous link
+
+
 if ($current_page != 1) {
-echo '<a href="index.php?s=' . ($start - $pagerows) . '&p=' . $pages . '">Previous</a> | ';
+   // Create a Previous Link
+    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
+            . "<input type=submit value='Previous Page'>"
+            . "<input type=hidden name='p' value=$pages>"
+            . "<input type=hidden name='s' value=".($start-$pagerows).">"
+            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
+            . "</form>");
+} else {
+    
 }
+
+if ($current_page != $pages) {
 //Create a Next link
-if ($current_page != $pages+1) {
-echo '<a href="index.php?s=' . ($start + $pagerows) . '&p=' . $pages . '">Next</a> ';
+    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
+            . "<input type=submit value='Next Page'>"
+            . "<input type=hidden name='p' value=$pages>"
+            . "<input type=hidden name='s' value=".($start+$pagerows).">"
+            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
+            . "</form>");
+} else {
 }
+
 
 }
 
@@ -93,8 +107,11 @@ foreach($methods as $method) {
     if($times_method_used > 0) {
         $delete_alert_message .= '\nThis method is currently used in '.$times_method_used.' cases.';
     }
-    echo("<tr>".
-            "<td><a href='edit_method.php?id=". $method->get_id()."'>Edit</td>");
+    echo("<td>".
+            "<form action='edit_method.php' name=editmethod method=POST>"
+            . "<input type=hidden name='id' value='".$method->get_id()."'>"
+            . "<input type=submit value=Edit>"
+            . "</form></td>");
     echo('
 	<td><form action="index.php?s='.$start.'&p='.$pages.'" method="post" id="delete_method" onsubmit="return confirm(\''.$delete_alert_message.'\')">
 	<input name="del_method_id" type="hidden" value="'.$method_id.'"/>
@@ -112,19 +129,32 @@ foreach($methods as $method) {
 echo("</tbody></table></div>");
 
 if ($pages > 1) {
-echo '<p>';
+
 //What number is the current page?
 $current_page = ($start/$pagerows) + 1;
-//If the page is not the first page then create a Previous link
+
 if ($current_page != 1) {
-echo '<a href="index.php?s=' . ($start - $pagerows) . '&p=' . $pages . '">Previous</a> | ';
+   // Create a Previous Link
+    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
+            . "<input type=submit value='Previous Page'>"
+            . "<input type=hidden name='p' value=$pages>"
+            . "<input type=hidden name='s' value=".($start-$pagerows).">"
+            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
+            . "</form>");
+} else {
+    
 }
+
+if ($current_page != $pages) {
 //Create a Next link
-if ($current_page != $pages+1) {
-echo '<a href="index.php?s=' . ($start + $pagerows) . '&p=' . $pages . '">Next</a> ';
-echo '&nbsp; &nbsp; &nbsp; &nbsp;';
+    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
+            . "<input type=submit value='Next Page'>"
+            . "<input type=hidden name='p' value=$pages>"
+            . "<input type=hidden name='s' value=".($start+$pagerows).">"
+            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
+            . "</form>");
+} else {
 }
-echo '</p>';
 }
 
 echo("</div>");

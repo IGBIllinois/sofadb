@@ -1,9 +1,8 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Edit methods, method_infos and options for those method_infos
+ * 
  */
 
 require_once "../../include/header_admin.php";
@@ -20,12 +19,11 @@ $method_type_list = array(METHOD_DATA_SEX_ID=>METHOD_DATA_SEX,
     METHOD_DATA_ANCESTRY_ID=>METHOD_DATA_ANCESTRY, 
     METHOD_DATA_STATURE_ID=>METHOD_DATA_STATURE);
 
-if(!isset($_POST['id']) &&  !isset($_GET['id'])) {
+if(!isset($_POST['id'])) {
     echo("Please enter a valid method.");
 } else {
-    if(isset($_GET['id'])) {
         // showing form for first time
-        $id = $_GET['id'];
+        $id = $_POST['id'];
         $method = new method($db, $id);
         
         $name = $method->get_name();
@@ -38,14 +36,12 @@ if(!isset($_POST['id']) &&  !isset($_GET['id'])) {
         $active = $method->get_active();
         $top = $method->get_top();
         $fdb = $method->get_fdb();
-
-    } else {
-        $id = ($_POST['id']);
-        $method = new method($db, $id);
-    }
+} 
     
     
 if(isset($_POST['edit_method_submit'])) {
+    
+    // Submit data for an edited method
     
     if(isset($_POST['method_name'])) {
         $name = $_POST['method_name'];
@@ -103,10 +99,11 @@ if(isset($_POST['edit_method_submit'])) {
 
 
 echo ("Method $name edited successfully.<BR>");
-}
 
-if(isset($_POST['add_method_info_submit'])) {
-
+} else if(isset($_POST['add_method_info_submit'])) {
+    
+    // Add a new method_info to this method
+    
     $methodid = $method->get_id();
     $method_info_name = $_POST['method_info_name'];
     $header = $_POST['method_info_header'];
@@ -120,9 +117,9 @@ if(isset($_POST['add_method_info_submit'])) {
     if($result > 0) {
             echo("Added method info $method_info_name.<BR>");
     }
-}
-
-if(isset($_POST['add_method_info_option_submit'])) {
+} else if(isset($_POST['add_method_info_option_submit'])) {
+    
+    // Add an option to a method_info for this method
 
     $method_info_id = $_POST['method_info_id'];
     $value = $_POST['method_info_option_value'];
@@ -131,9 +128,9 @@ if(isset($_POST['add_method_info_option_submit'])) {
     if($result > 0) {
             echo("Added method info option to ".$method_info->get_name() . " with value: $value.<BR>");
     }
-}
-
-if(isset($_POST['delete_option'])) {
+} else if(isset($_POST['delete_option'])) {
+    
+    // Delete an option for a method_info for this method
 
     $info_id = $_POST['info_id'];
     $option_id = $_POST['option_id'];
@@ -145,9 +142,9 @@ if(isset($_POST['delete_option'])) {
     if($result > 0) {
             echo("Deleted option $name.<BR>");
     }
-}
-
-if(isset($_POST['delete_method_info'])) {
+} else if(isset($_POST['delete_method_info'])) {
+    
+    // Delete a method_info for this method
 
     $method_info_id = $_POST['info_id'];
 
@@ -319,7 +316,7 @@ echo(method_infos::show_method_info($db, $method->get_id()));
 echo("<BR>");
 echo("</fieldset>");
 echo("<BR>");
-}
+
 
 require_once "../../include/footer.php";
 
