@@ -65,10 +65,6 @@ if(!$error){//if error start
         $pages=$_POST['p'];
     } else { //use the next block of code to calculate the number of pages
         //First, check for the total number of records
-
-
-        
-
         //Now calculate the number of pages
         if ($records > $pagerows){ //if the number of records will fill more than one page
         //Calculate the number of pages and round the result up to the nearest integer
@@ -115,7 +111,7 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
 // Fetch and print all the records:
 foreach($found_members as $found_member) {
 	echo '<tr>
-	<td><a href="../editprofile/index.php?edit_member_id=' . $found_member->get_id() . '">Edit</a></td>
+        <td><form method=post action="../editprofile/index.php" name=editprofile id=editprofile><input type=hidden name=edit_member_id value=' . $found_member->get_id().'><input name=editsubmit type=submit value=Edit></form></td>
 	<td><form action="../index.php" method="post" id="deletemember" onsubmit="return confirm(\'Do you really want to delete this member?\nAll member data and cases associated with this user will be deleted.\')">
 	<input name="delid" type="hidden" value="'.$found_member->get_id().'"/>
 	<input name="delsubmit" type="submit" value="Delete" /> </form>
