@@ -4,34 +4,67 @@ require_once "../include/header_admin.php";
 
 
  if (isset($_POST['exportfdb']) && $_POST['exportfdb'] != null){
-
+     $errors = array();
      $datesubmitted = null;
      if(isset($_POST['datesubmitted']) && $_POST['datesubmitted'] != null) {
+
          $datesubmitted = $_POST['datesubmitted'];
-         $params = array("datesubmitted"=>$datesubmitted);
-         
+         $test_arr  = explode('-', $datesubmitted);
+         // check for valid date (yyyy-mm-dd format)
+         $checkdate = checkdate($test_arr[1],$test_arr[2],$test_arr[0]);
+         echo("checkdate = $checkdate<BR>");
+         if(!$checkdate) {
+             $errors[] = "'$datesubmitted' is not a valid date. Please enter a valid date.";
+         } else {
+            $params = array("datesubmitted"=>$datesubmitted);
+         }
      } else {
          $params = array();
      }
-     $params['fdb_consent'] = true;
-     $caselist = sofa_case::search_cases($db, null, $params, null);
-     
-     sofa_case::write_report($db, $caselist, null, null, 1,0);
-     die();
+
+     if(count($errors) > 0) {
+         echo("Error:<BR>");
+         foreach($errors as $error) {
+             echo($error);
+         }
+     } else {
+        $params['fdb_consent'] = true;
+        $caselist = sofa_case::search_cases($db, null, $params, null);
+        sofa_case::write_report($db, $caselist, null, null, 1,0);
+        die();
+     }
 
  } else if (isset($_POST['downloaddata'])) {
      $date = null;
-     if(isset($_POST['date'])); {
+     $errors = array();
+     if(isset($_POST['date']) && $_POST['date'] != null) {
         $date = $_POST['date'];
+         $test_arr  = explode('-', $date);
+         // check for valid date (yyyy-mm-dd format)
+         $checkdate = checkdate($test_arr[1],$test_arr[2],$test_arr[0]);
+         if(!$checkdate) {
+             $errors[] = "'$date' is not a valid date. Please enter a valid date.";
+         } else {
+
+         }
+     } else {
      }
-     functions::download_data_report($db, $date);
-     die();
+     
+     if(count($errors) > 0) {
+         echo("Error:<BR>");
+         foreach($errors as $error) {
+             echo($error);
+         }
+     } else {
+        functions::download_data_report($db, $date);
+        die();
+     }
  }
 
 echo <<<_END
 <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">FDB Report</legend>
 <br>
-    <form action="admin_reports.php" method="post" id="export">
+    <form action="admin_reports.php" method="post" id="export" name='fdb_report'>
     Only get cases submitted after: (if left blank, all cases will be retrieved.)
 <input type="date" id="datesubmitted" name="datesubmitted">
  
@@ -45,7 +78,7 @@ echo <<<_END
  
  <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Download Report</legend>
 <br>
-    <form action="admin_reports.php" method="post" id="export">
+    <form action="admin_reports.php" method="post" id="export" name='admin_report'>
     Only get cases submitted after: (if left blank, all cases will be retrieved.)
 <input type="date" id="date" name="date">
  
