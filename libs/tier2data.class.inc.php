@@ -189,7 +189,6 @@ class tier2data {
     public function update_estimated_outcomes($estimated_outcome_1, $estimated_outcome_2 = null, $units=null) {
         
         $tier2id = $this->id;
-        echo("est 1 = $estimated_outcome_1<BR>");
         $query = "update tier2data set estimated_outcome_1=:est1 where id=:tier2id";
         $params = array("tier2id"=>$tier2id, "est1"=>$estimated_outcome_1);
         
