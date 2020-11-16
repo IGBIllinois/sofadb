@@ -19,7 +19,7 @@ require_once('../../include/session.inc.php') ;
 
   $error=0;
   
-  if (isset($_GET['search'])){
+  if (isset($_POST['search'])){
     unset($_SESSION['searched']);
     unset($_SESSION['searchstring']);
   }
@@ -28,37 +28,37 @@ require_once('../../include/session.inc.php') ;
        require('exportdata.php');
   }
 		  
-  if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['search'] != 1){//not export
+  if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['exportsubmit'])){//not export
 	  $first=0;
           $race_array = array();
-          foreach($_GET['race'] as $race=>$value) {
+          foreach($_POST['race'] as $race=>$value) {
               $race_array[$value] = $race;
           }
           $case_data = array(
-              "memberId"=>$_GET['mID'],
-              "caseYear"=>$_GET['cyear'],
-              "yearRange"=>$_GET['yearrange'],
-              "caseNumber"=>$_GET['cnum'],
-              "caseAgency"=>$_GET['cagency'],
-              "region"=>$_GET['region'],
-              "idsex"=>$_GET['sexid'],
-              "idage1"=>$_GET['ageid1'],
-              "idage2"=>$_GET['ageid2'],
-              "idageunits"=>$_GET['ageidunits'],
-              "idstature1"=>$_GET['statureid1'],
-              "idstature2"=>$_GET['statureid2'],
-              "idstatureunits"=>$_GET['statureunits'],
+              "memberId"=>$_POST['mID'],
+              "caseYear"=>$_POST['cyear'],
+              "yearRange"=>$_POST['yearrange'],
+              "caseNumber"=>$_POST['cnum'],
+              "caseAgency"=>$_POST['cagency'],
+              "region"=>$_POST['region'],
+              "idsex"=>$_POST['sexid'],
+              "idage1"=>$_POST['ageid1'],
+              "idage2"=>$_POST['ageid2'],
+              "idageunits"=>$_POST['ageidunits'],
+              "idstature1"=>$_POST['statureid1'],
+              "idstature2"=>$_POST['statureid2'],
+              "idstatureunits"=>$_POST['statureunits'],
               "race"=>$race_array,
-              "est_sex"=>$_GET['est_sex'],
-              "est_age"=>$_GET['est_age'],
-              "est_stat"=>$_GET['est_stat'],
-              "est_anc"=>$_GET['est_anc'],
-              "conjunction"=>$_GET['andor'],
-              "method_conj"=>$_GET['method_conj'],
-              "race_join"=>$_GET['race_join'],
-              "prac_join"=>$_GET['prac_join']
+              "est_sex"=>$_POST['est_sex'],
+              "est_age"=>$_POST['est_age'],
+              "est_stat"=>$_POST['est_stat'],
+              "est_anc"=>$_POST['est_anc'],
+              "conjunction"=>$_POST['andor'],
+              "method_conj"=>$_POST['method_conj'],
+              "race_join"=>$_POST['race_join'],
+              "prac_join"=>$_POST['prac_join']
                   );
-             $methods = ($_GET['method_select']);
+             $methods = ($_POST['method_select']);
              $method_list = array();
              foreach($methods as $index=>$result) {
                  foreach($result as $id=>$option) {
@@ -82,32 +82,29 @@ if (isset($_SESSION['searchstring']) && isset($_SESSION['searched'])){
 
 $pagerows = PAGEROWS;
 
-// Has the total number of pagess already been calculated?
-if (isset($_GET['p']) && is_numeric
-(
-    $_GET['p'])) 
-{
-//already been calculated
-$pages=$_GET['p'];}
-else{//use the next block of code to calculate the number of pages
+// Has the total number of pages already been calculated?
+if (isset($_POST['p']) && is_numeric ($_POST['p'])) { //already been calculated
+    $pages=$_POST['p'];
+} else { //use the next block of code to calculate the number of pages
 //First, check for the total number of records
-$records = count($case_results);
 
-//Now calculate the number of pages
-if ($records > $pagerows){ //if the number of records will fill more than one page
-//Calculatethe number of pages and round the result up to the nearest integer
-$pages = ceil ($records/$pagerows);
-}else{
-$pages = 1;
-}
+    $records = count($case_results);
+
+    //Now calculate the number of pages
+    if ($records > $pagerows){ //if the number of records will fill more than one page
+    //Calculate the number of pages and round the result up to the nearest integer
+        $pages = ceil ($records/$pagerows);
+    }else{
+        $pages = 1;
+    }
+
 }//page check finished
 
 //Declare which record to start with
-if (isset($_GET['s']) && is_numeric
-($_GET['s'])) {//already been calculated
-$start = $_GET['s'];
+if (isset($_POST['s']) && is_numeric($_POST['s'])) {//already been calculated
+    $start = $_POST['s'];
 }else{
-$start = 0;
+    $start = 0;
 }
 
 if(count($case_results) > 0) {
@@ -126,27 +123,6 @@ else {
 
 }
 
-
-
-echo "<p class='dbresults'>Total number of search results: $cases. Showing records  $startingrecord - $endingrecord </p>";
-if ($pages > 1) {
-echo '<p>';
-//What number is the current page?
-$current_page = ($start/$pagerows) + 1;
-//If the page is not the first page then create a Previous link
-if ($current_page != 1) {
-echo '<a href="index.php?s=' . ($start - $pagerows) . '&p=' . $pages . "&" . $_SERVER['QUERY_STRING']. '">Previous</a> ';
-}
-//Create a Next link
-if ($current_page != $pages) {
-echo '<a href="index.php?s=' . ($start + $pagerows) . '&p=' . $pages . "&" . $_SERVER['QUERY_STRING'].'">Next</a> ';
-echo '&nbsp; &nbsp; &nbsp; &nbsp;';
-}
-echo '</p>';
-}
-
-echo '<br/> <a href="index.php?search=1">Search Again</a>';
-echo("<BR><BR>");
 echo("If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Downloaded_data_sheet' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.");
 echo("<BR>");
 
@@ -155,6 +131,33 @@ echo'<br/><p>Click here to export results to CSV File
 <input name="fdb" type="hidden" value="0">
    <input name="exportsubmit" id="exportsubmit" type="submit" value="Export Case Data"/></p>
    </form>';
+
+echo '<br/> <a href="index.php?search=1">Search Again</a><BR><BR>';
+
+echo "<p class='dbresults'>Total number of search results: $cases. Showing records  $startingrecord - $endingrecord </p>";
+echo("<BR>");
+if ($current_page != 1) {
+   // Create a Previous Link
+    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
+            . "<input type=submit value='Previous Page'>"
+            . "<input type=hidden name='p' value=$pages>"
+            . "<input type=hidden name='s' value=".($start-$pagerows).">"
+            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
+            . "</form>");
+} else {
+    
+}
+
+if ($current_page != $pages) {
+//Create a Next link
+    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
+            . "<input type=submit value='Next Page'>"
+            . "<input type=hidden name='p' value=$pages>"
+            . "<input type=hidden name='s' value=".($start+$pagerows).">"
+            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
+            . "</form>");
+} else {
+}
 
 echo '<div class="scroll"><table id="hortable" summary="List of cases">
     <thead>
@@ -184,50 +187,31 @@ echo '</tbody></table></div>';
 else { // If it did not run OK.
 // Public message:
     echo '<p class="error">No records found.  </p>';	
-    $_SESSION['searched']=1;
-    unset($_GET['search']);
     echo '<br/> <a href="index.php?search=1">Search Again</a>';
     exit();
 } // End of if ($result). 
 
-
-
-$current_page = ($start/$pagerows) + 1;
-if ($pages==1)
-{
-    $startingrecord=1;
-    $endingrecord=$cases;
-    
-} elseif ($current_page!= $pages) {
-    $startingrecord=($current_page-1)*$pagerows+1;
-    $endingrecord=($current_page)*$pagerows;
-} else {
-    $startingrecord=($current_page-1)*$pagerows+1;
-    $endingrecord=$cases;
-
-}
-
-
-
-echo "<p class='dbresults'>Total number of search results: $cases. Showing records  $startingrecord - $endingrecord </p>";
-
-
-
-
-if ($pages > 1) {
-echo '<p>';
-//What number is the current page?
-$current_page = ($start/$pagerows) + 1;
-//If the page is not the first page then create a Previous link
 if ($current_page != 1) {
-echo '<a href="index.php?s=' . ($start - $pagerows) . '&p=' . $pages . "&" . $_SERVER['QUERY_STRING']. '">Previous Page</a> ';
+   // Create a Previous Link
+    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
+            . "<input type=submit value='Previous Page'>"
+            . "<input type=hidden name='p' value=$pages>"
+            . "<input type=hidden name='s' value=".($start-$pagerows).">"
+            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
+            . "</form>");
+} else {
+    
 }
-//Create a Next link
+
 if ($current_page != $pages) {
-echo '<a href="index.php?s=' . ($start + $pagerows) . '&p=' . $pages . "&" . $_SERVER['QUERY_STRING']. '">Next Page</a> ';
-echo '&nbsp; &nbsp; &nbsp; &nbsp;';
-}
-echo '</p>';
+//Create a Next link
+    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
+            . "<input type=submit value='Next Page'>"
+            . "<input type=hidden name='p' value=$pages>"
+            . "<input type=hidden name='s' value=".($start+$pagerows).">"
+            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
+            . "</form>");
+} else {
 }
 
 
@@ -241,7 +225,9 @@ unset($_GET['search']);
 
   }//end on error
   
-	  }//end export else
+} else {
+    // just show input form
+
   
   //end main submit
 ?>
@@ -262,30 +248,24 @@ if(!isset($fageid1)) $fageid1="";
 if(!isset($fageid2)) $fageid2="";
 
 
-if (!isset($_SESSION['searched']))
-{
+
 echo <<<_END
-<form action="index.php" method="get" id="search">
-
-
-<fieldset class="enclosefieldset">
-
-
-
-
-	<br>
+    
+    
+<form action="index.php" method="post" id="search">
+    <fieldset class="enclosefieldset">
+    <br>
    <fieldset class="caseinfobox"><legend class="boldlegend">Search By Identification Information</legend>
     
     <br><label class="label" for="sexid">Identified Sex</label>
-	<select name="sexid" id="sexid">
+
+   <select name="sexid" id="sexid">
 	<option value="">- Select -</option>
 	<option value="Male">Male</option>
 	<option value="Female">Female</option>
-	</select>
+    </select>
 
-
-
- <br><label class="label" for="ageid1">Range of Identified Ages</label><input id="ageid1" type="text" name="ageid1" size="5" maxlength="5" value="$fageid1"/>&nbsp; to &nbsp;
+    <br><label class="label" for="ageid1">Range of Identified Ages</label><input id="ageid1" type="text" name="ageid1" size="5" maxlength="5" value="$fageid1"/>&nbsp; to &nbsp;
     <input id="ageid2" type="text" name="ageid2" size="5" maxlength="5" value="$fageid2"/>
     <select name="ageidunits">
       <option value="years">years</option>
@@ -293,12 +273,13 @@ echo <<<_END
       <option value="fmonths">fetal months</option>
       </select>
     
-     <br><label class="label" for="statureid1">Range of Identified Statures</label><input id="statureid1" type="text" name="statureid1" size="5" maxlength="8" value=""/>&nbsp; to &nbsp;
+    <br><label class="label" for="statureid1">Range of Identified Statures</label><input id="statureid1" type="text" name="statureid1" size="5" maxlength="8" value=""/>&nbsp; to &nbsp;
     <input id="statureid2" type="text" name="statureid2" size="5" maxlength="8" value=""/> 
-        <select name="statureunits">
+    
+    <select name="statureunits">
       <option value="in">inches</option>
       <option value="cm">cm</option>
-      </select>
+    </select>
       
         <br><label class="label" for="idrace">Identified Races/Ethnicities</label>
       <input type="checkbox" name="race[]" value="as" id="raceAs"/>Asian/Pacific Islander
@@ -348,7 +329,8 @@ echo <<<_END
      </fieldset>  
 
         
-        <fieldset class="caseinfobox"><legend class="boldlegend">Search By Method</legend>
+    <fieldset class="caseinfobox"><legend class="boldlegend">Search By Method</legend>
+        
 _END;
     $sx_methods = method::get_methods_by_type($db, METHOD_DATA_SEX_ID);
     $list = array();
@@ -402,15 +384,17 @@ _END;
 echo <<<_END
     
      <br><label class="label" for="searchtype">Search for cases that contain:</label>
-  <select name="method_conj">
+  
+    <select name="method_conj">
 	<option value="all">All Selected Methods</option>
-	<option value="any">At Least One of Selected Methods</option></select> 
+	<option value="any">At Least One of Selected Methods</option>
+    </select> 
     
-        <span class="tooltip"><img class="img-bottom" src="../../images/tooltip.png">
-            <span class="tooltiptext">If you've selected multiple methods, then use the dropdown menu here to clarify your search. For example, if you selected Fordisc and Brooks & Suchey 1990, clicking "All Selected Methods" will only return cases where both methods were used.</span>
-        </span>   
+    <span class="tooltip"><img class="img-bottom" src="../../images/tooltip.png">
+        <span class="tooltiptext">If you've selected multiple methods, then use the dropdown menu here to clarify your search. For example, if you selected Fordisc and Brooks & Suchey 1990, clicking "All Selected Methods" will only return cases where both methods were used.</span>
+    </span>   
     
-        <br ><br>
+    <br ><br>
 
      </fieldset>  
      
@@ -423,25 +407,27 @@ echo <<<_END
 	<br >
 	<fieldset class="enclosefieldset">
 	<fieldset class="caseinfobox"><legend class="boldlegend">Search Options</legend>
- <br><label class="label" for="searchtype">List Cases That Meet:</label>
-  <select name="andor">
-	<option value="1">All Selected Criteria</option>
-	<option value="2">At Least One of Selected Criteria</option></select> 
+        <br>
+        <label class="label" for="searchtype">List Cases That Meet:</label>
+        <select name="andor">
+            <option value="1">All Selected Criteria</option>
+            <option value="2">At Least One of Selected Criteria</option>
+        </select> 
+
+        <span class="tooltip"><img class="img-bottom" src="../../images/tooltip.png">
+            <span class="tooltiptext"> If you've selected or entered multiple criteria for your above search query (e.g. female, white, black, case year 2009+, Fordisc, Brooks and Suchey 1990), you will need to specify the conditions of that search here.  Correctly indicating your specifications will improve the accuracy of your search. </span>
+        </span> 
     
-    <span class="tooltip"><img class="img-bottom" src="../../images/tooltip.png">
-        <span class="tooltiptext"> If you've selected or entered multiple criteria for your above search query (e.g. female, white, black, case year 2009+, Fordisc, Brooks and Suchey 1990), you will need to specify the conditions of that search here.  Correctly indicating your specifications will improve the accuracy of your search. </span>
-     </span> 
-    
-    <br ><br>
-<label class="label" for="regsubmit">Click here to search</label>
-   <input name="regsubmit" id="regsubmit" type="submit" class="showybutton" value="Search"/><br />
+        <br ><br>
+        <label class="label" for="regsubmit">Click here to search</label>
+        <input name="regsubmit" id="regsubmit" type="submit" class="showybutton" value="Search"/><br />
    
     
-<br>
-</fieldset>
-	<br>
-	</fieldset>
-<br>
+    <br>
+    </fieldset>
+    <br>
+    </fieldset>
+    <br>
 
 </form>
 
@@ -462,6 +448,7 @@ echo <<<_END
 	</fieldset>
 </form>
 <BR>
+    
 <form action="confirm.php" method="post" id="export">
 
 _END;
@@ -528,15 +515,12 @@ frmvalidator.addValidation("ageid2","geelmnt=ageid1","The second age should be l
 //]]>
 </script>
 
-
-
-
-
 _END;
-} 
+
 ?>
 </div>
 
 <?php
+}
     require_once("../../include/footer.php");
 ?>
