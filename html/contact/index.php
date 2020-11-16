@@ -59,7 +59,9 @@ Article/Chapter title:
 Biological profile component (age, sex, stature or ancestry):
 Bone(s) used by method:") .
 '</textarea></div>
-    <div id="contactsend"><input name="SendMessage" type="submit" value="Send Email"/></div>'; ?>
+    <div id="contactsend"><input name="SendMessage" type="submit" value="Send Email"/></div>'; 
+
+?>
 	
 	</form>
 </div>

@@ -36,6 +36,8 @@ require_once "../include/header_admin.php";
         {
            echo "Error: Message could not be sent.<BR>";
         }
+   } else {
+       
    }
 
     echo("<fieldset>");
@@ -44,11 +46,11 @@ require_once "../include/header_admin.php";
     echo '<div id="contactname">
       <label for="subject">Subject:</label>    
       <input name="subject" id="subject" type="text" size="40" maxlength="200" /></div>
-    <div id="contactmessage"><label for="emailmessage">Message:</label><br />
-  <textarea name="emailmessage" id="emailmessage" cols="60" rows="30">
-</textarea></div>
-<BR>
-    <input name="SendMessage" type="submit" value="Send Email"/></div><BR>';
+      <div id="contactmessage"><label for="emailmessage">Message:</label><br />
+      <textarea name="emailmessage" id="emailmessage" cols="60" rows="30">
+      </textarea></div>
+      <BR>
+      <input name="SendMessage" type="submit" value="Send Email"/></div><BR>';
    echo("</fieldset>");
     ?>
 	
