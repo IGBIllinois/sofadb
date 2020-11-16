@@ -2,88 +2,49 @@
 //**************************************
 //     First selection results     //
 //**************************************
-if(isset($_GET['func']) && $_GET['func'] == "drop_1"  ) { 
-   // If drop_1 (method type) was chosen, show dropdown for the newly selected method type
-   require_once('../../include/main.inc.php') ;
-   functions::drop_1($_GET['drop_var']); 
 
-   exit();
-   
-} else if(isset($_GET['func']) && $_GET['func'] == "show_method_info"  ) { 
-    // If a method was chosen, show the method_infos for that method
-    require_once('../../include/main.inc.php') ;
-    $method_id = $_GET['method_id'];
-    method_infos::show_method_info($db, $method_id); 
-    exit();
-    
-}
 $title = "Forensic Anthropology Case Database (FADAMA) - Edit Case";
 require_once('../../include/header_user.php');
-require_once('../../include/session.inc.php') ;
 
-
-
- 
 ?>
-
   <h1 class="cntr">Edit Case Information</h1>
-  
   <center>(<a href="https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Edit_case_information" target="_blank">Edit case tutorial</a>)</center>
-
-
   <?php
 
 $casedata = null;
 $errors = array();
-if(isset($_GET['id'])) 
-{
-    $case = new sofa_case($db, $_GET['id']);
-    if($case->get_memberid() != $session->get_var('id')) {
-        echo('<span style="padding-left:100px; 
-                    display:block;">');
-        echo "You do not have permission to view this case.";
-        echo("</span>");
-        require_once("../../include/footer.php");
-        exit;
-    } else {
-        $caseeditid=$_GET['id'];
-        $_SESSION['caseid']=$caseeditid;
-    
 
-    $casedata = new sofa_case($db, $caseeditid);
-    }
-}
-
-elseif(!isset($_SESSION['caseid']))
-{ 
-    header ("location: ../index.php"); exit();
-}
-
-
-
-elseif(isset($_SESSION['caseid']))
-{
-	$caseeditid=$_SESSION['caseid'];
-        $casedata = new sofa_case($db, $caseeditid);
-
-        $casedata = new sofa_case($db, $caseeditid);
-}
-	
- $methods = $casedata->get_case_methods();
- 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $errors = array(); // Start an array to hold the errors
-    if(isset($_POST['methodtype'])) {
-        $selmethodtype = $_POST['methodtype'][0];
+    if(isset($_POST['caseid'])) {
+        // Edit case
+
+        $case = new sofa_case($db, $_POST['caseid']);
+        if($case->get_memberid() != $session->get_var('id')) {
+            echo('<span style="padding-left:100px; 
+                        display:block;">');
+            echo "You do not have permission to view this case.";
+            echo("</span>");
+            require_once("../../include/footer.php");
+            exit;
+        } else {
+            $caseeditid=$_POST['caseid'];
+            $casedata = new sofa_case($db, $caseeditid);
+        }
+    } else {
+        echo("Please enter a valid case to edit.");
     }
+
+
+    $errors = array(); // Start an array to hold the errors
     
     //remove method from case here, decrement total cases and numsubmitted from members.
     if (isset($_POST['delsubmit']))
     {
 
             $deleteid=$_POST['delid'];
+            $caseid = $_POST['caseid'];
             $tier2 = new tier2data($db, $deleteid);
             $caseid = $tier2->get_caseid();
             $this_case = new sofa_case($db, $caseid);
@@ -254,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo("</p><BR></span>");
 
         }
-    } else {
+    } else if(isset($_POST['savecase'])) {
         // Edit case
         // 
 	// Check for a casename:
@@ -674,15 +635,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     
-    if (empty($errors)) 
-        { // If there were no errors
-		//Determine whether the case has already been registered	
-		$memberid=$session->get_var('id');
+    if (empty($errors)) { 
+       // If there were no errors
+       //Determine whether the case has already been registered	
+        $memberid=$session->get_var('id');
 
-      $caseeditid=$_SESSION['caseid'];
-      
+      $caseeditid=$_POST['caseid'];
       $case_exists = sofa_case::case_exists($db, $memberid, $caseyear, $casenum, $caseeditid);
-
+        $casedata = new sofa_case($db, $caseeditid);
             if ($case_exists == false)
             {//The case has not been registered already 
 		// Make the query:
@@ -749,6 +709,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                                 
                 $result = $case->edit_case($data);
+                
         	if ($result["RESULT"] == FALSE) { 
                     // If it did not run OK
                     // Error message:
@@ -761,15 +722,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     echo($result["MESSAGE"]);
                 }
 
-       		unset($_SESSION['caseid']); 
-                header ("location: ../index.php");
 
-                // Include the footer and stop the script
-
-                //exit();
                 
-		}
-	else {
+	} else {
             //The email address is already registered
             echo '<p class="error">The case name and number are not acceptable because it is already registered</p>';
         }//end already registered if
@@ -786,7 +741,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo("</p><BR></span>");
 
     }// End of else (empty($errors))
-} // End of the main Submit conditional.
+    // End of the main Submit conditional.
+}  else {
+
+}
 }
 ?>
 
@@ -806,6 +764,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     <form action="index.php" method="post" id="casedata" name="casedata">
         <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
+        <input type='hidden' id='caseid' name='savecase' value=1>
   <fieldset class="caseinfobox"><legend class="boldlegend">General Case Information</legend>
       
           
@@ -972,12 +931,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	  </div>
 	     <div id="tabs-2">
                     <?php
-   if(isset($_GET['successAddCase'])) {
+   if(isset($_POST['successAddCase'])) {
        echo("Case added successfully. You may now add method data to this case.<BR>");
    }
    ?>
                  
-                     <!-- Add Method box -->    
+    <!-- Add Method box -->    
 
     <form action="index.php#tabs-2" method="post" id="method_info_data">
         <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
@@ -991,15 +950,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div name="methodholder" id="methodholder">
              <p><select name="methodtype[]" id="methodtype">
                      
-                           <option value="" selected="selected" disabled="disabled">Add Method For</option>
-                           <option value=<?php echo '"'.METHOD_DATA_SEX_ID.'"';?> ><?php echo METHOD_DATA_SEX;?></option>
-                           <option value=<?php echo '"'.METHOD_DATA_AGE_ID.'"';?> ><?php echo METHOD_DATA_AGE;?></option>
-                           <option value=<?php echo '"'.METHOD_DATA_ANCESTRY_ID.'"';?> ><?php echo METHOD_DATA_ANCESTRY;?></option>
-                           <option value=<?php echo '"'.METHOD_DATA_STATURE_ID.'"';?> ><?php echo METHOD_DATA_STATURE;?></option>
+                <option value="" selected="selected" disabled="disabled">Add Method For</option>
+                <option value=<?php echo '"'.METHOD_DATA_SEX_ID.'"';?> ><?php echo METHOD_DATA_SEX;?></option>
+                <option value=<?php echo '"'.METHOD_DATA_AGE_ID.'"';?> ><?php echo METHOD_DATA_AGE;?></option>
+                <option value=<?php echo '"'.METHOD_DATA_ANCESTRY_ID.'"';?> ><?php echo METHOD_DATA_ANCESTRY;?></option>
+                <option value=<?php echo '"'.METHOD_DATA_STATURE_ID.'"';?> ><?php echo METHOD_DATA_STATURE;?></option>
 
-                            </select>
+                </select>
 
-                             <span id="wait_1" style="display: none;">
+        <span id="wait_1" style="display: none;">
 
     <img alt="Please Wait" src="../../images/ajax-loader.gif"/>
     </span>
@@ -1046,15 +1005,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     
                     foreach($tier2s as $tier2) {
                         $method = new method($db, $tier2->get_methodid());
-                        echo("<tr>
-                            
-                        <td><U><a href=editmethods.php?id=".$caseeditid."&tier2id=".$tier2->get_id().">Edit</a></U></td>");
-                        
+                        echo("<tr>");
+                        echo("<td><form action=editmethods.php method=POST>"
+                                . "<input type=hidden name=caseid value=$caseeditid>"
+                                . "<input type=hidden name=tier2id value=".$tier2->get_id().">"
+                                . "<input type=submit name=editmethod value='Edit'>"
+                                . "</form>");
                         
                         echo '<td><form action="index.php#tabs-2" method="post" id="removedata" onsubmit="return confirm(\'Do you really want to remove this method from this case?\')">
                             <form action="index.php#tabs-2" method="post" id="removedata" onsubmit="return confirm(\'Do you really want to remove this method from this case?\')">
                             <input name="delid" type="hidden" value="'.$tier2->get_id().'"/>
-                            <input name="delsubmit" type="submit" value="Remove" /> </form>
+                            <input type=hidden name=caseid value='.$caseeditid.'>
+                            <input name="delsubmit" type="submit" value="Delete" /> </form>
                             </td>';
                         
                         echo("<td>". $method->get_method_type()."</td>

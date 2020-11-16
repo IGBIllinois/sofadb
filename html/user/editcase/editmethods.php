@@ -13,10 +13,10 @@ require_once('../../include/session.inc.php') ;
   <?php
 
 $casedata = null;
-if(isset($_GET['id'])) 
-{
+/*
+if(isset($_GET['id'])) {
     $case = new sofa_case($db, $_GET['id']);
-    if($case->get_memberid() != $_SESSION['id']) {
+    if($case->get_memberid() != $session->get_var('id')) {
         echo('<span style="padding-left:100px; 
                     display:block;">');
         echo "You do not have permission to view this case.";
@@ -25,8 +25,6 @@ if(isset($_GET['id']))
         exit;
     } else {
         $caseeditid=$_GET['id'];
-        $_SESSION['caseid']=$caseeditid;
-        unset($_GET['id']);
 
         $casedata = new sofa_case($db, $caseeditid);
 
@@ -40,24 +38,55 @@ if(isset($_GET['id']))
     }
 }
 
-elseif(!isset($_SESSION['caseid']))
+elseif(!isset($_GET['caseid']))
 { 
     header ("location: ../index.php"); exit();
 }
 
-elseif(isset($_SESSION['caseid']))
+elseif(isset($_GET['caseid']))
 {
-	$caseeditid=$_SESSION['caseid'];
+	$caseeditid=$_GET['caseid'];
         $casedata = new sofa_case($db, $caseeditid);
 
 }
 	
+
  $methods = $casedata->get_case_methods();
- 
+ */
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    
+    if(isset($_POST['caseid'])) {
+        
+        $case = new sofa_case($db, $_POST['caseid']);
+        if($case->get_memberid() != $session->get_var('id')) {
+            echo('<span style="padding-left:100px; 
+                        display:block;">');
+            echo "You do not have permission to view this case.";
+            echo("</span>");
+            require_once("../../include/footer.php");
+            exit;
+        } else {
+            $caseeditid=$_POST['caseid'];
 
-    if(isset($_POST['tier2id'])) {
+            $casedata = new sofa_case($db, $caseeditid);
+
+
+            if(isset($_POST['tier2id'])) {
+                $tier2id = $_POST['tier2id'];
+                $tier2 = new tier2data($db, $_POST['tier2id']);
+                $method = new method($db, $tier2->get_methodid());
+
+            }
+        }
+    } else {
+        echo("Please input a valid case id.<BR>");
+    }
+    
+    if(!isset($_POST['tier2id'])) {
+        echo("Please select a valid tier2id.<BR>");
+    } else {
+        if(isset($_POST['submit'])) {
         $numerrors = 0;
         $errors = array();
         
@@ -119,7 +148,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     if($numerrors == 0) {
-        
     $tier2->update_estimated_outcomes($est1, $est2, $units);
     
     $result = null;
@@ -139,7 +167,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
 
     $output_data = $_POST['output_data'];
-
     $new_ids = array();
     
     foreach($output_data as $od) {
@@ -230,7 +257,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $check_select = $_POST['check_select'];
             foreach($check_select as $method_info_id=>$option_list) {
                 foreach($option_list as $option_id=>$option_name) {
-                    if($option_id > 0) {                
+                    if($option_id > 0) {    
                         $this_case->add_tier3($tier2id, $option_id);
                     }
                 }
@@ -240,7 +267,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo("<div id='caseform'>");
     if($numerrors == 0) {
         // Go back to case page
-        header ("location: index.php?id=$caseeditid&success=1#tabs-2");
+        //header ("location: index.php?id=$caseeditid&success=1#tabs-2");
     } else {
         foreach($result as $error_result) {
             echo($error_result['MESSAGE']. "<BR>");
@@ -261,7 +288,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	   
     }
     }
-        
+    }
     
 }
 ?>
@@ -281,10 +308,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	     <div id="tabs-1">
                  
-                     <!-- Add Method box -->    
-                     <?php 
-                     echo('<form action="editmethods.php?id='.$caseeditid.'&tier2id='.$tier2->get_id().'" method="post" id="casedata">');
-                     ?>
+        <!-- Add Method box -->    
+        <?php 
+        echo('<form action="editmethods.php" method="post" id="casedata">');
+        ?>
+        
+        <input type='hidden' id='submit' name='submit' value='1'>
         <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
         <input type='hidden' id='tier2id' name='tier2id' value='<?php echo $tier2id; ?>'>
     <fieldset class="methodinfobox"><legend class="boldlegend">Edit Methods</legend>
@@ -292,33 +321,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php
         echo($method->get_name());
         echo('  <input type="submit" class="showybutton" id="editmethoddatabutton" value="Save Edits" ><BR><BR>');
-
-
-            method_infos::show_method_info($db, $tier2->get_methodid(), $tier2->get_id());
+        method_infos::show_method_info($db, $tier2->get_methodid(), $tier2->get_id());
         
         ?>
-             <div name="methodholder" id="methodholder">
-             <p>
-                            
 
 
-     
-     <input type="submit" class="showybutton" id="editmethoddatabutton" value="Save Edits" ><BR><BR>
-                 
-             <U><a href="index.php?id=<?php echo $caseeditid; ?>#tabs-2">Back to Case</a></U>
-     
+        <input type="submit" class="showybutton" id="editmethoddatabutton" value="Save Edits" ><BR><BR>
 
-             </div>
-
-          <input name="fchoseninput" type="hidden" id="fchoseninput" value="0" />
-    <input name="pchoseninput" type="hidden" id="pchoseninput" value="0" />   
+        </form>
+        <form method="post" action="index.php#tabs-2">
+            <input type="hidden" name="caseid" value="<?php echo $caseeditid; ?>">
+            <input type="submit" name="submit" value="Back to Case">
+         </form>
    
     
     </fieldset>
-        </form>
-    <!-- End Add Method box -->
+        
+   <!-- End Add Method box -->
     
-                 <!-- Method data -->
+   <!-- Method data -->
    <div class="scroll" name="methodtableholder" id="methodtableholder">
              
             
@@ -326,7 +347,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                <table id="hortable" border="1">
                   <tbody>
                     <tr>
-                      <p>
+                      
 						
                         <th>Edit</th>
                         <th>Delete</th>
@@ -338,24 +359,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                    Method Name
                             </th>
                             <th>
-                                   Method Outcomes
+                                   Method Outcomes 
                             </th>
-                            </p>
+                            
                     </tr>
                     
                     <?php
-                    $tier2s = $casedata->get_case_methods();
+                    $caseid = $_POST['caseid'];
                     
+                    $casedata = new sofa_case($db, $caseid);
+                    $tier2s = $casedata->get_case_methods();
                     
                     foreach($tier2s as $tier2) {
                         $method = new method($db, $tier2->get_methodid());
-                        echo("<tr>
-                            
-                        <td><U><a href=editmethods.php?id=".$caseeditid."&tier2id=".$tier2->get_id().">Edit</A></U></td>");
+                        echo("<tr>");
                         
+                        echo("<td><form action=editmethods.php method=POST>"
+                                . "<input type=hidden name=caseid value=$caseid>"
+                                . "<input type=hidden name=tier2id value=".$tier2->get_id().">"
+                                . "<input type=submit name=editmethod value='Edit'>"
+                                . "</form>");
                         
                         echo '<td>
                             <form action="index.php" method="post" id="removedata" onsubmit="return confirm(\'Do you really want to remove this method from this case?\')">
+                            <input type=hidden name=caseid value='.$caseid.'>
                             <input name="delid" type="hidden" value="'.$tier2->get_id().'"/>
                             <input name="delsubmit" type="submit" value="Remove" /> </form>
                             </td>';
