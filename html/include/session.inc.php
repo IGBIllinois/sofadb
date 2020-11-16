@@ -17,18 +17,21 @@ if (($session->get_var('loggedin'))) {
         exit();
     }
     elseif (time() > (intval($session->get_var('timeout')) + intval(SESSION_TIMEOUT))) {
+        // Timed out
         header('Location: '.$root_url.'/logout.php');
     }
     //If IP address is different
     elseif ($_SERVER['REMOTE_ADDR'] != $session->get_var('ipaddress')) {
         header('Location: '.$root_url.'/logout.php');
     } else {
+        //Reset Timeout
+    $session_vars = array('timeout'=>time());
+    $session->set_session_var('timeout', time());
         
     }
 } else {
-    //Reset Timeout
-    $session_vars = array('timeout'=>time());
-    $session->set_session($session_vars);
+    // Go pack to login page
+   header('Location: '.$root_url.'/index.php');
 }
   
 
