@@ -21,7 +21,6 @@ class functions {
         global $db;
 
             $methods = method::get_methods_by_type($db,$drop_var);
-
             echo '<script type=\"text/javascript\">
              $(function(){
 
@@ -32,15 +31,14 @@ class functions {
                 selectedList: 1
              });
 
-            });</script>
-      ';
+            });</script>';
 
             echo '<select name="drop_2" id="drop_2">
                   <option value="" disabled="disabled" selected="selected">Choose method</option>';
 
-                    foreach($methods as $method) {
-                        echo '<option value="'.$method->get_id().'">'.$method->get_name().'</option>';
-                    }
+                foreach($methods as $method) {
+                    echo '<option value="'.$method->get_id().'">'.$method->get_name().'</option>';
+                }
 
             echo '</select>';
             echo('&nbsp;<input type="submit" class="showybutton"  name="add_method" value="Save Method" />'.
@@ -51,7 +49,7 @@ class functions {
                     $('#drop_2').change(function(){
                     $('#wait_2').show();
                     $('#result_2').hide();
-                    $.get(\"index.php\", {
+                    $.post(\"method_info.php\", {
                         func: \"show_method_info\",
                         method_id: $('#drop_2').val()
                         }, function(response){
