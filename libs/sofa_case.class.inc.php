@@ -1067,7 +1067,7 @@ public function submit_case($submitstatus) {
         // FDB consent
         if($case_data['fdb_consent'] != null && $case_data['fdb_consent'] == true) {
             if($param_string != "") {
-                $param_string .= $est_join;
+                $param_string .= $conjunction;
             }
             
             $param_string .= " fdb_consent = 'consent'";
@@ -1186,7 +1186,7 @@ public function submit_case($submitstatus) {
         
         $query .= " ORDER BY id ";
 
-        //echo("serch query = $query<BR>");
+        //echo("search query = $query<BR>");
         //print_r($params);
         
         $result = $db->get_query_result($query, $params);
