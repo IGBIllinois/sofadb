@@ -498,30 +498,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $case_id = $result['id'];
 
                 $case =  new sofa_case($db, $case_id);
-
-               header ("location: ../editcase/index.php?id=$case_id&successAddCase=$case_id#tabs-2"); exit();
+                echo('<div id="caseform">');
+                echo("Case added successfully. You may now edit the new case.");
+                echo("<form action='../editcase/index.php#tabs-2' method=POST name=addsuccess>"
+                        . "<input type=hidden name=caseid value=$case_id>"
+                        . "<input type=hidden name=successAddCase value=$case_id>"
+                        . "<input type=submit name=submit value='Edit Case'>"
+                        . "</form>");
+                echo("</div>");
+               //header ("location: ../editcase/index.php?id=$case_id&successAddCase=$case_id#tabs-2"); 
+               //exit();
                  
 			// Include the footer and stop the script
 		  
-			exit();
 		}
 	else
     	{//The cae  is already registered
-		echo	'<span style="padding-left:100px; 
-                display:block;"><p class="error">The case name and number are not acceptable because it is already registered</p></span>';
-		}//end already registered if
+            echo('<div id="caseform">');
+            echo('<span style="padding-left:100px; 
+            display:block;"><p class="error">The case name and number are not acceptable because it is already registered</p></span>');
+        }//end already registered if
+        echo("</div>");
 	} 
     else
      { // Report the errors.
-		echo '<span style="padding-left:100px; 
-                display:block;"><h2>Error!</h2>
-		<p class="error">The following error(s) occurred:<br/>';
-		foreach ($errors as $msg) 
-        { // Print each error.
-			echo " - $msg<br/>\n";
-		}
-		echo '</p><h3>Please try again.</h3><p><br/></p></span>';
-	   }// End of else (empty($errors))
+        echo('<div id="caseform">');
+        echo '<span style="padding-left:100px; 
+        display:block;"><h2>Error!</h2>
+        <p class="error">The following error(s) occurred:<br/>';
+        foreach ($errors as $msg)  { // Print each error.
+            echo " - $msg<br/>\n";
+        }
+        
+        echo '</p><h3>Please try again.</h3><p><br/></p></span>';
+        echo("</div>");
+    }// End of else (empty($errors))
 } // End of the main Submit conditional.
 ?>
   
