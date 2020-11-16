@@ -18,41 +18,36 @@ $(document).ready(function(){
     $(this).animate({"opacity": "1"}, "slow");
     });
     
-        
+ // Updates the list of methods when the method type is selected
+ $('#methodtype').change(function(){
+        $('#wait_1').show();
+        $('#result_1').hide();
+        $('#wait_2').hide();
+        $('#fchoseninput').val('0');
+        $('#pchoseninput').val('0');
+        $('#result_2').hide();
+        $('#drop_1').hide();
+        $('#drop_2').hide();
+
+        $.post("method_info.php", {
+		func: "drop_1",
+		drop_var: $('#methodtype').val()
+            }, 
+            function(response){
+                $('#result_1').fadeOut();
+                setTimeout("finishAjax('result_1', '"+escape(response)+"')", 400);
+            }
+        );//end get
+    	return false;
+	});//end method type change
+        //
+   
 // user/addcase
 
 	$('#wait_1').hide();
 
 
-    	$('#methodtype').change(function(){
 
-	  $('#wait_1').show();
-	  $('#result_1').hide();
-	  $('#wait_2').hide();
-	$('#fchoseninput').val('0');
-	$('#pchoseninput').val('0');
-	$('#result_2').hide();
-	$('#wait_3').hide();
-	$('#result_3').hide();
-	$('#drop_1').hide();
-	$('#drop_2').hide();
-
-      $.get("index.php", {
-		func: "drop_1",
-		drop_var: $('#methodtype').val()
-      }, function(response){
-        $('#result_1').fadeOut();
-        setTimeout("finishAjax('result_1', '"+escape(response)+"')", 400);
-      });//end get
-    	return false;
-	});//end method type change
-        
-        
-
-
-
-        
-        
     //user/editmethod    
     $('#wait_1').hide();
 	
