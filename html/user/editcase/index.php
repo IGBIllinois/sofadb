@@ -42,17 +42,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     //remove method from case here, decrement total cases and numsubmitted from members.
     if (isset($_POST['delsubmit']))
     {
-
-            $deleteid=$_POST['delid'];
-            $caseid = $_POST['caseid'];
-            $tier2 = new tier2data($db, $deleteid);
-            $caseid = $tier2->get_caseid();
-            $this_case = new sofa_case($db, $caseid);
-            $this_case->remove_method($deleteid);
-            
+        // Delete method
+        $deleteid=$_POST['delid'];
+        $caseid = $_POST['caseid'];
+        $tier2 = new tier2data($db, $deleteid);
+        $caseid = $tier2->get_caseid();
+        $this_case = new sofa_case($db, $caseid);
+        $this_case->remove_method($deleteid);
 
     } else if(isset($_POST['add_method'])) {
-
+        // Add a new method
         $method_id = $_POST['drop_2'];
         $method = new method($db, $method_id);
         
@@ -87,11 +86,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             }
         }
-        
-        
-        $output_data = $_POST['output_data'];
-        foreach($output_data as $od) {
 
+        // $output_data is an array of the tier3 data (method_info_options) that has been posted
+        // in ($id=>$value) pairs
+        $output_data = $_POST['output_data'];
+        
+        foreach($output_data as $od) {
+            // Check for numeric validity
             if(is_array($od)) {
                 foreach($od as $id=>$value) {
                     if($id != null && $id != '') {
@@ -134,13 +135,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
         if(count($errors) == 0) {
+        // $output_data is an array of the tier3 data (method_info_options) that has been posted
+        // in ($id=>$value) pairs    
         foreach($output_data as $od) {
 
                 if(is_array($od)) {
                     foreach($od as $id=>$value) {
                         if($id != null && $id != '') {
                             if($value != null && $value != "") {
-
+                                // Add the tier3 data
                                 $this_case->add_tier3($t2id, $id, $value);
                             }
                         }
@@ -151,9 +154,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
                 }
             }
+        } else {
+            // No errors
         }
         
-                // Add Left/Right data, if applicable
+        // Add Left/Right data, if applicable
         if($_POST['LR'] != null) {
         
             $lr = $_POST['LR'];
@@ -167,6 +172,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     }
             }
+        } else {
+            // No Left/Right inputs
         }
         
         
@@ -199,26 +206,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             }
             
+        } else {
+            // No references
         }
         }
         if(count($errors) == 0) {
-            //header ("location:index.php#tabs-2");
+            
         } else {
          // Report the errors.
-		echo '<span style="padding-left:100px; 
-                    display:block;"><h2>Error!</h2>
-		<p class="error">The following error(s) occurred:<br/>';
-		foreach ($errors as $msg) 
-        { // Print each error.
-			echo " - $msg<br/>\n";
-		}
+            echo '<span style="padding-left:100px; 
+                display:block;"><h2>Error!</h2>
+            <p class="error">The following error(s) occurred:<br/>';
+                foreach ($errors as $msg) { 
+                    // Print each error.
+                    echo " - $msg<br/>\n";
+                }
                 echo("</p><BR></span>");
-
         }
     } else if(isset($_POST['savecase'])) {
         // Edit case
         // 
-	// Check for a casename:
+	// Check for necessary case data:
 	if (empty($_POST['caseyear'])) {
             $errors[] = 'You must enter a case year to save.';
 	} else if(!is_numeric($_POST['caseyear'])) {
@@ -291,12 +299,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } 
     else {
         $faage_test = trim($_POST['faage']);
-                if(is_numeric($faage_test) && $faage_test > MAXAGE) {
-                    $errors[] = "Forensic Anthropology estimated age must be less than ".MAXAGE.".";
-                } else {
-                    $faage = trim($_POST['faage']);
-                    $faageunits = trim($_POST['faageunits']);
-                }
+        if(is_numeric($faage_test) && $faage_test > MAXAGE) {
+            $errors[] = "Forensic Anthropology estimated age must be less than ".MAXAGE.".";
+        } else {
+            $faage = trim($_POST['faage']);
+            $faageunits = trim($_POST['faageunits']);
+        }
             
     }
     
@@ -566,16 +574,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   
     
     if (empty($_POST['idrace_othertext'])) {
-		$idothertext=NULL;
-        
-	} 
+	$idothertext=NULL;
+    } 
     else {
-		$idOt=1;
+	$idOt=1;
         $idothertext = $_POST['idrace_othertext'];
-	
-	}
+    }
         
-                // prior known data
+    // prior known data
     if(isset($_POST['known_none'])) {
       $known_none=$_POST['known_none'];
     }
@@ -625,8 +631,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $known_unable_to_determine=0;
     }    
     
-    if(($idOt==0 && $idothertext)||($idOt==1 && !$idothertext))
+    if(($idOt==0 && $idothertext)||($idOt==1 && !$idothertext)) {
 	{$errors[] = 'You must Check the Other box and enter text.';}
+    } else {
+        // 'Other' box not checked, or check and text added
+    }
     
     if(empty($_POST['fdb_consent'])) {
         $errors[] = "You must select an FDB Data Sharing Option.";
@@ -743,7 +752,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }// End of else (empty($errors))
     // End of the main Submit conditional.
 }  else {
-
+    // Not posted
 }
 }
 ?>
@@ -760,16 +769,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div id="tabs-1">
     
     
-  <fieldset class="enclosefieldset">
+<fieldset class="enclosefieldset">
     
-    <form action="index.php" method="post" id="casedata" name="casedata">
-        <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
-        <input type='hidden' id='caseid' name='savecase' value=1>
-  <fieldset class="caseinfobox"><legend class="boldlegend">General Case Information</legend>
+<form action="index.php" method="post" id="casedata" name="casedata">
+    <input type='hidden' id='caseid' name='caseid' value='<?php echo $caseeditid; ?>'>
+    <input type='hidden' id='caseid' name='savecase' value=1>
+        
+<fieldset class="caseinfobox"><legend class="boldlegend">General Case Information</legend>
       
           
     
-     <label class="label" for="caseyear">Case Year</label><input id="caseyear" type="text" name="caseyear" size="5" maxlength="4" value="<?php  echo $casedata->get_caseyear();; ?>"/>
+  <label class="label" for="caseyear">Case Year</label><input id="caseyear" type="text" name="caseyear" size="5" maxlength="4" value="<?php  echo $casedata->get_caseyear();; ?>"/>
   <br />
     
   <label class="label" for="casenumber">Case Number</label><input id="casenumber" type="text" name="casenumber" size="30" maxlength="30" value="<?php echo $casedata->get_casenumber(); ?>"/>
@@ -980,57 +990,59 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                  <fieldset class="methodinfobox"><legend class="boldlegend">Currently Added Methods</legend>
    <div name="methodtableholder" id="methodtableholder">
 
-               <table id="hortable" border="1">
-                  <tbody>
-                    <tr>
-                      <p>
-						
-                        <th>Edit</th>
-                        <th>Delete</th>
-                        <th>Method Type</th>
-                        <th>Method Name</th>
-                        <th>Method Outcomes
-                                   
-                            <div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
-                                <span class="tooltiptext">This only displays a summary of the data you entered.</span>
-                            </div>   
-                                   
-                        </th>
-                            </p>
-                    </tr>
-                    
-                    <?php
-                    $tier2s = $casedata->get_case_methods();
-                    
-                    
-                    foreach($tier2s as $tier2) {
-                        $method = new method($db, $tier2->get_methodid());
-                        echo("<tr>");
-                        echo("<td><form action=editmethods.php method=POST>"
-                                . "<input type=hidden name=caseid value=$caseeditid>"
-                                . "<input type=hidden name=tier2id value=".$tier2->get_id().">"
-                                . "<input type=submit name=editmethod value='Edit'>"
-                                . "</form>");
-                        
-                        echo '<td><form action="index.php#tabs-2" method="post" id="removedata" onsubmit="return confirm(\'Do you really want to remove this method from this case?\')">
-                            <form action="index.php#tabs-2" method="post" id="removedata" onsubmit="return confirm(\'Do you really want to remove this method from this case?\')">
-                            <input name="delid" type="hidden" value="'.$tier2->get_id().'"/>
-                            <input type=hidden name=caseid value='.$caseeditid.'>
-                            <input name="delsubmit" type="submit" value="Delete" /> </form>
-                            </td>';
-                        
-                        echo("<td>". $method->get_method_type()."</td>
-				<td>".$method->get_name()."</td>".
-                                "<td>".$tier2->show_estimated_outcome()."</td>".
-				"</tr>");
-                    }
+    <table id="hortable" border="1">
+       <tbody>
+         <tr>
+           <p>
+
+             <th>Edit</th>
+             <th>Delete</th>
+             <th>Method Type</th>
+             <th>Method Name</th>
+             <th>Method Outcomes
+
+                 <div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
+                     <span class="tooltiptext">This only displays a summary of the data you entered.</span>
+                 </div>   
+
+             </th>
+                 </p>
+         </tr>
+
+         <?php
+         $tier2s = $casedata->get_case_methods();
+
+         // Draw the method table
+         foreach($tier2s as $tier2) {
+             $method = new method($db, $tier2->get_methodid());
+             echo("<tr>");
+             // Edit button
+             echo("<td><form action=editmethods.php method=POST>"
+                     . "<input type=hidden name=caseid value=$caseeditid>"
+                     . "<input type=hidden name=tier2id value=".$tier2->get_id().">"
+                     . "<input type=submit name=editmethod value='Edit'>"
+                     . "</form>");
+
+             // Delete button
+             echo '<td><form action="index.php#tabs-2" method="post" id="removedata" onsubmit="return confirm(\'Do you really want to remove this method from this case?\')">
+                 <form action="index.php#tabs-2" method="post" id="removedata" onsubmit="return confirm(\'Do you really want to remove this method from this case?\')">
+                 <input name="delid" type="hidden" value="'.$tier2->get_id().'"/>
+                 <input type=hidden name=caseid value='.$caseeditid.'>
+                 <input name="delsubmit" type="submit" value="Delete" /> </form>
+                 </td>';
+
+             echo("<td>". $method->get_method_type()."</td>
+                     <td>".$method->get_name()."</td>".
+                     "<td>".$tier2->show_estimated_outcome()."</td>".
+                     "</tr>");
+         }
 
     ?>
                     
                    
-                    </tbody>
-                </table>
-				<div class="clear"></div>
+        </tbody>
+    </table>
+    <div class="clear"></div>
     
     </div>
     </fieldset>
@@ -1055,12 +1067,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   var frmvalidator  = new Validator("casedata");
   
   frmvalidator.EnableOnPageErrorDisplaySingleBox();
-   frmvalidator.EnableMsgsTogether();
+  frmvalidator.EnableMsgsTogether();
  
  
   frmvalidator.addValidation("casenumber","req","You must provide a case number");
  
- frmvalidator.addValidation("caseyear","req","You must provide a year for the case");
+  frmvalidator.addValidation("caseyear","req","You must provide a year for the case");
   frmvalidator.addValidation("caseyear","gt=1900","Case Year must be post-1900");
  
   frmvalidator.addValidation("caseyear","maxlen=4","Year must be entered in YYYY format");
@@ -1070,7 +1082,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   frmvalidator.addValidation("faage", "lt=150", "Age should be less than 150.");
   frmvalidator.addValidation("faage2", "lt=150", "Age should be less than 150.");
   
-   frmvalidator.addValidation("fastature","numeric","Statures must be entered as a number");
+  frmvalidator.addValidation("fastature","numeric","Statures must be entered as a number");
    
   frmvalidator.addValidation("fastature2","numeric","Statures must be entered as a number");
   
@@ -1078,10 +1090,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    
   frmvalidator.addValidation("idstature","numeric","Statures must be entered as a number");
     
-	 frmvalidator.addValidation("idrace_othertext","req","Please fill-in the  Other Race/Ethinicity textbox",
-        "VWZ_IsChecked(document.forms['casedata'].elements['race_other'],'1')");
+  frmvalidator.addValidation("idrace_othertext","req","Please fill-in the  Other Race/Ethinicity textbox",
+    "VWZ_IsChecked(document.forms['casedata'].elements['race_other'],'1')");
 		
-frmvalidator.addValidation("farace_othertext","req","Please fill-in the Other Ancestry textbox",
+  frmvalidator.addValidation("farace_othertext","req","Please fill-in the Other Ancestry textbox",
         "VWZ_IsChecked(document.forms['casedata'].elements['farace_other'],'1')");
 
 	//]]></script>

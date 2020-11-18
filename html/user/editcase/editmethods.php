@@ -13,46 +13,7 @@ require_once('../../include/session.inc.php') ;
   <?php
 
 $casedata = null;
-/*
-if(isset($_GET['id'])) {
-    $case = new sofa_case($db, $_GET['id']);
-    if($case->get_memberid() != $session->get_var('id')) {
-        echo('<span style="padding-left:100px; 
-                    display:block;">');
-        echo "You do not have permission to view this case.";
-        echo("</span>");
-        require_once("../../include/footer.php");
-        exit;
-    } else {
-        $caseeditid=$_GET['id'];
 
-        $casedata = new sofa_case($db, $caseeditid);
-
-
-        if(isset($_GET['tier2id'])) {
-            $tier2id = $_GET['tier2id'];
-            $tier2 = new tier2data($db, $_GET['tier2id']);
-            $method = new method($db, $tier2->get_methodid());
-
-        }
-    }
-}
-
-elseif(!isset($_GET['caseid']))
-{ 
-    header ("location: ../index.php"); exit();
-}
-
-elseif(isset($_GET['caseid']))
-{
-	$caseeditid=$_GET['caseid'];
-        $casedata = new sofa_case($db, $caseeditid);
-
-}
-	
-
- $methods = $casedata->get_case_methods();
- */
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
@@ -287,6 +248,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		echo '</p><h3>Please try again.</h3><p><br/></p></span>';
 	   
     }
+    } else {
+        // Not posted
     }
     }
     
@@ -296,17 +259,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
   <div id="caseform">
-  
-   
-  
 
 	<div id="tabs">
   <ul>
     <li><a href="#tabs-1">Manage Case Methods</a></li>
- 
   </ul>
 
-	     <div id="tabs-1">
+    <div id="tabs-1">
                  
         <!-- Add Method box -->    
         <?php 
@@ -344,61 +303,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
              
             
              
-               <table id="hortable" border="1">
-                  <tbody>
-                    <tr>
-                      
-						
-                        <th>Edit</th>
-                        <th>Delete</th>
-                         <th>
-						
-                            Method Type
-                        </th>
-                            <th>
-                                   Method Name
-                            </th>
-                            <th>
-                                   Method Outcomes 
-                            </th>
-                            
-                    </tr>
-                    
-                    <?php
-                    $caseid = $_POST['caseid'];
-                    
-                    $casedata = new sofa_case($db, $caseid);
-                    $tier2s = $casedata->get_case_methods();
-                    
-                    foreach($tier2s as $tier2) {
-                        $method = new method($db, $tier2->get_methodid());
-                        echo("<tr>");
-                        
-                        echo("<td><form action=editmethods.php method=POST>"
-                                . "<input type=hidden name=caseid value=$caseid>"
-                                . "<input type=hidden name=tier2id value=".$tier2->get_id().">"
-                                . "<input type=submit name=editmethod value='Edit'>"
-                                . "</form>");
-                        
-                        echo '<td>
-                            <form action="index.php" method="post" id="removedata" onsubmit="return confirm(\'Do you really want to remove this method from this case?\')">
-                            <input type=hidden name=caseid value='.$caseid.'>
-                            <input name="delid" type="hidden" value="'.$tier2->get_id().'"/>
-                            <input name="delsubmit" type="submit" value="Remove" /> </form>
-                            </td>';
-                        
-                        echo("<td>". $method->get_method_type()."</td>
-				<td>".$method->get_name()."</td>".
-                                "<td>".$tier2->show_estimated_outcome()."</td>".
-				"</tr>");
-                    }
+    <table id="hortable" border="1">
+       <tbody>
+         <tr>
+
+
+            <th>Edit</th>
+            <th>Delete</th>
+             <th>
+
+                Method Type
+            </th>
+                <th>
+                       Method Name
+                </th>
+                <th>
+                       Method Outcomes 
+                </th>
+
+         </tr>
+
+         <?php
+         $caseid = $_POST['caseid'];
+
+         $casedata = new sofa_case($db, $caseid);
+         $tier2s = $casedata->get_case_methods();
+
+         foreach($tier2s as $tier2) {
+             $method = new method($db, $tier2->get_methodid());
+             echo("<tr>");
+
+             echo("<td><form action=editmethods.php method=POST>"
+                     . "<input type=hidden name=caseid value=$caseid>"
+                     . "<input type=hidden name=tier2id value=".$tier2->get_id().">"
+                     . "<input type=submit name=editmethod value='Edit'>"
+                     . "</form>");
+
+             echo '<td>
+                 <form action="index.php" method="post" id="removedata" onsubmit="return confirm(\'Do you really want to remove this method from this case?\')">
+                 <input type=hidden name=caseid value='.$caseid.'>
+                 <input name="delid" type="hidden" value="'.$tier2->get_id().'"/>
+                 <input name="delsubmit" type="submit" value="Remove" /> </form>
+                 </td>';
+
+             echo("<td>". $method->get_method_type()."</td>
+                     <td>".$method->get_name()."</td>".
+                     "<td>".$tier2->show_estimated_outcome()."</td>".
+                     "</tr>");
+         }
 
     ?>
                     
                    
-                    </tbody>
-                </table>
-				<div class="clear"></div>
+                </tbody>
+            </table>
+        <div class="clear"></div>
     
     </div>
 
@@ -407,16 +366,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
    </div></div>
 	  
-	  
-     <div id="casedata_errorloc" class="errorlocation">
+    <div id="casedata_errorloc" class="errorlocation">
     </div>
 
     </fieldset>
  
   </form>
-    
-    
-    
+
 <?php
     require_once("../../include/footer.php");
 ?>
