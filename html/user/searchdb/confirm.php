@@ -1,37 +1,44 @@
 <?php
 $title = "Forensic Anthropology Case Database (FADAMA) - Confirm";
 
-require_once('../../include/header_user.php');
+
 $errors = 0;
 $error_messages = array();
-echo("<div id='searchregion'>");
-echo("<div id='searchform'>");
-echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Confirm</legend>');
 
 if(isset($_POST['exportsubmit'])) {
+    // export cases based on search
     $submitid = "exportsubmit";
 } else if (isset($_POST['exportall'])) {
+    // export all cases
     $submitid = "exportall";
 } else if (isset($_POST['exportMy'])) {
+    // export only user's cases
     $submitid = "exportMy";
 }
 
 if(isset($_POST['submit_consent'])) {
+    // Check that all terms have been agreed to
     if(!isset($_POST['data']) ||
-            !isset($_POST['credit']) ||
-            !isset($_POST['conduct']) ||
-            !isset($_POST['terms'])) {
+        !isset($_POST['credit']) ||
+        !isset($_POST['conduct']) ||
+        !isset($_POST['terms'])) {
         $errors++;
         $error_messages[] = "You must agree to all of the terms before submitting.";
+    } else {
+        
     }
     if(!isset($_POST['name']) || $_POST['name'] == "") {
         $errors++;
         $error_messages[] = "Please input a name.";
+    } else {
+        
     }
     if(!isset($_POST['email']) || 
-            !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+        !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         $errors++;
         $error_messages[] = "Please input a valid email address.";
+    } else {
+        
     }
     
     if($errors == 0) {
@@ -43,14 +50,25 @@ if(isset($_POST['submit_consent'])) {
 
         
     } else {
+        echo("Error:<BR>");
         foreach($error_messages as $error) {
             echo("- $error<BR>");
         }
         echo("<BR>");
     }
 }
-    
-echo("<form action='confirm.php?".$_SERVER['QUERY_STRING']."' method=POST name='confirmform'>");
+require_once('../../include/header_user.php');
+echo("<div id='searchregion'>");
+echo("<div id='searchform'>");
+echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Confirm</legend>');
+
+echo("<form action='confirm.php' method=POST name='confirmform'>");
+
+// Re-add the POST search variables to this form
+foreach($_POST as $name=>$value) {
+    echo("<input type=hidden name=$name value='$value'>");
+}
+
 echo <<<_END
 
 <input type=hidden value='submit_consent' name="submit_consent" id='submit_consent'>
@@ -59,7 +77,7 @@ echo <<<_END
 <BR>
 <input type="checkbox" name= "credit" id="credit">I will credit this database with any publications and share with the developers any publications that stem from its use. Please use the following citation:
 <BR><BR>
-    <blockquote class=blockquote1>Hughes, CE and Juarez CA. 2018. Learning from Our Casework: The Forensic Anthropology Database for Assessing Methods Accuracy (FADAMA). NIJ 2018-DU-BX-0213.</blockquote>
+<blockquote class=blockquote1>Hughes, CE and Juarez CA. 2018. Learning from Our Casework: The Forensic Anthropology Database for Assessing Methods Accuracy (FADAMA). NIJ 2018-DU-BX-0213.</blockquote>
 <BR>
 <input type="checkbox" name="conduct" id="conduct">I will not conduct any research that attempts to identify decedents, agencies, or practitioners linked to case data.
 <BR>

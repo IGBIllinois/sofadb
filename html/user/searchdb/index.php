@@ -127,6 +127,11 @@ echo("If you plan to analyze this data, please be sure to review the FADAMA tuto
 echo("<BR>");
 
 echo ('<form action="confirm.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="export">');
+if(isset($_POST)) {
+    foreach($_POST as $name=>$value) {
+        echo("<input type=hidden name='$name' value='$value'>");
+    }
+}
 echo'<br/><p>Click here to export results to CSV File
 <input name="fdb" type="hidden" value="0">
    <input name="exportsubmit" id="exportsubmit" type="submit" value="Export Case Data"/></p>
@@ -453,64 +458,49 @@ echo <<<_END
 
 _END;
 
-echo("<input type=hidden name='mId' value='$memberid'>");
+    echo("<input type=hidden name='mId' value='$memberid'>");
 
-echo <<<_END
+    
+    echo <<<_END
 
-<fieldset class="enclosefieldset">
-	<fieldset class="caseinfobox"><legend class="boldlegend">Export My Cases</legend>
-<br>
-If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.
-<BR><BR>
-<span><label class="label" for="exportMy">Click here to export all of the current user's submitted cases</label><input name="exportMy" type="submit" id="exportMy" title="Export My Cases" value="Export My Cases"></span><br>
+    <fieldset class="enclosefieldset">
+            <fieldset class="caseinfobox"><legend class="boldlegend">Export My Cases</legend>
+    <br>
+    If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.
+    <BR><BR>
+    <span><label class="label" for="exportMy">Click here to export all of the current user's submitted cases</label><input name="exportMy" type="submit" id="exportMy" title="Export My Cases" value="Export My Cases"></span><br>
 
 
-<br>
-</fieldset>
-	<br>
-	</fieldset>
-</form>
+    <br>
+    </fieldset>
+            <br>
+            </fieldset>
+    </form>
     
 <script language="JavaScript" type="text/javascript"
     xml:space="preserve">//<![CDATA[
-//You should create the validator only after the definition of the HTML form
+  //You should create the validator only after the definition of the HTML form
   var frmvalidator  = new Validator("search");
   
- frmvalidator.EnableOnPageErrorDisplaySingleBox();
+  frmvalidator.EnableOnPageErrorDisplaySingleBox();
   frmvalidator.EnableMsgsTogether();
- 
- 
-  
- // frmvalidator.addValidation("casename","req","You must provide a nickname for the case");
 
-
-	frmvalidator.addValidation("cyear","gt=1900","Case Year must be post-1900");
- frmvalidator.addValidation("ageid1","gt=0","First age must be larger than zero");
+  frmvalidator.addValidation("cyear","gt=1900","Case Year must be post-1900");
+  frmvalidator.addValidation("ageid1","gt=0","First age must be larger than zero");
   frmvalidator.addValidation("ageid2","gt=0","Second age must be larger than zero");
- frmvalidator.addValidation("statureid1","gt=0","First stature must be larger than zero");
+  frmvalidator.addValidation("statureid1","gt=0","First stature must be larger than zero");
   frmvalidator.addValidation("statureid2","gt=0","Second stature must be larger than zero");
  
- 	frmvalidator.addValidation("statureid2","geelmnt=statureid1","The second stature should be larger or equal to the first.");
-frmvalidator.addValidation("ageid2","geelmnt=ageid1","The second age should be larger or equal to the first.");
+  frmvalidator.addValidation("statureid2","geelmnt=statureid1","The second stature should be larger or equal to the first.");
+  frmvalidator.addValidation("ageid2","geelmnt=ageid1","The second age should be larger or equal to the first.");
   frmvalidator.addValidation("cyear","maxlen=4","Year must be entered in YYYY format");
   frmvalidator.addValidation("cyear","numeric", "Year must be an integer number");
   frmvalidator.addValidation("ageid1","numeric", "First age must be a number");
-   frmvalidator.addValidation("ageid2","numeric", "Second age must be a number");
-   frmvalidator.addValidation("statureid1","numeric", "First stature must be a number");
-   frmvalidator.addValidation("statureid2","numeric", "Second stature must be a number");
+  frmvalidator.addValidation("ageid2","numeric", "Second age must be a number");
+  frmvalidator.addValidation("statureid1","numeric", "First stature must be a number");
+  frmvalidator.addValidation("statureid2","numeric", "Second stature must be a number");
   frmvalidator.addValidation("mID","numeric","Member ID must be an integer number");
-  
-  
- 
- 
- // frmvalidator.addValidation("fname","req","Please enter your First Name");
- // frmvalidator.addValidation("fname","maxlen=20",	"Max length for FirstName is 20");
- // frmvalidator.addValidation("fname","alpha","Alphabetic chars only");
-  
-  //frmvalidator.addValidation("email","email");
-  
-   
-   //frmvalidator.addValidation("pcode","numeric","Zip code must be a number");
+
     
 //]]>
 </script>
