@@ -42,11 +42,9 @@ $(document).ready(function(){
 	});//end method type change
         //
    
-// user/addcase
-
+        // user/addcase
+        
 	$('#wait_1').hide();
-
-
 
     //user/editmethod    
     $('#wait_1').hide();
@@ -76,13 +74,15 @@ $(document).ready(function(){
 
 // user/addcase
 
-
+// Used in drawing method dropboxes
 function finishAjax(id, response) {
   $('#wait_1').hide();
   $('#'+id).html(unescape(response));
   $('#'+id).fadeIn();
 
 }
+
+// Used in drawing methods
 function finishAjax_tier_three(id, response) {
   $('#wait_2').hide();
   $('#'+id).html(unescape(response));
@@ -92,7 +92,8 @@ function finishAjax_tier_three(id, response) {
 
 
 
-
+// Draws collapseable regions for items like Bone Regions in 
+// methods like Spradley/Jantz
 function showBoneRegion(showId) {
     var x = document.getElementById("category").options.length;
 
@@ -109,11 +110,12 @@ function showBoneRegion(showId) {
 
 }
 
-
+// Displays tabs
   $(function() {
     $( "#tabs" ).tabs();
   });
   
+  // Scroll to top of page
 $('document').ready(function() {
    $(window).scrollTop(0);
 });
@@ -124,10 +126,7 @@ $('document').ready(function() {
  });
 
 
-
-// hide checkboxes
-
-
+// Check or uncheck checkboxes
  $(document).mouseup(function (e) {
      var ids = document.querySelectorAll('[id]');
 
@@ -148,6 +147,9 @@ $('document').ready(function() {
 // checkbox dropdown
 var expanded = false;
 
+// Used to expand or hide a series of checkboxes, like in methods
+// like Rios & Cardoso
+// parameter: elementId - HTML id of the form element to expand or hide
 function showCheckboxes(elementId) {
 
   checkboxes = elementId;
@@ -161,6 +163,7 @@ function showCheckboxes(elementId) {
   }
 }
 
+// Hide a series of checkboxes when it's clicked off of
 function hideCheckboxes(){
 
   document.onclick = function(e){
@@ -172,6 +175,9 @@ function hideCheckboxes(){
 };
 // end checkbox dropdown
 
+// Enable a field after clicking a link
+// Used when a user registers to make sure the signature field is only
+// enabled after a user views the terms and conditions
 function enableAfterClick(elementid) {
     document.getElementById(elementid).disabled = false;
 }

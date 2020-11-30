@@ -1,4 +1,7 @@
 <?php
+/** Allows a user to reset their password
+ * 
+ */
 $title="Reset Password";
 require_once("../../conf/settings.inc.php");
 require_once("../include/header_general.php");
@@ -9,11 +12,14 @@ $contactURL = "https://". $_SERVER['HTTP_HOST']. $root_url. "/contact/";
 <?php
 $success = false;
 if(isset($_POST['submitpass'])) {
+    // Reset user's password
     
     $psword1 = $_POST['psword1'];
     $psword2 = $_POST['psword2'];
     
     if($psword1 == $psword2) {
+        // Check if new passwords match
+        
         if($psword1 == null || $psword1 == "") {
             $success = false;
             echo("Please fill out the password fields.<BR>");
@@ -37,6 +43,7 @@ if(isset($_POST['submitpass'])) {
 
 }
 if(!$success) {
+    // They haven't posted yet, or there was an error, so redraw the form
 // Check for tokens
 $selector = filter_input(INPUT_GET, 'selector');
 $validator = filter_input(INPUT_GET, 'validator');
@@ -51,12 +58,14 @@ if ( false !== ctype_xdigit( $selector ) && false !== ctype_xdigit( $validator )
         <BR>
         <input type="submit" name="submitpass" id="submitpass" class="submit" value="Submit">
     </form>
-<?php endif; 
+    
+<?php 
+
+    endif; 
 
 }
-
-
 ?>
+    
 </div>
   <script language="JavaScript" type="text/javascript"
     xml:space="preserve">//<![CDATA[

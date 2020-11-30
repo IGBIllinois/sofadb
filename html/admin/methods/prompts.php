@@ -1,10 +1,15 @@
 <?php
+
+/** Allows an Admin to add, or edit prompts available for methods
+ *  Prompts are additional text for methods that help describe methods and their inputs
+ */
+
 $title = "Forensic Anthropology Case Database (FADAMA) - Prompts";
 require_once "../../include/header_admin.php";
 
 
-
 if(isset($_POST['add_prompt'])) {
+    // Add a new prompt
     $errors = array();
     
     if(!isset($_POST['prompt_name']) || $_POST['prompt_name'] == "") {
@@ -33,13 +38,19 @@ if(isset($_POST['add_prompt'])) {
 
 
 if(isset($_POST['delete_prompt'])) {
+    
+    if(!isset($_POST['del_prompt_id'])) {
+        echo("Please select a prompt to delete.");
+    } else {
+        // Delete prompt
+    
     $prompt_id = $_POST['del_prompt_id'];
     
     $result = method::delete_prompt($db, $prompt_id);
     
     echo($result['MESSAGE']);
     
-    
+    }
 }
 
 $prompt_list = method::get_all_prompts($db);

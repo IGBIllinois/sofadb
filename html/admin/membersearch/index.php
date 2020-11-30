@@ -1,15 +1,14 @@
 <?php
 
- require_once('../../include/header_admin.php') ;
+/** Allows and Admin to search current users
+ * 
+ */
 
+ require_once('../../include/header_admin.php') ;
 
 ?>
 
   <div id="memberregion"> <h2 style="text-align:center">Search List of Members</h2> 
- 
- 
-  
-  
 
 <div name="searchresults">
  <?php 
@@ -28,8 +27,8 @@ $andor = " AND ";
  
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'  ) {
-      // new params
-      $search_values = array();
+    // New search parameters
+    $search_values = array();
 
     $id = (empty($_POST['mID']) ? null : $_POST['mID']);
     $first_name = (empty($_POST['fname']) ? null : $_POST['fname']);
@@ -78,7 +77,7 @@ if(!$error){//if error start
     //Declare which record to start with
     if (isset($_POST['s']) && is_numeric($_POST['s'])) {//already been calculated
         $start = $_POST['s'];
-    }else{
+    } else{
         $start = 0;
     }
 
@@ -241,16 +240,7 @@ echo <<<_END
 	</select>
  
  </fieldset>
-	
-   
-   
-           
-           
-    
-    
-           
-	
-	
+
 <br />	<br /> 
 <label class="label" for="searchtype">Type of search:</label>
   <select name="andor">
@@ -268,21 +258,13 @@ echo <<<_END
 
 <script language="JavaScript" type="text/javascript"
     xml:space="preserve">//<![CDATA[
-//You should create the validator only after the definition of the HTML form
+        
+  //You should create the validator only after the definition of the HTML form
   var frmvalidator  = new Validator("registration");
   
- frmvalidator.EnableOnPageErrorDisplaySingleBox();
+  frmvalidator.EnableOnPageErrorDisplaySingleBox();
   frmvalidator.EnableMsgsTogether();
- 
- 
- // frmvalidator.addValidation("fname","req","Please enter your First Name");
- // frmvalidator.addValidation("fname","maxlen=20",	"Max length for FirstName is 20");
- // frmvalidator.addValidation("fname","alpha","Alphabetic chars only");
-  
-  //frmvalidator.addValidation("email","email");
-  
-   
-   //frmvalidator.addValidation("pcode","numeric","Zip code must be a number");
+
     
 //]]></script>
 

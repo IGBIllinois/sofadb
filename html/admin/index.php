@@ -78,10 +78,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $changemember->set_permission($status);
         }
     } else {
-
+        // Nothing posted
     }
 } else {
-    
+    // Not posted
 }
 
 
@@ -90,7 +90,6 @@ if (isset($_POST['p']) && is_numeric ($_POST['p'])) { //already been calculated
     $pages=$_POST['p'];
 } else { //use the next block of code to calculate the number of pages
 //First, check for the total number of records
-
     $records = count($all_members);
 
     //Now calculate the number of pages
@@ -110,7 +109,6 @@ if (isset($_POST['s']) && is_numeric($_POST['s'])) {//already been calculated
     $start = 0;
 }
 
-$all_members = member::get_members($db);
 $members = member::get_members($db, $start, $pagerows);
 $total_members = count($all_members);
 

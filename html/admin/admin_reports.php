@@ -1,9 +1,17 @@
 <?php
+
+/**
+ * Allows an Admin to get reports about FDB cases, and reports of who has requested reports
+ */
+
 $title = "Forensic Anthropology Case Database (FADAMA) - Reports";
 require_once "../include/header_admin.php";
 
 
  if (isset($_POST['exportfdb']) && $_POST['exportfdb'] != null){
+     
+     // Get FDB data report
+     
      $errors = array();
      $datesubmitted = null;
      if(isset($_POST['datesubmitted']) && $_POST['datesubmitted'] != null) {
@@ -28,6 +36,7 @@ require_once "../include/header_admin.php";
              echo($error);
          }
      } else {
+         // No errors; Write report
         $params['fdb_consent'] = true;
         $caselist = sofa_case::search_cases($db, null, $params, null);
         sofa_case::write_report($db, $caselist, null, null, 1,0);
@@ -35,6 +44,7 @@ require_once "../include/header_admin.php";
      }
 
  } else if (isset($_POST['downloaddata'])) {
+     // Get a download report
      $date = null;
      $errors = array();
      if(isset($_POST['date']) && $_POST['date'] != null) {
@@ -48,6 +58,7 @@ require_once "../include/header_admin.php";
 
          }
      } else {
+         // No date entered; Get all data
      }
      
      if(count($errors) > 0) {

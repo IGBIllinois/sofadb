@@ -1,8 +1,12 @@
 <?php
+/**
+ *  Allows an Admin to add Administrator notes, 
+ */
 $title = " Forensic Anthropology Case Database (FADAMA) - Admin Notes";
 require_once "../include/header_admin.php";
 
 if(isset($_POST['addMessageSubmit'])) {
+    // Add a new message
     $errors = array();
     if(!isset($_POST['message']) || $_POST['message'] == "") {
         $errors[] = "Please input a message.";
@@ -20,6 +24,8 @@ if(isset($_POST['addMessageSubmit'])) {
             echo($error."<BR>");
         }
     }
+} else {
+    // No submit
 }
 
 echo('<div id="memberregion"> 

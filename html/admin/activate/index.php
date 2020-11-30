@@ -1,4 +1,9 @@
 <?php
+
+/** This page allows an administrator to activate a user who has requested approval
+ * 
+ */
+
 require_once("../../include/header_admin.php");
 
 ?>
@@ -8,6 +13,7 @@ require_once("../../include/header_admin.php");
 // This script retrieves all the records from the users table.
 
 if (isset($_POST['id'])) {
+    // Add user
     $idactivate=intval($_POST['id']);
 
     if(isset($_POST['deny'])) {
@@ -46,6 +52,7 @@ if (isset($_POST['id'])) {
     }
 
     } else {
+        // Activate member
         $member = new member($db, $idactivate);
         $result = $member->set_permission(1);
 

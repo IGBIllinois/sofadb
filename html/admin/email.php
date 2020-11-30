@@ -1,4 +1,10 @@
 <?php
+
+/** Allows an Admin to send an email to all users. Should only be used
+ * sparingly, for important announcements
+ * 
+ */
+
 $title = "Forensic Anthropology Case Database (FADAMA) - Email";
 require_once "../include/header_admin.php";
 

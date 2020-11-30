@@ -1,4 +1,10 @@
 <?php 
+
+/**
+ * Allows a user to edit their profile information
+ * 
+ */
+
 $title = "Forensic Anthropology Case Database (FADAMA) - Edit Profile";
 require_once("../../include/header_admin.php");
 require_once('../../include/session.inc.php') ;
@@ -11,19 +17,17 @@ require_once('../../include/session.inc.php') ;
   <div id="phperror">
   <?php
 
-
-
-
 // Has the form been submitted?
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
     if(isset($_POST['editsubmit'])) {
-        
         // Get member id and display current info
+        
         $memberid=$_POST['edit_member_id'];
         $edit_member = new member($db, $memberid);
     } else if(isset($_POST["submit"])){
         //Update with new info
+        
         $memberid=$_POST['edit_member_id'];
         $edit_member = new member($db, $memberid);
 	$errors = array(); // Start an array to hold the errors
@@ -221,10 +225,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
 
             } else { // If it did not run OK
 		// Error message:
-			echo '<h2>System Error</h2>
-			<p class="error">Registration failed because of a system error. We apologize for any inconvenience.</p>'; 
-			// Debugging message:
-			echo '<p>' . $result['MESSAGE'] . '<br><br>Query: ' . $q . '</p>';
+                echo '<h2>System Error</h2>
+                <p class="error">Registration failed because of a system error. We apologize for any inconvenience.</p>'; 
+                // Debugging message:
+                echo '<p>' . $result['MESSAGE'] . '<br><br>Query: ' . $q . '</p>';
 		} // End of if ($result)
 
 		// Include the footer and stop the script
@@ -238,8 +242,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
                     echo " - $msg<br>\n";
             }
             echo '</p><h3>Please try again.</h3><p><br></p></span>';
-            }// End of if (empty($errors))
-    } // End of the main Submit conditional.
+        }// End of if (empty($errors))
+    } else {
+        // No submit
+    }
+    // End of the main Submit conditional.
 }
 ?></div>
   
@@ -264,10 +271,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
     <br><label class="label" for="psword2">Confirm New Password</label><input id="psword2" type="password" name="psword2" size="12" maxlength="50" value="" ><br /><br></fieldset>
     
     <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Current Address</legend>
-        <br> <label class="label" for="title2">Job Title*</label><input id="title2" type="text" name="title2" size="30" maxlength="100" value="<?php echo $edit_member->get_title(); ?>">
-        <br><label class="label" for="institution">Institution*</label><input id="institution" type="text" name="institution" size="30" maxlength="100" value="<?php echo $edit_member->get_institution(); ?>">
-        <br><label class="label" for="addr1">Address*</label><input id="addr1" type="text" name="addr1" size="30" maxlength="100" value="<?php echo $edit_member->get_mailaddress(); ?>">
-        <br><label class="label" for="addr2">Address</label><input id="addr2" type="text" name="addr2" size="30" maxlength="100" value="<?php echo $edit_member->get_mailaddress2(); ?>">
+      <br> <label class="label" for="title2">Job Title*</label><input id="title2" type="text" name="title2" size="30" maxlength="100" value="<?php echo $edit_member->get_title(); ?>">
+      <br><label class="label" for="institution">Institution*</label><input id="institution" type="text" name="institution" size="30" maxlength="100" value="<?php echo $edit_member->get_institution(); ?>">
+      <br><label class="label" for="addr1">Address*</label><input id="addr1" type="text" name="addr1" size="30" maxlength="100" value="<?php echo $edit_member->get_mailaddress(); ?>">
+      <br><label class="label" for="addr2">Address</label><input id="addr2" type="text" name="addr2" size="30" maxlength="100" value="<?php echo $edit_member->get_mailaddress2(); ?>">
       <br><label class="label" for="city">City*</label><input id="city" type="text" name="city" size="30" maxlength="100" value="<?php echo $edit_member->get_city(); ?>">
       <br><label class="label" for="state">State*</label><input id="state" type="text" name="state" size="30" maxlength="30" value="<?php echo $edit_member->get_state(); ?>">
       <br><label class="label" for="pcode">Postal (ZIP) Code*</label><input id="pcode" type="text" name="pcode" size="15" maxlength="15" value="<?php echo $edit_member->get_zip(); ?>">
@@ -286,7 +293,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
         
         <option value="4"<?php if ($edit_member->get_aafsstatus() == 4) echo ' selected="selected"'; ?>>Not A Member</option>
         </select>
-         <br><label class="label" for="region">Region of Practice*</label>
+        <br><label class="label" for="region">Region of Practice*</label>
       <select name="region">
         <option value="">- Select -</option>
         <option value="1"<?php if ($edit_member->get_region() == 1) echo ' selected="selected"'; ?>>Northeast</option>
@@ -331,7 +338,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
 //You should create the validator only after the definition of the HTML form
   var frmvalidator  = new Validator("registration");
   
- frmvalidator.EnableOnPageErrorDisplaySingleBox();
+  frmvalidator.EnableOnPageErrorDisplaySingleBox();
   frmvalidator.EnableMsgsTogether();
  
  
@@ -354,21 +361,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
   frmvalidator.addValidation("city","req","Please enter your city");
  
 	
-	frmvalidator.addValidation("state","req","Please enter your state");
+  frmvalidator.addValidation("state","req","Please enter your state");
   
-   frmvalidator.addValidation("pcode","req","Please enter your zip code");
+  frmvalidator.addValidation("pcode","req","Please enter your zip code");
   
-   frmvalidator.addValidation("pcode","numeric","Zip code must be a number");
-    frmvalidator.addValidation("phone","numeric","Phone number must be a number");
+  frmvalidator.addValidation("pcode","numeric","Zip code must be a number");
+  frmvalidator.addValidation("phone","numeric","Phone number must be a number");
 
   frmvalidator.addValidation("degreeyear","gt=1900","Degree must be post-1900");
  
   frmvalidator.addValidation("degreeyear","maxlen=4");
   frmvalidator.addValidation("degreeyear","numeric","Degree year must be a number");
 
-   frmvalidator.addValidation("region","req","Please select your region");
+  frmvalidator.addValidation("region","req","Please select your region");
    
-   frmvalidator.addValidation("aafs","req","Please select your AAFS membership status");
+  frmvalidator.addValidation("aafs","req","Please select your AAFS membership status");
 
 //]]></script>
     

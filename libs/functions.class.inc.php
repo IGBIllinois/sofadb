@@ -91,6 +91,8 @@ class functions {
                 if ( null === $user ) {
                     return array('RESULT'=>0,
                         'MESSAGE'=>'There was an error processing your request.');
+                } else {
+                    
                 }
 
                 // Update password

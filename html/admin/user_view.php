@@ -2,14 +2,13 @@
 require_once('../include/header_admin.php') ;
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Change from an Admin view to a User view
  */
 
 $member = new member($db, $session->get_var('id'));
 
 if($member->get_permissionstatus() == 2) {
+    // Only change if user has admin permissions
     $session->set_session_var('permissionstatus', 1);
     
     header("Location: ../user/index.php");

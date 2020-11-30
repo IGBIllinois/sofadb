@@ -1,9 +1,8 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This page allows a user to add a new method to one of their cases
+ * 
  */
 
 require_once "../../include/header_admin.php";
