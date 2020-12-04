@@ -283,7 +283,8 @@ foreach($method_infos as $method_info) {
           echo("<table ><tr class=''><td class=''>");
           echo($option->get_value());
           echo("</td><td class=''>");
-          echo('<form action="./edit_method.php?id='.$id.'" method="post" id="delete_option" onsubmit="return confirm(\'Do you really want to delete this option?\')">
+          echo('<form action="./edit_method.php" method="post" id="delete_option" onsubmit="return confirm(\'Do you really want to delete this option?\')">
+          <input name="id" type="hidden" value="'.$id.'"/>
           <input name="option_id" type="hidden" value="'.$option->get_id().'"/>
           <input name="info_id" type="hidden" value="'.$method_info->get_id().'"/>
           <input name="id" type="hidden" value="'.$method->get_id().'"/>
@@ -292,7 +293,8 @@ foreach($method_infos as $method_info) {
           echo("<BR>");
       }
       echo("<td>");
-      echo('<form action="edit_method.php?id='.$id.'" method="post" id="add_option">');
+      echo('<form action="edit_method.php" method="post" id="add_option">');
+      echo("<input type='hidden' name=id value='".$id."'>");
       echo("<input type='hidden' name=method_info_id value='".$method_info->get_id()."'>");
       echo("<BR>");
       echo('Option value:');
