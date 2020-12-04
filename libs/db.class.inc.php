@@ -40,6 +40,7 @@ class db {
 					array(PDO::ATTR_PERSISTENT => true));
                         
                         $this->link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                        $this->link->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			$this->host = $host;
 			$this->database = $database;
 			$this->username = $username;
