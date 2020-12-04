@@ -1200,7 +1200,8 @@ public function submit_case($submitstatus) {
         return $results;
 
 }
-    /** Creates an excel sheet with data from the given cases
+    /** Creates a zip file containing an excel sheet with data from the given cases
+     * and an additional information text document.
      * 
      * @param db $db The database object
      * @param \sofa_case $case_list List of case objects
@@ -1211,125 +1212,136 @@ public function submit_case($submitstatus) {
      */
     public static function write_report($db, $case_list, $username=null, $email=null, $fdb=0, $mine=0) {
         
-       //header('Content-Type: text/csv; charset=utf-8');
-         ob_end_clean();
+        ob_end_clean();
         $today = date("m_d_Y_H_i_s");
+        
+        // Excel filename
         $filename='SOFADBExport_'.$today.".csv";
+        
+        // Zip filename
         $zip_filename='SOFADBExport_'.$today.".zip";
+        
         if($fdb) {
+            // Excel filename
             $filename = 'SOFADB_FDB_Export_'.$today.".csv";
+            
+            // Zip filename
             $zip_filename = 'SOFADB_FDB_Export_'.$today.".zip";
         }
         
-        //header("Content-type: application/octet-stream");
-        //header('Content-Disposition: attachment; filename='.$filename);
 
         $zip_filepath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $zip_filename;
         $zip = new ZipArchive();
         if ($zip->open($zip_filepath, ZIPARCHIVE::CREATE )!==TRUE) {
             exit("cannot open <$zip_filename>\n");
+        } else {
+            // Zip file created okay
         }
         
        // make header rows for data
        if($fdb) {
-       $headerrow=array('Case ID', 
-            'Date Submitted to FADAMA DB', 
-            'Case Year',
-           'Case Number',
-           'Case Agency',
-            'FA Report: Sex', 
-            'FA Report: Minimum age', 
-            'FA Report: Maximum age', 
-            'FA Report: FA Age Notes',
-            'FA Report: Ancestry',
-            'FA Report: Minimum Stature',
-            'FA Report: Maximum Stature',
-            'Identified Sex',
-            'Identified Sex Notes',
-            'Identified Age',
-            'Identified Age Units (years or fetal months)',
-            'Identified Age Notes',
-            'Identified Race/Ethnicity',
-            'Race/Ethnicity Notes',
-            'Identified Stature',
-            'Identified Stature Notes',
-            'Information Source',
-            'Case Notes');
-        
-        $headerrow2 = array('',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            ''
-            );  
-        $pre_headerrow = $headerrow2;
+            // Create an FDB report
+
+            // Header row contains column name, and Method name
+            $headerrow=array('Case ID', 
+                 'Date Submitted to FADAMA DB', 
+                 'Case Year',
+                 'Case Number',
+                 'Case Agency',
+                 'FA Report: Sex', 
+                 'FA Report: Minimum age', 
+                 'FA Report: Maximum age', 
+                 'FA Report: FA Age Notes',
+                 'FA Report: Ancestry',
+                 'FA Report: Minimum Stature',
+                 'FA Report: Maximum Stature',
+                 'Identified Sex',
+                 'Identified Sex Notes',
+                 'Identified Age',
+                 'Identified Age Units (years or fetal months)',
+                 'Identified Age Notes',
+                 'Identified Race/Ethnicity',
+                 'Race/Ethnicity Notes',
+                 'Identified Stature',
+                 'Identified Stature Notes',
+                 'Information Source',
+                 'Case Notes');
+
+             // Second header row contains Method Info name, under the corresponding Method name
+             $headerrow2 = array('',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 '',
+                 ''
+                 );  
+             $pre_headerrow = $headerrow2;
         
        } else {
-        $headerrow=array('Case ID', 
-            'Date Submitted to FADAMA DB', 
-            'Case Year',
-            'FA Report: Sex', 
-            'FA Report: Minimum age', 
-            'FA Report: Maximum age', 
-            'FA Report: FA Age Notes',
-            'FA Report: Ancestry',
-            'FA Report: Minimum Stature',
-            'FA Report: Maximum Stature',
-            'Identified Sex',
-            'Identified Sex Notes',
-            'Identified Age',
-            'Identified Age Units (years or fetal months)',
-            'Identified Age Notes',
-            'Identified Race/Ethnicity',
-            'Race/Ethnicity Notes',
-            'Identified Stature',
-            'Identified Stature Notes',
-            'Information Source',
-            'Case Notes',
-            'Background Case Knowledge');
-        
-        $headerrow2 = array('',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            ''
-            );
-        $pre_headerrow = $headerrow2;
+            $headerrow=array('Case ID', 
+                'Date Submitted to FADAMA DB', 
+                'Case Year',
+                'FA Report: Sex', 
+                'FA Report: Minimum age', 
+                'FA Report: Maximum age', 
+                'FA Report: FA Age Notes',
+                'FA Report: Ancestry',
+                'FA Report: Minimum Stature',
+                'FA Report: Maximum Stature',
+                'Identified Sex',
+                'Identified Sex Notes',
+                'Identified Age',
+                'Identified Age Units (years or fetal months)',
+                'Identified Age Notes',
+                'Identified Race/Ethnicity',
+                'Race/Ethnicity Notes',
+                'Identified Stature',
+                'Identified Stature Notes',
+                'Information Source',
+                'Case Notes',
+                'Background Case Knowledge');
+
+            $headerrow2 = array('',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                ''
+                );
+            $pre_headerrow = $headerrow2;
        }
 
         // Add methods to header row
@@ -1340,13 +1352,19 @@ public function submit_case($submitstatus) {
         $anc_methods = method::get_methods_by_type($db, METHOD_DATA_ANCESTRY_ID);
         $stat_methods = method::get_methods_by_type($db, METHOD_DATA_STATURE_ID);
         
+        // Order methods by type
         $all_methods = array_merge($sx_methods, $age_methods, $anc_methods, $stat_methods);
         
         foreach($all_methods as $method) {
+            // Create header rows for methods
             if($fdb) {
+                // FDB report
                 if(!$method->get_fdb()) {
+                    // If method isn't FDB, skip over this method
                     continue;
                 }
+            } else {
+               // Regular report 
             }
             $methodname = $method->get_name();
             
@@ -1363,27 +1381,32 @@ public function submit_case($submitstatus) {
             $method_info_ids[] = '';
             $method_infos = $method->get_method_infos();
 
+            // Some methods ('misfit methods') don't follow standard display. They have a separate
+            // "method_info_type", and are displayed according to that type
             foreach($method_infos as $method_info) {
-
+                
                 if($method->get_method_info_type() == METHOD_INFO_TYPE_SPRADLEY_JANTZ) {
                     if($method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_CATEGORY)&&
                             $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) &&
                             $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME) &&
                             $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_LEFT_RIGHT)) {
-                    $name = $method_info->get_name();
-                    if($method_info->get_header() != null && $method_info->get_name() != $method_info->get_header()) {
-                        $name .= ": ". $method_info->get_header();
-                    }
-                    
-                    // For formulas, just use the header text
-                    if($method_info->get_type() == input_type::get_input_type_by_name($db, USER_INTERACTION_SELECT_EACH)->get_id()) {
-                        $name = $method_info->get_header();
-                    }
+                        
+                        $name = $method_info->get_name();
+                        if($method_info->get_header() != null && $method_info->get_name() != $method_info->get_header()) {
+                            $name .= ": ". $method_info->get_header();
+                        }
 
-                    $pre_headerrow[] = $method_type_name;
-                    $headerrow[] = $methodname;
-                    $headerrow2[] = $name;
-                    $method_info_ids[] = $method_info->get_id();
+                        // For formulas, just use the header text
+                        if($method_info->get_type() == input_type::get_input_type_by_name($db, USER_INTERACTION_SELECT_EACH)->get_id()) {
+                            $name = $method_info->get_header();
+                        }
+
+                        $pre_headerrow[] = $method_type_name;
+                        $headerrow[] = $methodname;
+                        $headerrow2[] = $name;
+                        $method_info_ids[] = $method_info->get_id();
+                    } else {
+                        // Don't display this type in the record
                     }
                 } else {
                 if($method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_CATEGORY) &&
@@ -1395,7 +1418,10 @@ public function submit_case($submitstatus) {
                     if($method_info->get_parent_id() != null) {
                         $parent = new method_infos($db, $method_info->get_parent_id());
                         if($parent->get_name() != $name) {
+                            // Format name with parent title
                             $name = $parent->get_name() . ": ". $name;
+                        } else {
+                            // Don't format name
                         }
 
                     }
@@ -1403,7 +1429,6 @@ public function submit_case($submitstatus) {
                     $headerrow[] = $methodname;
                     $headerrow2[] = $name;
                     $method_info_ids[] = $method_info->get_id();
-                    
                                         
                     if(count($method_info->get_references()) > 0) {
                         // Add column for references
@@ -1411,24 +1436,28 @@ public function submit_case($submitstatus) {
                         $headerrow[] = $methodname;
                         $headerrow2[] = $name . " References";
                         $method_info_ids[] = '';
+                    } else {
+                        // Don't show in report
                     }
                     
                 }
                 }
                 
                    
-            }
-        }
+            } // end foreach($method_infos)
+        } // end creating header rows
          
         if(!$fdb) {
+            // Add record of download request to database
             $download_query = "INSERT INTO downloads (name, email, date) VALUES (:name, :email, NOW())";
             $download_params = array("name"=>$username,
                                     "email"=>$email);
             $db->get_insert_result($download_query, $download_params);
+        } else {
+            // FDB report, don't record
         }
         
         // create a file pointer connected to the output stream
-        //$output = fopen('php://output', 'w');
         $output = fopen('php://temp', 'w');
         
         // output the column headings
@@ -1443,23 +1472,54 @@ public function submit_case($submitstatus) {
             $curr_row[] = $curr_case->get_datesubmitted();
             $curr_row[] = $curr_case->get_caseyear();
             if($fdb) {
+                // Add case number and agency to FDB report
                 $curr_row[] = $curr_case->get_casenumber();
                 $curr_row[] = $curr_case->get_caseagency();
+            } else {
+                // Not FDB
             }
             $curr_row[] = $curr_case->get_fasex();
             $curr_row[] = $curr_case->get_faage() . " " . (empty($curr_case->get_faageunits()) ? "years" : $curr_case->get_faageunits());
             $curr_row[] = $curr_case->get_faage2() . " " . (empty($curr_case->get_faageunits2()) ? "years" : $curr_case->get_faageunits2());
             $curr_row[] = $curr_case->get_faage_notes();
             $faancestry = "";
-            if ($curr_case->get_faancestryas()!=0){$faancestry=$faancestry.'[Asian/Pacific Islander]';}
-            if ($curr_case->get_faancestryaf()!=0){$faancestry=$faancestry.'[African-American/Black]';}
-            if ($curr_case->get_faancestryhi()!=0){$faancestry=$faancestry.'[Hispanic]';}
-            if ($curr_case->get_faancestryna()!=0){$faancestry=$faancestry.'[Native Ameriacan]';}
-            if ($curr_case->get_faancestrywh()!=0){$faancestry=$faancestry.'[White]';}
+            
+            // Get the list of Forensic Anthropology estimated ancestry
+            if ($curr_case->get_faancestryas()!=0) {
+                $faancestry=$faancestry.'[Asian/Pacific Islander]';
+            } else {
+                
+            }
+            if ($curr_case->get_faancestryaf()!=0) {
+                $faancestry=$faancestry.'[African-American/Black]';
+            } else {
+                
+            }
+            if ($curr_case->get_faancestryhi()!=0) {
+                $faancestry=$faancestry.'[Hispanic]';
+            } else {
+                
+            }
+            if ($curr_case->get_faancestryna()!=0) {
+                $faancestry=$faancestry.'[Native Ameriacan]';
+            } else {
+                
+            }
+            if ($curr_case->get_faancestrywh()!=0) {
+                $faancestry=$faancestry.'[White]';
+            
+            } else {
+                
+            }
             if ($curr_case->get_faancestryottext()!= null &&
-                    $curr_case->get_faancestryottext() != '') {$faancestry=$faancestry.'['.$curr_case->get_faancestryottext().']';}
+                    $curr_case->get_faancestryottext() != '') {
+                $faancestry=$faancestry.'['.$curr_case->get_faancestryottext().']';
+            } else {
+                
+            }
             $curr_row[] = $faancestry;
             
+            // Get the FA estimated stature and stature units
             $fastatureunits = $curr_case->get_fastatureunits();
             $units = '';
             if(!empty($fastatureunits)) {
@@ -1469,18 +1529,21 @@ public function submit_case($submitstatus) {
             }
 
             $curr_row[] = (empty($curr_case->get_fastature()) ? "" : ($curr_case->get_fastature() . $units));
-            
             $curr_row[] = (empty($curr_case->get_fastature2()) ? "" : ($curr_case->get_fastature2() . $units));
+            
+            
             $curr_row[] = $curr_case->get_idsex();
             $curr_row[] = $curr_case->get_idsex_notes();
             $curr_row[] = $curr_case->get_idage();
             $curr_row[] = $curr_case->get_idageunits();
             $curr_row[] = $curr_case->get_idage_notes();
+            
+            // Get the identified ancestry
             $idancestry = "";
             if ($curr_case->get_idraceas()!=0){$idancestry=$idancestry.'[Asian/Pacific Islander]';}
             if ($curr_case->get_idraceaf()!=0){$idancestry=$idancestry.'[African-American/Black]';}
             if ($curr_case->get_idracehi()!=0){$idancestry=$idancestry.'[Hispanic]';}
-            if ($curr_case->get_idracena()!=0){$idancestry=$idancestry.'[Native Ameriacan]';}
+            if ($curr_case->get_idracena()!=0){$idancestry=$idancestry.'[Native American]';}
             if ($curr_case->get_idracewh()!=0){$idancestry=$idancestry.'[White]';}
             if ($curr_case->get_idraceot()!=0){$idancestry=$idancestry.'['.$curr_case->get_idraceottext().']';}
             $curr_row[] = $idancestry;
@@ -1500,38 +1563,62 @@ public function submit_case($submitstatus) {
             
             $background_knowledge = "";
             
+            // Determine which, if any, traits were known prior to case investigation
             if($curr_case->get_known_none()== 1) {
                 $background_knowledge .= "No biological profile information was known";
+            } else {
+                // Not checked
             }
             if($curr_case->get_known_sex() == 1) {
                 if($background_knowledge != "") {
                     $background_knowledge .= ", ";
+                } else { // No comma
+                    
                 }
+                
                 $background_knowledge .= "Sex was known";
+            } else {
+                // Not checked
             }
             if($curr_case->get_known_age()== 1) {
                 if($background_knowledge != "") {
                     $background_knowledge .= ", ";
+                } else { // No comma
+                    
                 }
                 $background_knowledge .= "Age was known";
+            } else {
+                // Not checked
             }
             if($curr_case->get_known_ancestry()== 1) {
                 if($background_knowledge != "") {
                     $background_knowledge .= ", ";
+                } else { // No comma
+                    
                 }
                 $background_knowledge .= "Ancestry/Group Affinity was known";
+            } else {
+                // Not checked
             }
             if($curr_case->get_known_stature()== 1) {
                 if($background_knowledge != "") {
                     $background_knowledge .= ", ";
+                } else { // No comma
+                    
                 }
                 $background_knowledge .= "Stature was known";
+            } else {
+                // Not checked
             }
             if($curr_case->get_known_unable_to_determine()== 1) {
                 if($background_knowledge != "") {
                     $background_knowledge .= ", ";
+                } else { // No comma
+                    
                 }
                 $background_knowledge .= "Unable to determine";
+            } else {
+                // Not checked
             }
             
             $curr_row[] = $background_knowledge;
@@ -1546,6 +1633,8 @@ public function submit_case($submitstatus) {
 
             $i = 0;
 
+            // Go through all methods and print data if that method was used in this case
+            
             foreach($all_methods as $tmp_method) {
                 if($fdb) {
                     if(!$tmp_method->get_fdb()) {
@@ -1553,6 +1642,9 @@ public function submit_case($submitstatus) {
                     }
                 }
                 if(in_array($tmp_method->get_id(), $case_method_ids)) {
+                    // This method has been used in this case
+                    
+                    // "Y" denotes this case was used.
                     $curr_row[] = "Y";
 
                     $tier2id = $case_method_data[$tmp_method->get_id()];
@@ -1584,98 +1676,109 @@ public function submit_case($submitstatus) {
 
                     $method_infos = $tmp_method->get_method_infos();
                     
+                    // Add the method info data for this method
                     foreach($method_infos as $method_info) {
-                        if($method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_CATEGORY) &&
-                                $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) &&
-                                $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME) &&
-                                $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_LEFT_RIGHT)) {
-                        $id = $method_info->get_id();
-                        $index = array_search($id, $method_info_ids);
-                        
-                        $options = $method_info->get_method_info_options();
-                        $opt_ids = array();
-                        foreach($options as $opt) {
-                            $opt_ids[] = $opt->get_id();
-                        }
-                        $found = false;
-                        $txt = "";
-                        $user_input = false;
-                        if($method_info->get_type() == input_type::get_input_id_by_name($db, USER_INTERACTION_NUMERIC_ENTRY) ||
-                             $method_info->get_type() == input_type::get_input_id_by_name($db, USER_INTERACTION_TEXT_ENTRY) ||
-                             $method_info->get_type() == input_type::get_input_id_by_name($db, USER_INTERACTION_TEXT_AREA)) {
-                            $user_input = true;
-                        }
-                        foreach($tier3s as $tier3) {
+                            if($method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_CATEGORY) &&
+                                    $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) &&
+                                    $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME) &&
+                                    $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_LEFT_RIGHT)) {
+                                // Don't display the above types
+                            $id = $method_info->get_id();
+                            $index = array_search($id, $method_info_ids);
 
-                            if(in_array($tier3->get_method_info_option_id(), $opt_ids)) {
-                                if($user_input) {
-                                    if($tier3->get_value() != null) {
-                                        $txt .= $tier3->get_value();
-                                    } else {
-                                        $txt .= "";
-                                    }
-                                    $found = true;
+                            $options = $method_info->get_method_info_options();
+                            $opt_ids = array();
+                            foreach($options as $opt) {
+                                $opt_ids[] = $opt->get_id();
                             }
-                                
-                             else {
-                                if($txt != "") {
-                                    $txt .= ", ";
+                            $found = false;
+                            $txt = "";
+                            $user_input = false;
+                            if($method_info->get_type() == input_type::get_input_id_by_name($db, USER_INTERACTION_NUMERIC_ENTRY) ||
+                                 $method_info->get_type() == input_type::get_input_id_by_name($db, USER_INTERACTION_TEXT_ENTRY) ||
+                                 $method_info->get_type() == input_type::get_input_id_by_name($db, USER_INTERACTION_TEXT_AREA)) {
+                                $user_input = true;
+                            } else {
+                                // No user input
+                            }
+                            foreach($tier3s as $tier3) {
+
+                                if(in_array($tier3->get_method_info_option_id(), $opt_ids)) {
+                                    if($user_input) {
+                                        if($tier3->get_value() != null) {
+                                            $txt .= $tier3->get_value();
+                                        } else {
+                                            $txt .= "";
+                                        }
+                                        $found = true;
                                 }
-                                $txt .= $tier2->format_tier3data($tier3->get_id(), false);
-                                $found = true;
 
+                                 else {
+                                    if($txt != "") {
+                                        $txt .= ", ";
+                                    }
+                                    $txt .= $tier2->format_tier3data($tier3->get_id(), false);
+                                    $found = true;
+
+                                }
+                                }
                             }
-                            }
-                        }
-                            // Add L/R
+                                // Add L/R
 
-                            if($method_info->get_type() == input_type::get_input_id_by_name($db, USER_INTERACTION_NUMERIC_ENTRY)) {
+                                if($method_info->get_type() == input_type::get_input_id_by_name($db, USER_INTERACTION_NUMERIC_ENTRY)) {
 
-                                if(count($method_info->get_children()) > 0) {
+                                    if(count($method_info->get_children()) > 0) {
 
-                                    $children = $method_info->get_children();
-                                    $child = $children[0];
-                                    $options = $child->get_method_info_options();
-                                    
-                                    foreach($options as $opt) {
-                                        $t3 = tier3data::get_tier3_by_option($db, $tier2->get_id(), $opt->get_id());
-                                        if($t3 != null) {
-                                            $txt .= " (".$opt->get_value().")";
+                                        $children = $method_info->get_children();
+                                        $child = $children[0];
+                                        $options = $child->get_method_info_options();
+
+                                        foreach($options as $opt) {
+                                            $t3 = tier3data::get_tier3_by_option($db, $tier2->get_id(), $opt->get_id());
+                                            if($t3 != null) {
+                                                $txt .= " (".$opt->get_value().")";
+                                            }
                                         }
                                     }
-                                }
-                            
-                        }
-                            
-                        
-                        if(!$found) {
-                            $curr_row[$index] = '';
-                        } else {
-                            $curr_row[$index] = $txt;
-                        }
-                            } else {
-                            } 
-                                            
-                    if(count($method_info->get_references()) > 0) {
-                        // Add column for references
-                        $refs = $tier2->get_selected_references($method_info->get_id());
-                        $ref_list = "";
-                        foreach($refs as $ref) {
-                            if($ref_list != "") {
-                                $ref_list .= "; ";
+
                             }
-                            $ref_list .= $ref->get_reference_name();
-                        }
-                        $curr_row[$index + 1] = $ref_list;
-                    }    
+
+
+                            if(!$found) {
+                                $curr_row[$index] = '';
+                            } else {
+                                $curr_row[$index] = $txt;
+                            }
+                                } else {
+                                } 
+
+                        // Were references used?        
+                        if(count($method_info->get_references()) > 0) {
+                            // Add column for references
+                            $refs = $tier2->get_selected_references($method_info->get_id());
+                            $ref_list = "";
+                            foreach($refs as $ref) {
+                                if($ref_list != "") {
+                                    $ref_list .= "; ";
+                                }
+                                $ref_list .= $ref->get_reference_name();
+                            }
+                            $curr_row[$index + 1] = $ref_list;
+                        } else {
+                            // No references
+                        }    
                     
-                    }
+                    } // end foreach($method_infos)
                     
                 } else {
+                    // This method was not used
+                    
                     $curr_row[]= "N";
                     // Estimated outcome is blank if not used
                     $curr_row[] = '';
                     $method_infos = $tmp_method->get_method_infos();
+                    
+                    // For each method info, add an empty space to the Excel sheet
                     foreach($method_infos as $method_info) {
                         if($method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_CATEGORY) &&
                                 $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) &&
@@ -1687,13 +1790,15 @@ public function submit_case($submitstatus) {
                                 $curr_row[] = '';
                             }
                         }
-                    }
+                    } // end foreach($method_infos)
                 }
                 $i++;
             }
             fputcsv($output, $curr_row);
 
         }
+        
+        // Now create the Excel sheet and add it and the info document to a zip file.
         rewind($output);
         $data = stream_get_contents($output);
         fclose($output);

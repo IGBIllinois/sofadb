@@ -111,7 +111,7 @@ foreach($methods as $method) {
             . "<input type=submit value=Edit>"
             . "</form></td>");
     echo('
-	<td><form action="index.php?s='.$start.'&p='.$pages.'" method="post" id="delete_method" onsubmit="return confirm(\''.$delete_alert_message.'\')">
+	<td><form action="index.php?s='.$start.'&p='.$pages.'" method="post" id="delete_method_form" onsubmit="return confirm(\''.$delete_alert_message.'\')">
 	<input name="del_method_id" type="hidden" value="'.$method_id.'"/>
 	<input id="delete_method" name="delete_method" type="submit" value="Delete" /> </form>');
     echo("</td>".
@@ -144,7 +144,7 @@ if ($current_page != 1) {
 }
 
 if ($current_page != $pages) {
-//Create a Next link
+    //Create a Next link
     echo("<form class='inline' method=post action=index.php name='regsubmit'>"
             . "<input type=submit value='Next Page'>"
             . "<input type=hidden name='p' value=$pages>"
@@ -152,12 +152,12 @@ if ($current_page != $pages) {
             . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
             . "</form>");
 } else {
+    // No Next link
 }
 }
 
 echo("</div>");
         
-
 require_once "../../include/footer.php";
 
 ?>

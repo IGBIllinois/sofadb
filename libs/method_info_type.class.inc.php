@@ -74,7 +74,7 @@ class method_info_type {
         
     }
     
-            // Private functions
+     // Private functions
     
     private function load_method_info_type($id) {
        $query = "SELECT * from method_info_types where id=:id";

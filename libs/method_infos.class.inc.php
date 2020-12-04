@@ -1,9 +1,12 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This class details the method_infos object. Every method has one or more "method_infos", which are inputs detailing
+ * what measurements are used in the method. Each method_infos object has a type, 
+ * (such as 'multiselect', 'singleselect', etc. described in app.inc.php) that determines how it will be displayed
+ * and how the input will be accepted.
+ * 
+ * When submitting data entered into a method_infos object, the user input 
  */
 
 class method_infos {

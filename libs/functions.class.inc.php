@@ -44,6 +44,7 @@ class functions {
             echo('&nbsp;<input type="submit" class="showybutton"  name="add_method" value="Save Method" />'.
                     ' (Don\'t see your method? <U><A target="blank" href="../../contact/index.php">Contact us.</A></U>)<BR>');
             
+            // This javascript draws the method info on the page when selected from the dropdown menu
             echo "<script type=\"text/javascript\">
                     $('#wait_2').hide();
                     $('#drop_2').change(function(){
@@ -68,7 +69,8 @@ class functions {
      * @param string $selector Generated ID in password_reset table
      * @param string $validator URL Validator
      * @param type $new_pass New password string
-     * @return type
+     * @return array An array of the form (RESULT=>$result, MESSAGE=>$message) where
+     *  $result is true or false, and $message is an output message
      */
     public static function reset_password($db, $selector, $validator, $new_pass) {
         // Get tokens

@@ -501,28 +501,26 @@ By requesting registration to the FADAMA Database, I agree to the following guid
   
   frmvalidator.addValidation("lname","req","Please enter your Last Name");
   frmvalidator.addValidation("lname","maxlen=20","Max length is 20");
-    frmvalidator.addValidation("lname","alpha","Alphabetic chars only in last name");
+  frmvalidator.addValidation("lname","alpha","Alphabetic chars only in last name");
   
   frmvalidator.addValidation("email","maxlen=50");
   frmvalidator.addValidation("email","req","Please enter your email address");
   frmvalidator.addValidation("email","email");
   
    frmvalidator.addValidation("psword1","req","Please enter a password");
-   
-      frmvalidator.addValidation("psword2","req","Please confirm your password");
+   frmvalidator.addValidation("psword2","req","Please confirm your password");
   
   
   frmvalidator.addValidation("institution","req","Please enter your institution");
   frmvalidator.addValidation("addr1","req","Please enter your address");
   frmvalidator.addValidation("city","req","Please enter your city");
- 
-	
-	frmvalidator.addValidation("state","req","Please enter your state");
+ 	
+  frmvalidator.addValidation("state","req","Please enter your state");
   
-   frmvalidator.addValidation("pcode","req","Please enter your zip code");
+  frmvalidator.addValidation("pcode","req","Please enter your zip code");
   
-   frmvalidator.addValidation("pcode","numeric","Zip code must be a number");
-    frmvalidator.addValidation("phone","numeric","Phone number must be a number");
+  frmvalidator.addValidation("pcode","numeric","Zip code must be a number");
+  frmvalidator.addValidation("phone","numeric","Phone number must be a number");
   
   frmvalidator.addValidation("degreeyear","gt=1900","Degree must be post-1900");
  
