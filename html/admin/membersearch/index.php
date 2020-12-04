@@ -109,20 +109,28 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
 
 // Fetch and print all the records:
 foreach($found_members as $found_member) {
+    $status = $member->get_permissionstatus();
+    $perm_status = "User";
+    if($status == 0) {
+        $perm_status = "Not yet registered";
+    } else if($status == 2) {
+        $perm_status = "Admin";
+    }
+    
 	echo '<tr>
         <td><form method=post action="../editprofile/index.php" name=editprofile id=editprofile><input type=hidden name=edit_member_id value=' . $found_member->get_id().'><input name=editsubmit type=submit value=Edit></form></td>
 	<td><form action="../index.php" method="post" id="deletemember" onsubmit="return confirm(\'Do you really want to delete this member?\nAll member data and cases associated with this user will be deleted.\')">
 	<input name="delid" type="hidden" value="'.$found_member->get_id().'"/>
 	<input name="delsubmit" type="submit" value="Delete" /> </form>
 	</td>
-	<td>' . $found_member->get_lastname() . '</td>
-	<td>' . $found_member->get_firstname(). '</td>
-	<td>' . $found_member->get_uname() . '</td>
-	<td>' . $found_member->get_institution(). '</td>
-	<td>' . $found_member->get_dateregistered() . '</td>
-	<td>' . $found_member->get_lastlogin() . '</td>
-	<td>' . $found_member->get_permissionstatus(). '</td>
-	<td>' . $found_member->get_totalcases() . '</td>
+	<td>' . htmlentities($found_member->get_lastname()) . '</td>
+	<td>' . htmlentities($found_member->get_firstname()). '</td>
+	<td>' . htmlentities($found_member->get_uname()) . '</td>
+	<td>' . htmlentities($found_member->get_institution()). '</td>
+	<td>' . htmlentities($found_member->get_dateregistered()) . '</td>
+	<td>' . htmlentities($found_member->get_lastlogin()) . '</td>
+	<td>' . $perm_status . '</td>
+	<td>' . htmlentities($found_member->get_totalcases()) . '</td>
 	
 
 	</tr>';
