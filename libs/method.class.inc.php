@@ -462,14 +462,20 @@ class method {
         
         $active_test = ($active >= 0) ? " where active=:active " : "";
         $query = "SELECT id from methods $active_test  ORDER BY $order ";
-        $params = array("active"=>$active);
+        if($active >= 0) {
+            // Only show active methods?
+            $params = array("active"=>$active);
+        } else {
+            
+        }
         if(is_numeric($start) && $start >= 0) {
             $query .= " LIMIT $start ";
             if(is_numeric($limit) && $limit > 0) {
                 $query .= ", $limit";
             }
+        } else {
+            // Don't use a start point or limit
         }
-
         $result = $db->get_query_result($query, $params);
         $methods = array();
         foreach($result as $method) {
@@ -597,7 +603,7 @@ class method {
         
         $del_query = "DELETE FROM methods where id = :method_id";
         $del_params = array("method_id"=>$method_id);
-        
+
         $result = $db->get_update_result($del_query, $del_params);
         
         if($result > 0) {
