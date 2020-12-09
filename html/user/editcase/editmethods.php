@@ -278,6 +278,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo("<div id='caseform'>");
                 if($numerrors == 0) {
                     // Edit went smoothly
+                    echo("Method edited successfully.");
                 } else {
                     // There were errors, output them
                     foreach($result as $error_result) {
@@ -407,8 +408,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
          }
 
     ?>
-                    
-                   
+
                 </tbody>
             </table>
         <div class="clear"></div>
