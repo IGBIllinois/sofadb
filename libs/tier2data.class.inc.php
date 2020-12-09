@@ -40,8 +40,9 @@ class tier2data {
 
         if($id != null) {
             $this->load_tier2data($id);
-            
-        }  
+        }  else {
+            // Don't load data
+        }
     }
     
     public function get_id() {
@@ -108,7 +109,7 @@ class tier2data {
     
     /** Gets all or one tier3 data for this tier2 object
      * 
-     * @param type $methodinfoid method_info id to get tier3 data for; null to get all data
+     * @param int $methodinfoid method_info id to get tier3 data for; null to get all data
      * @return \tier3data array of tier3 objects
      */
     public function get_tier3data($method_info_option_id = null) {
@@ -119,6 +120,8 @@ class tier2data {
             $query .= " AND method_info_option_id = :method_info_option_id ";
             $params['method_info_option_id'] = $method_info_option_id;
             
+        } else {
+            // Get all method info data for this tier2data object
         }
         $query .= " ORDER BY id";
 
@@ -171,6 +174,8 @@ class tier2data {
             
             if($for_web) {
                 $output .= "<BR>";
+            } else {
+                // Don't format for web
             }
 
 
@@ -199,7 +204,11 @@ class tier2data {
             if($units != null) {
                 $query = "update tier2data set estimated_outcome_1=:est1 , estimated_outcome_2=:est2, estimated_outcome_units=:units where id=:tier2id";
                 $params = array("tier2id"=>$tier2id, "est1"=>$estimated_outcome_1, "est2"=>$estimated_outcome_2, "units"=>$units);
+            } else {
+                // Don't add units
             }
+        } else {
+            // Don't add second outcome
         }
         
         
@@ -229,23 +238,33 @@ class tier2data {
         if($outcomes[$outcome_type->get_id()] != null) {
             $method_info_option = new method_info_option($this->db, $est1);
             $output .= $method_info_option->get_value();
-        }
-        else {
+        } else {
         if($est1 != null) {
             $output .= $est1;
+        } else {
+            // No est1
         }
         if($est2 != null && $est2 != "") {
             if($output != "") {
                 $output .= " - ";
+            } else {
+                // Don't add separating dash between two outcomes, sincd there's only one
             }
+            
             $output .= $est2;
+        } else {
+            // blank estimates
         }
         if($units != null && $units != "") {
             $output .= " $units";
+        } else {
+            // No units given
         }
         }
         if($output == "") {
             $output = "No estimated outcome given";
+        } else {
+            // Data has already been supplied
         }
         
         return $output;
@@ -350,6 +369,8 @@ class tier2data {
                 $tier2 = new tier2data($db, $data['id']);
                 $return_result[] = $tier2;
             }
+        } else {
+            // None found
         }
         return $return_result;
         
@@ -361,16 +382,18 @@ class tier2data {
        $result = $this->db->get_query_result($query, $params);
 
        if(count($result) > 0) {
-           $data = $result[0];
+            $data = $result[0];
        
-       $this->id = $id;
-        $this->memberid = $data['memberid'];
-        $this->caseid = $data['caseid'];
-        $this->methodtype = $data['methodtype'];
-        $this->methodid = $data['methodid'];
-        $this->estimated_outcome_1 = $data['estimated_outcome_1'];
-        $this->estimated_outcome_2 = $data['estimated_outcome_2'];
-        $this->estimated_outcome_units = $data['estimated_outcome_units'];
+            $this->id = $id;
+            $this->memberid = $data['memberid'];
+            $this->caseid = $data['caseid'];
+            $this->methodtype = $data['methodtype'];
+            $this->methodid = $data['methodid'];
+            $this->estimated_outcome_1 = $data['estimated_outcome_1'];
+            $this->estimated_outcome_2 = $data['estimated_outcome_2'];
+            $this->estimated_outcome_units = $data['estimated_outcome_units'];
+       } else {
+           // Not found
        }
        
     }

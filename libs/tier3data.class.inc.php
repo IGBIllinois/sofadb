@@ -30,7 +30,9 @@ class tier3data {
         if($id != null) {
             $this->load_tier3data($id);
             
-        }  
+        } else {
+            // Don't load data
+        } 
     }
     
     public function get_id() {
@@ -141,14 +143,16 @@ class tier3data {
        $result = $this->db->get_query_result($query, $params);
 
        if(count($result) > 0) {
-           $data = $result[0];
+            $data = $result[0];
        
-        $this->id = $id;
-        $this->tier2id = $data['tier2id'];
-        $this->value = $data['value'];
-        $this->method_info_option_id = $data['method_info_option_id'];
-       }
-       
+            $this->id = $id;
+            $this->tier2id = $data['tier2id'];
+            $this->value = $data['value'];
+            $this->method_info_option_id = $data['method_info_option_id'];
+        } else {
+            // Not found
+        }
+
     }
     
 }

@@ -1,9 +1,9 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The sofa_case class is used to store and manipulate data for the FADAMA user
+ * cases. They contain data such as case name, number, and year, and also
+ * which methods were used and the method results.
  */
 
 class sofa_case {
@@ -589,29 +589,32 @@ public function submit_case($submitstatus) {
         if($method_infos->get_type() == input_type::get_input_type_by_name($this->db, USER_INTERACTION_CATEGORY)) {
             //Don't input a category
             return;
-        }
-        $fields = "(tier2id, method_info_option_id ";
-        $values = "(:tier2id, :method_info_option_id ";
-        $params = array("tier2id"=>$tier2id, "method_info_option_id"=>$method_info_option_id);
-
-        if($value != null) {
-            $fields .= ", value ";
-            $values .= ", :value ";
-            $params['value'] = $value;
-        }
-        $fields .= ")";
-        $values .= ")";
-        
-        $query = "INSERT INTO tier3data $fields VALUES $values";
-
-        $result = $this->db->get_insert_result($query, $params);
-        if($result > 0) {
-            return array("RESULT"=>TRUE,
-                        "MESSAGE"=>"Tier 3 data added successfully.",
-                        "id"=>$result);
         } else {
-            return array("RESULT"=>FALSE,
-                        "MESSAGE"=>"Tier 3 data not added successfully.");
+            $fields = "(tier2id, method_info_option_id ";
+            $values = "(:tier2id, :method_info_option_id ";
+            $params = array("tier2id"=>$tier2id, "method_info_option_id"=>$method_info_option_id);
+
+            if($value != null) {
+                $fields .= ", value ";
+                $values .= ", :value ";
+                $params['value'] = $value;
+            } else {
+                // No value given
+            }
+            $fields .= ")";
+            $values .= ")";
+
+            $query = "INSERT INTO tier3data $fields VALUES $values";
+
+            $result = $this->db->get_insert_result($query, $params);
+            if($result > 0) {
+                return array("RESULT"=>TRUE,
+                            "MESSAGE"=>"Tier 3 data added successfully.",
+                            "id"=>$result);
+            } else {
+                return array("RESULT"=>FALSE,
+                            "MESSAGE"=>"Tier 3 data not added successfully.");
+            }
         }
     }
     /** Adds a record to the tier3data table given a methodinfoid id instead
@@ -626,6 +629,7 @@ public function submit_case($submitstatus) {
      * where "RESULT" is true if successful, else false, and "MESSAGE" is an
      * output message
      */
+    /*
     public function add_tier3_by_id($tier2id, $methodinfoid, $value=null) {
         if($value == null) {
             $q = "INSERT INTO tier3data(tier2id, methodinfoid) VALUES ".
@@ -637,6 +641,10 @@ public function submit_case($submitstatus) {
                     return array("RESULT"=>TRUE,
                                 "MESSAGE"=>"Method data added successfully.",
                                 "id"=>$info_result);
+                } else {
+                    return array("RESULT"=>FALSE,
+                                "MESSAGE"=>"ERROR: Method data not added successfully.",
+                                "id"=>0);
                 }
         } else {
             $q = "INSERT INTO tier3data(tier2id, methodinfoid, value) VALUES ".
@@ -653,7 +661,7 @@ public function submit_case($submitstatus) {
                 }
         }
     }
-    
+    */
     
     /** Deletes Tier 3 data for a given Tier 2 id and method_info id
      * 
@@ -736,6 +744,7 @@ public function submit_case($submitstatus) {
      * where "RESULT" is true if successful, else false, and "MESSAGE" is an
      * output message
      */
+    /*
     public function update_tier3($t2id, $methodinfoid, $new_value, $reflist = null){
         $check_query = "SELECT * from tier3data where tier2id = :t2id and methodinfoid = :methodinfoid ";
         $params = array("t2id"=>$t2id,
@@ -771,7 +780,7 @@ public function submit_case($submitstatus) {
             return $result;
         }
     }
-    
+    */
     
    /** Remove a method from a case
     *  (Note: This will completely delete the tier2 and tier3 data from
@@ -847,6 +856,8 @@ public function submit_case($submitstatus) {
         if($start >= 0) {
                 $q .= "LIMIT $start, $pagerows";
 
+        } else {
+            // No limit, get all member cases
         }
 
         $result = $db->get_query_result($q, $params);
@@ -873,17 +884,17 @@ public function submit_case($submitstatus) {
      */
     public static function case_exists($db, $caseid, $memberid, $caseyear, $casenum) {
         $q = "SELECT id FROM cases WHERE memberid=:memberid AND caseyear=:caseyear AND casenumber=:casenum AND id!=:caseeditid";
-                    $params = array("memberid"=>$memberid,
-                                    "caseyear"=>$caseyear,
-                                    "casenum"=>$casenum,
-                                    "caseeditid"=>$caseid);
+        $params = array("memberid"=>$memberid,
+                        "caseyear"=>$caseyear,
+                        "casenum"=>$casenum,
+                        "caseeditid"=>$caseid);
 
-                    $result = $db->get_query_result($q, $params);
-                    if(count($result) > 0) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+        $result = $db->get_query_result($q, $params);
+        if(count($result) > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     /** Determines if a case exists, without a case id. Used when adding new cases
@@ -897,16 +908,16 @@ public function submit_case($submitstatus) {
      */
     public static function new_case_exists($db, $memberid, $casename, $casenumber) {
         $q = "SELECT id FROM cases WHERE memberid=:memberid AND casename=:casename AND casenumber=:casenum";
-                $params = array("memberid"=>$memberid,
-                                "casename"=>$casename,
-                                "casenum"=>$casenum);
-                
-                $result = $db->get_query_result($q, $params);
-                if(count($result) > 0) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+        $params = array("memberid"=>$memberid,
+                        "casename"=>$casename,
+                        "casenum"=>$casenum);
+
+        $result = $db->get_query_result($q, $params);
+        if(count($result) > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     /**
@@ -921,8 +932,12 @@ public function submit_case($submitstatus) {
         $query = "SELECT id from cases where submissionstatus=1  ";
         $param_string = "";
         $conjunction = " AND ";
+        
+        // determine the conjuction to use ("AND" if matching every criteria, "OR" if any criteria can match)
         if($case_data['conjunction'] == 2) {
             $conjunction = " OR ";
+        } else {
+            // Already set to "AND"
         }
         
         // Member ID
@@ -959,6 +974,8 @@ public function submit_case($submitstatus) {
             $casenumber = $case_data['caseNumber'];
 		if($param_string != "") {
                     $param_string .= $conjunction;
+                } else {
+                    // No conjuction needed in query string yet
                 }
                 $param_string .= " casenumber LIKE CONCAT ('%', :caseyear, '%') ";
                 $params["caseyear"] = $case_data['caseYear'];
@@ -969,6 +986,8 @@ public function submit_case($submitstatus) {
         if ($case_data['caseAgency'] != null && $case_data['caseAgency'] != "") {
             if($param_string != "") {
                 $param_string .= $conjunction;
+            } else {
+                    // No conjuction needed in query string yet
             }
             $param_string .= " caseagency LIKE CONCAT ('%', :caseagency, '%') ";
             $params["caseagency"] = $case_data['caseAgency'];
@@ -978,6 +997,8 @@ public function submit_case($submitstatus) {
         if ($case_data['region'] != null && $case_data['region'] != "") {
             if($param_string != "") {
                 $param_string .= $conjunction;
+            } else {
+                    // No conjuction needed in query string yet
             }
             $param_string .= " members.region = :region ";
             $params["region"] = $case_data['region'];
@@ -987,6 +1008,8 @@ public function submit_case($submitstatus) {
         if ($case_data['idsex'] != null && $case_data['idsex'] != "") {
             if($param_string != "") {
                 $param_string .= $conjunction;
+            } else {
+                    // No conjuction needed in query string yet
             }
             $param_string .= " idsex = :idsex ";
             $params["idsex"] = $case_data['idsex'];
@@ -1008,6 +1031,8 @@ public function submit_case($submitstatus) {
             }
             if($param_string != "") {
                 $param_string .= $conjunction;
+            } else {
+                    // No conjuction needed in query string yet
             }
             if($case_data['idageunits'] == 'fmonths') {
                 $params["idage1"] = $case_data['idage1'];
@@ -1044,6 +1069,8 @@ public function submit_case($submitstatus) {
             
             if($param_string != "") {
                 $param_string .= $conjunction;
+            } else {
+                    // No conjuction needed in query string yet
             }
             $param_string .= " ( (idstatureunits = :idstatureunits AND (idstature between :idstature1 AND :idstature2) )".
                     " OR (idstatureunits = :alt_idstatureunits AND (idstature between :alt_idstature1 AND :alt_idstature2)))";
@@ -1059,6 +1086,8 @@ public function submit_case($submitstatus) {
         if($case_data['datesubmitted'] != null) {
             if($param_string != "") {
                 $param_string .= $conjunction;
+            } else {
+                    // No conjuction needed in query string yet
             }
             $param_string .= " (datesubmitted >= :datesubmitted) ";
             $params['datesubmitted'] = $case_data['datesubmitted'];
@@ -1068,6 +1097,8 @@ public function submit_case($submitstatus) {
         if($case_data['fdb_consent'] != null && $case_data['fdb_consent'] == true) {
             if($param_string != "") {
                 $param_string .= $conjunction;
+            } else {
+                    // No conjuction needed in query string yet
             }
             
             $param_string .= " fdb_consent = 'consent'";
@@ -1080,6 +1111,8 @@ public function submit_case($submitstatus) {
             $race_string = "";
             if($param_string != "") {
                 $param_string .= $conjunction;
+            } else {
+                    // No conjuction needed in query string yet
             }
             foreach ($case_data['race'] as $name=>$value) {
                 $race_join = " AND ";
@@ -1153,6 +1186,8 @@ public function submit_case($submitstatus) {
                 $method_ids = implode(",", $methods);
                 if($param_string != "") {
                     $param_string .= $conjunction;
+                } else {
+                    // No conjuction needed in query string yet
                 }
                 $param_string .= " id in (select tier2data.caseid from tier2data where tier2data.methodid in ($method_ids))";
             } else {
@@ -1167,6 +1202,8 @@ public function submit_case($submitstatus) {
                 }
                 if($param_string != "") {
                     $param_string .= $conjunction;
+                } else {
+                    // No conjuction needed in query string yet
                 }
                 $param_string .= "( id in (SELECT caseid FROM `tier2data` where ($tmp_str) ".
                         " group by caseid having count( caseid)=$num_methods and caseid not in (select id from cases where id in (SELECT caseid FROM `tier2data` group by caseid having (count(methodid) > count(distinct methodid))))))";
@@ -1177,17 +1214,10 @@ public function submit_case($submitstatus) {
             $param_string  = " AND (".$param_string . ")";
             
         }
-
-         
-        
+     
         $query .= $param_string;
-        
-        
-        
-        $query .= " ORDER BY id ";
 
-        //echo("search query = $query<BR>");
-        //print_r($params);
+        $query .= " ORDER BY id ";
         
         $result = $db->get_query_result($query, $params);
         $results = array();
