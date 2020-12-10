@@ -250,7 +250,7 @@ The Case Notes section is the ideal place to include case notes. However, we ask
 <BR>
     <h1 id="methodChoice">How did you choose methods to be included in the database?</h1>
     <BR>
-    In building this database, we consulted forensic anthropology laboratories that have high caseloads (for example, Harris Country Institute of Forensic Sciences, New York City Office of Chief Medical Examiners, University of Tennessee Forensic Anthropology Center, and Defense POW/MIA Accounting Agency) and conducted a thorough literature review of existing forensic anthropology methods. If your method does not fit with the available templates, please select the option to “request new method” and we will complete this in a timely manner. If your method does not fit with the available templates, please use the option to request a new method via the Contact Us page, and we will complete this in a timely manner.
+    In building this database, we consulted forensic anthropology laboratories that have high caseloads (for example, Harris Country Institute of Forensic Sciences, New York City Office of Chief Medical Examiners, University of Tennessee Forensic Anthropology Center, and Defense POW/MIA Accounting Agency) and conducted a thorough literature review of existing forensic anthropology methods. If your method does not fit with the available templates, please use the option to request a new method via the Contact Us page, and we will complete this in a timely manner.
 
     <BR><BR>
         
