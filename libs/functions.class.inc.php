@@ -249,30 +249,30 @@ class functions {
         $filename='DownloadReport_'.$today.".csv";
 
         header("Content-type: application/octet-stream");
-       header('Content-Disposition: attachment; filename='.$filename);
-       
-       $header1 = array("Name", "Email", "Download Date");
-       
-       $query = "SELECT * from downloads";
-       $params = array();
-       
-       if($date != null) {
-           $query .= " WHERE date >= :date";
-           $params['date'] = $date;
-       }
-       
-       $download_results = $db->get_query_result($query, $params);
-       
-        // create a file pointer connected to the output stream
-        $output = fopen('php://output', 'w');
-        fputcsv($output, $header1);
-        
-       foreach($download_results as $result) {
-           $data = array($result['name'], $result['email'], $result['date']);
-           fputcsv($output, $data);
-       }
-       
-       fclose($output);
+        header('Content-Disposition: attachment; filename='.$filename);
+
+        $header1 = array("Name", "Email", "Download Date");
+
+        $query = "SELECT * from downloads";
+        $params = array();
+
+        if($date != null) {
+            $query .= " WHERE date >= :date";
+            $params['date'] = $date;
+        }
+
+        $download_results = $db->get_query_result($query, $params);
+
+         // create a file pointer connected to the output stream
+         $output = fopen('php://output', 'w');
+         fputcsv($output, $header1);
+
+        foreach($download_results as $result) {
+            $data = array($result['name'], $result['email'], $result['date']);
+            fputcsv($output, $data);
+        }
+
+        fclose($output);
 
    }
 

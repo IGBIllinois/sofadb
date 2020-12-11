@@ -69,6 +69,8 @@ class method_info_type {
             $id = $input['id'];
             $type = new method_info_type($db, $id);
             return $type;
+        } else {
+            // Type not found
         }
         return null;
         
@@ -83,11 +85,13 @@ class method_info_type {
        $result = $this->db->get_query_result($query, $params);
 
        if(count($result) > 0) {
-           $data = $result[0];
+            $data = $result[0];
        
-       $this->id = $id;
-        $this->method_type = $data['method_type'];
+            $this->id = $id;
+            $this->method_type = $data['method_type'];
 
+       } else {
+           // Type not found
        }
     }
        

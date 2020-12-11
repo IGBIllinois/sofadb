@@ -85,20 +85,23 @@ if(isset($_POST['edit_method_submit'])) {
         $top = 0;
     }
 
-    $method->update_method($name, 
-            $type_id, 
-            $measurement_type, 
-            $description, 
-            $instructions, 
-            $method_info_type, 
-            $prompt_id, 
-            $fdb,
-            $top,
-            $active);
+    $result = $method->update_method($name, 
+                $type_id, 
+                $measurement_type, 
+                $description, 
+                $instructions, 
+                $method_info_type, 
+                $prompt_id, 
+                $fdb,
+                $top,
+                $active);
     
 
-
-echo ("Method $name edited successfully.<BR>");
+    if($result != null) {
+        echo ("Method $name edited successfully.<BR>");
+    } else {
+        echo("Erro: Method $name not updated. Please try again.");
+    }
 
 } else if(isset($_POST['add_method_info_submit'])) {
     
@@ -152,7 +155,11 @@ echo ("Method $name edited successfully.<BR>");
     
     if($result > 0) {
             echo("Deleted option $name.<BR>");
+    } else {
+        echo("Error: There was an error deleting the method.");
     }
+} else {
+    // Unknown post type
 }
 
 echo(''
@@ -263,50 +270,62 @@ echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="round
 $method_infos = $method->get_method_infos();
 
 if(count($method_infos) > 0) {
-echo("<table id='hortable'>");
+    
+    // Draw the table containing the methods
+    
+    echo("<table id='hortable'>");
 
-echo("<TR><TD>Name</TD><TD>Type</TD><TD>Options</td><TD>Add option</td></TR>");
+    echo("<TR><TD>Name</TD><TD>Type</TD><TD>Options</td><TD>Add option</td></TR>");
 
-foreach($method_infos as $method_info) {
-    echo("<TR>");
-    echo("<TD>".$method_info->get_name());
-    echo('<form action="./edit_method.php?id='.$id.'" method="post" id="delete_method_info" onsubmit="return confirm(\'Do you really want to delete this method info?\')">
-          <input name="info_id" type="hidden" value="'.$method_info->get_id().'"/>
-          <input name="id" type="hidden" value="'.$method->get_id().'"/>
-	<input name="delete_method_info" type="submit" value="Delete Method Info" /> </form>');
-    echo("</TD>");
-    $type = new input_type($db, $method_info->get_type());
-    echo("<TD>".$type->get_input_type()."</TD>");
-    echo("<TD>");
-      $options = $method_info->get_method_info_options();
-      foreach($options as $option) {
-          echo("<table ><tr class=''><td class=''>");
-          echo($option->get_value());
-          echo("</td><td class=''>");
-          echo('<form action="./edit_method.php" method="post" id="delete_option" onsubmit="return confirm(\'Do you really want to delete this option?\')">
-          <input name="id" type="hidden" value="'.$id.'"/>
-          <input name="option_id" type="hidden" value="'.$option->get_id().'"/>
-          <input name="info_id" type="hidden" value="'.$method_info->get_id().'"/>
-          <input name="id" type="hidden" value="'.$method->get_id().'"/>
-	<input name="delete_option" type="submit" value="Delete Option" /> </form>');
-          echo("</td></table>");
+    foreach($method_infos as $method_info) {
+        echo("<TR>");
+        // Draw the edit_method button
+        echo("<TD>".$method_info->get_name());
+        echo('<form action="./edit_method.php?id='.$id.'" method="post" id="delete_method_info" onsubmit="return confirm(\'Do you really want to delete this method info?\')">
+              <input name="info_id" type="hidden" value="'.$method_info->get_id().'"/>
+              <input name="id" type="hidden" value="'.$method->get_id().'"/>
+            <input name="delete_method_info" type="submit" value="Delete Method Info" /> </form>');
+        echo("</TD>");
+        $type = new input_type($db, $method_info->get_type());
+        echo("<TD>".$type->get_input_type()."</TD>");
+        echo("<TD>");
+        // Show the options, and allow user to edit them
+          $options = $method_info->get_method_info_options();
+          foreach($options as $option) {
+              echo("<table ><tr class=''><td class=''>");
+              echo($option->get_value());
+              echo("</td><td class=''>");
+              
+              // Delete option
+              echo('<form action="./edit_method.php" method="post" id="delete_option" onsubmit="return confirm(\'Do you really want to delete this option?\')">
+              <input name="id" type="hidden" value="'.$id.'"/>
+              <input name="option_id" type="hidden" value="'.$option->get_id().'"/>
+              <input name="info_id" type="hidden" value="'.$method_info->get_id().'"/>
+              <input name="id" type="hidden" value="'.$method->get_id().'"/>
+            <input name="delete_option" type="submit" value="Delete Option" /> </form>');
+              echo("</td></table>");
+              echo("<BR>");
+          }
+          echo("<td>");
+          
+          // Add new option
+          echo('<form action="edit_method.php" method="post" id="add_option">');
+          echo("<input type='hidden' name=id value='".$id."'>");
+          echo("<input type='hidden' name=method_info_id value='".$method_info->get_id()."'>");
           echo("<BR>");
-      }
-      echo("<td>");
-      echo('<form action="edit_method.php" method="post" id="add_option">');
-      echo("<input type='hidden' name=id value='".$id."'>");
-      echo("<input type='hidden' name=method_info_id value='".$method_info->get_id()."'>");
-      echo("<BR>");
-      echo('Option value:');
-      echo("<input type=text id='method_info_option_value' name='method_info_option_value'>");
-      echo('<input name="add_method_info_option_submit" id="add_method_info_option_submit" type="submit" value="Add Option"/><BR><BR>');
-      echo("</form>");
-      echo("</td>");
-    echo("</TD>");
-    echo("</TR>");
+          echo('Option value:');
+          echo("<input type=text id='method_info_option_value' name='method_info_option_value'>");
+          echo('<input name="add_method_info_option_submit" id="add_method_info_option_submit" type="submit" value="Add Option"/><BR><BR>');
+          echo("</form>");
+          
+          echo("</td>");
+        echo("</TD>");
+        echo("</TR>");
+    }
+    echo("</table>");
+} else {
+    // None found
 }
-echo("</table>");
-} 
 
 echo("<BR></fieldset>");
 

@@ -1,7 +1,8 @@
 <?php
 
 /* 
- * Class for input types for method_info objects (
+ * Class for input types for method_info objects 
+ *
  */
 
 class input_type {
@@ -18,12 +19,19 @@ class input_type {
         if($id != null) {
             $this->load_input_type($id);
             
-        }  
+        }  else {
+            // Don't load data
+        }
     }    
     
     public function get_id() { return $this->id; }
     public function get_input_type() { return $this->input_type; }
     
+    /**
+     * Get a list of all input types
+     * @param db $db The database object
+     * @return \input_type An array of input type objects
+     */
     public static function get_input_types($db) {
         
         $query = "SELECT * from input_types";
@@ -41,6 +49,7 @@ class input_type {
     }
     
     /**
+     * Get an input type by its name, instead of id
      * 
      * @param db $db The database object
      * @param text $name Name of the new type
@@ -99,7 +108,8 @@ class input_type {
        
        $this->id = $id;
         $this->input_type = $data['input_type'];
-
+       } else {
+           // None found
        }
     }
        

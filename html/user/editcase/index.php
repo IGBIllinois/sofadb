@@ -18,10 +18,11 @@ $errors = array();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if(isset($_POST['caseid'])) {
-        // Edit case
+        // Edit existing case
 
         $case = new sofa_case($db, $_POST['caseid']);
         if($case->get_memberid() != $session->get_var('id')) {
+            // No permission to view this case
             echo('<span style="padding-left:100px; 
                         display:block;">');
             echo "You do not have permission to view this case.";
@@ -39,9 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $errors = array(); // Start an array to hold the errors
     
-    //remove method from case here, decrement total cases and numsubmitted from members.
-    if (isset($_POST['delsubmit']))
-    {
+    //remove method from case here
+    if (isset($_POST['delsubmit'])) {
         // Delete method
         $deleteid=$_POST['delid'];
         $caseid = $_POST['caseid'];
@@ -62,6 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $method = new method($db, $method_id);
                 $errors[] = "You have already added a method for ".$method->get_name().". Only one instance of each method can be used per case.<BR>".
                         "Please scroll down and use the \"Edit\" function to make any modifications to this method.";
+            } else {
+                // New method added
             }
         }
         $estimated_outcome_1 = null;
@@ -70,12 +72,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         if(isset($_POST['estimated_outcome_1'])) {
             $estimated_outcome_1 = $_POST['estimated_outcome_1'];
+        } else {
+            // No estimated outcome 1 given
         }
         if(isset($_POST['estimated_outcome_2'])) {
             $estimated_outcome_2 = $_POST['estimated_outcome_2']; 
-       }
+        } else {
+            // No estimated outcome 2 given
+        }
         if(isset($_POST['estimated_outcome_units'])) {
             $estimated_outcome_units = $_POST['estimated_outcome_units'];
+        } else {
+            // No estimated outcome units given
         }
 
         if($method->get_method_type_num() == METHOD_DATA_STATURE_ID ||
@@ -84,7 +92,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     ($estimated_outcome_2 != null && $estimated_outcome_2 !=  "" && !(is_numeric($estimated_outcome_2)))) {
                 $errors[] = "Estimated outcome must be numeric.";
 
+            } else {
+                // Outcome is numeric
             }
+        } else {
+            // Don't check for numeric type
         }
 
         // $output_data is an array of the tier3 data (method_info_options) that has been posted
@@ -104,10 +116,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 $value != "" &&
                                 !is_numeric($value)) {
                             $errors[] = ("Value for ".$opt->get_value() . " must be numeric.");
+                        } else {
+                            // Don't check for numeric value
                         }
 
+                    } else {
+                        // ID is null
                     }
                 }
+            } else {
+                // Not array, don't check value
             }
         }
         
@@ -752,8 +770,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }// End of else (empty($errors))
     // End of the main Submit conditional.
 }  else {
-    // Not posted
+    // Post data not recognized
 }
+
+} else {
+    // No submit
 }
 ?>
 

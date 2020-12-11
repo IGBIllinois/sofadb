@@ -65,10 +65,12 @@ class method_info_option {
         if(count($result) > 0) {
             $data = $result[0];
 
-        $this->id = $id;
-         $this->method_infos_id = $data['method_infos_id'];
-         $this->value = $data['value'];
+            $this->id = $id;
+            $this->method_infos_id = $data['method_infos_id'];
+            $this->value = $data['value'];
 
+        } else {
+            // Option not found
         }
 
     }

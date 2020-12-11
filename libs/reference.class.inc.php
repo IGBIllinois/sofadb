@@ -97,6 +97,8 @@ class reference {
      * 
      * @param db $db The database object
      * @param string $ref_name Name for the new reference
+     * @return type Array of type ["RESULT"=>$result, "MESSAGE"=>$message],
+     *  where RESULT is true if successful, and $message is an output message.
      */
     public static function add_reference($db, $ref_name) {
         $check_query = "SELECT * from reference where reference_name=:name";
@@ -124,6 +126,9 @@ class reference {
      * 
      * @param db $db The database object
      * @param int $id ID of the reference to delete
+     * 
+     * @return type Array of type ["RESULT"=>$result, "MESSAGE"=>$message],
+     *  where RESULT is true if successful, and $message is an output message.
      */
     public static function delete_reference($db, $id) {
         
@@ -176,9 +181,11 @@ class reference {
        if(count($result) > 0) {
            $data = $result[0];
        
-       $this->id = $id;
+        $this->id = $id;
         $this->reference_name = $data['reference_name'];
 
+       } else {
+           // Not found
        }
     }
        

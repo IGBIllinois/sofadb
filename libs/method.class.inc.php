@@ -48,8 +48,9 @@ class method {
 
         if($id != null) {
             $this->load_method($id);
-            
-        }  
+        } else {
+            // Don't load data
+        }
     }
     
     public function get_id() {
@@ -168,6 +169,8 @@ class method {
                 $result = $this->db->get_update_result($query, $params);
                 if ($result) { // If it ran OK.
                     return $result;
+                } else {
+                    return array();
                 }
     }
     

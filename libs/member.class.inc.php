@@ -89,6 +89,8 @@ class member {
         $this->db = $db;
         if($id !=  null) {
             $this->load_member($id);
+        } else {
+            // Don't load data
         }
     }
 
@@ -147,8 +149,8 @@ public function set_permission($status) {
         return array("RESULT"=>TRUE,
                     "MESSAGE"=>"Member ".$this->get_uname(). " updated successfully.");
     } else {
-            return array("RESULT"=>FALSE,
-                "MESSAGE"=>"Error: Member ".$this->get_uname(). " not updated.");
+        return array("RESULT"=>FALSE,
+            "MESSAGE"=>"Error: Member ".$this->get_uname(). " not updated.");
     }
     
 }
@@ -164,6 +166,8 @@ public function get_num_active_cases() {
     $result = $this->db->get_query_result($q, $params);
     if(count($result)> 0) {
         return $result[0]['count'];
+    } else {
+        // None found
     }
     
 }
@@ -180,6 +184,8 @@ public function get_num_unsubmitted_cases() {
     $result = $this->db->get_query_result($q, $params);
     if(count($result)> 0) {
         return $result[0]['count'];
+    } else {
+        // None found
     }
     
 }

@@ -1392,6 +1392,8 @@ public function submit_case($submitstatus) {
                 if(!$method->get_fdb()) {
                     // If method isn't FDB, skip over this method
                     continue;
+                } else {
+                    // Keep going in foreach
                 }
             } else {
                // Regular report 
@@ -1518,34 +1520,34 @@ public function submit_case($submitstatus) {
             if ($curr_case->get_faancestryas()!=0) {
                 $faancestry=$faancestry.'[Asian/Pacific Islander]';
             } else {
-                
+                // Not listed
             }
             if ($curr_case->get_faancestryaf()!=0) {
                 $faancestry=$faancestry.'[African-American/Black]';
             } else {
-                
+                // Not listed
             }
             if ($curr_case->get_faancestryhi()!=0) {
                 $faancestry=$faancestry.'[Hispanic]';
             } else {
-                
+                // Not listed
             }
             if ($curr_case->get_faancestryna()!=0) {
                 $faancestry=$faancestry.'[Native Ameriacan]';
             } else {
-                
+                // Not listed
             }
             if ($curr_case->get_faancestrywh()!=0) {
                 $faancestry=$faancestry.'[White]';
             
             } else {
-                
+                // Not listed
             }
             if ($curr_case->get_faancestryottext()!= null &&
                     $curr_case->get_faancestryottext() != '') {
                 $faancestry=$faancestry.'['.$curr_case->get_faancestryottext().']';
             } else {
-                
+                // Not listed
             }
             $curr_row[] = $faancestry;
             
@@ -1570,12 +1572,37 @@ public function submit_case($submitstatus) {
             
             // Get the identified ancestry
             $idancestry = "";
-            if ($curr_case->get_idraceas()!=0){$idancestry=$idancestry.'[Asian/Pacific Islander]';}
-            if ($curr_case->get_idraceaf()!=0){$idancestry=$idancestry.'[African-American/Black]';}
-            if ($curr_case->get_idracehi()!=0){$idancestry=$idancestry.'[Hispanic]';}
-            if ($curr_case->get_idracena()!=0){$idancestry=$idancestry.'[Native American]';}
-            if ($curr_case->get_idracewh()!=0){$idancestry=$idancestry.'[White]';}
-            if ($curr_case->get_idraceot()!=0){$idancestry=$idancestry.'['.$curr_case->get_idraceottext().']';}
+            if ($curr_case->get_idraceas()!=0){
+                $idancestry=$idancestry.'[Asian/Pacific Islander]';
+            } else {
+                // Not listed
+            }
+            if ($curr_case->get_idraceaf()!=0){
+                $idancestry=$idancestry.'[African-American/Black]';
+            } else {
+                // Not listed
+            }
+            if ($curr_case->get_idracehi()!=0){
+                $idancestry=$idancestry.'[Hispanic]';
+            } else {
+                // Not listed
+            }
+            if ($curr_case->get_idracena()!=0){
+                $idancestry=$idancestry.'[Native American]';
+            } else {
+                // Not listed
+            }
+            if ($curr_case->get_idracewh()!=0){
+                $idancestry=$idancestry.'[White]';
+            } else {
+                // Not listed
+            }
+            if ($curr_case->get_idraceot()!=0){
+                $idancestry=$idancestry.'['.$curr_case->get_idraceottext().']';
+            } else {
+                // Not listed
+            }
+            
             $curr_row[] = $idancestry;
             $curr_row[] = $curr_case->get_idancaddtext();
             
@@ -1602,8 +1629,8 @@ public function submit_case($submitstatus) {
             if($curr_case->get_known_sex() == 1) {
                 if($background_knowledge != "") {
                     $background_knowledge .= ", ";
-                } else { // No comma
-                    
+                } else { 
+                    // No comma
                 }
                 
                 $background_knowledge .= "Sex was known";
@@ -1623,8 +1650,8 @@ public function submit_case($submitstatus) {
             if($curr_case->get_known_ancestry()== 1) {
                 if($background_knowledge != "") {
                     $background_knowledge .= ", ";
-                } else { // No comma
-                    
+                } else { 
+                    // No comma
                 }
                 $background_knowledge .= "Ancestry/Group Affinity was known";
             } else {
@@ -1669,6 +1696,8 @@ public function submit_case($submitstatus) {
                 if($fdb) {
                     if(!$tmp_method->get_fdb()) {
                         continue;
+                    } else {
+                        // FDB, keep goint in foreach
                     }
                 }
                 if(in_array($tmp_method->get_id(), $case_method_ids)) {
@@ -1690,15 +1719,23 @@ public function submit_case($submitstatus) {
                     } else {
                         if(is_numeric($est)) {
                             $est = ">= ".$est;
+                        } else {
+                            // No greater than or equals sign needed
                         }
                     }
                     if(empty($est) && !empty($est2)) {
                         if(is_numeric($est2)) {
                             $est = "<= ".$est2;
+                        } else {
+                            // No less than or equals sign needed
                         }
+                    } else {
+                        // No est2 given
                     }
                     if($est_units != null && $est_units != "") {
                         $est .=  " ".$est_units;
+                    } else {
+                        // No units given
                     }
                     $curr_row[] = $est;
                     
@@ -1741,20 +1778,20 @@ public function submit_case($submitstatus) {
                                             $txt .= "";
                                         }
                                         $found = true;
-                                }
+                                    } else {
+                                        if($txt != "") {
+                                            $txt .= ", ";
+                                        } else {
+                                            // No comma needed
+                                        }
+                                        $txt .= $tier2->format_tier3data($tier3->get_id(), false);
+                                        $found = true;
 
-                                 else {
-                                    if($txt != "") {
-                                        $txt .= ", ";
                                     }
-                                    $txt .= $tier2->format_tier3data($tier3->get_id(), false);
-                                    $found = true;
-
-                                }
                                 }
                             }
                                 // Add L/R
-
+                                // "if it's a numeric entry and has a child (L/R), add that info to the text
                                 if($method_info->get_type() == input_type::get_input_id_by_name($db, USER_INTERACTION_NUMERIC_ENTRY)) {
 
                                     if(count($method_info->get_children()) > 0) {
@@ -1767,10 +1804,16 @@ public function submit_case($submitstatus) {
                                             $t3 = tier3data::get_tier3_by_option($db, $tier2->get_id(), $opt->get_id());
                                             if($t3 != null) {
                                                 $txt .= " (".$opt->get_value().")";
+                                            } else {
+                                                // Null, don't add value
                                             }
                                         }
+                                    } else {
+                                        // No children for this method
                                     }
 
+                            } else {
+                                // Not numeric entry
                             }
 
 
@@ -1779,8 +1822,9 @@ public function submit_case($submitstatus) {
                             } else {
                                 $curr_row[$index] = $txt;
                             }
-                                } else {
-                                } 
+                        } else {
+                            // Not a specified type
+                        } 
 
                         // Were references used?        
                         if(count($method_info->get_references()) > 0) {
@@ -1790,6 +1834,8 @@ public function submit_case($submitstatus) {
                             foreach($refs as $ref) {
                                 if($ref_list != "") {
                                     $ref_list .= "; ";
+                                } else {
+                                    // No need for separator
                                 }
                                 $ref_list .= $ref->get_reference_name();
                             }
@@ -1814,19 +1860,26 @@ public function submit_case($submitstatus) {
                                 $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_INPUT_BOX_WITH_DROPDOWN) &&
                                 $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_ESTIMATED_OUTCOME) &&
                                 $method_info->get_type() != input_type::get_input_id_by_name($db, USER_INTERACTION_LEFT_RIGHT) ) {
+                            
                             $curr_row[] = '';
+                            
                             if(count($method_info->get_references()) > 0) {
                                 // This method info uses references, so include a column for them
                                 $curr_row[] = '';
+                            } else {
+                                // No reference column needed
                             }
+                        } else {
+                            // Not a given method type
                         }
                     } // end foreach($method_infos)
                 }
                 $i++;
             }
+            // Add the output data row to the file
             fputcsv($output, $curr_row);
 
-        }
+        } // end foreach($caselist)
         
         // Now create the Excel sheet and add it and the info document to a zip file.
         rewind($output);
@@ -1865,6 +1918,8 @@ public function submit_case($submitstatus) {
         if(!$mresult) {
             echo 'Could not load data from database';
             return;
+        } else {
+            // Not found
         }
 
         $casedata = $mresult[0];
