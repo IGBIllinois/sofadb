@@ -23,6 +23,12 @@ DEFINE ("METHOD_DATA_SEX_ID", 1);
 DEFINE ("METHOD_DATA_ANCESTRY_ID", 3);
 DEFINE ("METHOD_DATA_STATURE_ID",4);
 
+// Permission status
+DEFINE ("PERMISSION_REQUESTED", 0);
+DEFINE ("PERMISSION_USER", 1);
+DEFINE ("PERMISSION_ADMIN", 2);
+DEFINE ("PERMISSION_UNVERIFIED", 3);
+
 // User interaction types
 
 // one or more multi-select boxes, multiple choices can be made from all

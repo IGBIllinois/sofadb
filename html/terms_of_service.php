@@ -40,12 +40,12 @@ if(isset($_POST['regsubmit'])) {
         $member = new member($db, $session->get_var('id'));
         $member->update_terms_agreement($signature, $signature_date, true);
 
-    if($member->get_permissionstatus() == 2) {
-        $session->set_session_var('permissionstatus', 2);
-
+    if($member->get_permissionstatus() == PERMISSION_ADMIN) {
+        $session->set_session_var('permissionstatus', PERMISSION_ADMIN);
         header("Location: ./admin/index.php");
+        
     } else {
-        $session->set_session_var('permissionstatus', 1);
+        $session->set_session_var('permissionstatus', PERMISSION_USER);
         header("Location: ./user/index.php");
     }
     }

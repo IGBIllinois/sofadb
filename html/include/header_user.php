@@ -12,9 +12,9 @@ if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
 require_once('main.inc.php');
 require_once('session.inc.php') ;
 
-if($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==1)
+if($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==PERMISSION_USER)
 {}
-elseif($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==2)
+elseif($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==PERMISSION_ADMIN)
 {
     
     // If they're admin, redirect to the admin page
@@ -154,7 +154,7 @@ http://jquery.org/license
 
 <?php
 $member = new member($db, $session->get_var('id'));
-if($member->get_permissionstatus() == 2) {
+if($member->get_permissionstatus() == PERMISSION_ADMIN) {
     ?>
 <li>
     <a href="<?php echo($root_url) ?>/user/admin_view.php"><svg class="view" width="30px" height="30px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">

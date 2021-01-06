@@ -19,7 +19,7 @@ if (isset($_POST['id'])) {
     if(isset($_POST['deny'])) {
         // decline this user
         $member = new member($db, $idactivate);
-        $result = $member->set_permission('0');
+        $result = $member->set_permission(PERMISSION_REQUESTED);
 
 
     if($result['RESULT'] == FALSE) 
@@ -54,8 +54,7 @@ if (isset($_POST['id'])) {
     } else {
         // Activate member
         $member = new member($db, $idactivate);
-        $result = $member->set_permission(1);
-
+        $result = $member->set_permission(PERMISSION_USER);
 
         if($result['RESULT'] == FALSE) 
         {
@@ -90,7 +89,7 @@ if (isset($_POST['id'])) {
 //set the number of rows per display page
 $pagerows = PAGEROWS;
 
-$inactive_members = member::get_members_permission($db, 0);
+$inactive_members = member::get_members_permission($db, PERMISSION_REQUESTED);
 
 // Has the total number of pages already been calculated?
 if (isset($_POST['p']) && is_numeric ($_POST['p'])) { //already been calculated

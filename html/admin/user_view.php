@@ -7,9 +7,9 @@ require_once('../include/header_admin.php') ;
 
 $member = new member($db, $session->get_var('id'));
 
-if($member->get_permissionstatus() == 2) {
+if($member->get_permissionstatus() == PERMISSION_ADMIN) {
     // Only change if user has admin permissions
-    $session->set_session_var('permissionstatus', 1);
+    $session->set_session_var('permissionstatus', PERMISSION_USER);
     
     header("Location: ../user/index.php");
 }

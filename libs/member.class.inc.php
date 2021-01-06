@@ -65,7 +65,7 @@ class member {
     /** Last login date */
     private $lastlogin;
     
-    /** User permission status (0 = not accepted, 1 = regular user, 2 = admin) */
+    /** User permission status */
     private $permissionstatus;
     
     
@@ -265,9 +265,11 @@ public function reset_password($new_pass) {
  * where $result is true or false, and $message is an output message.
  */
 public function delete_member($delete_member_id) {
-    if($this->get_permissionstatus() != 2) {
+    if($this->get_permissionstatus() != PERMISSION_ADMIN) {
         return array("RESULT"=>FALSE,
                     "MESSAGE"=>"You do not have permission to delete this user.");        
+    } else {
+        
     }
     
     if($this->get_id() == $delete_member_id) {
@@ -566,7 +568,7 @@ public static function add_member($db, $params) {
                 . ":state,"
                 . ":zip,"
                 . ":phone,"
-                . "'0', "
+                . PERMISSION_UNVERIFIED. ", "
                 . "NOW(), "
                 . ":affiliation,"
                 . ":sponsor,"

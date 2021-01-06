@@ -8,8 +8,8 @@ require_once('../include/main.inc.php') ;
  */
 
 $member = new member($db, $session->get_var('id'));
-if($member->get_permissionstatus() == 2) {
-    $session->set_session_var('permissionstatus', 2);
+if($member->get_permissionstatus() == PERMISSION_ADMIN) {
+    $session->set_session_var('permissionstatus', PERMISSION_ADMIN);
 
     header("Location: ../admin/index.php");
 }

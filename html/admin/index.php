@@ -141,10 +141,16 @@ echo '<div class="scroll"><table id="hortable" summary="List of members">
 foreach($members as $member) {
     $status = $member->get_permissionstatus();
     $perm_status = "User";
-    if($status == 0) {
+    if($status == PERMISSION_UNVERIFIED) {
+        $perm_status = "Email not yet verified";
+    }else if($status == PERMISSION_USER) {
+        $perm_status = "User";
+    }else if($status == PERMISSION_REQUESTED) {
         $perm_status = "Not yet registered";
-    } else if($status == 2) {
+    } else if($status == PERMISSION_ADMIN) {
         $perm_status = "Admin";
+    } else {
+        $perm_status = "Unknown";
     }
 	echo '<tr>
         <td><form method=post action="./editprofile/index.php" name=editprofile id=editprofile><input type=hidden name=edit_member_id value=' . $member->get_id().'><input name=editsubmit type=submit value=Edit></form></td>    
@@ -162,7 +168,7 @@ foreach($members as $member) {
 	<td>' . $perm_status . '</td>
 	<td>' . $member->get_totalcases() . '</td>';
         echo("<td>");
-        if($member->get_permissionstatus() == 2) {
+        if($member->get_permissionstatus() == PERMISSION_ADMIN) {
             // Change to regular user
             $form = "<form action=index.php name=changestatus id=changestatus method=POST>"
                     . "<input type=hidden name='status' value='1'>"
@@ -170,7 +176,7 @@ foreach($members as $member) {
                     . "<input type=submit name=changeStatusSubmit value='Make regular user'>"
                     . "</form>";    
             echo($form);
-        } else if($member->get_permissionstatus() == 1) {
+        } else if($member->get_permissionstatus() == PERMISSION_USER) {
             // Change to admin
             $form = "<form action=index.php name=changestatus id=changestatus method=POST>"
                     . "<input type=hidden name='status' value='2'>"
