@@ -19,54 +19,55 @@ if(isset($_POST['resetsubmit'])) {
     }
     else {
     // Create tokens
-$selector = bin2hex(random_bytes(8));
-$token = random_bytes(32);
-$validator = bin2hex($token);
+    $selector = bin2hex(random_bytes(8));
+    $token = random_bytes(32);
+    $validator = bin2hex($token);
 
-$url = sprintf('%sreset.php?%s', $contactURL, http_build_query([
-    'selector' => $selector,
-    'validator' => $validator
-]));
+    $url = sprintf('%sreset.php?%s', $contactURL, http_build_query([
+        'selector' => $selector,
+        'validator' => $validator
+    ]));
 
+    // Adds an entry to the password reset table. Selector and Validator are used to verify
+    $insert = functions::update_password_request($db, $email, $selector, $validator);
 
-$insert = functions::update_password_request($db, $email, $selector, $validator);
+    // send email
 
-// send email
+    $to = $email;
+    $subject = 'FADAMA password reset link';
 
-$to = $email;
-$subject = 'FADAMA password reset link';
+    $user = member::load_member_by_name($db, $email);
+    $name = $user->get_firstname() . " ". $user->get_lastname();
 
-$user = member::load_member_by_name($db, $email);
-$name = $user->get_firstname() . " ". $user->get_lastname();
+    $params = array ("url"=>$url,
+                     "name"=>$name,
+                     "from_email"=>FROM_EMAIL);
 
-$params = array ("url"=>$url,
-                 "name"=>$name,
-                 "from_email"=>FROM_EMAIL);
+    $message = functions::renderTwigTemplate('email/change_password.html.twig', $params);
 
-$message = functions::renderTwigTemplate('email/change_password.html.twig', $params);
+    // Headers
+    $headers = "From: " . FROM_EMAIL . " <" . FROM_EMAIL . ">\r\n";
+    $headers .= "Reply-To: " . ADMIN_EMAIL . "\r\n";
+    $headers .= "Content-type: text/html\r\n";
+    $headers .= "Return-Path: ".FROM_EMAIL;
 
-// Headers
-$headers = "From: " . FROM_EMAIL . " <" . FROM_EMAIL . ">\r\n";
-$headers .= "Reply-To: " . ADMIN_EMAIL . "\r\n";
-$headers .= "Content-type: text/html\r\n";
+    // Send email
+    $sent = mail($to, $subject, $message, $headers);
 
-// Send email
-$sent = mail($to, $subject, $message, $headers);
+        if($sent) {
+        echo("An email has been sent to $to with a link to reset the password for that account.");
+            $success = true;
+        }
+        else {
+            echo("An error occurred. The message was not sent.<BR>");
+        }
 
-    if($sent) {
-    echo("An email has been sent to $to with a link to reset the password for that account.");
-        $success = true;
     }
-    else {
-        echo("An error occurred. The message was not sent.<BR>");
-    }
-    
-}
 }
     
 if(!$success) {
-echo("<form method='POST' action='resetPasswordRequest.php'>");
-echo("Please enter the email you used as your username when you registered:<BR>Submitting the form will send a link to the specified address.");
+    echo("<form method='POST' action='resetPasswordRequest.php'>");
+    echo("Please enter the email you used as your username when you registered:<BR>Submitting the form will send a link to the specified address.");
 ?>
     <br><BR>
     <B>Email Address* </B>
@@ -76,8 +77,9 @@ echo("Please enter the email you used as your username when you registered:<BR>S
 <?php
 
 echo("</form>");
+} else {
+   // Errors
 }
-
 
 echo("<BR><a href='../index.php'>Back to Main Page</A>");
     

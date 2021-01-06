@@ -12,10 +12,10 @@ require_once("include/main.inc.php");
 
   if($session->get_var('loggedin')) {
 
-    if($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==1){
+    if($session->get_var('loggedin')== 1 && $session->get_var('permissionstatus') == PERMISSION_USER){
         header('Location: ' . './user/index.php');
 
-    } elseif($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==2) {
+    } elseif($session->get_var('loggedin')== 1 && $session->get_var('permissionstatus') == PERMISSION_ADMIN) {
         header('Location: ' . './admin/index.php');
 
     } elseif($session->get_var('loggedin')==1) {   
@@ -116,11 +116,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $p = FALSE;
             echo '<p class="error">You forgot to enter your password.</p>';
 	}
-if($member != null && $member->get_uname() != null && $member->get_permissionstatus() >= 0) {
+if($member != null && $member->get_uname() != null && $member->get_permissionstatus() >= PERMISSION_REQUESTED) {
 // Start the session, fetch the record and insert the three values in an array
 
     $session->set_session_var('permissionstatus', (int) $member->get_permissionstatus()); // Ensure that the user level is an integer
-    if ($session->get_var('permissionstatus')!=0) {
+    if ($session->get_var('permissionstatus') != PERMISSION_REQUESTED) {
 
         //$_SESSION['loggedin']=1;
         //$_SESSION['created']=time();
@@ -148,13 +148,18 @@ if($member != null && $member->get_uname() != null && $member->get_permissionsta
 
 if($session->get_var('loggedin')){
 
-    if($session->get_var('permissionstatus')==1) {
+    if($session->get_var('permissionstatus') == PERMISSION_USER) {
         header('Location: ' . './user/index.php');
        
     }
-    elseif($session->get_var('permissionstatus')==2){
+    elseif($session->get_var('permissionstatus') == PERMISSION_ADMIN){
         header('Location: ' . './admin/index.php');
         
+    } elseif($session->get_var('permissionstatus')== PERMISSION_UNVERIFIED) {   
+        echo '<p>The email you provided has not yet been verified. Please check the email provided during registration and follow its instructions.</p>';
+        echo("To resend the verification email, please <a href='contact/resend_verify_request.php'>click here</a>.");
+        
+    } else {
     }
     
 } else { // No match was made.

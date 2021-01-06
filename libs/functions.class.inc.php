@@ -118,6 +118,37 @@ class functions {
 
     }
     
+    /** Checks if a user has a valid entry in the password_reset table with a given selector and validator
+     * 
+     * @param db $db The database object
+     * @param string $selector Generated ID in password_reset table
+     * @param string $validator URL Validator
+     * @return boolean true if there is an entry, else false
+     */
+    public static function check_password_reset($db, $selector, $validator) {
+        // Get tokens
+        $results = $db->get_query_result("SELECT * FROM password_reset WHERE selector = :selector AND expires >= :time", ['selector'=>$selector,'time'=>time()]);
+
+        if ( empty( $results ) ) {
+            return array('RESULT'=>FALSE,
+                'MESSAGE'=>'There was an error processing your request. Error Code: 002');
+        }
+
+        $auth_token = $results[0];
+        $token = $auth_token['token'];
+        $email = $auth_token['email'];
+
+        // Validate tokens
+        if ( password_verify($validator, $token) )  {
+            return array('RESULT'=>TRUE,
+                'MESSAGE'=>'Password verified.',
+                "email"=>$email);
+        } else {
+            return array('RESULT'=>FALSE,
+                'MESSAGE'=>'There was an error processing your request.');
+        }
+    }
+    
     /**
      * Creates HTML text for a select box
      * 
@@ -282,7 +313,7 @@ class functions {
     * @param type $admin If true, get only admin emails, else get all emails
     * @return type
     */
-   public function get_emails($db, $admin=0) {
+   public static function get_emails($db, $admin=0) {
        $query = "SELECT uname from members where permissionstatus ";
        if($admin === 0) {
            $query .= " != 0";
@@ -298,4 +329,63 @@ class functions {
        
        return $return_result;
    }
+   
+   /**
+    * Sends a verification email to a prospective user. Once they respond by 
+    * clicking on a link provided in the email, they confirm the email
+    * is theirs and can be vetted by an admin.
+    * 
+    * @param db $db The database object
+    * @param type $email Email address to send verification email
+    * @param type $selector Selector for unique validation
+    * @param type $validator Validator for unique validation
+    * 
+    * @return array An array of the form (RESULT=>$result, MESSAGE=>$message) where
+     *  $result is true or false, and $message is an output message
+    */
+   public static function send_register_email($db, $email, $selector, $validator, $root_url="sofadb") {
+       
+       self::update_password_request($db, $email, $selector, $validator);
+
+        $to = $email;
+        $subject = 'FADAMA email verification';
+
+        $user = member::load_member_by_name($db, $email);
+        $name = $user->get_firstname() . " ". $user->get_lastname();
+        $verifyURL = "https://". $_SERVER['HTTP_HOST']. $root_url. "/contact/";
+
+        $url = sprintf('%sverify.php?%s', $verifyURL, http_build_query([
+            'selector' => $selector,
+            'validator' => $validator
+        ]));
+        
+        $params = array ("url"=>$url,
+                         "name"=>$name,
+                         "from_email"=>FROM_EMAIL);
+
+        $message = functions::renderTwigTemplate('email/register_verify.html.twig', $params);
+
+        // Headers
+        $headers = "From: " . FROM_EMAIL . " <" . FROM_EMAIL . ">\r\n";
+        $headers .= "Reply-To: " . ADMIN_EMAIL . "\r\n";
+        $headers .= "Return-Path: " . ADMIN_EMAIL ."\r\n";
+        $headers .= "Content-type: text/html\r\n";
+
+        // Send email
+        $sent = mail($to, $subject, $message, $headers);
+
+            if($sent) {
+            $message = ("An email has been sent to $to with a link to verify the email for that account.");
+                $success = true;
+            }
+            else {
+                $message = ("An error occurred. The message was not sent.");
+                $success = false;
+            }
+            
+            return array("RESULT"=>$success,
+                    "MESSAGE"=>$message);
+
+   }
+
 }

@@ -103,8 +103,8 @@ require_once("include/main.inc.php");
 // This code inserts a record into the users table
 // Has the form been submitted?
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    
-    echo('<div style="width:500px;padding-left:20%">');
+    try {
+    echo('<div id="wrapper" style="width:500px">');
 	$errors = array(); // Start an array to hold the errors
 	// Check for a title:
 
@@ -158,8 +158,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$errors[] = 'You forgot to enter your email address.';
 	}
 	
-	
-	
 	// Check for a password and match it against the confirmed password:
 	if (!empty($_POST['psword1'])) {
 		if ($_POST['psword1'] != $_POST['psword2']) {
@@ -197,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} else {
 		$cty = trim($_POST['city']);
 	}
-// Check for the county:
+        // Check for the county:
 	if (empty($_POST['state'])) {
 		$errors[] = 'You forgot to enter your state.';
 	} else {
@@ -298,75 +296,90 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "signature"=>$signature,
             "signature_date"=>$signature_date);
  
-        $user_params = array("user_name"=>($fn . " ".$ln),
-                            "from_email"=>FROM_EMAIL);
+        //$user_params = array("user_name"=>($fn . " ".$ln),
+        //                    "from_email"=>FROM_EMAIL);
 	
-	if (empty($errors)) { // If there were no errors
-//Determine whether the email address has already been registered	
+        if (empty($errors)) { // If there were no errors
+        //Determine whether the email address has already been registered	
 
-   $member_exists = member::member_exists($db, $e);       
+            $member_exists = member::member_exists($db, $e);       
 
-   if(!$member_exists) {
+            if(!$member_exists) {
 
-        $result = member::add_member($db, $params);
-        if($result['RESULT'] == TRUE) {
+                 $result = member::add_member($db, $params);
+                 if($result['RESULT'] == TRUE) {
 
-            echo($result['MESSAGE']. "<BR>");
+                   $admin_email = ADMIN_EMAIL;              
+                   $to = $admin_email;
+
+                   $from= FROM_EMAIL;
+                 //$subject = "FADAMA DB ADMIN ALERT: Activate new user";
+                 //$message = functions::renderTwigTemplate('email/register_admin.html.twig', $params);
+
+                 //$header = "From:".$from."\r\n";
+                 //$retval = mail($to,$subject,$message,$header);
+
+                 // Email verification
+                 //$user_to = $e;
+                 //$user_subject = "FADAMA Membership Request";
+
+                 //$user_message = functions::renderTwigTemplate("email/register_verify.html.twig", $user_params);
+                 //$user_header = "From:".$from."\r\n";
+
+                 //$user_retval = mail($user_to, $user_subject, $user_message, $user_header);
 
 
-      $admin_email = ADMIN_EMAIL;              
-      $to = $admin_email;
+                    // Create tokens
+                    $selector = bin2hex(random_bytes(8));
+                    $token = random_bytes(32);
+                    $validator = bin2hex($token);
+                    try {
 
-      $from= FROM_EMAIL;
-   $subject = "FADAMA DB ADMIN ALERT: Activate new user";
-   $message = functions::renderTwigTemplate('email/register_admin.html.twig', $params);
-           
-   $header = "From:".$from."\r\n";
-   $retval = mail($to,$subject,$message,$header);
-   
-   // Also email user
-   $user_to = $e;
-   $user_subject = "FADAMA Membership Request";
+                        // Send email to the address the user provided
+                        functions::send_register_email($db, $e, $selector, $validator, $root_url);
 
-   $user_message = functions::renderTwigTemplate("email/register_user.html.twig", $user_params);
-   $user_header = "From:".$from."\r\n";
-   
-   $user_retval = mail($user_to, $user_subject, $user_message, $user_header);
-   if( $user_retval == true )  
-   {
-     echo("Thank you for requesting membership approval to FADAMA. Your request is under review and may take up to 1 week to be approved.");
-	  
-   }
-   else
-   {
-      echo "Error: Activation Email not sent. Please contact administrator.";
-   }
-	
-	
-		
-		} else { // If it did not run OK
-		// Error message:
-			echo '<h2>System Error</h2>
-			<p class="error">Registration failed because of a system error. We apologize for any inconvenience.</p>'; 
-			// Debugging message:
-			echo '<p>' . $result['MESSAGE']. '</p>';
-		} // End of if ($result)
+                    } catch(Exception $e) {
+                        echo($e->getTraceAsString());
+                    }
+                 //if( $user_retval == true )  
+                 //{
+                   //echo("Thank you for requesting membership approval to FADAMA. Your request is under review and may take up to 1 week to be approved.");
+                   echo("Thank you for requesting membership approval to FADAMA. To complete your registration, please check the email you provided to verify your email address.");
 
-		// Include the footer and stop the script
-		  
-		exit();
-}else{//The email address is already registered
-echo	'<p class="error">The email address is not acceptable because it is already registered</p>';
+                 //}
+                 //else
+                 //{
+                 //   echo "Error: Activation Email not sent. Please contact administrator.";
+                 //}
+
+            } else { // If it did not run OK
+                 // Error message:
+                echo '<h2>System Error</h2>
+                <p class="error">Registration failed because of a system error. We apologize for any inconvenience.</p>'; 
+                // Debugging message:
+                echo '<p>' . $result['MESSAGE']. '</p>';
+            } // End of if ($result)
+
+     // Include the footer and stop the script
+
+     exit();
+     
+    } else{//The email address is already registered
+        echo '<p class="error">The email address is not acceptable because it is already registered</p>';
+    }
+    } else { // Report the errors.
+        echo '<h2>Error!</h2>
+            <p class="error">The following error(s) occurred:<br>';
+        foreach ($errors as $msg) { // Print each error.
+            echo " - $msg<br>\n";
+        }
+        echo '</p><h3>Please try again.</h3><p><br></p>';
+    }// End of if (empty($errors))
+} catch(Exception $e) {
+    // End of the main Submit conditional.
+    echo("ERROR:".$e->getTraceAsString());
 }
-	} else { // Report the errors.
-		echo '<h2>Error!</h2>
-		<BR><p class="error">The following error(s) occurred:<br>';
-		foreach ($errors as $msg) { // Print each error.
-			echo " - $msg<br>\n";
-		}
-		echo '</p><h3>Please try again.</h3><p><br></p>';
-		}// End of if (empty($errors))
-}// End of the main Submit conditional.
+}
 echo("</div>");
 ?>
   
