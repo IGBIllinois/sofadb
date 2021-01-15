@@ -109,7 +109,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
 	} else {
             $cty = trim($_POST['city']);
 	}
-// Check for the county:
+        
+        // Check for the county:
 	if (empty($_POST['state'])) {
             $errors[] = 'You forgot to enter your state.';
 	} else {

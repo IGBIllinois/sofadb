@@ -7,13 +7,25 @@
 
 require_once "../../include/header_admin.php";
 
-    
+// Method name
 $name = null;
+
+// Method type id
 $type_id = null;
+
+// Method type name
 $type_name = null;
+
+// Method measurement type
 $measurement_type=null;
+
+// Method description
 $description = null;
+
+// Method instructions
 $instructions = null;
+
+// Method prompt
 $prompt = null;
 
 $method_type_list = array(METHOD_DATA_SEX_ID=>METHOD_DATA_SEX, 
@@ -70,6 +82,8 @@ if(isset($_POST['top'])) {
 }
 
 if(isset($_POST['add_method_submit'])) {
+    // Add a new method
+    
     if(count($errors) == 0) {
         $result = method::create_method($db, $name, $type_id, $measurement_type, $description, $instructions, $method_info_type, $prompt, $fdb, $top);
 
@@ -96,8 +110,6 @@ if(isset($_POST['add_method_submit'])) {
         }
     }
 }
-
-
 
 echo(''
         . '<form action="add_method.php" method="post" id="registration">

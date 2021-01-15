@@ -275,13 +275,6 @@ class sofa_case {
                 . "datestarted,"
                 . "datemodified,"
                 . "submissionstatus,"
-                . "faancestryas,"
-                . "faancestryeuro,"
-                
-                . "faancestryaf,"
-                . "faancestryna,"
-                . "faancestryhi,"
-                . "faancestryot,"
                 . "faancestryottext,"
                 
                 . "idraceas,"
@@ -340,13 +333,6 @@ class sofa_case {
                     . "NOW(),"
                     . "NOW(),"
                     . "'0',"
-                    . ":faancestryas,"
-                    . ":faancestryeuro,"
-                
-                    . ":faancestryaf,"
-                    . ":faancestryna,"
-                    . ":faancestryhi,"
-                    . ":faancestryot,"
                     . ":faancestryottext,"
                 
                     . ":idraceas,"
@@ -370,9 +356,11 @@ class sofa_case {
                 
                 . ")";	
         
-
+                try {
                 $caseid = $db->get_insert_result($q, $data);
-                
+                } catch(Exception $e) {
+                    echo $e->getTraceAsString();
+                }
 
                 if($caseid == 0) {
                     return array("RESULT"=>FALSE,
@@ -516,12 +504,6 @@ public function submit_case($submitstatus) {
                 . "casenotes=:casenotes,"
                 . "datemodified=NOW(),"
                 
-                . "faancestryas=:faancestryas,"
-                . "faancestryeuro=:faancestryeuro,"
-                . "faancestryaf=:faancestryaf,"
-                . "faancestryna=:faancestryna,"
-                . "faancestryhi=:faancestryhi,"
-                . "faancestryot=:faancestryot,"
                 
                 . "faancestryottext=:faancestryottext,"
                 . "idraceas=:idraceas,"

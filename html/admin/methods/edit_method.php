@@ -7,11 +7,19 @@
 
 require_once "../../include/header_admin.php";
 
-
+// Method name
 $name = null;
+
+// Method type id
 $type_id = null;
+
+// Method measurement type
 $measurement_type=null;
+
+// Method description
 $description = null;
+
+// Method instructions
 $instructions = null;
 
 $method_type_list = array(METHOD_DATA_SEX_ID=>METHOD_DATA_SEX, 
@@ -32,9 +40,17 @@ if(!isset($_POST['id'])) {
         $description = $method->get_description();
         $instructions = $method->get_instructions();
         $method_info_type = $method->get_method_info_type();
+        
+        // ID of the prompt used
         $prompt_id = $method->get_prompt_id();
+        
+        // Is the method active?
         $active = $method->get_active();
+        
+        // Should thie method be displayed at the top of a list?
         $top = $method->get_top();
+        
+        // Is this method listed in the FDB?
         $fdb = $method->get_fdb();
 } 
     
@@ -106,17 +122,43 @@ if(isset($_POST['edit_method_submit'])) {
 } else if(isset($_POST['add_method_info_submit'])) {
     
     // Add a new method_info to this method
-    
+    $errors = array();
     $methodid = $method->get_id();
-    $method_info_name = $_POST['method_info_name'];
-    $header = $_POST['method_info_header'];
-    $option_header = $_POST['method_info_option_header'];
-    $input_type = $_POST['input_type'];
-    $parent = $_POST['parent'];
+    if(!empty($_POST['method_info_name'])) {
+        $method_info_name = $_POST['method_info_name'];
+    } else {
+        $method_info_name = null;
+    }
+    if(!empty($_POST['method_info_header'])) {
+        $header = $_POST['method_info_header'];
+    } else {
+        $header = "";
+    }
+
+    if(!empty($_POST['method_info_option_header'])) {
+        $option_header = $_POST['method_info_option_header'];
+    } else {
+        $option_header = "";
+    }
+    if(!empty($input_type = $_POST['input_type'])) {
+        $input_type = $_POST['input_type'];
+    
+    } else {
+        $input_type = "";
+    }
+    
+    if(!empty($_POST['parent'])) {
+    
+        $parent = $_POST['parent'];
+    } else {
+        $parent = "";
+    }
+
     if($parent < 0) {
         $parent = null;
     }
     $result = $method->add_method_info($method_info_name, $header, $option_header, $input_type, $parent);
+    
     if($result > 0) {
             echo("Added method info $method_info_name.<BR>");
     }

@@ -13,12 +13,25 @@
 <div name="searchresults">
  <?php 
 
+ // User id to search for
 $id=null;
+
+// First name to search for
 $first_name = null;
+
+// Last name to search for
 $last_name = null;
+
+// Email to search for
 $email = null;
+
+// Institution to search for
 $institution = null;
+
+// Region to search for
 $region = null;
+
+// Conjunction used in forming the query. "AND" for all items, "OR" for at least one
 $andor = " AND ";
 
   $error=0;
@@ -39,11 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'  ) {
     $andor = ($_POST['andor'] == 1) ? " AND " : " OR ";
 
     if ($id == null &&
-            $first_name == null &&
-            $last_name == null &&
-            $email == null &&
-            $institution == null &&
-            $region == null)
+        $first_name == null &&
+        $last_name == null &&
+        $email == null &&
+        $institution == null &&
+        $region == null)
     {
         echo 'Please enter at least one search criterion';
         $error=1;
@@ -51,8 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'  ) {
     }
 	  
 	  
-if(!$error){//if error start	  
-// This script retrieves all the records from the users table.
+if(!$error){ 
+    // This script retrieves all the records from the users table.
 
     $found_members = member::search_members($db, $id, $first_name, $last_name, $email, $institution, $region, $andor);
     $num_members = count($found_members);
@@ -117,7 +130,7 @@ foreach($found_members as $found_member) {
         $perm_status = "Admin";
     }
     
-	echo '<tr>
+    echo '<tr>
         <td><form method=post action="../editprofile/index.php" name=editprofile id=editprofile><input type=hidden name=edit_member_id value=' . $found_member->get_id().'><input name=editsubmit type=submit value=Edit></form></td>
 	<td><form action="../index.php" method="post" id="deletemember" onsubmit="return confirm(\'Do you really want to delete this member?\nAll member data and cases associated with this user will be deleted.\')">
 	<input name="delid" type="hidden" value="'.$found_member->get_id().'"/>
@@ -131,19 +144,20 @@ foreach($found_members as $found_member) {
 	<td>' . htmlentities($found_member->get_lastlogin()) . '</td>
 	<td>' . $perm_status . '</td>
 	<td>' . htmlentities($found_member->get_totalcases()) . '</td>
-	
-
 	</tr>';
-	}
-	echo '</tbody></table></div>'; // Close the table.
-} else { // If it did not run OK.
-// Public message:
-	echo '<p class="error">No records found.  </p>';
-	// Debugging message:
-	$session->set_session_variable('searched', 1);
+}
+    echo '</tbody></table></div>'; // Close the table.
+    
+} else { 
+    // If it did not run OK.
+    // Public message:
+    echo '<p class="error">No records found.  </p>';
+    // Debugging message:
+    $session->set_session_variable('searched', 1);
 
-        echo '<br/> <a href="index.php?search=1">Search Again</a>';
-        exit();
+    echo '<br/> <a href="index.php?search=1">Search Again</a>';
+    exit();
+    
 } // End of if ($result). Now display the total number of records/members.
 
 echo "<p>Total number of search results: $num_members</p>";
@@ -161,7 +175,7 @@ if ($current_page != 1) {
 }
 
 if ($current_page != $pages) {
-//Create a Next link
+    //Create a Next link
     echo("<form class='inline' method=post action=index.php name='regsubmit'>"
             . "<input type=submit value='Next Page'>"
             . "<input type=hidden name='p' value=$pages>"
@@ -170,18 +184,14 @@ if ($current_page != $pages) {
             . "</form>");
 } else {
 }
+
 $session->set_session_variable('searched', 1);
 
 echo '<br/> <a href="index.php?search=1">Search Again</a>';
   }//end on error
 }
 
-
 ?>
-
-
-
-
 
  </div>
 
@@ -189,10 +199,19 @@ echo '<br/> <a href="index.php?search=1">Search Again</a>';
 
 <?php 
 
+// Member id
 if(!isset($fmID)) $fmID="";
+
+// Member first name
 if(!isset($ffname)) $ffname="";
+
+// Member last name
 if(!isset($flname)) $flname="";
+
+// Member institution
 if(!isset($finstitution)) $finstitution="";
+
+// Member email
 if(!isset($femail)) $femail="";
 
 
@@ -203,9 +222,7 @@ if( $result == false || $result != 1)
 echo <<<_END
 <form action="index.php" method="post" id="registration">
 
-
 <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
-
 
 <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend>Search By Member ID</legend>
 <br><label class="label" for="mID">Member ID</label><input id="mID" type="text" name="mID" size="3" maxlength="5" value="$fmID">
@@ -214,37 +231,28 @@ echo <<<_END
 
 <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend>Search By Identification Information</legend>
 
-
-
-
-	<br><label class="label" for="fname">First Name</label><input id="fname" type="text" name="fname" size="30" maxlength="30" value="$ffname">
-	<br>
+    <br><label class="label" for="fname">First Name</label><input id="fname" type="text" name="fname" size="30" maxlength="30" value="$ffname">
+    <br>
   
     <label class="label" for="lname">Last Name</label><input id="lname" type="text" name="lname" size="30" maxlength="40" value="$flname">
     
     
-	<br> 
+    <br> 
     <label class="label" for="email">Email Address</label><input id="email" type="text" name="email" size="30" maxlength="60" value="$femail" >
     
     <br/> <label class="label" for="institution">Institution</label><input id="institution" type="text" name="institution" size="30" maxlength="60" value="$finstitution" > 
- 
-   
-             
-        
-           <br>
-           
-           
-           <label class="label" for="region">Region of Practice</label>
+
+    <br>
+
+    <label class="label" for="region">Region of Practice</label>
 	<select name="region">
-	<option value="">- Select -</option>
-	<option value="1">Northeast</option>
-	<option value="2">West</option>
-	<option value="3">Midwest</option>
-	<option value="4">South</option>
+            <option value="">- Select -</option>
+            <option value="1">Northeast</option>
+            <option value="2">West</option>
+            <option value="3">Midwest</option>
+            <option value="4">South</option>
 	</select>
-    
-     
-	
+
 	</select>
  
  </fieldset>
@@ -257,28 +265,24 @@ echo <<<_END
 
 <label class="label" for="regsubmit">Click here to search</label>
    <input name="regsubmit" id="regsubmit" type="submit" value="Search"/>
+        
    <div id="registration_errorloc" class="errorlocation">
-            </div>
+   </div>
    
-    </fieldset>
+</fieldset>
 
 </form>
 
-<script language="JavaScript" type="text/javascript"
-    xml:space="preserve">//<![CDATA[
+  <script language="JavaScript" type="text/javascript"
+  xml:space="preserve">//<![CDATA[
         
   //You should create the validator only after the definition of the HTML form
   var frmvalidator  = new Validator("registration");
   
   frmvalidator.EnableOnPageErrorDisplaySingleBox();
   frmvalidator.EnableMsgsTogether();
-
     
 //]]></script>
-
-
-
-
 
 _END;
 } 
