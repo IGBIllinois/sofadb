@@ -112,8 +112,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fastature2=NULL;
     } 
     else {
-        // fastature2 may be 
-        $fastature2 = trim($_POST['fastature2']);
+        $fastature2_test = trim($_POST['fastature2']);
+        if(!is_numeric($fastature2_test)) {
+            $errors[] = "Forensic Anthropology estimated stature must be numeric.";
+        } else {
+            $fastature2 = trim($_POST['fastature2']);
+	}
 
     }
 
@@ -123,10 +127,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fastature2=NULL;
         $fastatureunits=NULL;
     } else {
-        // FA stature may not be numeric for entries like "<= 30"
         $fastature_test = trim($_POST['fastature']);
-        $fastature = trim($_POST['fastature']);
-        $fastatureunits = trim($_POST['fastatureunits']);
+        if(!is_numeric($fastature_test)) {
+            $errors[] = "Forensic Anthropology estimated stature must be numeric.";
+        } else {
+
+                $fastature = trim($_POST['fastature']);
+                $fastatureunits = trim($_POST['fastatureunits']);
+        }
     }
 
 
@@ -153,7 +161,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } 
     else {
         $idage_test = trim($_POST['idage']);
-        // Identified age may be non-numeric, for entries like ">=30"
         if($idage_test > MAXAGE) {
             $errors[] = "Identified age must be less than ".MAXAGE.".";
         } else {
@@ -176,9 +183,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } 
     else {
         $idstature_test = trim($_POST['idstature']);
-        // Identified stature may be non-numeric for entries like ">=30"
-        $idstature = trim($_POST['idstature']);
-        $idstatureunits = trim($_POST['idstatureunits']);
+            if(!is_numeric($idstature_test)) {
+                $errors[] = "Identified stature must be numeric.";
+            } else {
+    
+		$idstature = trim($_POST['idstature']);
+                $idstatureunits = trim($_POST['idstatureunits']);
+            }
         
     }
    
@@ -482,7 +493,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     
   <BR>
-    <br/><label class="label" for="faage">Age</label><input id="faage" type="text" name="faage" size="5" maxlength="5" value="<?php if (isset($_POST['faage'])) echo $_POST['faage']; ?>"/>
+    <br/><label class="label" for="faage">Age</label><input id="faage" type="number" step="0.01" name="faage" size="5" maxlength="5" value="<?php if (isset($_POST['faage'])) echo $_POST['faage']; ?>"/>
 
     <select name="faageunits">
       <option value="years">years</option>
@@ -490,7 +501,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <option value="fetalmonths"<?php if (isset($_POST['faageunits']) AND ($_POST['faageunits'] == 'fetalmonths')) echo ' selected="selected"'; ?>>fetal months</option>
       </select>&nbsp; to &nbsp;
     
-    <input id="faage2" type="text" name="faage2" size="5" maxlength="5" value="<?php if (isset($_POST['faage2'])) echo $_POST['faage2']; ?>"/>
+    <input id="faage2" type="number" step="0.01" name="faage2" size="5" maxlength="5" value="<?php if (isset($_POST['faage2'])) echo $_POST['faage2']; ?>"/>
     
     <select name="faageunits2">
       <option value="years">years</option>
@@ -503,14 +514,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>     
     
     <BR>
-    <label class="label" for="faage">Age Notes</label><input id="faage" type="text" name="faage_notes" size="30"  value="<?php if (isset($_POST['faage_notes'])) echo $_POST['faage_notes']; ?>"/>
+    <label class="label" for="faage">Age Notes</label><input id="faage" type="text"  name="faage_notes" size="30"  value="<?php if (isset($_POST['faage_notes'])) echo $_POST['faage_notes']; ?>"/>
     <BR>
     
     <br/><label class="label" for="faancestry">Ancestry/Group Affiliation</label><input id="farace_othertext" type="text" name="farace_othertext" size="30" maxlength="100" value="<?php if (isset($_POST['farace_othertext'])) echo $_POST['farace_othertext']; ?>"/>
 
-    <br/><label class="label" for="fastature">Stature</label><input id="fastature" type="text" name="fastature" size="6" maxlength="8" value="<?php if (isset($_POST['fastature'])) echo $_POST['fastature']; ?>"/>  &nbsp; to &nbsp;
+    <br/><label class="label" for="fastature">Stature</label><input id="fastature" type="number" step="0.01" name="fastature" size="6" maxlength="8" value="<?php if (isset($_POST['fastature'])) echo $_POST['fastature']; ?>"/>  &nbsp; to &nbsp;
     
-    <input id="fastature2" type="text" name="fastature2" size="6" maxlength="8" value="<?php if (isset($_POST['fastature2'])) echo $_POST['fastature2']; ?>"/>  <select name="fastatureunits">
+    <input id="fastature2" type="number" step="0.01" name="fastature2" size="6" maxlength="8" value="<?php if (isset($_POST['fastature2'])) echo $_POST['fastature2']; ?>"/>  <select name="fastatureunits">
       <option value="in">inches</option>
       <option value="cm">cm</option>
       </select>
@@ -533,7 +544,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <BR>
         <BR>
         
-      <label class="label" for="idage">Age</label><input id="idage" type="text" name="idage" size="5" maxlength="5" value="<?php if (isset($_POST['idage'])) echo $_POST['idage']; ?>"/>
+      <label class="label" for="idage">Age</label><input id="idage" type="number" step="0.01" name="idage" size="5" maxlength="5" value="<?php if (isset($_POST['idage'])) echo $_POST['idage']; ?>"/>
       <select name="idageunits">
         <option value="years">years</option>
         <option value="months"<?php if (isset($_POST['idageunits']) AND ($_POST['idageunits'] == 'months')) echo ' selected="selected"'; ?>>months</option>
@@ -557,7 +568,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <BR>
       <BR>
       
-      <label class="label" for="idstature">Stature</label><input id="idstature" type="text" name="idstature" size="6" maxlength="8" value="<?php if (isset($_POST['idstature'])) echo $_POST['idstature']; ?>" />
+      <label class="label" for="idstature">Stature</label><input id="idstature" type="number" step="0.01" name="idstature" size="6" maxlength="8" value="<?php if (isset($_POST['idstature'])) echo $_POST['idstature']; ?>" />
       
       <select name="idstatureunits">
         <option value="in">inches</option>
@@ -656,15 +667,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   frmvalidator.addValidation("caseyear","maxlen=4","Year must be entered in YYYY format");
   frmvalidator.addValidation("caseyear","numeric","Year must be entered in YYYY format");
   
+  frmvalidator.addValidation("faage","numeric","FA Age must be entered as a number");
+  frmvalidator.addValidation("faage2","numeric","FA Age must be entered as a number");
+  
   frmvalidator.addValidation("faage", "lt=150", "Age should be less than 150.");
   frmvalidator.addValidation("faage2", "lt=150", "Age should be less than 150.");
   
   frmvalidator.addValidation("fastature","numeric","Statures must be entered as a number");
-   
   frmvalidator.addValidation("fastature2","numeric","Statures must be entered as a number");
   
   frmvalidator.addValidation("idage","numeric","Ages must be entered as a number");
-   
   frmvalidator.addValidation("idstature","numeric","Statures must be entered as a number");
   
   frmvalidator.addValidation("idrace_othertext","req","Please fill-in the  Other Race/Ethinicity textbox",
