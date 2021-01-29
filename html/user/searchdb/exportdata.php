@@ -4,12 +4,16 @@
  set_time_limit ( 0 );
  
   if (isset($_POST['exportMy'])) {
+      $unsubmitted = false;
+      if(isset($_POST['unsubmitted'])) {
+          $unsubmitted = $_POST['unsubmitted'];
+      }
         $case_data = array("memberId"=>$_POST['mId']);
 
         $name=$_POST['name'];
         $email = $_POST['email'];
 
-        $case_results = sofa_case::search_cases($db, null, $case_data, null);
+        $case_results = sofa_case::search_cases($db, null, $case_data, null, $unsubmitted);
 
         sofa_case::write_report($db, $case_results, $name, $email);
         die();
@@ -57,7 +61,8 @@
              }
              $name=$_POST['name'];
              $email = $_POST['email'];
-              $case_results = sofa_case::search_cases($db, null, $case_data, $method_list);
+             $unsubmitted = $_POST['unsubmitted'];
+              $case_results = sofa_case::search_cases($db, null, $case_data, $method_list, $unsubmitted);
 
               sofa_case::write_report($db, $case_results, $name, $email);
 

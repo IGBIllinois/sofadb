@@ -14,6 +14,8 @@ if(isset($_POST['exportsubmit'])) {
 } else if (isset($_POST['exportMy'])) {
     // export only user's cases
     $submitid = "exportMy";
+} else {
+    
 }
 
 if(isset($_POST['submit_consent'])) {
