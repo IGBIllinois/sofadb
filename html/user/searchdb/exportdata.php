@@ -15,7 +15,7 @@
 
         $case_results = sofa_case::search_cases($db, null, $case_data, null, $unsubmitted);
 
-        sofa_case::write_report($db, $case_results, $name, $email);
+        sofa_case::write_report($db, $case_results, $name, $email, false, true);
         die();
             
     } else

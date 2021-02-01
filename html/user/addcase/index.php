@@ -408,7 +408,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $result = sofa_case::add_case($db, $data);
 
             if($result['RESULT'] == FALSE) {
-                print_r($data);
                 echo($result['MESSAGE']);
                 exit();
             }

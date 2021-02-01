@@ -1261,7 +1261,12 @@ public function submit_case($submitstatus) {
             // Create an FDB report
 
             // Header row contains column name, and Method name
-            $headerrow=array('Case ID', 
+            $headerrow = array();
+            array_push($headerrow, 'Case ID');
+            if($mine) {
+                array_push($headerrow, "Case Number");
+            }
+            array_push($headerrow,
                  'Date Submitted to FADAMA DB', 
                  'Case Year',
                  'Case Number',
@@ -1286,7 +1291,11 @@ public function submit_case($submitstatus) {
                  'Case Notes');
 
              // Second header row contains Method Info name, under the corresponding Method name
-             $headerrow2 = array('',
+            $headerrow2 = array("");
+            if($mine) {
+                array_push($headerrow, "");
+            }
+            array_push($headerrow,
                  '',
                  '',
                  '',
@@ -1313,7 +1322,12 @@ public function submit_case($submitstatus) {
              $pre_headerrow = $headerrow2;
         
        } else {
-            $headerrow=array('Case ID', 
+            $headerrow = array();
+            array_push($headerrow, 'Case ID');
+            if($mine) {
+                array_push($headerrow, "Case Number");
+            }
+            array_push($headerrow,
                 'Date Submitted to FADAMA DB', 
                 'Case Year',
                 'FA Report: Sex', 
@@ -1336,7 +1350,11 @@ public function submit_case($submitstatus) {
                 'Case Notes',
                 'Background Case Knowledge');
 
-            $headerrow2 = array('',
+            $headerrow2 = array("");
+            if($mine) {
+                array_push($headerrow2, "");
+            }
+            array_push($headerrow2,
                 '',
                 '',
                 '',
@@ -1489,6 +1507,9 @@ public function submit_case($submitstatus) {
             $curr_row = array();
             $member = new member($db, $curr_case->get_memberid());
             $curr_row[] = $curr_case->get_id();
+            if($mine) {
+                $curr_row[] = $curr_case->get_casenumber();
+            }
             $curr_row[] = $curr_case->get_datesubmitted();
             $curr_row[] = $curr_case->get_caseyear();
             if($fdb) {
