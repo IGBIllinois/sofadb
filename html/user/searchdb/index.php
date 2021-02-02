@@ -15,6 +15,7 @@ require_once('../../include/session.inc.php') ;
 <div name="searchresults">
  <?php 
   
+ // Get the member id from the session
  $memberid=$session->get_var('id');
 
   $error=0;
@@ -56,8 +57,10 @@ require_once('../../include/session.inc.php') ;
               "conjunction"=>$_POST['andor'],
               "method_conj"=>$_POST['method_conj'],
               "race_join"=>$_POST['race_join'],
-              "prac_join"=>$_POST['prac_join']
+              "prac_join"=>$_POST['prac_join'],
+              "unsubmitted"=>$_POST['unsubmitted']
                   );
+          
              $methods = ($_POST['method_select']);
              $method_list = array();
              foreach($methods as $index=>$result) {
@@ -68,173 +71,167 @@ require_once('../../include/session.inc.php') ;
                  }
              }
             $case_results = sofa_case::search_cases($db, $memberid, $case_data, $method_list);
-              
-          
+            echo("<BR>");
 
-	
-	  
-if(!$error){  
+        if(!$error){
 
-if (isset($_SESSION['searchstring']) && isset($_SESSION['searched'])){
-    $searchstring=$_SESSION['searchstring'];
-    
-}
+            if (isset($_SESSION['searchstring']) && isset($_SESSION['searched'])){
+                $searchstring=$_SESSION['searchstring'];
 
-$pagerows = PAGEROWS;
+            }
 
-// Has the total number of pages already been calculated?
-if (isset($_POST['p']) && is_numeric ($_POST['p'])) { //already been calculated
-    $pages=$_POST['p'];
-} else { //use the next block of code to calculate the number of pages
-//First, check for the total number of records
+            $pagerows = PAGEROWS;
 
-    $records = count($case_results);
+            // Has the total number of pages already been calculated?
+            if (isset($_POST['p']) && is_numeric ($_POST['p'])) { //already been calculated
+                $pages=$_POST['p'];
+            } else { //use the next block of code to calculate the number of pages
+            //First, check for the total number of records
 
-    //Now calculate the number of pages
-    if ($records > $pagerows){ //if the number of records will fill more than one page
-    //Calculate the number of pages and round the result up to the nearest integer
-        $pages = ceil ($records/$pagerows);
-    }else{
-        $pages = 1;
-    }
+                $records = count($case_results);
 
-}//page check finished
+                //Now calculate the number of pages
+                if ($records > $pagerows){ //if the number of records will fill more than one page
+                //Calculate the number of pages and round the result up to the nearest integer
+                    $pages = ceil ($records/$pagerows);
+                }else{
+                    $pages = 1;
+                }
 
-//Declare which record to start with
-if (isset($_POST['s']) && is_numeric($_POST['s'])) {//already been calculated
-    $start = $_POST['s'];
-}else{
-    $start = 0;
-}
+            }//page check finished
 
-if(count($case_results) > 0) {
-    $cases = count($case_results);
-    $current_page = ($start/$pagerows) + 1;
-if ($pages==1) {
-    $startingrecord=1;
-    $endingrecord=$cases;
-}
-elseif ($current_page!= $pages) {
-    $startingrecord=($current_page-1)*$pagerows+1;
-    $endingrecord=($current_page)*$pagerows;}
-else {
-    $startingrecord=($current_page-1)*$pagerows+1;
-    $endingrecord=$cases;
+            //Declare which record to start with
+            if (isset($_POST['s']) && is_numeric($_POST['s'])) {//already been calculated
+                $start = $_POST['s'];
+            }else{
+                $start = 0;
+            }
 
-}
+            if(count($case_results) > 0) {
+                // Cases were found
 
-echo("If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Downloaded_data_sheet' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.");
-echo("<BR>");
+                $cases = count($case_results);
+                $current_page = ($start/$pagerows) + 1;
 
-echo ('<form action="confirm.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="export">');
-if(isset($_POST)) {
-    foreach($_POST as $name=>$value) {
-        echo("<input type=hidden name='$name' value='$value'>");
-    }
-}
-echo'<br/><p>Click here to export results to CSV File
-<input name="fdb" type="hidden" value="0">
-   <input name="exportsubmit" id="exportsubmit" type="submit" value="Export Case Data"/></p>
-   </form>';
+                if ($pages==1) {
+                    $startingrecord=1;
+                    $endingrecord=$cases;
 
-echo '<br/> <a href="index.php?search=1">Search Again</a><BR><BR>';
+                } elseif ($current_page!= $pages) {
+                    $startingrecord=($current_page-1)*$pagerows+1;
+                    $endingrecord=($current_page)*$pagerows;
 
-echo "<p class='dbresults'>Total number of search results: $cases. Showing records  $startingrecord - $endingrecord </p>";
-echo("<BR>");
-if ($current_page != 1) {
-   // Create a Previous Link
-    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
-            . "<input type=submit value='Previous Page'>"
-            . "<input type=hidden name='p' value=$pages>"
-            . "<input type=hidden name='s' value=".($start-$pagerows).">"
-            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
-            . "</form>");
-} else {
-    
-}
+                } else {
+                $startingrecord=($current_page-1)*$pagerows+1;
+                $endingrecord=$cases;
 
-if ($current_page != $pages) {
-//Create a Next link
-    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
-            . "<input type=submit value='Next Page'>"
-            . "<input type=hidden name='p' value=$pages>"
-            . "<input type=hidden name='s' value=".($start+$pagerows).">"
-            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
-            . "</form>");
-} else {
-}
+                }
 
-echo '<div class="scroll"><table id="hortable" summary="List of cases">
-    <thead>
-    	<tr>
-            <th scope="col">Case Year</th>
-            <th scope="col">Date Submitted</th>
-             </tr>
-    </thead>
-    <tbody>';
-    	
+                echo("If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Downloaded_data_sheet' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.");
+                echo("<BR>");
 
+                echo ('<form action="confirm.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="export">');
+                if(isset($_POST)) {
+                    foreach($_POST as $name=>$value) {
+                        echo("<input type=hidden name='$name' value='$value'>");
+                    }
+                }
+                echo'<br/><p>Click here to export results to CSV File
+                <input name="fdb" type="hidden" value="0">
+                   <input name="exportsubmit" id="exportsubmit" type="submit" value="Export Case Data"/></p>
+                   </form>';
 
-// Fetch and print all the records:
-$regcount=1;
+                echo '<br/> <a href="index.php?search=1">Search Again</a><BR><BR>';
 
-for($i = $startingrecord; $i <= $endingrecord; $i++) {
+                echo "<p class='dbresults'>Total number of search results: $cases. Showing records  $startingrecord - $endingrecord </p>";
+                echo("<BR>");
+                if ($current_page != 1) {
+                   // Create a Previous Link
+                    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
+                            . "<input type=submit value='Previous Page'>"
+                            . "<input type=hidden name='p' value=$pages>"
+                            . "<input type=hidden name='s' value=".($start-$pagerows).">"
+                            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
+                            . "</form>");
+                } else {
 
-    $case = $case_results[($i-1)];
-	echo '<tr>
-	<td>' . $case->get_caseyear(). '</td>
-	<td>' . $case->get_datesubmitted() . '</td>
-	</tr>';    
-}
-echo '</tbody></table></div>'; 
+                }
 
-} 
-else { // If it did not run OK.
-// Public message:
-    echo '<p class="error">No records found.  </p>';	
-    echo '<br/> <a href="index.php?search=1">Search Again</a>';
-    exit();
-} // End of if ($result). 
+                if ($current_page != $pages) {
+                //Create a Next link
+                    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
+                            . "<input type=submit value='Next Page'>"
+                            . "<input type=hidden name='p' value=$pages>"
+                            . "<input type=hidden name='s' value=".($start+$pagerows).">"
+                            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
+                            . "</form>");
+                } else {
+                }
 
-if ($current_page != 1) {
-   // Create a Previous Link
-    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
-            . "<input type=submit value='Previous Page'>"
-            . "<input type=hidden name='p' value=$pages>"
-            . "<input type=hidden name='s' value=".($start-$pagerows).">"
-            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
-            . "</form>");
-} else {
-    
-}
-
-if ($current_page != $pages) {
-//Create a Next link
-    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
-            . "<input type=submit value='Next Page'>"
-            . "<input type=hidden name='p' value=$pages>"
-            . "<input type=hidden name='s' value=".($start+$pagerows).">"
-            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
-            . "</form>");
-} else {
-}
+                echo '<div class="scroll"><table id="hortable" summary="List of cases">
+                    <thead>
+                        <tr>
+                            <th scope="col">Case Year</th>
+                            <th scope="col">Date Submitted</th>
+                             </tr>
+                    </thead>
+                    <tbody>';
 
 
 
+                // Fetch and print all the records:
+                $regcount=1;
+
+                for($i = $startingrecord; $i <= $endingrecord; $i++) {
+
+                    $case = $case_results[($i-1)];
+                        echo '<tr>
+                        <td>' . $case->get_caseyear(). '</td>
+                        <td>' . $case->get_datesubmitted() . '</td>
+                        </tr>';    
+                }
+
+                echo '</tbody></table></div>'; 
+
+            } else { 
+                // No cases found
+                    echo '<p class="error">No records found.  </p>';	
+                    echo '<br/> <a href="index.php?search=1">Search Again</a>';
+                    exit();
+            } // End of if ($result). 
+
+            if ($current_page != 1) {
+               // Create a Previous Link
+                echo("<form class='inline' method=post action=index.php name='regsubmit'>"
+                        . "<input type=submit value='Previous Page'>"
+                        . "<input type=hidden name='p' value=$pages>"
+                        . "<input type=hidden name='s' value=".($start-$pagerows).">"
+                        . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
+                        . "</form>");
+            } else {
+
+            }
+
+            if ($current_page != $pages) {
+            //Create a Next link
+                echo("<form class='inline' method=post action=index.php name='regsubmit'>"
+                        . "<input type=submit value='Next Page'>"
+                        . "<input type=hidden name='p' value=$pages>"
+                        . "<input type=hidden name='s' value=".($start+$pagerows).">"
+                        . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
+                        . "</form>");
+            } else {
+            }
+
+            $_SESSION['searched']=1;
+            $_SESSION['searchstring']=$searchstring;
 
 
-
-$_SESSION['searched']=1;
-$_SESSION['searchstring']=$searchstring;
-unset($_GET['search']);
-
-  }//end on error
+        }//end on error
   
 } else {
     // just show input form
 
-  
-  //end main submit
 ?>
 
 
@@ -337,6 +334,11 @@ echo <<<_END
     <fieldset class="caseinfobox"><legend class="boldlegend">Search By Method</legend>
         
 _END;
+
+    // Draw dropdown lists of all the methods, organized by type
+
+    // Sex methods
+
     $sx_methods = method::get_methods_by_type($db, METHOD_DATA_SEX_ID);
     $list = array();
     foreach($sx_methods as $sx_method) {
@@ -347,6 +349,8 @@ _END;
     echo("<td>");
     echo(functions::checkbox_dropdown(METHOD_DATA_SEX_ID, 'sex_methods', $list, array(), 'method_select'));
     echo("</td>");
+    
+    // Age methods
     
     $age_methods = method::get_methods_by_type($db, METHOD_DATA_AGE_ID);
     $list = array();
@@ -359,6 +363,8 @@ _END;
     echo(functions::checkbox_dropdown(METHOD_DATA_AGE_ID, 'age_methods', $list, array(), 'method_select'));
     echo("</td>");
     
+    // Ancestry methods
+    
     $anc_methods = method::get_methods_by_type($db, METHOD_DATA_ANCESTRY_ID);
     $list = array();
     foreach($anc_methods as $anc_method) {
@@ -370,8 +376,11 @@ _END;
     echo(functions::checkbox_dropdown(METHOD_DATA_ANCESTRY_ID, 'anc_methods', $list, array(), 'method_select'));
     echo("</td>");
     
+    // Stature methods
+    
     $stat_methods = method::get_methods_by_type($db, METHOD_DATA_STATURE_ID);
     $list = array();
+    
     foreach($stat_methods as $stat_method) {
         $item = array($stat_method->get_id(), $stat_method->get_name());
         $list[] = $item;
@@ -468,8 +477,9 @@ _END;
     <br>
     If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.
     <BR><BR>
-    <span><label class="label" for="exportMy">Click here to export all of the current user's submitted cases</label><input name="exportMy" type="submit" id="exportMy" title="Export My Cases" value="Export My Cases"></span><br>
-
+    <span><label class="label" for="exportMy">Click here to export all of the current user's cases</label><input name="exportMy" type="submit" id="exportMy" title="Export My Cases" value="Export My Cases"></span><br>
+    <BR>
+        <span><label class="label" for="unsubmitted">Include unsubmitted cases?</label><input type=checkbox name="unsubmitted" value=1> </span>
 
     <br>
     </fieldset>
@@ -511,6 +521,7 @@ _END;
 </div>
 
 <?php
+// end else
 }
     require_once("../../include/footer.php");
 ?>
