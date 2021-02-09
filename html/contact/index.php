@@ -19,6 +19,11 @@ require_once "../include/header_general.php";
        if(!isset($_POST['emailentry']) || $_POST['emailentry'] == "") {
            $errors[] = "You must enter your email address.";
        }
+       else if (!filter_var($_POST['emailentry'], FILTER_VALIDATE_EMAIL)) {
+           $errors[] = "You must enter a valid email address.";
+       } else {
+           // Okay email
+       }
        if(count($errors) > 0) {
            foreach($errors as $error) {
                echo($error ."<BR>");
@@ -44,7 +49,7 @@ require_once "../include/header_general.php";
     }
 }
     
-    echo '<div id="contactentry"><label for="emailentry">Your Email Address:</label> <input name="emailentry" id="emailentry" type="text" size="32" maxlength="200" value="'.$email.'"/></div>
+    echo '<div id="contactentry"><label for="emailentry">Your Email Address:</label> <input name="emailentry" id="emailentry" type="email" size="32" maxlength="200" value="'.$email.'"/></div>
     <div id="contactname">
       <label for="nameentry">Your Name:</label>    
       <input name="nameentry" id="nameentry" type="text" size="40" maxlength="200" value="'.$name.'"/></div>
