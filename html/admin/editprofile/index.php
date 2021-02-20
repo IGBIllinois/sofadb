@@ -366,7 +366,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
   
   frmvalidator.addValidation("pcode","req","Please enter your zip code");
   
-  frmvalidator.addValidation("pcode","numeric","Zip code must be a number");
   frmvalidator.addValidation("phone","numeric","Phone number must be a number");
 
   frmvalidator.addValidation("degreeyear","gt=1900","Degree must be post-1900");
