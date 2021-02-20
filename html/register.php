@@ -483,7 +483,7 @@ By requesting registration to the FADAMA Database, I agree to the following guid
      <BR><BR>
              By signing below, I acknowledge that I have read and agree to the Terms of Service, Privacy Notice, and Contributor License Agreement.<BR><BR>
                      <label class="label" for="signature">Signature (Type your full name):</label><input type="text" name="signature" id="signature" disabled> <i>(activated once the link above has been clicked)</i><BR>
-             <label class="label" for="signature_date">Date:</label><input type="date" name="signature_date" id="signature_date">
+             <label class="label" for="signature_date">Date:</label><input type="date" name="signature_date" id="signature_date" placeholder="mm/dd/yyyy" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" >
 <br/><br/>
 
 	</fieldset>
