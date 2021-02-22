@@ -86,7 +86,7 @@ The forensic anthropology database for assessing methods accuracy (FADAMA) is a 
 With the participation of practitioners and the submission of the current and past cases, FADAMA is the first forensic anthropological community-wide collective resource and has the potential to improve and standardize forensic anthropology practices. Currently, there exists no formal, organized space for the forensic anthropology community to share our approaches to casework and casework outcomes. While informal peer interaction is ongoing and useful, a significant measure that is missing in order for our discipline to self-assess is data on our casework itself. Electronic access to all submitted and anonymized case data is available for download for all FADAMA users to make possible the widest use of the data for education and research. This project was supported by Award No.2018-DU-BX-0213, awarded by the National
 Institute of Justice, Office of Justice Programs, U.S. Department of Justice. The opinions, findings, and conclusions or
 recommendations expressed in this publication/program/exhibition are those of the author(s) and do not necessarily
-reflect those of the Department of Justice.
+reflect those of the Department of Justice. To learn more about FADAMA, please see the following reference: Juarez, Chelsey A., Cris E. Hughes, and An‐Di Yim. "A report on the Forensic Anthropology Database for Assessing Methods Accuracy." American Journal of Physical Anthropology 174.1 (2021): 149-150.
 
 <BR>
 <BR>
