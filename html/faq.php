@@ -35,6 +35,7 @@ require_once("./include/header_general.php");
             <li><a href="#FADAMAdev">How was FADAMA developed?</a></li>
             <li><a href="#FADAMAmanage">Who manages FADAMA?</a></li>
             <li><a href="#FDB">How does FADAMA relate to Forensic Anthropology Data Bank (FDB)?</a></li>
+	    <li><a href="Case_info"> What is the origin of the cases submitted to FADAMA?</a></li>
         </ul>  
         <BR>
         <li><B><a href='#userresponsibility'>FADAMA User Information and Responsibility</a></B></li>
@@ -132,8 +133,12 @@ reflect those of the Department of Justice. To learn more about FADAMA, please s
 	The Forensic Anthropology Data Bank (FDB) was developed by The University of Tennessee, Knoxville in 1986. The purpose of the FDB is to understand contemporary skeletal variation and to allow for development of pertinent identification criteria of contemporary skeletons. The FDB contains demographic information and skeletal information from many cases, including medical history, occupation, stature, weight, cranial and postcranial metrics, various aging criteria scores, and non-metric information.
 	FADAMA provides the opportunity for users to share relevant case data with the FDB. However, in contrast to FADAMA's anonymity, FDB sharing requires identifiable information about the case, including the case number and case agency. This is because the FDB needs to know who is submitting cases and what the case numbers are so that there is no duplication of cases.
 	The data FADAMA shared with FDB include: case year, case number, case agency, relevant craniometric data (such as the ones associated with FORDISC), and relevant postcranial metric data (such as the ones associated with various stature estimation methods).
-        
-        <BR><BR><BR>
+	    
+	<BR>    
+<h1 id="Case_info">What is the origin of the cases submitted to FADAMA?</h1>
+	FADAMA cases comes from all over the U.S., from a variety of institutional types, including ME and coroners offices as well as university labs. Case origin statistics are updated biannually and reported <a target='blank' href='./docs/Biannual_Case_Origins_Report.pdf'>here</a>.
+       
+	    <BR><BR><BR>
                     
 <h1 id='userresponsibility'><U>Users</U></h1>
     <BR>  
