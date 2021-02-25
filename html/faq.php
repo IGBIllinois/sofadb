@@ -35,7 +35,7 @@ require_once("./include/header_general.php");
             <li><a href="#FADAMAdev">How was FADAMA developed?</a></li>
             <li><a href="#FADAMAmanage">Who manages FADAMA?</a></li>
             <li><a href="#FDB">How does FADAMA relate to Forensic Anthropology Data Bank (FDB)?</a></li>
-	    <li><a href="Case_info"> What is the origin of the cases submitted to FADAMA?</a></li>
+	    <li><a href="#Case_info"> What is the origin of the cases submitted to FADAMA?</a></li>
         </ul>  
         <BR>
         <li><B><a href='#userresponsibility'>FADAMA User Information and Responsibility</a></B></li>
