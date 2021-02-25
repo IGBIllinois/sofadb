@@ -121,8 +121,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $agree_to_terms = false;
         } else {
             $sig_date = $_POST['signature_date'];
-            $sig_date_split = explode("/", $sig_date);
-            if(!checkdate($sig_date_split[0],$sig_date_split[1],$sig_date_split[2])) {
+            $sig_date_split = explode("-", $sig_date);
+            if(!checkdate($sig_date_split[1],$sig_date_split[2],$sig_date_split[0])) {
                 $errors[] = "Please enter a valid date.";
             } else {
                 $signature_date = $_POST['signature_date'];
@@ -489,7 +489,7 @@ By requesting registration to the FADAMA Database, I agree to the following guid
      <BR><BR>
              By signing below, I acknowledge that I have read and agree to the Terms of Service, Privacy Notice, and Contributor License Agreement.<BR><BR>
                      <label class="label" for="signature">Signature (Type your full name):</label><input type="text" name="signature" id="signature" disabled> <i>(activated once the link above has been clicked)</i><BR>
-             <label class="label" for="signature_date">Date:</label><input type="date" name="signature_date" id="signature_date" placeholder="mm/dd/yyyy" pattern="(0[1-9]|1[012])\/(0[1-9]|1[0-9]|2[0-9]|3[01])\/[0-9]{4}" >
+             <label class="label" for="signature_date">Date:</label><input type="date" name="signature_date" id="signature_date" placeholder="yyyy-mm-dd" pattern="(?:19|20)(?:(?:[13579][26]|[02468][048])-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))|(?:[0-9]{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:29|30))|(?:(?:0[13578]|1[02])-31)))" >
 <br/><br/>
 
 	</fieldset>
