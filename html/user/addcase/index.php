@@ -485,14 +485,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <option value="">- Select -</option>
     <option value="Female"<?php if (isset($_POST['fasex']) AND ($_POST['fasex'] == 'Female')) echo ' selected="selected"'; ?>>Female</option>
     <option value="Probable Female"<?php if (isset($_POST['fasex']) AND ($_POST['fasex'] == 'Probable Female')) echo ' selected="selected"'; ?>>Probable Female</option>
-    <option value="Indeterminate"<?php if (isset($_POST['fasex']) AND ($_POST['fasex'] == 'Indeterminate')) echo ' selected="selected"'; ?>>Indeterminate</option>
+    <option value="Indeterminate Analysis"<?php if (isset($_POST['fasex']) AND ($_POST['fasex'] == 'Indeterminate Analysis')) echo ' selected="selected"'; ?>>Indeterminate Analysis</option>
+    <option value="Not Analyzed"<?php if (isset($_POST['fasex']) AND ($_POST['fasex'] == 'Not Analyzed')) echo ' selected="selected"'; ?>>Not Analyzed</option>
     <option value="Probable Male"<?php if (isset($_POST['fasex']) AND ($_POST['fasex'] == 'Probable Male')) echo ' selected="selected"'; ?>>Probable Male</option>
     <option value="Male"<?php if (isset($_POST['fasex']) AND ($_POST['fasex'] == 'Male')) echo ' selected="selected"'; ?>>Male</option>
     </select>
     
     
   <BR>
-    <br/><label class="label" for="faage">Age</label><input id="faage" type="number" step="0.01" name="faage" size="5" maxlength="5" value="<?php if (isset($_POST['faage'])) echo $_POST['faage']; ?>"/>
+    <br/><label class="label" for="faage">Age</label><input id="faage" type="number" step="0.001" name="faage" size="5" maxlength="5" value="<?php if (isset($_POST['faage'])) echo $_POST['faage']; ?>"/>
 
     <select name="faageunits">
       <option value="years">years</option>
@@ -500,7 +501,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <option value="fetalmonths"<?php if (isset($_POST['faageunits']) AND ($_POST['faageunits'] == 'fetalmonths')) echo ' selected="selected"'; ?>>fetal months</option>
       </select>&nbsp; to &nbsp;
     
-    <input id="faage2" type="number" step="0.01" name="faage2" size="5" maxlength="5" value="<?php if (isset($_POST['faage2'])) echo $_POST['faage2']; ?>"/>
+    <input id="faage2" type="number" step="0.001" name="faage2" size="5" maxlength="5" value="<?php if (isset($_POST['faage2'])) echo $_POST['faage2']; ?>"/>
     
     <select name="faageunits2">
       <option value="years">years</option>
@@ -509,7 +510,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       </select>
     
     <div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
-        <span class="tooltiptext">If the estimated age is not a range (e.g. 55+ years), input "55" into the lower range text box provided here.</span>
+        <span class="tooltiptext">If the estimated age is not a range (e.g. 55+ years), input "55" into the lower range text box provided here.<BR>If you did not perform an age estimation (e.g., unavailable skeletal elements), please leave the fields blank and insert "not analyzed" into the Age Notes field. </span>
     </div>     
     
     <BR>
@@ -518,13 +519,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     <br/><label class="label" for="faancestry">Ancestry/Group Affiliation</label><input id="farace_othertext" type="text" name="farace_othertext" size="30" maxlength="100" value="<?php if (isset($_POST['farace_othertext'])) echo $_POST['farace_othertext']; ?>"/>
 
-    <br/><label class="label" for="fastature">Stature</label><input id="fastature" type="number" step="0.01" name="fastature" size="6" maxlength="8" value="<?php if (isset($_POST['fastature'])) echo $_POST['fastature']; ?>"/>  &nbsp; to &nbsp;
+    <div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
+        <span class="tooltiptext">If you did not perform an ancestry estimation, please state "not analyzed". If you performed an ancestry estimation but it was indeterminate, please state "indeterminate analysis".</span>
+    </div>  
     
-    <input id="fastature2" type="number" step="0.01" name="fastature2" size="6" maxlength="8" value="<?php if (isset($_POST['fastature2'])) echo $_POST['fastature2']; ?>"/>  <select name="fastatureunits">
+    <br/><label class="label" for="fastature">Stature</label><input id="fastature" type="number" step="0.001" name="fastature" size="6" maxlength="8" value="<?php if (isset($_POST['fastature'])) echo $_POST['fastature']; ?>"/>  &nbsp; to &nbsp;
+   
+    
+    <input id="fastature2" type="number" step="0.001" name="fastature2" size="6" maxlength="8" value="<?php if (isset($_POST['fastature2'])) echo $_POST['fastature2']; ?>"/>  <select name="fastatureunits">
       <option value="in">inches</option>
       <option value="cm">cm</option>
       </select>
     
+    <div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
+        <span class="tooltiptext">If you did not perform a stature estimation (e.g., unavailable skeletal elements), please leave the fields blank.</span>
+    </div> 
     
     </fieldset>
     
@@ -543,7 +552,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <BR>
         <BR>
         
-      <label class="label" for="idage">Age</label><input id="idage" type="number" step="0.01" name="idage" size="5" maxlength="5" value="<?php if (isset($_POST['idage'])) echo $_POST['idage']; ?>"/>
+      <label class="label" for="idage">Age</label><input id="idage" type="number" step="0.001" name="idage" size="5" maxlength="5" value="<?php if (isset($_POST['idage'])) echo $_POST['idage']; ?>"/>
       <select name="idageunits">
         <option value="years">years</option>
         <option value="months"<?php if (isset($_POST['idageunits']) AND ($_POST['idageunits'] == 'months')) echo ' selected="selected"'; ?>>months</option>
@@ -567,7 +576,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <BR>
       <BR>
       
-      <label class="label" for="idstature">Stature</label><input id="idstature" type="number" step="0.01" name="idstature" size="6" maxlength="8" value="<?php if (isset($_POST['idstature'])) echo $_POST['idstature']; ?>" />
+      <label class="label" for="idstature">Stature</label><input id="idstature" type="number" step="0.001" name="idstature" size="6" maxlength="8" value="<?php if (isset($_POST['idstature'])) echo $_POST['idstature']; ?>" />
       
       <select name="idstatureunits">
         <option value="in">inches</option>

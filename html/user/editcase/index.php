@@ -762,7 +762,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     
     
-    <br/><label class="label" for="faage">Age</label><input id="faage" type="number" step="0.01" name="faage" size="5" maxlength="5" value="<?php  echo $casedata->get_faage(); ?>"/>
+    <br/><label class="label" for="faage">Age</label><input id="faage" type="number" step="0.001" name="faage" size="5" maxlength="5" value="<?php  echo $casedata->get_faage(); ?>"/>
     
     <select name="faageunits">
       <option value="years">years</option>
@@ -770,7 +770,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <option value="fetalmonths"<?php if ($casedata->get_faageunits() == 'fetalmonths') echo ' selected="selected"'; ?>>fetal months</option>
       </select>&nbsp; to &nbsp;
     
-    <input id="faage2" type="number" step="0.01" name="faage2" size="5" maxlength="5" value="<?php echo $casedata->get_faage2(); ?>"/>
+    <input id="faage2" type="number" step="0.001" name="faage2" size="5" maxlength="5" value="<?php echo $casedata->get_faage2(); ?>"/>
     
     <select name="faageunits2">
       <option value="years">years</option>
@@ -783,16 +783,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>      
     
     <BR>
-    <label class="label" for="faage">Age Notes</label><input id="faage" type="number" step="0.01" name="faage_notes" size="30"  value="<?php echo ((isset($_POST['faage_notes'])) ? $_POST['faage_notes'] : $casedata->get_faage_notes()); ?>"/>
+    <label class="label" for="faage">Age Notes</label><input id="faage" type="number" step="0.001" name="faage_notes" size="30"  value="<?php echo ((isset($_POST['faage_notes'])) ? $_POST['faage_notes'] : $casedata->get_faage_notes()); ?>"/>
     <BR>
     
     <br/><label class="label" for="faancestry">Ancestry/Group Affiliation</label><input id="farace_othertext" type="text" name="farace_othertext" size="30" maxlength="100" value="<?php  echo $casedata->get_faancestryottext(); ?>"/>
     
     
     
-    <br/><label class="label" for="fastature">Stature</label><input id="fastature" type="number" step="0.01" name="fastature" size="6" maxlength="8" value="<?php echo $casedata->get_fastature() ?>"/>  &nbsp; to &nbsp;
+    <br/><label class="label" for="fastature">Stature</label><input id="fastature" type="number" step="0.001" name="fastature" size="6" maxlength="8" value="<?php echo $casedata->get_fastature() ?>"/>  &nbsp; to &nbsp;
     
-    <input id="fastature2" type="number" step="0.01" name="fastature2" size="6" maxlength="8" value="<?php echo $casedata->get_fastature2(); ?>"/>  <select name="fastatureunits">
+    <input id="fastature2" type="number" step="0.001" name="fastature2" size="6" maxlength="8" value="<?php echo $casedata->get_fastature2(); ?>"/>  <select name="fastatureunits">
         <option value="in" <?php if ($casedata->get_fastatureunits() == 'in') echo ' selected="selected"'; ?>>inches</option>
       <option value="cm" <?php if ($casedata->get_fastatureunits() == 'cm') echo ' selected="selected"'; ?>>cm</option>
       </select>
@@ -815,7 +815,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <BR>
       
       
-      <label class="label" for="idage">Age</label><input id="idage" type="number" step="0.01" name="idage" size="5" maxlength="5" value="<?php echo $casedata->get_idage(); ?>"/>
+      <label class="label" for="idage">Age</label><input id="idage" type="number" step="0.001" name="idage" size="5" maxlength="5" value="<?php echo $casedata->get_idage(); ?>"/>
       <select name="idageunits">
         <option value="years">years</option>
         <option value="months"<?php if ($casedata->get_idageunits() == 'months') echo ' selected="selected"'; ?>>months</option>
@@ -837,7 +837,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <br /><label class="label" for="idancaddtext">Race/Ethnicity Notes</label><input id="idancaddtext" type="text" name="idancaddtext" size="30" maxlength="300" value="<?php echo $casedata->get_idancaddtext(); ?>" /><br>
       
       
-      <br/><label class="label" for="idstature">Stature</label><input id="idstature" type="number" step="0.01" name="idstature" size="6" maxlength="8" value="<?php echo $casedata->get_idstature(); ?>" />
+      <br/><label class="label" for="idstature">Stature</label><input id="idstature" type="number" step="0.001" name="idstature" size="6" maxlength="8" value="<?php echo $casedata->get_idstature(); ?>" />
       
       <select name="idstatureunits" >
           <option value="in" <?php if ($casedata->get_idstatureunits() == 'in') echo ' selected="selected"'; ?>>inches</option>
