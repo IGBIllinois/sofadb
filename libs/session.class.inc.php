@@ -25,6 +25,10 @@ class session {
 		return $result;
 
 	}
+        
+        public function unset_var($name) {
+            unset($_SESSION[$name]);
+        }
 
 	public function get_all_vars() {
 		return $_SESSION;
