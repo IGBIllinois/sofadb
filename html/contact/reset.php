@@ -50,7 +50,7 @@ $validator = filter_input(INPUT_GET, 'validator');
 $queryString = $_SERVER['QUERY_STRING'];
 if ( false !== ctype_xdigit( $selector ) && false !== ctype_xdigit( $validator ) ) :
 ?>
-    <form action="reset.php? <?php echo $queryString;?>" method="post">
+    <form id='passreset' action="reset.php?<?php echo $queryString;?>" method="post">
         <input type="hidden" name="selector" value="<?php echo $selector; ?>">
         <input type="hidden" name="validator" value="<?php echo $validator; ?>">
         <input type="password" class="text" name="psword1" placeholder="Enter your new password" required><BR>
@@ -70,7 +70,7 @@ if ( false !== ctype_xdigit( $selector ) && false !== ctype_xdigit( $validator )
   <script language="JavaScript" type="text/javascript"
     xml:space="preserve">//<![CDATA[
 //You should create the validator only after the definition of the HTML form
-  var frmvalidator  = new Validator("registration");
+  var frmvalidator  = new Validator("passreset");
   
  frmvalidator.EnableOnPageErrorDisplaySingleBox();
   frmvalidator.EnableMsgsTogether();
