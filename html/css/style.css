@@ -208,6 +208,22 @@ body {
 	clear: both;
 }
 
+.error {
+	font-family: Verdana;
+	font-size: 14px;
+	color: #DD0000;
+	clear: both;
+        padding-left: 20px;
+}
+
+.ok {
+	font-family: Verdana;
+	font-size: 14px;
+	color: #00DD00;
+	clear: both;
+        padding-left: 20px;
+}
+
 #caseregion {
 	float: left;
 	margin-right: 15px;
@@ -351,52 +367,7 @@ body {
 }
 
 
-/*	
-	Side Navigation Menu V2, RWD
-	===================
-	License:
-	http://goo.gl/805sas
-	===================
-	Author: @PableraShow
 
- */
-
-/*@import url(http://pablogarciafernandez.com/css/reset.css);*/
-
-/* Typography
-------------------------------------- 
-//@charset "UTF-8";
-//@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
-*/
-/*body {
-	  font-family: 'Open Sans', sans-serif;
-	  font-size: 1em;
-	  font-weight: 300;	
-	  font-style: normal;
-	  word-spacing: normal;
-	  letter-spacing: normal;
-	  text-rendering: optimizeLegibility;
-	  line-height: 1.8em;
-	  color:#717171;
-}
-
-h1 {
-	  font-size: 2em;
-  	font-weight: 300;
-	  line-height: 4em;
-  	text-transform: uppercase;
-  	color: #BDBDBD;
-}
-h2 {
-	  font-size: 1.4em;
-  	font-weight: 400;
-	  line-height: 1em;
-}
-
-p {
-  font-size: 1.16em;
-  line-height: 4em;
-}*/
 
 p svg {
   display: inline-block;
