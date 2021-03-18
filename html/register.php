@@ -142,15 +142,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	}
 	// Check for a first name:
 	if (empty($_POST['fname'])) {
-		$errors[] = 'You forgot to enter your first name.';
+                $errors[] = 'You forgot to enter your first name.';
 	} else {
-			$fn = trim($_POST['fname']);
+                $fn = trim($_POST['fname']);
 	}
 	// Check for a last name:
 	if (empty($_POST['lname'])) {
-		$errors[] = 'You forgot to enter your last name.';
+                $errors[] = 'You forgot to enter your last name.';
 	} else {
-		$ln = trim($_POST['lname']);
+                $ln = trim($_POST['lname']);
 	}
 
 	// Check for an email address:
@@ -302,8 +302,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "signature"=>$signature,
             "signature_date"=>$signature_date);
  
-        //$user_params = array("user_name"=>($fn . " ".$ln),
-        //                    "from_email"=>FROM_EMAIL);
 	
         if (empty($errors)) { // If there were no errors
         //Determine whether the email address has already been registered	
@@ -319,20 +317,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                    $to = $admin_email;
 
                    $from= FROM_EMAIL;
-                 //$subject = "FADAMA DB ADMIN ALERT: Activate new user";
-                 //$message = functions::renderTwigTemplate('email/register_admin.html.twig', $params);
-
-                 //$header = "From:".$from."\r\n";
-                 //$retval = mail($to,$subject,$message,$header);
-
-                 // Email verification
-                 //$user_to = $e;
-                 //$user_subject = "FADAMA Membership Request";
-
-                 //$user_message = functions::renderTwigTemplate("email/register_verify.html.twig", $user_params);
-                 //$user_header = "From:".$from."\r\n";
-
-                 //$user_retval = mail($user_to, $user_subject, $user_message, $user_header);
 
 
                     // Create tokens
@@ -347,16 +331,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     } catch(Exception $e) {
                         echo($e->getTraceAsString());
                     }
-                 //if( $user_retval == true )  
-                 //{
-                   //echo("Thank you for requesting membership approval to FADAMA. Your request is under review and may take up to 1 week to be approved.");
                    echo("Thank you for requesting membership approval to FADAMA. To complete your registration, please check the email you provided to verify your email address.");
 
-                 //}
-                 //else
-                 //{
-                 //   echo "Error: Activation Email not sent. Please contact administrator.";
-                 //}
 
             } else { // If it did not run OK
                  // Error message:
@@ -406,8 +382,8 @@ echo("</div>");
      <center><strong class="outsidetext">* indicates required field</strong></center>
   <br>  <label class="label" for="fname">First Name*</label><input id="fname" type="text" name="fname" size="30" maxlength="30" value="<?php if (isset($_POST['fname'])) echo $_POST['fname']; ?>">
     <br><label class="label" for="lname">Last Name*</label><input id="lname" type="text" name="lname" size="30" maxlength="40" value="<?php if (isset($_POST['lname'])) echo $_POST['lname']; ?>">
-    <br><label class="label" for="email">Email Address*</label><input id="email" type="text" name="email" size="30" maxlength="160" value="<?php if (isset($_POST['email'])) echo $_POST['email']; ?>" >
-    <br><label class="label" for="email">Confirm Email Address*</label><input id="email2" type="text" name="email2" size="30" maxlength="160" value="<?php if (isset($_POST['email2'])) echo $_POST['email2']; ?>" > 
+    <br><label class="label" for="email">Email Address*</label><input id="email" type="email" name="email" size="30" maxlength="160" value="<?php if (isset($_POST['email'])) echo $_POST['email']; ?>" >
+    <br><label class="label" for="email">Confirm Email Address*</label><input id="email2" type="email" name="email2" size="30" maxlength="160" value="<?php if (isset($_POST['email2'])) echo $_POST['email2']; ?>" > 
     
     
     <br><label class="label" for="psword1">Password*</label><input id="psword1" type="password" name="psword1" size="12" maxlength="50" value="<?php if (isset($_POST['psword1'])) echo $_POST['psword1']; ?>" >
@@ -461,7 +437,7 @@ echo("</div>");
       <br><label class="label" for="affiliation">Other Forensic Governing Body Affiliation (e.g. FASE, ALAF):</label><input id="affiliation" type="text" name="affiliation" size="30"  value="<?php if (isset($_POST['affiliation'])) echo $_POST['affiliation']; ?>" >
         <br>If you aren't a member of a forensic governing body, you are required to have a sponsor in order to access FADAMA. Fill out their name, email, and affiliated membership in the space below
         <br><label class="label" for="sponsor">Sponsor:</label><input id="sponsor" type="text" name="sponsor" size="30" value="<?php if (isset($_POST['sponsor'])) echo $_POST['sponsor']; ?>" >
-        <br><label class="label" for="sponsor_email">Sponsor Email:</label><input id="sponsor_email" type="text" name="sponsor_email" size="30" value="<?php if (isset($_POST['sponsor_email'])) echo $_POST['sponsor_email']; ?>" >
+        <br><label class="label" for="sponsor_email">Sponsor Email:</label><input id="sponsor_email" type="email" name="sponsor_email" size="30" value="<?php if (isset($_POST['sponsor_email'])) echo $_POST['sponsor_email']; ?>" >
         <br><label class="label" for="sponsor_affiliation">Sponsor Affiliation:</label><input id="sponsor_affiliation" type="text" name="sponsor_affiliation" size="30"  value="<?php if (isset($_POST['sponsor_affiliation'])) echo $_POST['sponsor_affiliation']; ?>" >
                 <BR><BR>
       
@@ -525,6 +501,7 @@ By requesting registration to the FADAMA Database, I agree to the following guid
   frmvalidator.addValidation("email","maxlen=50");
   frmvalidator.addValidation("email","req","Please enter your email address");
   frmvalidator.addValidation("email","email");
+  frmvalidator.addValidation("sponsor_email","email");
   
    frmvalidator.addValidation("psword1","req","Please enter a password");
    frmvalidator.addValidation("psword2","req","Please confirm your password");
