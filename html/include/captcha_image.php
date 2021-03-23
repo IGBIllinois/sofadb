@@ -9,7 +9,7 @@
 $ds = DIRECTORY_SEPARATOR;
 $filepath = __DIR__ . "$ds..$ds";
 try {
-require_once "../include/main.inc.php";
+require_once "./main.inc.php";
 require_once("../../libs/captcha.class.inc.php");
 } catch(Exception $e) {
     echo($e->getTraceAsString());
