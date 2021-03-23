@@ -75,8 +75,10 @@ public static $permitted_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $black = imagecolorallocate($image, 0, 0, 0);
         $white = imagecolorallocate($image, 255, 255, 255);
         $textcolors = [$black, $white];
-
-        $fonts = [dirname(__FILE__).'\..\html\fonts\Acme.ttf', dirname(__FILE__).'\..\html\fonts\Ubuntu.ttf', dirname(__FILE__).'\..\html\fonts\Merriweather.ttf', dirname(__FILE__).'\..\html\fonts\PlayfairDisplay.ttf'];
+        $ds = DIRECTORY_SEPARATOR;
+        
+        $prefix = dirname(__FILE__)."$ds..".$ds."html".$ds."fonts".$ds;
+        $fonts = [$prefix."Acme.ttf", $prefix."Ubuntu.ttf", $prefix."Merriweather.ttf", $prefix."PlayfairDisplay.ttf"];
 
         // Add letters with random rotation to the image
         for($i = 0; $i < $string_length; $i++) {
