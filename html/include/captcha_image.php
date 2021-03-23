@@ -1,13 +1,5 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-$ds = DIRECTORY_SEPARATOR;
-$filepath = __DIR__ . "$ds..$ds";
 try {
 require_once "./main.inc.php";
 require_once("../../libs/captcha.class.inc.php");
