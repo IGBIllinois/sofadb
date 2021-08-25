@@ -783,7 +783,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>      
     
     <BR>
-    <label class="label" for="faage">Age Notes</label><input id="faage" type="number" step="0.001" name="faage_notes" size="30"  value="<?php echo ((isset($_POST['faage_notes'])) ? $_POST['faage_notes'] : $casedata->get_faage_notes()); ?>"/>
+    <label class="label" for="faage">Age Notes</label><input id="faage" type="text" name="faage_notes" size="30"  value="<?php echo ((isset($_POST['faage_notes'])) ? $_POST['faage_notes'] : $casedata->get_faage_notes()); ?>"/>
     <BR>
     
     <br/><label class="label" for="faancestry">Ancestry/Group Affiliation</label><input id="farace_othertext" type="text" name="farace_othertext" size="30" maxlength="100" value="<?php  echo $casedata->get_faancestryottext(); ?>"/>
