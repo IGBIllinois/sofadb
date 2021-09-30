@@ -718,8 +718,8 @@ public static function update_member($db, $params, $pwd=null) {
             $this->sponsor_affiliation = $member_data['sponsor_affiliation'];
             
             $this->agree_to_terms = $member_data['agree_to_terms'];
-            $this->signature = $member['signature'];
-            $this->signature_date = $member['signature_date'];
+            $this->signature = $member_data['signature'];
+            $this->signature_date = $member_data['signature_date'];
             
         }
     }
