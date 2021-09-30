@@ -382,7 +382,7 @@ echo("</div>");
      <center><strong class="outsidetext">* indicates required field</strong></center>
   <br>  <label class="label" for="fname">First Name*</label><input id="fname" type="text" name="fname" size="30" maxlength="30" value="<?php if (isset($_POST['fname'])) echo $_POST['fname']; ?>">
     <br><label class="label" for="lname">Last Name*</label><input id="lname" type="text" name="lname" size="30" maxlength="40" value="<?php if (isset($_POST['lname'])) echo $_POST['lname']; ?>">
-    <br><label class="label" for="email">Email Address*</label><input id="email" type="email" name="email" size="30" maxlength="160" value="<?php if (isset($_POST['email'])) echo $_POST['email']; ?>" >
+    <br><label class="label" for="email">Institutional/Agency Email*</label><input id="email" type="email" name="email" size="30" maxlength="160" value="<?php if (isset($_POST['email'])) echo $_POST['email']; ?>" >
     <br><label class="label" for="email">Confirm Email Address*</label><input id="email2" type="email" name="email2" size="30" maxlength="160" value="<?php if (isset($_POST['email2'])) echo $_POST['email2']; ?>" > 
     
     
@@ -418,10 +418,20 @@ echo("</div>");
       <br><label class="label" for="region">Current Region of Practice*</label>
       <select name="region">
         <option value="">- Select -</option>
-        <option value="1"<?php if (isset($_POST['region']) AND ($_POST['region'] == '1')) echo ' selected="selected"'; ?>>Northeast</option>
-        <option value="2"<?php if (isset($_POST['region']) AND ($_POST['region'] == '2')) echo ' selected="selected"'; ?>>West</option>
-        <option value="3"<?php if (isset($_POST['region']) AND ($_POST['region'] == '3')) echo ' selected="selected"'; ?>>Midwest</option>
-        <option value="4"<?php if (isset($_POST['region']) AND ($_POST['region'] == '4')) echo ' selected="selected"'; ?>>South</option>
+        <option value="1"<?php if (isset($_POST['region']) AND ($_POST['region'] == '1')) echo ' selected="selected"'; ?>>U.S. Northeast</option>
+        <option value="2"<?php if (isset($_POST['region']) AND ($_POST['region'] == '2')) echo ' selected="selected"'; ?>>U.S. West</option>
+        <option value="3"<?php if (isset($_POST['region']) AND ($_POST['region'] == '3')) echo ' selected="selected"'; ?>>U.S. Midwest</option>
+        <option value="4"<?php if (isset($_POST['region']) AND ($_POST['region'] == '4')) echo ' selected="selected"'; ?>>U.S. South</option>
+        <option value="5"<?php if (isset($_POST['region']) AND ($_POST['region'] == '5')) echo ' selected="selected"'; ?>>Africa</option>
+        <option value="6"<?php if (isset($_POST['region']) AND ($_POST['region'] == '6')) echo ' selected="selected"'; ?>>Asia Pacific</option>
+        <option value="7"<?php if (isset($_POST['region']) AND ($_POST['region'] == '7')) echo ' selected="selected"'; ?>>Central America</option>
+        <option value="8"<?php if (isset($_POST['region']) AND ($_POST['region'] == '8')) echo ' selected="selected"'; ?>>Canada</option>
+        <option value="9"<?php if (isset($_POST['region']) AND ($_POST['region'] == '9')) echo ' selected="selected"'; ?>>Caribbean</option>
+        <option value="10"<?php if (isset($_POST['region']) AND ($_POST['region'] == '10')) echo ' selected="selected"'; ?>>Europe</option>
+        <option value="11"<?php if (isset($_POST['region']) AND ($_POST['region'] == '11')) echo ' selected="selected"'; ?>>Middle East</option>
+        <option value="12"<?php if (isset($_POST['region']) AND ($_POST['region'] == '12')) echo ' selected="selected"'; ?>>South America</option>
+        
+        
         </select>
       <br><label class="label" for="degree">Education*</label>
       <select name="degree">
