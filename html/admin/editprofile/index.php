@@ -295,12 +295,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
         <option value="4"<?php if ($edit_member->get_aafsstatus() == 4) echo ' selected="selected"'; ?>>Not A Member</option>
         </select>
         <br><label class="label" for="region">Region of Practice*</label>
-      <select name="region">
+            <select name="region">
         <option value="">- Select -</option>
-        <option value="1"<?php if ($edit_member->get_region() == 1) echo ' selected="selected"'; ?>>Northeast</option>
-        <option value="2"<?php if ($edit_member->get_region() == 2) echo ' selected="selected"'; ?>>West</option>
-        <option value="3"<?php if ($edit_member->get_region() == 3) echo ' selected="selected"'; ?>>Midwest</option>
-        <option value="4"<?php if ($edit_member->get_region() == 4) echo ' selected="selected"'; ?>>South</option>
+        <option value="1"<?php if (isset($_POST['region']) AND ($_POST['region'] == '1')) echo ' selected="selected"'; ?>>U.S. Northeast</option>
+        <option value="2"<?php if (isset($_POST['region']) AND ($_POST['region'] == '2')) echo ' selected="selected"'; ?>>U.S. West</option>
+        <option value="3"<?php if (isset($_POST['region']) AND ($_POST['region'] == '3')) echo ' selected="selected"'; ?>>U.S. Midwest</option>
+        <option value="4"<?php if (isset($_POST['region']) AND ($_POST['region'] == '4')) echo ' selected="selected"'; ?>>U.S. South</option>
+        <option value="5"<?php if (isset($_POST['region']) AND ($_POST['region'] == '5')) echo ' selected="selected"'; ?>>Africa</option>
+        <option value="6"<?php if (isset($_POST['region']) AND ($_POST['region'] == '6')) echo ' selected="selected"'; ?>>Asia Pacific</option>
+        <option value="7"<?php if (isset($_POST['region']) AND ($_POST['region'] == '7')) echo ' selected="selected"'; ?>>Central America</option>
+        <option value="8"<?php if (isset($_POST['region']) AND ($_POST['region'] == '8')) echo ' selected="selected"'; ?>>Canada</option>
+        <option value="9"<?php if (isset($_POST['region']) AND ($_POST['region'] == '9')) echo ' selected="selected"'; ?>>Caribbean</option>
+        <option value="10"<?php if (isset($_POST['region']) AND ($_POST['region'] == '10')) echo ' selected="selected"'; ?>>Europe</option>
+        <option value="11"<?php if (isset($_POST['region']) AND ($_POST['region'] == '11')) echo ' selected="selected"'; ?>>Middle East</option>
+        <option value="12"<?php if (isset($_POST['region']) AND ($_POST['region'] == '12')) echo ' selected="selected"'; ?>>South America</option>
+        
+        
         </select>
         
     
