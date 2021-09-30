@@ -55,13 +55,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 	
     
+    if (empty($_POST['origcaseyear'])) {
+        $origcaseyear = null;
+    } else if(!is_numeric($_POST['origcaseyear'])) {
+        $errors[] = 'Case year must be numeric.';
+    } else if(strlen("".$_POST['origcaseyear']) != 4) {
+        $errors[] = 'Please enter a 4-digit original case year.';
+    } else if($_POST['origcaseyear'] > date('Y')) {
+        $errors[] = 'You cannot add an original case year for a future date.';
+    }
+    else {
+        $origcaseyear = trim($_POST['origcaseyear']);
+    }
+    
     // Check for a case agency:
     if (empty($_POST['caseagency'])) {
         $caseag=NULL;
     } else {
         $caseag = trim($_POST['caseagency']);
     }
-	
+
+    // Check for a case agency:
+    if (empty($_POST['caseregion'])) {
+        $caseregion=NULL;
+    } else {
+        $caseregion = trim($_POST['caseregion']);
+    }
+    
+    
     // Check for a FA sex
     if (empty($_POST['fasex'])) {
         $fasex=NULL;
@@ -353,8 +374,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 "casename"=>$casename,
                 "casenum"=>$casenum,
                 "caseyear"=>$caseyear,
+                "origcaseyear"=>$origcaseyear,
                 "memberid"=>$memberid,
                 "caseag"=>$caseag,
+                "caseregion"=>$caseregion,
 
                 "fasex"=>$fasex,
                 "faage"=>$faage,
@@ -463,13 +486,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     
   <fieldset class="caseinfobox"><legend class="boldlegend">General Case Information</legend>
-        <label class="label" for="caseyear">Case Year (YYYY)*</label><input id="caseyear" type="text" name="caseyear" size="5" maxlength="4" value="<?php if (isset($_POST['caseyear'])) echo $_POST['caseyear']; ?>"/><strong class="outsidetext">* indicates required field</strong>
+      Please note that only data related to the case year and case region is shared to the database. Case number and case agency is never released and is only kept in your personal case profile. 
+      <BR><BR>
+      <strong>* indicates a required field</strong>
+      <BR><BR>
+        <label class="label" for="caseyear">Case Year (YYYY)*</label><input id="caseyear" type="text" name="caseyear" size="5" maxlength="4" value="<?php if (isset($_POST['caseyear'])) echo $_POST['caseyear']; ?>"/>
   <br/>
+
+        <label class="label" for="origcaseyear">Original Case Year</label><input id="origcaseyear" type="text" name="origcaseyear" size="5" maxlength="4" value="<?php if (isset($_POST['origcaseyear'])) echo $_POST['origcaseyear']; ?>"/>
+  <div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
+        <span class="tooltiptext">Does the year of this case's forensic anthropology analysis differ from the year the human remains were recovered? If so, please
+provide the original case year in the box here, and your year that you
+initiated the forensic anthropological analysis in the "Case Year" field
+above.</span>
+    </div>  
+        <br/>
+
+  
   <label class="label" for="casenumber">Case Number*</label><input id="casenumber" type="text" name="casenumber" size="30" maxlength="30" value="<?php if (isset($_POST['casenumber'])) echo $_POST['casenumber']; ?>"/>
   <br />
     
   <label class="label" for="caseagency">Case Agency</label><input id="caseagency" type="text" name="caseagency" size="30"  value="<?php if (isset($_POST['caseagency'])) echo $_POST['caseagency']; ?>"/>
   <br />
+  
+      <label class="label" for="caseregion">Case Region</label>
+      <select name="caseregion">
+        <option value="">- Select -</option>
+        <option value="1"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '1')) echo ' selected="selected"'; ?>>U.S. Northeast</option>
+        <option value="2"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '2')) echo ' selected="selected"'; ?>>U.S. West</option>
+        <option value="3"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '3')) echo ' selected="selected"'; ?>>U.S. Midwest</option>
+        <option value="4"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '4')) echo ' selected="selected"'; ?>>U.S. South</option>
+        <option value="5"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '5')) echo ' selected="selected"'; ?>>Africa</option>
+        <option value="6"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '6')) echo ' selected="selected"'; ?>>Asia Pacific</option>
+        <option value="7"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '7')) echo ' selected="selected"'; ?>>Central America</option>
+        <option value="8"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '8')) echo ' selected="selected"'; ?>>Canada</option>
+        <option value="9"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '9')) echo ' selected="selected"'; ?>>Caribbean</option>
+        <option value="10"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '10')) echo ' selected="selected"'; ?>>Europe</option>
+        <option value="11"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '11')) echo ' selected="selected"'; ?>>Middle East</option>
+        <option value="12"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '12')) echo ' selected="selected"'; ?>>South America</option>
+        
+        
+        </select>
     
  
     <span name="savebutton" class="bigsavebutton">
@@ -620,7 +677,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
            </div>     
            <BR><BR>
            <input type="checkbox" name="certify_no_info" value="1" />
-            I certify that no identifiable information (e.g. name, home address, relative’s names, driver’s license number etc) 
+            I certify that no identifiable information (e.g. name, home address, relative’s names, driver’s license number etc.) 
             regarding the decedent of this case will be submitted in FADAMA.
             <BR>
             <BR>
@@ -642,7 +699,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
            
     <fieldset class="caseinfobox"><legend class="boldlegend">Case Notes</legend>
       <label class="label" for="casenotes"></label>
-      <textarea name="casenotes" cols="55" rows="7"><?php if (isset($_POST['casenotes'])) echo $_POST['casenotes']; ?></textarea>
+      <textarea name="casenotes" cols="55" rows="7"
+                placeholder='Please use this box to indicate any aspects of the case that are noteworthy for this case, or may have impacted your approach to assessing the biological profile for this case, including taphonomic alterations, postmortem damage, perimortem trauma, missing skeletal elements, burning, etc.'
+                ><?php if (isset($_POST['casenotes'])) echo $_POST['casenotes']; ?></textarea>
 
       
       

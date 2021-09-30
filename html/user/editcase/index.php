@@ -7,6 +7,7 @@ $title = "Forensic Anthropology Case Database (FADAMA) - Edit Case";
 require_once('../../include/header_user.php');
 
 ?>
+<br/>
   <h1 class="cntr">Edit Case Information</h1>
   <center>(<a href="https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Edit_case_information" target="_blank">Edit case tutorial</a>)</center>
   
@@ -280,6 +281,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         else {
             $casenam="";	
 	}
+        
+        // Check for an original case year
+        if (empty($_POST['origcaseyear'])) {
+            $origcaseyear = null;
+	} else if(!is_numeric($_POST['origcaseyear'])) {
+            $errors[] = 'Case year must be numeric.';
+        } else if(strlen("".$_POST['origcaseyear']) != 4) {
+            $errors[] = 'Please enter a 4-digit original case year.';
+        } else if($_POST['origcaseyear'] > date('Y')) {
+            $errors[] = 'Cannot add an original case year for a future date.';
+        }
+        else {
+            $caseyear = trim($_POST['origcaseyear']);
+	}
     
     
 	// Check for a case agency:
@@ -289,6 +304,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} 
         else {
             $caseag = trim($_POST['caseagency']);
+	}
+        
+        // Check for a case agency:
+	if (empty($_POST['caseregion'])) {
+            $caseregion=NULL;
+        
+	} 
+        else {
+            $caseregion = trim($_POST['caseregion']);
 	}
 	
         // Check for a FA sex
@@ -615,14 +639,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($case_exists == false)
             {//The case has not been registered already 
 		// Make the query:
-		
+		try {
                 $case = new sofa_case($db, $caseeditid);
                 $data = array(
                     
                     "casename"=>$casenam,
                     "casenum"=>$casenum,
                     "caseyear"=>$caseyear,
+                    "origcaseyear"=>$origcaseyear,
                     "caseag"=>$caseag,
+                    "caseregion"=>$caseregion,
 
                     "fasex"=>$fasex,
                     "faage"=>$faage,
@@ -672,7 +698,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                                 
                 $result = $case->edit_case($data);
-
+                } catch(Exception $e) {
+                    echo($e->getTraceAsString());
+                }
         	if ($result["RESULT"] == FALSE) { 
                     // If it did not run OK
                     // Error message:
@@ -718,6 +746,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	<div id="tabs">
   <ul>
     <li><a href="#tabs-1">General Case Information</a></li>
+    
     <li><a href="#tabs-2">Manage Case Methods</a></li>
  
   </ul>
@@ -731,18 +760,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <input type='hidden' id='caseid' name='savecase' value=1>
         
 <fieldset class="caseinfobox"><legend class="boldlegend">General Case Information</legend>
-      
+Please note that only data related to the case year and case region is shared to the database. Case number and case agency is never released and is only kept in your personal case profile. 
+      <BR><BR>
+      <strong>* indicates a required field</strong>
+      <BR><BR>      
           
     
-  <label class="label" for="caseyear">Case Year</label><input id="caseyear" type="text" name="caseyear" size="5" maxlength="4" value="<?php  echo $casedata->get_caseyear();; ?>"/>
+  <label class="label" for="caseyear">Case Year (YYYY)*</label><input id="caseyear" type="text" name="caseyear" size="5" maxlength="4" value="<?php  echo $casedata->get_caseyear(); ?>"/>
   <br />
+  <label class="label" for="origcaseyear">Original Case Year</label><input id="origcaseyear" type="text" name="origcaseyear" size="5" maxlength="4" value="<?php echo $casedata->get_orig_case_year(); ?>"/>
+  <div class="tooltip"><img class='img-bottom' src="../../images/tooltip.png">
+        <span class="tooltiptext">Does the year of this case's forensic anthropology analysis differ from the year the human remains were recovered? If so, please
+provide the original case year in the box here, and your year that you
+initiated the forensic anthropological analysis in the "Case Year" field
+above.</span>
+    </div>  
+        <br/>
     
-  <label class="label" for="casenumber">Case Number</label><input id="casenumber" type="text" name="casenumber" size="30" maxlength="30" value="<?php echo $casedata->get_casenumber(); ?>"/>
+  <label class="label" for="casenumber">Case Number*</label><input id="casenumber" type="text" name="casenumber" size="30" maxlength="30" value="<?php echo $casedata->get_casenumber(); ?>"/>
   <br />
     
   <label class="label" for="caseagency">Case Agency</label><input id="caseagency" type="text" name="caseagency" size="30" maxlength="30" value="<?php echo $casedata->get_caseagency(); ?>"/>
-      
-  <br/>
+ 
+  <br><label class="label" for="caseregion">Case Region</label>
+    <select name="caseregion">
+        <option value="">- Select -</option>
+        <option value="1"<?php if ($casedata->get_caseregion() == '1') echo ' selected="selected"'; ?>>U.S. Northeast</option>
+        <option value="2"<?php if ($casedata->get_caseregion() == '2') echo ' selected="selected"'; ?>>U.S. West</option>
+        <option value="3"<?php if ($casedata->get_caseregion() == '3') echo ' selected="selected"'; ?>>U.S. Midwest</option>
+        <option value="4"<?php if ($casedata->get_caseregion() == '4') echo ' selected="selected"'; ?>>U.S. South</option>
+        <option value="5"<?php if ($casedata->get_caseregion() == '5') echo ' selected="selected"'; ?>>Africa</option>
+        <option value="6"<?php if ($casedata->get_caseregion() == '6') echo ' selected="selected"'; ?>>Asia Pacific</option>
+        <option value="7"<?php if ($casedata->get_caseregion() == '7') echo ' selected="selected"'; ?>>Central America</option>
+        <option value="8"<?php if ($casedata->get_caseregion() == '8') echo ' selected="selected"'; ?>>Canada</option>
+        <option value="9"<?php if ($casedata->get_caseregion() == '9') echo ' selected="selected"'; ?>>Caribbean</option>
+        <option value="10"<?php if ($casedata->get_caseregion() == '10') echo ' selected="selected"'; ?>>Europe</option>
+        <option value="11"<?php if ($casedata->get_caseregion() == '11') echo ' selected="selected"'; ?>>Middle East</option>
+        <option value="12"<?php if ($casedata->get_caseregion() == '12') echo ' selected="selected"'; ?>>South America</option>
+
+
+    </select>
+  
+
     <span name="savebutton" class="bigsavebutton">
     <input name="savecase" type="image" id="savecase" src="../../images/bigsave.png" alt="Save Case" width="90"/></span>
   </fieldset>
@@ -888,7 +947,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       
     <fieldset class="caseinfobox"><legend class="boldlegend">Case Notes</legend>
       <label class="label" for="casenotes"></label>
-      <textarea name="casenotes" cols="55" rows="7"><?php echo $casedata->get_casenotes(); ?></textarea>
+<textarea name="casenotes" cols="55" rows="7" placeholder='Please use this box to indicate any aspects of the case that are noteworthy for this case, or may have impacted your approach to assessing the biological profile for this case, including taphonomic alterations, postmortem damage, perimortem trauma, missing skeletal elements, burning, etc.'><?php echo $casedata->get_casenotes();?></textarea>
 
       </fieldset>
       </fieldset>

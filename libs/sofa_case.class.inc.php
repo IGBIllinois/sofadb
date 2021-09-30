@@ -29,6 +29,9 @@ class sofa_case {
     /** Case agency */
     private $caseagency;
     
+    /** Case region */
+    private $caseregion;
+    
     /** Forensic Anthropology estimated sex */
     private $fasex;
     
@@ -164,6 +167,9 @@ class sofa_case {
     /** Option to give consent to share data with the FDB (Consent, already submitted, Do Not Consent) */
     private $fdb_consent;
     
+    /** If this was a cold case, this is the original year of the case */
+    private $orig_case_year;
+    
     // getters
     public function get_id() { return $this->id; }
     public function get_casename() { return $this->casename; }
@@ -171,6 +177,7 @@ class sofa_case {
     public function get_caseyear() { return $this->caseyear; }
     public function get_memberid() { return $this->memberid; }
     public function get_caseagency() { return $this->caseagency; }
+    public function get_caseregion() { return $this->caseregion; }
     public function get_fasex() { return $this->fasex; }
     public function get_faage() { return $this->faage; }
     public function get_faage2() { return $this->faage2; }
@@ -221,6 +228,8 @@ class sofa_case {
     
     public function get_fdb_consent() { return $this->fdb_consent; }
     
+    public function get_orig_case_year() { return $this->orig_case_year; }
+    
     public function __construct($db, $id = 0) {
 
 
@@ -245,8 +254,10 @@ class sofa_case {
                 . "casename, "
                 . "casenumber,"
                 . "caseyear,"
+                . "origcaseyear,"
                 . "memberid,"
                 . "caseagency,"
+                . "caseregion,"
                 
                 . "fasex,"
                 . "faage,"
@@ -302,8 +313,10 @@ class sofa_case {
                     . ":casename,"
                     . ":casenum,"
                     . ":caseyear,"
+                    . ":origcaseyear,"
                     . ":memberid,"
                     . ":caseag,"
+                    . ":caseregion,"
                 
                     . ":fasex,"
                     . ":faage,"
@@ -356,6 +369,7 @@ class sofa_case {
                 
                 . ")";	
         
+        
                 try {
                 $caseid = $db->get_insert_result($q, $data);
                 } catch(Exception $e) {
@@ -363,6 +377,7 @@ class sofa_case {
                 }
 
                 if($caseid == 0) {
+                    print_r($data);
                     return array("RESULT"=>FALSE,
                             "MESSAGE"=>"<h2>System Error</h2>
 				<p class='error'>Saving failed because of a system error. We apologize for any inconvenience.</p>
@@ -477,8 +492,10 @@ public function submit_case($submitstatus) {
         $q = "UPDATE cases SET "
                 . "casename=:casename,"
                 . "caseyear=:caseyear,"
+                . "origcaseyear=:origcaseyear,"
                 . "casenumber=:casenum,"
                 . "caseagency=:caseag,"
+                . "caseregion=:caseregion,"
                 
                 . "fasex=:fasex,"
                 . "faage=:faage,"
@@ -526,7 +543,6 @@ public function submit_case($submitstatus) {
                 . "fdb_consent=:fdb_consent"
                 
                 . " WHERE id=:caseeditid";
-
 
         $this->db->get_update_result($q, $data);
         return array("RESULT"=>TRUE,
@@ -599,51 +615,7 @@ public function submit_case($submitstatus) {
             }
         }
     }
-    /** Adds a record to the tier3data table given a methodinfoid id instead
-     * of output_data values
-     * 
-     * @param int $tier2id Tier2 ID
-     * @param int $methodinfoid ID of the method_info
-     * @param string $value Value to add (optional, only for certain user_interaction types)
-     * @return array an array in the form
-     *  ("RESULT"=>$result,
-     *      "MESSAGE"=>$message)
-     * where "RESULT" is true if successful, else false, and "MESSAGE" is an
-     * output message
-     */
-    /*
-    public function add_tier3_by_id($tier2id, $methodinfoid, $value=null) {
-        if($value == null) {
-            $q = "INSERT INTO tier3data(tier2id, methodinfoid) VALUES ".
-                        "(:t2id, :methodinfoid)";
-                $params = array("t2id"=>$tier2id,
-                                "methodinfoid"=>$methodinfoid);
-                $info_result = $this->db->get_insert_result($q, $params);
-                if($info_result > 0) {
-                    return array("RESULT"=>TRUE,
-                                "MESSAGE"=>"Method data added successfully.",
-                                "id"=>$info_result);
-                } else {
-                    return array("RESULT"=>FALSE,
-                                "MESSAGE"=>"ERROR: Method data not added successfully.",
-                                "id"=>0);
-                }
-        } else {
-            $q = "INSERT INTO tier3data(tier2id, methodinfoid, value) VALUES ".
-                        "(:t2id, :methodinfoid, :value)";
-                $params = array("t2id"=>$tier2id,
-                                "methodinfoid"=>$methodinfoid,
-                                "value"=>$value);
 
-                $info_result = $this->db->get_insert_result($q, $params);
-                if($info_result > 0) {
-                    return array("RESULT"=>TRUE,
-                                "MESSAGE"=>"Method data added successfully.",
-                                "id"=>$info_result);
-                }
-        }
-    }
-    */
     
     /** Deletes Tier 3 data for a given Tier 2 id and method_info id
      * 
@@ -715,54 +687,7 @@ public function submit_case($submitstatus) {
     }
     
     
-    /** Updates a tier3 data with a new value, or inserts it if it doesn't exist
-     * 
-     * @param type $t2id
-     * @param type $methodinfoid
-     * @param type $new_value
-     * @return array an array in the form
-     *  ("RESULT"=>$result,
-     *      "MESSAGE"=>$message)
-     * where "RESULT" is true if successful, else false, and "MESSAGE" is an
-     * output message
-     */
-    /*
-    public function update_tier3($t2id, $methodinfoid, $new_value, $reflist = null){
-        $check_query = "SELECT * from tier3data where tier2id = :t2id and methodinfoid = :methodinfoid ";
-        $params = array("t2id"=>$t2id,
-                        "methodinfoid"=>$methodinfoid);
-        $check_result = $this->db->get_query_result($check_query, $params);
-        
-        if(count($check_result)>0) {
-            // it already exists, update
-            $update_query = "UPDATE tier3data set value=:new_value where tier2id=:t2id and methodinfoid=:methodinfoid";
-            $params = array("t2id"=>$t2id,
-                        "methodinfoid"=>$methodinfoid,
-                        "new_value"=>$new_value);
 
-            if($reflist != null) {
-                $update_query = "UPDATE tier3data set value=:new_value, reference = :reflist where tier2id=:t2id and methodinfoid=:methodinfoid";
-                $params = array("t2id"=>$t2id,
-                        "methodinfoid"=>$methodinfoid,
-                        "reflist"=>$reflist,
-                        "new_value"=>$new_value);
-
-            }
-            $result = $this->db->get_update_result($update_query, $params);
-            if(count($result) > 0) {
-                return array("RESULT"=>TRUE,
-                            "MESSAGE"=>"Tier 3 data updated successfully.");
-            } else {
-                return array("RESULT"=>FALSE,
-                            "MESSAGE"=>"Tier 3 data not updated successfully.");
-            }
-        } else {
-            // insert
-            $result = $this->add_tier3_by_id($t2id, $methodinfoid, $new_value);
-            return $result;
-        }
-    }
-    */
     
    /** Remove a method from a case
     *  (Note: This will completely delete the tier2 and tier3 data from
@@ -1269,6 +1194,8 @@ public function submit_case($submitstatus) {
             array_push($headerrow,
                  'Date Submitted to FADAMA DB', 
                  'Case Year',
+                 'Cold Case?',
+                 'Cold Case Year',
                  'Case Number',
                  'Case Agency',
                  'FA Report: Sex', 
@@ -1317,6 +1244,8 @@ public function submit_case($submitstatus) {
                  '',
                  '',
                  '',
+                 '',
+                 '',
                  ''
                  );  
              $pre_headerrow = $headerrow2;
@@ -1330,6 +1259,8 @@ public function submit_case($submitstatus) {
             array_push($headerrow,
                 'Date Submitted to FADAMA DB', 
                 'Case Year',
+                'Cold Case?',
+                'Cold Case Year',
                 'FA Report: Sex', 
                 'FA Report: Minimum age', 
                 'FA Report: Maximum age', 
@@ -1355,6 +1286,8 @@ public function submit_case($submitstatus) {
                 array_push($headerrow2, "");
             }
             array_push($headerrow2,
+                '',
+                '',
                 '',
                 '',
                 '',
@@ -1505,13 +1438,28 @@ public function submit_case($submitstatus) {
 
         foreach($case_list as $curr_case) {
             $curr_row = array();
+
             $member = new member($db, $curr_case->get_memberid());
+
             $curr_row[] = $curr_case->get_id();
+
+            
             if($mine) {
                 $curr_row[] = $curr_case->get_casenumber();
+            } else {
             }
+            
             $curr_row[] = $curr_case->get_datesubmitted();
             $curr_row[] = $curr_case->get_caseyear();
+
+            if($curr_case->get_orig_case_year() != NULL && $curr_case->get_orig_case_year() != "") {
+                $curr_row[] = "Y";
+                $curr_row[] = $curr_case->get_orig_case_year();
+            } else {
+                $curr_row[] = "N";
+                $curr_row[] = "";
+            }
+            
             if($fdb) {
                 // Add case number and agency to FDB report
                 $curr_row[] = $curr_case->get_casenumber();
@@ -1938,8 +1886,10 @@ public function submit_case($submitstatus) {
         $this->casename = $casedata['casename'];
         $this->casenumber = $casedata['casenumber'];
         $this->caseyear = $casedata['caseyear'];
+        $this->orig_case_year = $casedata['origcaseyear'];
         $this->memberid = $casedata['memberid'];
         $this->caseagency = $casedata['caseagency'];
+        $this->caseregion = $casedata['caseregion'];
         $this->fasex = $casedata['fasex'];
         $this->faage = $casedata['faage'];
         $this->faage2 = $casedata['faage2'];
