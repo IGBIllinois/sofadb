@@ -85,18 +85,17 @@ require_once "../include/header_general.php";
       <input name="nameentry" id="nameentry" type="text" size="40" maxlength="200" value="'.$name.'"/></div>
     <div id="contactmessage"><label for="emailmessage">Comments and Questions:</label><br />
     
-  <textarea name="emailmessage" id="emailmessage" cols="60" rows="30" ">'.
-(($message !== "") ? $message :
-           
-"If requesting the addition of a method not currently available in the database, fill out the following information to include in your message:
+  <textarea name="emailmessage" id="emailmessage" cols="60" rows="30" placeholder="If requesting the addition of a method not currently available in the database, fill out the following information to include in your message:
 Author(s):
 Year:
 Article/Chapter title:
 Biological profile component (age, sex, stature or ancestry):
-Bone(s) used by method:") .
+Bone(s) used by method:">'.
+(($message !== "") ? $message : ""
+           
+) .
             
 '
-    
 </textarea>
 <BR>
 <label for="captcha">Please Enter the Captcha Text</label><BR>
