@@ -293,7 +293,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors[] = 'Cannot add an original case year for a future date.';
         }
         else {
-            $caseyear = trim($_POST['origcaseyear']);
+            $origcaseyear = trim($_POST['origcaseyear']);
 	}
     
     
