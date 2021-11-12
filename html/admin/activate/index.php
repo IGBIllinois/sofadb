@@ -32,11 +32,13 @@ if (isset($_POST['id'])) {
         $params = array("username"=>($member->get_firstname() . " " . $member->get_lastname()));
         $from_email = FROM_EMAIL;
         $subject = "FADAMA Membership Denied";
-        $message = functions::renderTwigTemplate('email/request_denied.html.twig', $params);
-        $header = "From:".$from_email."\r\n";
+        $txt_message = functions::renderTwigTemplate('email/request_denied.txt.twig', $params);
+        $html_message = functions::renderTwigTemplate('email/request_denied.html.twig', $params);
 
-       $retval = mail ($to,$subject,$message,$header);
-
+        $emailer->set_to_emails($to);
+        $retval = $emailer->send_email(FROM_EMAIL,$subject,$txt_message,$html_message);
+        
+        
        if( $retval == true )  {
 
             echo "Email sent to ". $member->get_uname().".";
@@ -67,9 +69,11 @@ if (isset($_POST['id'])) {
             $subject = "FADAMA Membership Approved";
 
             $params = array("url"=>($_SERVER['HTTP_HOST']. $_SERVER['CONTEXT_PREFIX']));
-            $message = functions::renderTwigTemplate("email/request_approved.html.twig", $params);
-            $header = "From:".$from_email."\r\n";
-            $retval = mail ($to,$subject,$message,$header);
+            $html_message = functions::renderTwigTemplate("email/request_approved.html.twig", $params);
+            $txt_message = functions::renderTwigTemplate("email/request_approved.txt.twig", $params);
+
+            $emailer->set_to_emails($to);
+            $retval = $emailer->send_email(FROM_EMAIL,$subject,$txt_message,$html_message);
 
             if( $retval == true )  
             {

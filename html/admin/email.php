@@ -25,14 +25,12 @@ require_once "../include/header_admin.php";
         $subject = $_POST['subject'];
 
         $message = $_POST['emailmessage'];
-        $header = "From:".$from."\r\n";
-
-        $emails_array = functions::get_emails($db);
-        $emails = implode(",",$emails_array);
         
-        $header .= "Bcc:$emails\r\n";
-
-        $retval = mail($from, $subject, $message, $header);
+        $emails_array = functions::get_emails($db);
+        
+        $emailer->set_bcc_emails($emails_array);
+        $retval = $emailer->send_emai(FROM_EMAIL, $subject, $message);
+        
         if( $retval == true )  
         {
            echo "Message sent successfully.<BR>"; 

@@ -50,11 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $params = array("full_name"=>$full_name);
 
            $subject = "SOFA DB ADMIN ALERT: Delete User Account";
-           $message = functions::renderTwigTemplate('email/user_delete.html.twig', $params);
+           $txt_message = functions::renderTwigTemplate('email/user_delete.txt.twig', $params);
+           $html_message = functions::renderTwigTemplate('email/user_delete.html.twig', $params);
 
-           $header = "From:".$from."\r\n";
-           $header .= "Return-Path:". $from."\r\n";
-           $retval = mail ($to,$subject,$message,$header);
+           $retval = $emailer->send_email($from, $subject, $txt_message, $html_message);
            if( $retval == true )  
            {
               echo "Message sent successfully."; 

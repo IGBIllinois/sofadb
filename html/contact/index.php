@@ -1,5 +1,6 @@
 <?php
 $title="Contact Us";
+require_once("../../conf/settings.inc.php");
 require_once "../include/header_general.php";
 ?>
 
@@ -54,8 +55,12 @@ require_once "../include/header_general.php";
             $subject = "SOFA DB ADMIN ALERT: Comments and Questions";
             $message = $_POST['emailmessage'];
             $emailmessage = $_POST['emailmessage']."\n From email: ".$_POST['emailentry']." and Name: ".$_POST['nameentry'];
-            $header = "From:".$from."\r\n";
-            $retval = mail ($to,$subject,$emailmessage,$header);
+
+            $reply_emails = array();
+           
+            $emailer->set_to_emails($to);
+
+            $retval = $emailer->send_email($from,$subject,$emailmessage);
             if( $retval == true )  
             {
                echo("<div class=ok>");

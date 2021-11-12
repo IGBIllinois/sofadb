@@ -6,6 +6,8 @@ require_once(__DIR__ .'/../../libs/functions.class.inc.php');
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use IGBIllinois\email;
+
 
 $root_dir = $_SERVER['SERVER_NAME'] . $_SERVER['CONTEXT_PREFIX'];
 $ds = DIRECTORY_SEPARATOR;
@@ -17,7 +19,8 @@ require_once($filepath . "conf". $ds. 'app.inc.php');
 
 error_reporting(0);
 
-/** Automatically load clases from /libs folder
+
+/** Automatically load classes from /libs folder
  * 
  * @global string $filepath
  * @global type $ds
@@ -54,8 +57,15 @@ try {
 
 // database class
 $db = new db(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD) OR die ('Could not connect to MySQL' );
- 
+
+// Emailer object from igbillinois-php library
+$emailer = new email(MAIL_HOST, MAIL_PORT);
+
 $session = new session(SESSION_NAME);
+$reply_emails = array();
+
+$reply_emails = explode(",", ADMIN_EMAIL);
+$emailer->set_replyto_emails($reply_emails);
 
 // These lines allow a user to hit the Back button and return to a previously
 // submitted form

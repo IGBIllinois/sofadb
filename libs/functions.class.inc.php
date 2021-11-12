@@ -343,8 +343,7 @@ class functions {
     * @return array An array of the form (RESULT=>$result, MESSAGE=>$message) where
      *  $result is true or false, and $message is an output message
     */
-   public static function send_register_email($db, $email, $selector, $validator, $root_url="sofadb") {
-       
+   public static function send_register_email($db, $email, $selector, $validator, $emailer, $root_url="sofadb") {
        self::update_password_request($db, $email, $selector, $validator);
 
         $to = $email;
@@ -360,21 +359,23 @@ class functions {
         ]));
         
         $params = array ("url"=>$url,
-                         "name"=>$name,
+                         "user_name"=>$name,
                          "from_email"=>FROM_EMAIL);
 
-        $message = functions::renderTwigTemplate('email/register_verify.html.twig', $params);
+        $html_message = functions::renderTwigTemplate('email/register_verify.html.twig', $params);
+        $txt_message = functions::renderTwigTemplate('email/register_verify.txt.twig', $params);
 
-        // Headers
-        $headers = "From: " . FROM_EMAIL . " <" . FROM_EMAIL . ">\r\n";
-        $headers .= "Reply-To: " . ADMIN_EMAIL . "\r\n";
-        $headers .= "Return-Path: " . ADMIN_EMAIL ."\r\n";
-        $headers .= "Content-type: text/html\r\n";
-
+        $from = ADMIN_EMAIL;
         // Send email
-        $sent = mail($to, $subject, $message, $headers);
-
-            if($sent) {
+        try {
+            $emailer->set_to_emails($to);
+            $sent = $emailer->send_email(FROM_EMAIL,$subject,$txt_message,$html_message);
+            
+        } catch(Exception $e) {
+            echo($e->getTraceAsString());
+            $sent = false;
+        }
+        if($sent) {
             $message = ("An email has been sent to $to with a link to verify the email for that account.");
                 $success = true;
             }
@@ -382,8 +383,8 @@ class functions {
                 $message = ("An error occurred. The message was not sent.");
                 $success = false;
             }
-            
-            return array("RESULT"=>$success,
+           
+             return array("RESULT"=>$success,
                     "MESSAGE"=>$message);
 
    }

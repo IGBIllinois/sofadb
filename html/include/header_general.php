@@ -18,7 +18,7 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
       require_once("session.inc.php"); 
       $session = new session(SESSION_NAME);
   }
-    //require_once("../../conf/settings.inc.php");
+    require_once("../../conf/settings.inc.php");
     
 ?>
 

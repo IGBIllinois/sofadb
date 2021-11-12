@@ -326,13 +326,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     try {
 
                         // Send email to the address the user provided
-                        functions::send_register_email($db, $e, $selector, $validator, $root_url);
+                        $return_val = functions::send_register_email($db, $e, $selector, $validator, $emailer, $root_url);
 
                     } catch(Exception $e) {
                         echo($e->getTraceAsString());
                     }
-                   echo("Thank you for requesting membership approval to FADAMA. To complete your registration, please check the email you provided to verify your email address.");
-
+                    echo($return_val["MESSAGE"]);
 
             } else { // If it did not run OK
                  // Error message:

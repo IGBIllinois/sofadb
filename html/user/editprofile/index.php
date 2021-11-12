@@ -33,14 +33,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $from= FROM_EMAIL;
             $subject = "FADAMA DB ADMIN ALERT: Delete user request";
-            $message = functions::renderTwigTemplate('email/user_delete_self_request.html.twig', $params);
+            $html_message = functions::renderTwigTemplate('email/user_delete_self_request.html.twig', $params);
+            $txt_message = functions::renderTwigTemplate('email/user_delete_self_request.txt.twig', $params);
+            
+            $to_emails = explode(",", $admin_email);
+            $emailer->set_to_emails($to_emails);
 
-            $header = "From:".$from."\r\n";
-            $retval = mail($to,$subject,$message,$header);
+            $retval = $emailer->send_email($from, $subject, $txt_message, $html_message);
 
             echo("</span>");
         } else {
+            echo("<span style='padding-left:100px; display:block;'>");
             echo("You must agree to the terms before requesting your account to be deleted.");
+            echo("</span>");
         }
     } else {
 	$errors = array(); // Start an array to hold the errors
