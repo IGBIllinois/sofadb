@@ -107,6 +107,7 @@ reflect those of the Department of Justice. To learn more about FADAMA, please s
     <li><a href='https://andicyim.github.io/FADAMA/Videos/FADAMA_tutorial_1_0414.mp4'> Video 1 (basic functionality)</a></il>
     <li><a href='https://andicyim.github.io/FADAMA/Videos/FADAMA_tutorial_2_0414.mp4'> Video 2 (case search and data download)</a></il>
     <li><a href='https://andicyim.github.io/FADAMA/Videos/FADAMA_tutorial_3_0428.mp4'> Video 3 (downloaded data sheet)</a></il>
+    <li><a href='https://forensiccoe.org/forensic-anthropology-database-fadama/'> Video 4 (FTCOE Workshop: Using FADAMA for research)</a></il>
     </ol>
 	</li>
 
