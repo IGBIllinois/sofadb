@@ -1215,14 +1215,16 @@ public function submit_case($submitstatus) {
                  'Identified Stature',
                  'Identified Stature Notes',
                  'Information Source',
-                 'Case Notes');
-
+                 'Case Notes',
+                 'Background Case Knowledge');
+            
              // Second header row contains Method Info name, under the corresponding Method name
             $headerrow2 = array("");
             if($mine) {
                 array_push($headerrow, "");
             }
-            array_push($headerrow,
+            array_push($headerrow2,
+                 '',
                  '',
                  '',
                  '',
