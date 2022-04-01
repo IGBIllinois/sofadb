@@ -4,37 +4,47 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f99357e360a82665dbd4bcbf20f0f70",
+    "content-hash": "df9e67a94ebb8648ce94ed0c3c9118ed",
     "packages": [
         {
             "name": "amenadiel/jpgraph",
-            "version": "4.0.3",
+            "version": "v4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/HuasoFoundries/jpgraph.git",
-                "reference": "1328d5a2cf0f1ce8f83b79f17d339b34241ace74"
+                "reference": "e196d51a520a4182cc26240b4a0744495706f11a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/HuasoFoundries/jpgraph/zipball/1328d5a2cf0f1ce8f83b79f17d339b34241ace74",
-                "reference": "1328d5a2cf0f1ce8f83b79f17d339b34241ace74",
+                "url": "https://api.github.com/repos/HuasoFoundries/jpgraph/zipball/e196d51a520a4182cc26240b4a0744495706f11a",
+                "reference": "e196d51a520a4182cc26240b4a0744495706f11a",
                 "shasum": ""
             },
             "require": {
                 "ext-gd": "*",
-                "php": ">=7.0.0"
+                "php": ">=7.2.0"
             },
             "require-dev": {
                 "codeception/codeception": "^4.0",
                 "codeception/module-asserts": "^1.1",
+                "ergebnis/composer-normalize": "^2.13",
+                "ergebnis/php-cs-fixer-config": "^2.13",
                 "kint-php/kint": "^3.3",
                 "monolog/monolog": "^2.0",
-                "squizlabs/php_codesniffer": "^3.5",
-                "symfony/dotenv": "~4.2.0",
-                "symfony/event-dispatcher": "~4.2",
-                "symfony/yaml": "4.*"
+                "overtrue/phplint": "^2.3",
+                "squizlabs/php_codesniffer": "^3.6",
+                "symfony/dotenv": "^4.0 || ^5.0",
+                "symfony/event-dispatcher": "^4.0 || ^5.0",
+                "symfony/yaml": "^4.0 || ^5.0"
             },
             "type": "library",
+            "extra": {
+                "composer-normalize": {
+                    "indent-size": 4,
+                    "indent-style": "space"
+                },
+                "version": "4.1.1"
+            },
             "autoload": {
                 "psr-4": {
                     "Amenadiel\\JpGraph\\": "src/",
@@ -44,7 +54,6 @@
                     "Amenadiel\\JpGraph\\Graph\\": "src/graph",
                     "Amenadiel\\JpGraph\\Image\\": "src/image",
                     "Amenadiel\\JpGraph\\Themes\\": "src/themes",
-                    "Amenadiel\\JpGraph\\UnitTest\\": "tests",
                     "Amenadiel\\JpGraph\\Graph\\Axis\\": "src/graph/axis",
                     "Amenadiel\\JpGraph\\Graph\\Tick\\": "src/graph/tick",
                     "Amenadiel\\JpGraph\\Graph\\Scale\\": "src/graph/scale"
@@ -54,7 +63,7 @@
             "license": [
                 "QPL-1.0"
             ],
-            "description": "jpGraph, library to make graphs and charts",
+            "description": "Composer Friendly, full refactor of JpGraph, library to make graphs and charts",
             "homepage": "http://jpgraph.net/",
             "keywords": [
                 "chart",
@@ -65,9 +74,9 @@
             ],
             "support": {
                 "issues": "https://github.com/huasofoundries/jpgraph/issues",
-                "source": "https://github.com/HuasoFoundries/jpgraph/tree/master"
+                "source": "https://github.com/HuasoFoundries/jpgraph/tree/v4.1.1"
             },
-            "time": "2020-01-07T08:39:02+00:00"
+            "time": "2021-04-27T19:09:11+00:00"
         },
         {
             "name": "components/jquery",
@@ -260,26 +269,28 @@
         },
         {
             "name": "igbillinois/igbillinois-php",
-            "version": "1.2",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/IGBIllinois/IGBIllinois-php.git",
-                "reference": "65fb741c47da12a8e3f32f89224bbc72a8fbfe60"
+                "reference": "bba2ffebcb21361f0eb2642ff3d504f38ec0ba17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IGBIllinois/IGBIllinois-php/zipball/65fb741c47da12a8e3f32f89224bbc72a8fbfe60",
-                "reference": "65fb741c47da12a8e3f32f89224bbc72a8fbfe60",
+                "url": "https://api.github.com/repos/IGBIllinois/IGBIllinois-php/zipball/bba2ffebcb21361f0eb2642ff3d504f38ec0ba17",
+                "reference": "bba2ffebcb21361f0eb2642ff3d504f38ec0ba17",
                 "shasum": ""
             },
             "require": {
-                "amenadiel/jpgraph": "4.0.3",
+                "amenadiel/jpgraph": ">4",
+                "ext-gd": "*",
+                "ext-mbstring": "*",
                 "pear/auth_sasl2": "v0.2.0",
                 "pear/mail": "1.4.1",
                 "pear/mail_mime": "1.10.9",
                 "pear/net_smtp": "1.9.2",
                 "php": ">=7.1",
-                "phpoffice/phpspreadsheet": ">=1.8.2"
+                "phpoffice/phpspreadsheet": ">=1.16"
             },
             "require-dev": {
                 "phpdocumentor/phpdocumentor": "2.*"
@@ -307,10 +318,10 @@
                 "template"
             ],
             "support": {
-                "source": "https://github.com/IGBIllinois/IGBIllinois-php/tree/1.2",
+                "source": "https://github.com/IGBIllinois/IGBIllinois-php/tree/1.2.1",
                 "issues": "https://github.com/IGBIllinois/IGBIllinois-php/issues"
             },
-            "time": "2021-08-11T17:51:12+00:00"
+            "time": "2022-03-13T18:07:23+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -1558,7 +1569,11 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=7.2",
+        "ext-pdo": "*",
+        "ext-mysqlnd": "*"
+    },
     "platform-dev": [],
     "plugin-api-version": "2.1.0"
 }

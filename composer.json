@@ -10,6 +10,9 @@
 	],
 
 	"require": {
+		"php": ">=7.2",
+		"ext-pdo": "*",
+		"ext-mysqlnd": "*",
 		"components/jquery": "3.4.1",
 		"components/jqueryui": "1.12.1",
 		"twig/twig":"^3.0",
