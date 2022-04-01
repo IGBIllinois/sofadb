@@ -1,20 +1,23 @@
 {
-    "repositories" : [
-        {
-            "type": "vcs",
-            "url": "https://www.github.com/IGBIllinois/IGBIllinois-php"
-        }
-    ],
+	"name": "igbillinois/sofadb",
+	"description": "Society of Forensic Anthropologists Forensic Case Database",
+	"license": "GPL-3.0-only",
+	"repositories" : [
+	{
+		"type": "vcs",
+		"url": "https://www.github.com/IGBIllinois/IGBIllinois-php"
+	}
+	],
 
-    "require": {
-            "components/jquery": "3.4.1",
-            "components/jqueryui": "1.12.1",
-            "twig/twig":"^3.0",
-            "igbillinois/igbillinois-php": "1.2"
-    },
-    "config": {
-            "component-dir": "html/vendor/components"
-    }
+	"require": {
+		"components/jquery": "3.4.1",
+		"components/jqueryui": "1.12.1",
+		"twig/twig":"^3.0",
+		"igbillinois/igbillinois-php": "1.2.1"
+	},
+	"config": {
+		"component-dir": "html/vendor/components"
+	}
 
 }
 
