@@ -73,8 +73,12 @@ class functions {
      *  $result is true or false, and $message is an output message
      */
     public static function reset_password($db, $selector, $validator, $new_pass) {
-        // Get tokens
-        $results = $db->get_query_result("SELECT * FROM password_reset WHERE selector = :selector AND expires >= :time", ['selector'=>$selector,'time'=>time()]);
+	    // Get tokens
+	    $sql = "SELECT * FROM password_reset WHERE selector = :selector AND expires >= :time";
+	    $parameters = array('selector'=>$selector,
+		    	'time'=>date('Y-M-D G:i:s')
+		);
+        $results = $db->get_query_result($sql,$parameters);
 
         if ( empty( $results ) ) {
             return array('RESULT'=>FALSE,
@@ -129,8 +133,12 @@ class functions {
      * @return boolean true if there is an entry, else false
      */
     public static function check_password_reset($db, $selector, $validator) {
-        // Get tokens
-        $results = $db->get_query_result("SELECT * FROM password_reset WHERE selector = :selector AND expires >= :time", ['selector'=>$selector,'time'=>time()]);
+	    // Get tokens
+	    $sql = "SELECT * FROM password_reset WHERE selector = :selector AND expires >= :time";
+	    $parameters = array('selector'=>$selector,
+                        'time'=>date('Y-M-D G:i:s')
+		);
+	    $results = $db->get_query_result($sql,$parameters);
 
         if ( empty( $results ) ) {
             return array('RESULT'=>FALSE,
@@ -245,7 +253,7 @@ class functions {
                 'email'     =>  $email,
                 'selector'  =>  $selector, 
                 'token'     =>  password_hash($validator, PASSWORD_DEFAULT),
-                'expires'   =>  $expires->format('U'),
+                'expires'   =>  $expires->format('Y-m-d H:i:s'),
             ));
         
         return $insert;

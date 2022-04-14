@@ -111,8 +111,24 @@ public function get_city() { return $this->city; }
 public function get_state() { return $this->state; }
 public function get_zip() { return $this->zip; }
 public function get_phone() { return $this->phone; }
-public function get_dateregistered() { return $this->dateregistered; }
-public function get_lastlogin() { return $this->lastlogin; }
+public function get_dateregistered($long_format = false) { 
+	if ($long_format) {
+		return $this->dateregistered;
+	}
+	else {
+		return date("Y-m-d",strtotime($this->dateregistered));
+	}
+}
+public function get_lastlogin($long_format = false) { 
+	if ($long_format) {
+		return $this->lastlogin; 
+	}
+	elseif ($this->lastlogin) {
+		return date("Y-m-d",strtotime($this->lastlogin));
+	}
+	return "";
+
+}
 public function get_permissionstatus() { return $this->permissionstatus; }
 public function get_affiliation() { return $this->affiliation; }
 public function get_sponsor() { return $this->sponsor; }
@@ -344,7 +360,7 @@ public function update_terms_agreement($signature, $signature_date, $agree) {
  * @param string Password to check
  * @return boolean True if the passwords match, else false
  */
-public static function verify_user_new($db, $name, $chkpwd) {
+public static function authenticate($db, $name, $chkpwd) {
     $query = "SELECT pwd from members where uname=:name";
     $params = array("name"=>$name);
     
@@ -542,7 +558,6 @@ public static function add_member($db, $params) {
             . "zip,"
             . "phone,"
             . "permissionstatus,"
-            . "dateregistered,"
             . "affiliation,"
             . "sponsor,"
             . "sponsor_email,"
@@ -569,7 +584,6 @@ public static function add_member($db, $params) {
                 . ":zip,"
                 . ":phone,"
                 . PERMISSION_UNVERIFIED. ", "
-                . "NOW(), "
                 . ":affiliation,"
                 . ":sponsor,"
                 . ":sponsor_email,"

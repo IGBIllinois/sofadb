@@ -84,34 +84,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	// Validate the email address:
 	if (!empty($_POST['email'])) {
-            $e = trim($_POST['email']);
+            $email = trim($_POST['email']);
 
 	} else {
-            $e = FALSE;
+            $email = FALSE;
             echo '<p class="error">You forgot to enter your email address.</p>';
 
 	}
         if (!empty($_POST['psword'])) {
-            $p = trim($_POST['psword']);
+            $password = trim($_POST['psword']);
             
-            $chk_result = member::verify_user_new($db, $e, $p);
+            $chk_result = member::authenticate($db, $email, $password);
             if($chk_result) {
                 $member = new member($db);
-                $member = member::load_member_by_name($db, $e);
-            } else {
-                // try old way
-                $s = SALT;
-                $hash=md5($s . $p);
-                if ($e && $hash){//if no problems
-                    // Retrieve the user_id, first_name and user_level for that email/password combination:
-                    $member = new member($db);
-                    
-                    $result = $member->load_info_by_name($e, $hash);
-                    // reset to new version
-                    $member->reset_password($p);
-
-                }
-            }
+                $member = member::load_member_by_name($db, $email);
+	    } 
 	} else {
             $p = FALSE;
             echo '<p class="error">You forgot to enter your password.</p>';
@@ -186,7 +173,8 @@ if($session->get_var('loggedin')){
 
 				<div id="username_inputmiddle">
 				
-					<input type="text" name="email" id="url" placeholder="E-mail Address" onclick="this.value = ''" tabindex="1">
+				<input type="text" name="email" id="url" placeholder="E-mail Address" onclick="this.value = ''" 
+					tabindex="1" value='<?php if (isset($_POST['email'])) { echo $_POST['email']; }?>'>
 					<img id="url_user" src="./images/mailicon.png" alt="">
 				
 				</div>

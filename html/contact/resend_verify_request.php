@@ -27,23 +27,9 @@ if(isset($_POST["verify"])) {
                     $validator = bin2hex($token);
                     functions::send_register_email($db, $email, $selector, $validator, $root_url);
                     echo("An email has been sent to the address you provided. Please check the message and follow the instructions to activate your account.");
-                } else {
-                    // try old way
-                    $s = SALT;
-                    $hash=md5($s . $p);
-                    if ($e && $hash){//if no problems
-                        
-                        $selector = bin2hex(random_bytes(8));
-                        $token = random_bytes(32);
-                        $validator = bin2hex($token);
-                        functions::send_register_email($db, $email, $selector, $validator, $root_url);
-                        echo("An email has been sent to the address you provided. Please check the message and follow the instructions to activate your account.");
-
-                    } else {
-                        echo("Your email and password don't match. Please try again, or contact the administration if you continue to experience problems.");
-                    }
-                }
-            } else {
+		} 
+	    } 
+	    else {
                 $p = FALSE;
                 echo '<p class="error">Please enter your password.</p>';
             }
