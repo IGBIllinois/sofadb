@@ -63,13 +63,7 @@ CREATE TABLE `cases` (
   PRIMARY KEY (`id`),
   KEY `memberid` (`memberid`),
   KEY `submissionstatus` (`submissionstatus`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `contact` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email` text NOT NULL,
-   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `downloads` (
@@ -95,19 +89,19 @@ CREATE TABLE `members` (
   `title` varchar(50) NOT NULL,
   `degree` varchar(50) NOT NULL,
   `degreeyear` int(11) unsigned NOT NULL,
-  `fieldofstudy` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `fieldofstudy` varchar(100) NOT NULL,
   `aafsstatus` int(11) unsigned NOT NULL,
   `institution` varchar(100) NOT NULL,
   `region` int(11) unsigned NOT NULL,
   `mailaddress` varchar(100) NOT NULL,
-  `mailaddress2` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
-  `city` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `state` varchar(25) CHARACTER SET latin1 NOT NULL,
-  `zip` varchar(10) CHARACTER SET latin1 NOT NULL,
-  `phone` varchar(25) CHARACTER SET latin1 DEFAULT NULL,
-  `lastlogin` date DEFAULT NULL,
+  `mailaddress2` varchar(100) DEFAULT NULL,
+  `city` varchar(50) NOT NULL,
+  `state` varchar(25) NOT NULL,
+  `zip` varchar(10) NOT NULL,
+  `phone` varchar(25) DEFAULT NULL,
+  `lastlogin` DATETIME DEFAULT NULL,
   `permissionstatus` int(11) unsigned NOT NULL,
-  `dateregistered` date NOT NULL,
+  `dateregistered` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `affiliation` varchar(100) DEFAULT NULL,
   `sponsor` varchar(100) DEFAULT NULL,
   `sponsor_email` varchar(100) DEFAULT NULL,
@@ -120,11 +114,11 @@ CREATE TABLE `members` (
 
 CREATE TABLE `methods` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `methodname` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `methodname` varchar(100) NOT NULL,
   `methodtypenum` int(11) NOT NULL,
-  `measurementtype` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `measurementtype` varchar(100) NOT NULL,
   `description` varchar(100) DEFAULT NULL,
-  `instructions` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
+  `instructions` varchar(100) DEFAULT NULL,
   `methodinfotype` varchar(100) DEFAULT NULL,
   `prompt` int(10) unsigned DEFAULT NULL,
   `active` tinyint(1) DEFAULT NULL,
@@ -169,7 +163,7 @@ CREATE TABLE `password_reset` (
   `email` varchar(255) DEFAULT NULL,
   `selector` char(16) DEFAULT NULL,
   `token` char(64) DEFAULT NULL,
-  `expires` bigint(20) DEFAULT NULL,
+  `expires` DATETIME DEFAULT NULL,
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -206,7 +200,7 @@ CREATE TABLE `tier2data` (
    PRIMARY KEY (`id`),
    KEY `memberid` (`memberid`,`caseid`,`methodid`),
    KEY `methodtype` (`methodtype`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tier3data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -215,3 +209,10 @@ CREATE TABLE `tier3data` (
   `method_info_option_id` int(10) unsigned DEFAULT NULL,
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE DEFINER='root'@'localhost' EVENT password_reset
+        ON SCHEDULE EVERY 1 DAY
+        STARTS '2022-01-01 00:00:00'
+        DO
+                DELETE FROM password_reset WHERE expires < CURRENT_TIMESTAMP;
+
