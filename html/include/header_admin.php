@@ -29,10 +29,10 @@ try {
     echo("ERROR: Cannot find terms of service page.");
 }
 
-if($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==PERMISSION_ADMIN) {
+if($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==member::PERMISSION_ADMIN) {
     
 }
-elseif($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==PERMISSION_USER) {
+elseif($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==member::PERMISSION_USER) {
     // If they're a user, redirect to the user page.
     header('Location: ' . $root_url.'/user/index.php');
     exit();

@@ -10,7 +10,7 @@
 # Installation
 
 ## Prerequisites
-- PHP
+- PHP >= 7.2
 - PHP Mysql
 
 1. Clone the source from GitHub, or check out the latest release and put the code in /htdocs/sofadb/

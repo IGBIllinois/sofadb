@@ -5,7 +5,12 @@
  */
 
 class member {
-    
+
+	public const PERMISSION_REQUESTED =  0;
+	public const PERMISSION_USER = 1;
+	public const PERMISSION_ADMIN = 2;
+	public const PERMISSION_UNVERIFIED = 3;
+
     private $db;
     
     /** Member ID */
@@ -281,7 +286,7 @@ public function reset_password($new_pass) {
  * where $result is true or false, and $message is an output message.
  */
 public function delete_member($delete_member_id) {
-    if($this->get_permissionstatus() != PERMISSION_ADMIN) {
+    if($this->get_permissionstatus() != self::PERMISSION_ADMIN) {
         return array("RESULT"=>FALSE,
                     "MESSAGE"=>"You do not have permission to delete this user.");        
     } else {
@@ -583,7 +588,7 @@ public static function add_member($db, $params) {
                 . ":state,"
                 . ":zip,"
                 . ":phone,"
-                . PERMISSION_UNVERIFIED. ", "
+                . self::PERMISSION_UNVERIFIED. ", "
                 . ":affiliation,"
                 . ":sponsor,"
                 . ":sponsor_email,"

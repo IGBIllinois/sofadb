@@ -23,12 +23,12 @@ if ( false !== ctype_xdigit( $selector ) && false !== ctype_xdigit( $validator )
         $email = $result['email'];
         //$user = new member($db, $userid);
         $user = member::load_member_by_name($db, $email);
-        if($user->get_permissionstatus() == PERMISSION_UNVERIFIED) {
+        if($user->get_permissionstatus() == member::PERMISSION_UNVERIFIED) {
             // And currently unverified
             echo('<div id="wrapper" style="width:500px">');
                 echo("Email verification success. Thank you for requesting membership approval to FADAMA. Your request is under review and may take up to 1 week to be approved.");
             echo("</div>");
-                $user->set_permission(PERMISSION_REQUESTED);
+                $user->set_permission(member::PERMISSION_REQUESTED);
 
             // Send admin email
             $admin_email = ADMIN_EMAIL;              

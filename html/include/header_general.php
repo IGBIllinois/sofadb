@@ -96,7 +96,7 @@ http://jquery.org/license
   <ul>
 
 <?php
-    if(isset($session) && $session->get_var('loggedin') == 1 && $session->get_var('permissionstatus') == PERMISSION_USER) {
+    if(isset($session) && $session->get_var('loggedin') == 1 && $session->get_var('permissionstatus') == member::PERMISSION_USER) {
 ?>
     <li><a href="<?php echo($root_url)?>/index.php">My Cases</a></li>
     <li><a href="<?php echo($root_url)?>/user/searchdb/?search=1">Search</a></li>

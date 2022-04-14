@@ -12,10 +12,10 @@ require_once("include/main.inc.php");
 
   if($session->get_var('loggedin')) {
 
-    if($session->get_var('loggedin')== 1 && $session->get_var('permissionstatus') == PERMISSION_USER){
+    if($session->get_var('loggedin')== 1 && $session->get_var('permissionstatus') == member::PERMISSION_USER){
         header('Location: ' . './user/index.php');
 
-    } elseif($session->get_var('loggedin')== 1 && $session->get_var('permissionstatus') == PERMISSION_ADMIN) {
+    } elseif($session->get_var('loggedin')== 1 && $session->get_var('permissionstatus') == member::PERMISSION_ADMIN) {
         header('Location: ' . './admin/index.php');
 
     } elseif($session->get_var('loggedin')==1) {   
@@ -103,11 +103,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $p = FALSE;
             echo '<p class="error">You forgot to enter your password.</p>';
 	}
-if($member != null && $member->get_uname() != null && $member->get_permissionstatus() >= PERMISSION_REQUESTED) {
+if($member != null && $member->get_uname() != null && $member->get_permissionstatus() >= member::PERMISSION_REQUESTED) {
 // Start the session, fetch the record and insert the three values in an array
 
     $session->set_session_var('permissionstatus', (int) $member->get_permissionstatus()); // Ensure that the user level is an integer
-    if ($session->get_var('permissionstatus') != PERMISSION_REQUESTED) {
+    if ($session->get_var('permissionstatus') != member::PERMISSION_REQUESTED) {
 
         $session_vars = array(
             'loggedin'=>1,
@@ -130,14 +130,14 @@ if($member != null && $member->get_uname() != null && $member->get_permissionsta
 
 if($session->get_var('loggedin')){
 
-    if($session->get_var('permissionstatus') == PERMISSION_USER) {
+    if($session->get_var('permissionstatus') == member::PERMISSION_USER) {
         header('Location: ' . './user/index.php');
        
     }
-    elseif($session->get_var('permissionstatus') == PERMISSION_ADMIN){
+    elseif($session->get_var('permissionstatus') == member::PERMISSION_ADMIN){
         header('Location: ' . './admin/index.php');
         
-    } elseif($session->get_var('permissionstatus')== PERMISSION_UNVERIFIED) {   
+    } elseif($session->get_var('permissionstatus')== member::PERMISSION_UNVERIFIED) {   
         echo '<p>The email you provided has not yet been verified. Please check the email provided during registration and follow its instructions.</p>';
         echo("To resend the verification email, please <a href='contact/resend_verify_request.php'>click here</a>.");
         

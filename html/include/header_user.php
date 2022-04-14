@@ -12,9 +12,9 @@ if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
 require_once('main.inc.php');
 require_once('session.inc.php') ;
 
-if($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==PERMISSION_USER)
+if($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==member::PERMISSION_USER)
 {}
-elseif($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==PERMISSION_ADMIN)
+elseif($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==member::PERMISSION_ADMIN)
 {
     
     // If they're admin, redirect to the admin page
