@@ -216,3 +216,5 @@ CREATE DEFINER='root'@'localhost' EVENT password_reset
         DO
                 DELETE FROM password_reset WHERE expires < CURRENT_TIMESTAMP;
 
+INSERT INTO members (uname, pwd, firstname, lastname, title, degree, degreeyear, fieldofstudy, aafsstatus, institution, region, mailaddress, city, state, zip, permissionstatus) VALUES
+('admin@admin.com', '$2y$10$xZD6cdVskRHYhHkk7l4Mf.oz/VQaVdiQ6LrnzMC31PFevhBxisTyG', 'ADMIN', 'User', '', '',0, '', 0, '', 0,'', '', '' ,'', 2);
