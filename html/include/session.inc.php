@@ -2,7 +2,7 @@
 require_once("main.inc.php");
 
  if($session == null) {
-     $session=new session(SESSION_NAME);
+     $session=new \IGBIllinois\session(SESSION_NAME);
  }
 $login_user = "";
 

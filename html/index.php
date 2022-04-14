@@ -55,7 +55,7 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
 
 </head>
 
-<body>
+<body OnLoad="document.login.email.focus();">
 <div id="top" class='header'>
 
     <div class='header_logo'>
@@ -122,11 +122,6 @@ if($member != null && $member->get_uname() != null && $member->get_permissionsta
     $session->set_session_var('permissionstatus', (int) $member->get_permissionstatus()); // Ensure that the user level is an integer
     if ($session->get_var('permissionstatus') != PERMISSION_REQUESTED) {
 
-        //$_SESSION['loggedin']=1;
-        //$_SESSION['created']=time();
-        //$_SESSION['lastactivity']=time();
-        //$_SESSION['id'] = $member->get_id();
-        
         $session_vars = array(
             'loggedin'=>1,
             'created'=>time(),
@@ -184,14 +179,14 @@ if($session->get_var('loggedin')){
 		<div id="wrappermiddle">
 
 			<h2>Login</h2>
-<form action="index.php" method="post">
+<form action="index.php" method="post" name='login'>
 			<div id="username_input">
 
 				<div id="username_inputleft"></div>
 
 				<div id="username_inputmiddle">
 				
-					<input type="text" name="email" id="url" value="E-mail Address" onclick="this.value = ''">
+					<input type="text" name="email" id="url" placeholder="E-mail Address" onclick="this.value = ''" tabindex="1">
 					<img id="url_user" src="./images/mailicon.png" alt="">
 				
 				</div>
@@ -206,7 +201,7 @@ if($session->get_var('loggedin')){
 
 				<div id="password_inputmiddle">
 				
-					<input type="password" name="psword" id="url" value="" onclick="this.value = ''">
+					<input type="password" name="psword" id="url" value="" onclick="this.value = ''" tabindex="2">
 					<img id="url_password" src="./images/passicon.png" alt="">
 				
 				</div>
@@ -217,8 +212,7 @@ if($session->get_var('loggedin')){
 
 			<div id="submit">
 			
-				<!--<input type="image" src="./images/submit_hover_new.png" name="submit" id="submit1" value="Sign In">-->
-				<input type="image" src="./images/submit.png" name="submit" id="submit2" value="Sign In">
+				<input type="image" src="./images/submit.png" name="submit" id="submit2" value="Sign In" tabindex="3">
 				</form>
 			</div>
 

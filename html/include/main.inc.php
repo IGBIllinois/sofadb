@@ -61,7 +61,7 @@ $db = new db(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD) OR die ('Could not connect 
 // Emailer object from igbillinois-php library
 $emailer = new email(MAIL_HOST, MAIL_PORT);
 
-$session = new session(SESSION_NAME);
+$session = new \IGBIllinois\session(SESSION_NAME);
 $reply_emails = array();
 
 $reply_emails = explode(",", ADMIN_EMAIL);
