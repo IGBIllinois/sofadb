@@ -1,10 +1,4 @@
-/nbproject/private/
-/nbproject
 /conf/settings.inc.php
 /html/vendor/
 /vendor
 
-._*
-.DS_Store
-error_log
-*php_errors.log
