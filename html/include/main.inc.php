@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ .'/../vendor/autoload.php';
+require_once __DIR__ .'/../../vendor/autoload.php';
 require_once(__DIR__ .'/../../libs/functions.class.inc.php');
 
 use Twig\Error\LoaderError;

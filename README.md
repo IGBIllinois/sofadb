@@ -18,6 +18,10 @@
 2.  Create an alias in apache configs that points to the html folder.  
 ```
 Alias /sofadb /var/www/sofadb/html
+<Directory /var/www/sofadb/html>
+	AllowOverride None
+	Require all granted
+</Directory>
 ```
 
 3.  Create the database and a user/password on the mysql server which has select/insert/delete/update permissions on the database.

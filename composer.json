@@ -18,8 +18,14 @@
 		"twig/twig":"^3.0",
 		"igbillinois/igbillinois-php": "1.2.1"
 	},
-	"config": {
-		"component-dir": "html/vendor/components"
+	"scripts": {
+		"post-update-cmd": [
+			"mkdir -p html/vendor/components",
+			"cp -R vendor/components/jquery html/vendor/components",
+			"cp -R vendor/components/jqueryui html/vendor/components"
+
+
+		]
 	}
 
 }
