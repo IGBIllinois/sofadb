@@ -98,13 +98,16 @@ class functions {
                 }
 
                 // Update password
-                $result = $user->reset_password($new_pass);
+		$result = $user->reset_password($new_pass);
+
                 $update = $result['RESULT'];
 
 
             if ( $update == true ) {
                 // New password. New session.
-
+		$db->get_update_result("DELETE FROM password_reset WHERE selector=:selector AND token=:token",
+			array(":selector"=>$selector,
+			":token"=>$token));
                 return array('RESULT'=>TRUE,
                     'MESSAGE'=>'Password updated successfully. <BR><a href="../index.php">Login here</a>');
             } else {

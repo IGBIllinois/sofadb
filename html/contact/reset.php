@@ -2,6 +2,7 @@
 /** Allows a user to reset their password
  * 
  */
+
 $title="Reset Password";
 require_once("../../conf/settings.inc.php");
 require_once("../include/header_general.php");
@@ -14,22 +15,21 @@ $success = false;
 if(isset($_POST['submitpass'])) {
     // Reset user's password
     
-    $psword1 = $_POST['psword1'];
-    $psword2 = $_POST['psword2'];
+    $psword1 = trim($_POST['psword1']);
+    $psword2 = trim($_POST['psword2']);
     
     if($psword1 == $psword2) {
         // Check if new passwords match
         
-        if($psword1 == null || $psword1 == "") {
+        if(($psword1 == null) || ($psword1 == "") || ($psword2 == null) || ($psword2 == "")) {
             $success = false;
             echo("Please fill out the password fields.<BR>");
-        } else {
-
-            $p = trim($_POST['psword1']);
-            
+	} 
+	else {
+    
             $validator = $_POST['validator'];
             $selector = $_POST['selector'];    
-            $result = functions::reset_password($db, $selector, $validator, $p);    
+            $result = functions::reset_password($db, $selector, $validator, $psword1);    
 
             echo($result['MESSAGE']);
             $success = $result['RESULT'];
@@ -50,14 +50,13 @@ $validator = filter_input(INPUT_GET, 'validator');
 $queryString = $_SERVER['QUERY_STRING'];
 if ( false !== ctype_xdigit( $selector ) && false !== ctype_xdigit( $validator ) ) :
 ?>
-    <form id='passreset' action="reset.php?<?php echo $queryString;?>" method="post">
-        <input type="hidden" name="selector" value="<?php echo $selector; ?>">
+<form name='passreset' id='passreset' action="reset.php?<?php echo $queryString;?>" method="post">
+	<input type="hidden" name="selector" value="<?php echo $selector; ?>">
         <input type="hidden" name="validator" value="<?php echo $validator; ?>">
-        <input type="password" class="text" name="psword1" placeholder="Enter your new password" required><BR>
-        <input type="password" class="text" name="psword2" placeholder="Retype Password" required>
-        <BR>
-        <input type="submit" name="submitpass" id="submitpass" class="submit" value="Submit">
-    </form>
+        <input type="password" size='40' class="text" name="psword1" placeholder="Enter your new password" required>
+        <br><input type="password" size='40' class="text" name="psword2" placeholder="Retype Password" required>
+        <p><input type="submit" name="submitpass" id="submitpass" class="submit" value="Submit">
+</form>
     
 <?php 
 
@@ -67,20 +66,5 @@ if ( false !== ctype_xdigit( $selector ) && false !== ctype_xdigit( $validator )
 ?>
     
 </div>
-  <script language="JavaScript" type="text/javascript"
-    xml:space="preserve">//<![CDATA[
-//You should create the validator only after the definition of the HTML form
-  var frmvalidator  = new Validator("passreset");
   
- frmvalidator.EnableOnPageErrorDisplaySingleBox();
-  frmvalidator.EnableMsgsTogether();
-  
-     frmvalidator.addValidation("psword1","req","Please enter a password");
-   
-      frmvalidator.addValidation("psword2","req","Please confirm your password");
-      
-  </script>
-  
-  <?php
-  require_once('../include/footer.php');
-  ?>
+<?php require_once('../include/footer.php'); ?>
