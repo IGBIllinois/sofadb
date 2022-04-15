@@ -257,58 +257,46 @@ class sofa_case {
                 . "origcaseyear,"
                 . "memberid,"
                 . "caseagency,"
-                . "caseregion,"
-                
+                . "caseregion," 
                 . "fasex,"
                 . "faage,"
                 . "faage2,"
                 . "faageunits,"
                 . "faageunits2,"
                 . "faage_notes,"
-                
                 . "fastature,"
                 . "fastature2,"
                 . "fastatureunits,"
                 . "idsex,"
                 . "idsex_notes,"
-                
                 . "idage,"               
                 . "idageunits,"
                 . "idage_notes,"
-                
                 . "idstature,"
                 . "idstatureunits,"
                 . "idstature_notes,"
-                
                 . "idsource,"
                 . "casenotes,"
-                
                 . "datestarted,"
                 . "datemodified,"
                 . "submissionstatus,"
                 . "faancestryottext,"
-                
                 . "idraceas,"
                 . "idraceaf,"
                 . "idracewh,"
                 . "idracehi,"
                 . "idracena,"
-                
                 . "idraceot,"
                 . "idraceottext,"
                 . "idancaddtext,"
-                
                 . "known_none,"
                 . "known_sex,"
                 . "known_age,"
                 . "known_ancestry,"
                 . "known_stature,"
                 . "known_unable_to_determine,"
-                
                 . "fdb_consent"
-                
                 .") "
-                
                 . "VALUES ("
                     . ":casename,"
                     . ":casenum,"
@@ -317,54 +305,43 @@ class sofa_case {
                     . ":memberid,"
                     . ":caseag,"
                     . ":caseregion,"
-                
                     . ":fasex,"
                     . ":faage,"
                     . ":faage2,"
                     . ":faageunits,"
                     . ":faageunits2,"
                     . ":faage_notes,"
-                
                     . ":fastature,"
                     . ":fastature2,"
                     . ":fastatureunits,"
-                
                     . ":idsex,"
                     . ":idsex_notes,"
-                
                     . ":idage,"
                     . ":idageunits,"
                     . ":idage_notes,"
-                
                     . ":idstature,"
                     . ":idstatureunits,"
                     . ":idstature_notes,"
-                
                     . ":idsource,"
                     . ":casenotes,"
-                
                     . "NOW(),"
                     . "NOW(),"
                     . "'0',"
                     . ":faancestryottext,"
-                
                     . ":idraceas,"
                     . ":idraceaf,"
                     . ":idracewh,"
                     . ":idracehi,"
                     . ":idracena,"
-                
                     . ":idraceot,"
                     . ":idraceottext,"
                     . ":idancaddtext,"
-                
                     . ":known_none,"
                     . ":known_sex,"
                     . ":known_age,"
                     . ":known_ancestry,"
                     . ":known_stature,"
                     . ":known_unable_to_determine,"
-                    
                     . ":fdb_consent"
                 
                 . ")";	
@@ -495,53 +472,43 @@ public function submit_case($submitstatus) {
                 . "origcaseyear=:origcaseyear,"
                 . "casenumber=:casenum,"
                 . "caseagency=:caseag,"
-                . "caseregion=:caseregion,"
-                
+                . "caseregion=:caseregion," 
                 . "fasex=:fasex,"
                 . "faage=:faage,"
                 . "faage2=:faage2,"
                 . "faageunits=:faageunits, "
                 . "faageunits2=:faageunits2,"
                 . "faage_notes=:faage_notes,"
-                
                 . "fastature=:fastature,"
                 . "fastature2=:fastature2,"
                 . "fastatureunits=:fastatureunits,"
-                
                 . "idsex=:idsex,"
                 . "idsex_notes=:idsex_notes,"
                 . "idage=:idage,"
                 . "idageunits=:idageunits,"
                 . "idage_notes=:idage_notes,"
-                
                 . "idsource=:idsource,"
                 . "idstature=:idstature,"
                 . "idstatureunits=:idstatureunits,"
                 . "idstature_notes=:idstature_notes,"
                 . "casenotes=:casenotes,"
                 . "datemodified=NOW(),"
-                
-                
                 . "faancestryottext=:faancestryottext,"
                 . "idraceas=:idraceas,"
                 . "idraceaf=:idraceaf,"
                 . "idracewh=:idracewh,"
                 . "idracehi=:idracehi,"
                 . "idracena=:idracena,"
-                
                 . "idraceot=:idraceot,"
                 . "idraceottext=:idraceottext,"
                 . "idancaddtext=:idancaddtext,"
-
                 . "known_none=:known_none,"
                 . "known_sex=:known_sex,"
                 . "known_age=:known_age,"
                 . "known_ancestry=:known_ancestry,"
                 . "known_stature=:known_stature,"
                 . "known_unable_to_determine=:known_unable_to_determine,"
-
                 . "fdb_consent=:fdb_consent"
-                
                 . " WHERE id=:caseeditid";
 
         $this->db->get_update_result($q, $data);
@@ -1862,12 +1829,8 @@ public function submit_case($submitstatus) {
 
     }
     
-            
-
-
-
     
-    // Private methods
+    /////////////// Private methods //////////////
     
     private function load_case($id) {
         
