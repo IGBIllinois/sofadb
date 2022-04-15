@@ -1,21 +1,6 @@
 <?php 
 $addcase = 1;
 $title = "Forensic Anthropology Case Database (FADAMA) -  Add Case";
-require('../../include/header_user.php') ;
-?>
-
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-</head>
-
-  <br/>
-  <h1 class="cntr">Case Information</h1>
-  
-  <center>(<a href="https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Start_a_new_submission" target="_blank">New case tutorial</a>)</center>
-
-  <?php
-
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
@@ -437,14 +422,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $case_id = $result['id'];
 
 	    $case =  new sofa_case($db, $case_id);
-            echo('<div id="caseform">');
-            echo("Case added successfully. You may now add method data to the case using the \"Manage Case Methods\" tab.");
-            echo("<form action='../editcase/index.php#tabs-2' method=POST name=addsuccess>"
-                    . "<input type=hidden name=caseid value=$case_id>"
-                    . "<input type=hidden name=successAddCase value=$case_id>"
-                    . "<input type=submit name=submit value='Edit Case'>"
-                    . "</form>");
-            echo("</div>");
+            //echo('<div id="caseform">');
+            //echo("Case added successfully. You may now add method data to the case using the \"Manage Case Methods\" tab.");
+            //echo("<form action='../editcase/index.php#tabs-2' method=POST name=addsuccess>"
+            //        . "<input type=hidden name=caseid value=$case_id>"
+            //        . "<input type=hidden name=successAddCase value=$case_id>"
+            //        . "<input type=submit name=submit value='Edit Case'>"
+            //        . "</form>");
+	    //echo("</div>");
+	    header ("location: ../editcase/index.php?id=$case_id&successAddCase=$case_id#tabs-2"); exit();
 
 	} else {
             //The cae  is already registered
@@ -467,9 +453,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }// End of else (empty($errors))
 } // End of the main Submit conditional.
 
-?>
   
+require('../../include/header_user.php');
 
+?>
+
+  <br/>
+  <h1 class="cntr">Case Information</h1>
+
+  <center>(<a href="https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Start_a_new_submission" target="_blank">New case tutorial</a>)</center>
 
   <div id="caseform">
     <form action="index.php" method="post" id="casedata">

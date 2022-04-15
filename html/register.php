@@ -22,7 +22,6 @@ require_once("include/main.inc.php");
 <title>Forensic Anthropology Case Database (FADAMA) - Register</title>
 
 <!-- JS -->
-	
 <script type="text/javascript" src='vendor/components/jquery/jquery.js'></script>
 <script type="text/javascript" src='vendor/components/jqueryui/jquery-ui.js'></script>
 <script type="text/javascript" src='js/gen_validatorv4.js'></script>
@@ -33,8 +32,6 @@ require_once("include/main.inc.php");
 <link rel="stylesheet" href="css/style.css"  type="text/css" />
 <link rel="stylesheet" type="text/css" href="css/jquery.multiselect.css" />
 <link rel="stylesheet" type="text/css" href="vendor/components/jqueryui/themes/base/jquery-ui.css" />
-
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 
 <title>Register</title>

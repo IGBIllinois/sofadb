@@ -51,39 +51,19 @@ if(!$member->get_agree_to_terms()) {
 <title><?php echo $title ?></title>
 
 <!-- CSS -->
- <link href="<?php echo($root_url) ?>/css/style.css" rel="stylesheet" type="text/css" />
- <link rel="stylesheet" type="text/css" href="<?php echo($root_url) ?>/css/jquery.multiselect.css" />
-
+<link href="<?php echo($root_url) ?>/css/style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="<?php echo($root_url) ?>/css/jquery.multiselect.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo($root_url) ?>/vendor/components/jqueryui/themes/base/jquery-ui.css" />
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-
 <!-- Javascript -->
-  <script type='text/javascript' src='<?php echo($root_url) ?>/js/gen_validatorv4.js'></script>
-
-
+<script type='text/javascript' src='<?php echo($root_url) ?>/js/gen_validatorv4.js'></script>
 <script type="text/javascript" src="<?php echo($root_url) ?>/vendor/components/jquery/jquery.js"></script>
 <script type="text/javascript" src="<?php echo($root_url) ?>/vendor/components/jqueryui/jquery-ui.min.js"></script>
-
-
 <script type="text/javascript" src="<?php echo($root_url) ?>/js/jquery.multiselect.js"></script>
-
 <script type="text/javascript" src="<?php echo($root_url) ?>/js/sofa_javascript.js"></script>
-
-<!--
-jQuery Plugin: Are-You-Sure (Dirty Form Detection)
-https://github.com/codedance/jquery.AreYouSure/
-
-Copyright (c) 2012-2014, Chris Dance - PaperCut Software http://www.papercut.com/
-Dual licensed under the MIT or GPL Version 2 licenses.
-http://jquery.org/license
--->
-  <script type="text/javascript" src="<?php echo($root_url) ?>/js/jquery.are-you-sure.js"></script>
+<script type="text/javascript" src="<?php echo($root_url) ?>/js/jquery.are-you-sure.js"></script>
   
-
-
- </head>
+</head>
 
 
 
