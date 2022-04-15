@@ -218,3 +218,17 @@ CREATE DEFINER='root'@'localhost' EVENT password_reset
 
 INSERT INTO members (uname, pwd, firstname, lastname, title, degree, degreeyear, fieldofstudy, aafsstatus, institution, region, mailaddress, city, state, zip, permissionstatus) VALUES
 ('admin@admin.com', '$2y$10$xZD6cdVskRHYhHkk7l4Mf.oz/VQaVdiQ6LrnzMC31PFevhBxisTyG', 'ADMIN', 'User', '', '',0, '', 0, '', 0,'', '', '' ,'', 2);
+
+INSERT INTO `input_types` (`id`, `input_type`) VALUES(1, 'multiselect');
+INSERT INTO `input_types` (`id`, `input_type`) VALUES(2, 'singleselect');
+INSERT INTO `input_types` (`id`, `input_type`) VALUES(3, 'select_each');
+INSERT INTO `input_types` (`id`, `input_type`) VALUES(4, 'numeric_entry');
+INSERT INTO `input_types` (`id`, `input_type`) VALUES(5, 'text_entry');
+INSERT INTO `input_types` (`id`, `input_type`) VALUES(6, 'user_input_with_dropdown');
+INSERT INTO `input_types` (`id`, `input_type`) VALUES(7, 'text_area');
+INSERT INTO `input_types` (`id`, `input_type`) VALUES(8, 'category');
+INSERT INTO `input_types` (`id`, `input_type`) VALUES(9, 'estimated_outcome');
+INSERT INTO `input_types` (`id`, `input_type`) VALUES(13, 'two-column');
+INSERT INTO `input_types` (`id`, `input_type`) VALUES(14, 'checkbox_select');
+INSERT INTO `input_types` (`id`, `input_type`) VALUES(16, 'left_right');
+

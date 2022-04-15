@@ -187,7 +187,6 @@ class sofa_case {
     public function get_fastature() { return $this->fastature; }
     public function get_fastature2() { return $this->fastature2; }
     public function get_fastatureunits() { return $this->fastatureunits; }
-    
     public function get_idsex() { return $this->idsex; }
     public function get_idsex_notes() { return $this->idsex_notes; }
     public function get_idage() { return $this->idage; }
@@ -218,20 +217,16 @@ class sofa_case {
     public function get_idraceot()  { return $this->idraceot; }
     public function get_idraceottext()  { return $this->idraceottext; }
     public function get_idancaddtext() { return $this->idancaddtext; }
-
     public function get_known_none() { return $this->known_none; }
     public function get_known_sex() { return $this->known_sex; }
     public function get_known_age() { return $this->known_age; }
     public function get_known_ancestry() { return $this->known_ancestry; }
     public function get_known_stature() { return $this->known_stature; }
     public function get_known_unable_to_determine() { return $this->known_unable_to_determine; }
-    
     public function get_fdb_consent() { return $this->fdb_consent; }
-    
     public function get_orig_case_year() { return $this->orig_case_year; }
     
     public function __construct($db, $id = 0) {
-
 
         $this->db = $db;
 

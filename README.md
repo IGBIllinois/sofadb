@@ -43,8 +43,7 @@ mysql -u root -p sofadb < sql/method_infos.sql
 mysql -u root -p sofadb < sql/method_info_options.sql
 mysql -u root -p sofadb < sql/reference.sql
 mysql -u root -p sofadb < sql/method_info_reference_list.sql
-mysql -u root -p sofadb < sql/input_types.sql
-mysql -u root -p sofadb < sql/promtps.sql
+mysql -u root -p sofadb < sql/prompts.sql
 ```
 
 6.  Edit /conf/settings.inc.php to reflect your settings.
