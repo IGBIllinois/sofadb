@@ -652,10 +652,7 @@ public function submit_case($submitstatus) {
         return $result;
 
     }
-    
-    
-
-    
+     
    /** Remove a method from a case
     *  (Note: This will completely delete the tier2 and tier3 data from
     *  the database. There will be no getting it back.
@@ -703,10 +700,7 @@ public function submit_case($submitstatus) {
         }
     }
     
-
-
-
-    // Static functions
+    /////////////// Static functions ///////////////
     
     /** Gets the cases for a member
      * 
@@ -1835,19 +1829,13 @@ public function submit_case($submitstatus) {
     private function load_case($id) {
         
         $query = "SELECT * from cases where id=  :id";
-
         $mresult = $this->db->get_query_result($query, array("id"=>$id));
         if(!$mresult) {
             echo 'Could not load data from database';
             return;
-        } else {
-            // Not found
         }
-
         $casedata = $mresult[0];
-        
-        $this->id = $id;
-        
+        $this->id = $id; 
         $this->casename = $casedata['casename'];
         $this->casenumber = $casedata['casenumber'];
         $this->caseyear = $casedata['caseyear'];
@@ -1892,15 +1880,13 @@ public function submit_case($submitstatus) {
         $this->datestarted = $casedata['datestarted'];
         $this->datemodified = $casedata['datemodified'];
         $this->submissionstatus = $casedata['submissionstatus'];
-        $this->datesubmitted = $casedata['datesubmitted'];
-        
+        $this->datesubmitted = $casedata['datesubmitted'];        
         $this->known_none = $casedata['known_none'];
         $this->known_sex = $casedata['known_sex'];
         $this->known_age = $casedata['known_age'];
         $this->known_ancestry = $casedata['known_ancestry'];
         $this->known_stature = $casedata['known_stature'];
-        $this->known_unable_to_determine = $casedata['known_unable_to_determine'];
-        
+        $this->known_unable_to_determine = $casedata['known_unable_to_determine']; 
         $this->fdb_consent = $casedata['fdb_consent'];
         }
     
