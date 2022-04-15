@@ -19,9 +19,6 @@ class member {
     /** email (username) */
     private $uname;
     
-    /** Encrypted password */
-    private $pwd;
-    
     /** First name */
     private $firstname;
     
@@ -207,32 +204,6 @@ public function get_num_unsubmitted_cases() {
         return $result[0]['count'];
     } else {
         // None found
-    }
-    
-}
-
-/** Loads info from the database into this member object. Used when updating user password to new version
- * 
- * @param string email of the user
- * @param string $hash_pass Hashed password of the user
- * @return Array in the format ("RESULT"=>$result, "MESSAGE"=>$message) where
- * $result is true if successful, and $message is an output message.
- */
-public function load_info_by_name($name, $hash_pass) {
-
-    $query = "SELECT id from members where uname=:name and pwd=:pwd";
-    $params = array("name"=>$name,
-                    "pwd"=>$hash_pass);
-    
-    $result = $this->db->get_query_result($query, $params);
-    if(count($result) > 0) {
-        $id = $result[0]['id'];
-        $this->load_member($id);
-        return array("RESULT"=>TRUE,
-                        "MESSAGE"=>"Member loaded successfully.");
-    } else {
-        return array("RESULT"=>FALSE,
-                        "MESSAGE"=>"Member not loaded successfully.");
     }
     
 }
@@ -710,7 +681,6 @@ public static function update_member($db, $params, $pwd=null) {
             
             $this->id = $id;
             $this->uname = $member_data['uname'];
-            $this->pwd = $member_data['pwd'];
             $this->firstname = $member_data['firstname'];
             $this->lastname = $member_data['lastname'];
             $this->title = $member_data['title'];
