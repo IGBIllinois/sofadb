@@ -76,4 +76,7 @@ session_cache_limiter(false);
 
 $pagerows = PAGEROWS;
 
+session_set_cookie_params(array('secure'=>true,
+                                'SameSite'=>'Lax')
+                        );
 ?>

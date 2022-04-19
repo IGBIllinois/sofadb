@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df9e67a94ebb8648ce94ed0c3c9118ed",
+    "content-hash": "e1bf28eaa9a89623f5162725d4771076",
     "packages": [
         {
             "name": "amenadiel/jpgraph",
@@ -269,16 +269,16 @@
         },
         {
             "name": "igbillinois/igbillinois-php",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/IGBIllinois/IGBIllinois-php.git",
-                "reference": "bba2ffebcb21361f0eb2642ff3d504f38ec0ba17"
+                "reference": "9d0598981a7912622ab0393944681604e82e09d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IGBIllinois/IGBIllinois-php/zipball/bba2ffebcb21361f0eb2642ff3d504f38ec0ba17",
-                "reference": "bba2ffebcb21361f0eb2642ff3d504f38ec0ba17",
+                "url": "https://api.github.com/repos/IGBIllinois/IGBIllinois-php/zipball/9d0598981a7912622ab0393944681604e82e09d3",
+                "reference": "9d0598981a7912622ab0393944681604e82e09d3",
                 "shasum": ""
             },
             "require": {
@@ -318,10 +318,10 @@
                 "template"
             ],
             "support": {
-                "source": "https://github.com/IGBIllinois/IGBIllinois-php/tree/1.2.1",
+                "source": "https://github.com/IGBIllinois/IGBIllinois-php/tree/1.2.2",
                 "issues": "https://github.com/IGBIllinois/IGBIllinois-php/issues"
             },
-            "time": "2022-03-13T18:07:23+00:00"
+            "time": "2022-04-19T18:07:16+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
