@@ -18,12 +18,11 @@ require_once('../../include/header_user.php');
 $casedata = null;
 $errors = array();
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if(isset($_POST['caseid'])) {
         // Edit existing case
-
+	
         $case = new sofa_case($db, $_POST['caseid']);
         if($case->get_memberid() != $session->get_var('id')) {
             // No permission to view this case
@@ -41,7 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo("Please enter a valid case to edit.");
     }
 
-
+	if (isset($_POST['successAddCase'])) {
+		echo "Case added successfully. You may now add method data to the case using the \"Manage Case Methods\" tab";
+	}
     $errors = array(); // Start an array to hold the errors
     
     //remove method from case here

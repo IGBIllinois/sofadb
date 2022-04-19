@@ -1,4 +1,8 @@
-<?php 
+<?php
+
+require_once(__DIR__ . '/../../include/main.inc.php');
+require_once(__DIR__ . '/../../include/session.inc.php');
+
 $addcase = 1;
 $title = "Forensic Anthropology Case Database (FADAMA) -  Add Case";
 
@@ -363,52 +367,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 "memberid"=>$memberid,
                 "caseag"=>$caseag,
                 "caseregion"=>$caseregion,
-
                 "fasex"=>$fasex,
                 "faage"=>$faage,
                 "faage2"=>$faage2,
-
                 "faageunits"=>$faageunits,
                 "faageunits2"=>$faageunits2,
                 "faage_notes"=>$faage_notes,
-
                 "fastature"=>$fastature,
                 "fastature2"=>$fastature2,
                 "fastatureunits"=>$fastatureunits,
-
                 "idsex"=>$idsex,
                 "idsex_notes"=>$idsex_notes,
-
                 "idage"=>$idage,                  
                 "idageunits"=>$idageunits,
                 "idage_notes"=>$idage_notes,
-
                 "idstature"=>$idstature,
                 "idstatureunits"=>$idstatureunits,
                 "idstature_notes"=>$idstature_notes,
-
                 "idsource"=>$idsource,
                 "casenotes"=>$casenotes,
-
                 "faancestryottext"=>$faothertext,
-
                 "idraceas"=>$idAs,
                 "idraceaf"=>$idBl,
                 "idracewh"=>$idWh,
                 "idracehi"=>$idHi,
                 "idracena"=>$idNa,
-
                 "idraceot"=>$idOt,
                 "idraceottext"=>$idothertext,
                 "idancaddtext"=>$idancaddtext,
-
                 "known_none"=>$known_none,
                 "known_age"=>$known_age,
                 "known_sex"=>$known_sex,
                 "known_ancestry"=>$known_ancestry,
                 "known_stature"=>$known_stature,
                 "known_unable_to_determine"=>$known_unable_to_determine,
-
                 "fdb_consent"=>$fdb_consent
 
             );	
@@ -417,23 +409,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if($result['RESULT'] == FALSE) {
                 echo($result['MESSAGE']);
-                exit();
             }
-            $case_id = $result['id'];
+	    else {
+		$case_id = $result['id'];
 
-	    $case =  new sofa_case($db, $case_id);
-            //echo('<div id="caseform">');
-            //echo("Case added successfully. You may now add method data to the case using the \"Manage Case Methods\" tab.");
-            //echo("<form action='../editcase/index.php#tabs-2' method=POST name=addsuccess>"
-            //        . "<input type=hidden name=caseid value=$case_id>"
-            //        . "<input type=hidden name=successAddCase value=$case_id>"
-            //        . "<input type=submit name=submit value='Edit Case'>"
-            //        . "</form>");
-	    //echo("</div>");
-	    header ("location: ../editcase/index.php?id=$case_id&successAddCase=$case_id#tabs-2"); exit();
+		$case =  new sofa_case($db, $case_id);
+		//echo('<div id="caseform">');
+		//echo("Case added successfully. You may now add method data to the case using the \"Manage Case Methods\" tab.");
+		echo("<form action='../editcase/index.php#tabs-1' method='POST' name='addsuccess' id='addsuccess'>"
+		        . "<input type='hidden' name='caseid' value='" . $case_id . "'>"
+		        . "<input type='hidden' name='successAddCase' value='" . $case_id . "'>"
+		        . "</form>");
+		//header ("location: ../editcase/index.php?id=$case_id&successAddCase=$case_id#tabs-2"); exit();
+		
+	    }
 
 	} else {
-            //The cae  is already registered
+            //The case  is already exists
             echo('<div id="caseform">');
             echo('<span style="padding-left:100px; 
             display:block;"><p class="error">The case name and number are not acceptable because it is already registered</p></span>');
@@ -454,10 +446,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } // End of the main Submit conditional.
 
   
-require('../../include/header_user.php');
+require_once('../../include/header_user.php');
 
 ?>
-
   <br/>
   <h1 class="cntr">Case Information</h1>
 
@@ -710,7 +701,7 @@ above.</span>
   </form>
    
     
-    <script language="JavaScript" type="text/javascript"
+   <script language="JavaScript" type="text/javascript"
     xml:space="preserve">//<![CDATA[
 //You should create the validator only after the definition of the HTML form
   var frmvalidator  = new Validator("casedata");
@@ -744,7 +735,12 @@ above.</span>
   frmvalidator.addValidation("farace_othertext","req","Please fill-in the Other Ancestry textbox",
         "VWZ_IsChecked(document.forms['casedata'].elements['farace_other'],'1')");
 
-	//]]></script>
+	var formsubmit = document.getElementById("addsuccess");
+	if (formsubmit != null) {
+        	formsubmit.submit();
+	}
+
+  //]]></script>
     
 <?php
     require_once("../../include/footer.php");

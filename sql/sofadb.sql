@@ -1,4 +1,6 @@
 
+SET GLOBAL event_scheduler = ON;
+
 CREATE TABLE `admin_notes` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) unsigned DEFAULT NULL,
@@ -211,8 +213,10 @@ CREATE TABLE `tier3data` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE DEFINER='root'@'localhost' EVENT password_reset
-        ON SCHEDULE EVERY 1 DAY
+        ON SCHEDULE EVERY 1 HOUR
         STARTS '2022-01-01 00:00:00'
+	ON COMPLETION PRESERVE ENABLE
+	COMMENT 'Clears out expired password_reset requests'
         DO
                 DELETE FROM password_reset WHERE expires < CURRENT_TIMESTAMP;
 
