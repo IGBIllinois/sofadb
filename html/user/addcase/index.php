@@ -414,13 +414,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$case_id = $result['id'];
 
 		$case =  new sofa_case($db, $case_id);
-		//echo('<div id="caseform">');
-		//echo("Case added successfully. You may now add method data to the case using the \"Manage Case Methods\" tab.");
 		echo("<form action='../editcase/index.php#tabs-1' method='POST' name='addsuccess' id='addsuccess'>"
 		        . "<input type='hidden' name='caseid' value='" . $case_id . "'>"
 		        . "<input type='hidden' name='successAddCase' value='" . $case_id . "'>"
 		        . "</form>");
-		//header ("location: ../editcase/index.php?id=$case_id&successAddCase=$case_id#tabs-2"); exit();
 		
 	    }
 

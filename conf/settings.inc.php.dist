@@ -10,7 +10,7 @@ DEFINE ('DB_USER', '');
 DEFINE ('DB_PASSWORD', '');
 DEFINE ('DB_HOST', '');
 DEFINE ('DB_NAME', '');
-
+DEFINE ('TIMEZONE','');
 DEFINE ('ADMIN_EMAIL', '');
 DEFINE ('FROM_EMAIL', '');
 

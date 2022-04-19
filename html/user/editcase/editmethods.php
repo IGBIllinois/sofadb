@@ -311,10 +311,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
   <div id="caseform">
-
+	<form method="post" action="index.php#tabs-2">
+            <input type="hidden" name="caseid" value="<?php echo $caseeditid; ?>">
+            <input type="submit" name="submit" value="Back to Case">
+         </form>
+	<br>
   <div id="tabs">
   <ul>
-    <li><a href="#tabs-1">Manage Case Methods</a></li>
+	<li><a href="#tabs-1">Manage Case Methods</a></li>
   </ul>
 
     <div id="tabs-1">
@@ -331,20 +335,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <?php
         echo($method->get_name());
-        echo('  <input type="submit" class="showybutton" id="editmethoddatabutton" value="Save Edits" ><BR><BR>');
+        echo('<br><input type="submit" class="showybutton" id="editmethoddatabutton" value="Save Edits" ><BR><BR>');
         // Draw method_infos for this method, with tier2data 
         method_infos::show_method_info($db, $tier2->get_methodid(), $tier2->get_id());
         
         ?>
 
 
-        <input type="submit" class="showybutton" id="editmethoddatabutton" value="Save Edits" ><BR><BR>
+        <br><input type="submit" class="showybutton" id="editmethoddatabutton" value="Save Edits" ><BR><BR>
 
         </form>
-        <form method="post" action="index.php#tabs-2">
-            <input type="hidden" name="caseid" value="<?php echo $caseeditid; ?>">
-            <input type="submit" name="submit" value="Back to Case">
-         </form>
    
     
     </fieldset>

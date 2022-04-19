@@ -17,6 +17,8 @@ $filepath = __DIR__ . "$ds..$ds..$ds";
 require_once($filepath. "conf". $ds. 'settings.inc.php');
 require_once($filepath . "conf". $ds. 'app.inc.php');
 
+
+date_default_timezone_set(TIMEZONE);
 error_reporting(0);
 
 
