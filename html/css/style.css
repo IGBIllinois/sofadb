@@ -1145,8 +1145,35 @@ input[type=number] {
      display: inline-block;
 }
 
-.button_link {
-	-webkit-appearance: button;
-	-moz-appearance: button;
-	appearance: button;
+div.pagination {
+	clear: both;
+	margin: auto;
+	width: 50%;
+
+}
+
+ul.pagination {
+        list-style-type: none;
+        display: flex;
+	text-align: center;
+}
+
+ul.pagination li {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+a.pagination_button {
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: #CCC;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+}
+
+a.pagination_button:hover {
+	background-color: #0000FF;
 }

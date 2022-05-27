@@ -64,76 +64,56 @@ $curr_cases = sofa_case::get_member_cases($db, $memberid, $start, $pagerows);
 $num_cases = count($total_cases);
 $pages_url = "index.php";
 $pages_html = html::get_pages_html($pages_url,$num_cases,$start,PAGEROWS);
-
-if ($num_cases >= 0) { // If it ran OK, display the records.
-// Table header.
-
-
-	//echo "<p class='dbresults'>Total number of cases: $num_cases. Showing records  $startingrecord - $endingrecord </p>";
-	echo("<p class='dbresults'>You have ".$member->get_num_unsubmitted_cases(). " unsubmitted cases.</p>");
-	/*if ($pages > 1) {
-		if ($current_page != 1) {
-			// Create a Previous Link
-			echo("<form class='inline' method=post action=index.php name='regsubmit'>"
-				. "<input type=submit value='Previous Page'>"
-				. "<input type=hidden name='p' value=$pages>"
-				. "<input type=hidden name='s' value=".($start-$pagerows).">"
-				. "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
-				. "</form>");
-		}
-
-		if ($current_page != $pages) {
-			//Create a Next link
-			echo("<form class='inline' method=post action=index.php name='regsubmit'>"
-				. "<input type=submit value='Next Page'>"
-				. "<input type=hidden name='p' value=$pages>"
-				. "<input type=hidden name='s' value=".($start+$pagerows).">"
-				. "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
-				. "</form>");
-		} 
-	}*/
-
-
+$startrecord = $start + 1;
+$endrecord = $start + PAGEROWS;
+if ($endrecord > $num_cases) {
+	$endrecord = $num_cases;
+}
 
 $case_html = "";
 // Fetch and print all the records:
-foreach($curr_cases as $case) {
-	$case_html .= '<tr>';
-	$case_html .= "<td><form method=post action='./editcase/index.php' name='editprofile' id='editprofile'>";
-	$case_html .= "<input type=hidden name=caseid value='" . $case->get_id() . "'><input name='editsubmit' type='submit' value='Edit'></form></td>";
-	$case_html .= "<td><form action='index.php' method='post' id='deletedata' ";
-	$case_html .= "onsubmit=\"return confirm(\'This will permanently delete this case and all data associated with it.\nDo you really want to delete this case?\')\">";
-	$case_html .= "<input name='delid' type='hidden' value='" . $case->get_id() ."'>";
-	$case_html .= "<input name='delsubmit' type='submit' value='Delete'></form>";
-	$case_html .= "</td>";
+if ($num_cases) {
+	foreach($curr_cases as $case) {
+		$case_html .= '<tr>';
+		$case_html .= "<td><form method=post action='./editcase/index.php' name='editprofile' id='editprofile'>";
+		$case_html .= "<input type=hidden name=caseid value='" . $case->get_id() . "'><input name='editsubmit' type='submit' value='Edit'></form></td>";
+		$case_html .= "<td><form action='index.php' method='post' id='deletedata' ";
+		$case_html .= "onsubmit=\"return confirm(\'This will permanently delete this case and all data associated with it.\nDo you really want to delete this case?\')\">";
+		$case_html .= "<input name='delid' type='hidden' value='" . $case->get_id() ."'>";
+		$case_html .= "<input name='delsubmit' type='submit' value='Delete'></form>";
+		$case_html .= "</td>";
                 
-	if($case->get_submissionstatus() == 1) {
-		$case_html .= "<td><form method=POST action=index.php>";
-		$case_html .= "<input type=hidden name=id value='".$case->get_id()."'>";
-                $case_html .= "<input type=hidden name=status value=0>";
-		$case_html .= "<input type=submit value=Withdraw></form></td>";
+		if($case->get_submissionstatus() == 1) {
+			$case_html .= "<td><form method=POST action=index.php>";
+			$case_html .= "<input type=hidden name=id value='".$case->get_id()."'>";
+        	        $case_html .= "<input type=hidden name=status value=0>";
+			$case_html .= "<input type=submit value=Withdraw></form></td>";
+		}
+		else {
+			$case_html = "<td><form method=POST action=index.php>";
+			$case_html .= "<input type=hidden name=id value='".$case->get_id()."'>";
+			$case_html .= "<input type=hidden name=status value=1>";
+			$case_html .= "<input type=submit value=Submit></form></td>";
+	        }
+        
+		$case_html .= "<td>" . htmlentities($case->get_caseyear()) . "</td>";
+		$case_html .= "<td>" . htmlentities($case->get_casenumber()) . "</td>";
+		$case_html .= "<td>" . htmlentities($case->get_caseagency()) . "</td>";
+		$case_html .= "<td>" . htmlentities($case->get_datemodified()) . "</td>";
+		$case_html .= "<td>" . htmlentities($case->get_datesubmitted()) . "</td>";
+		$case_html .= "</tr>";
 	}
-	else {
-		$case_html = "<td><form method=POST action=index.php>";
-		$case_html .= "<input type=hidden name=id value='".$case->get_id()."'>";
-		$case_html .= "<input type=hidden name=status value=1>";
-		$case_html .= "<input type=submit value=Submit></form></td>";
-        }
-        
-	$case_html .= "<td>" . htmlentities($case->get_caseyear()) . "</td>";
-	$case_html .= "<td>" . htmlentities($case->get_casenumber()) . "</td>";
-	$case_html .= "<td>" . htmlentities($case->get_caseagency()) . "</td>";
-	$case_html .= "<td>" . htmlentities($case->get_datemodified()) . "</td>";
-	$case_html .= "<td>" . htmlentities($case->get_datesubmitted()) . "</td>";
-	$case_html .= "</tr>";
 }
-        
+
+else {
+	$case_html = "<td colspan='6'>No Cases</td>";
 } 
-//echo "<p class='dbresults'>Total number of cases: $num_cases. Showing records  $startingrecord - $endingrecord </p>";
 
 ?>
 
-<div class="scroll">
+	<p class='dbresults'>You have <?php echo $member->get_num_unsubmitted_cases(); ?> unsubmitted cases. Showing records <?php echo $startrecord . " - " . $endrecord; ?></p>
+<p class='dbresults'>Total number of cases: <?php echo $num_cases; ?>.</p>
+
 <table id="hortable" summary="List of cases">
 <thead><tr>
 	<th scope="col">Edit</th>
@@ -155,9 +135,7 @@ foreach($curr_cases as $case) {
 </tbody>
 </table>
 </div>
-</div>
 <?php echo $pages_html; ?>  
-  
 <?php
 require_once("../include/footer.php");
 ?>

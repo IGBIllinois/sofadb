@@ -20,13 +20,13 @@ class html {
 
                 }
 
-                $pages_html = "<nav><ul>";
+                $pages_html = "<div class='pagination'><ul class='pagination'>";
                 if ($current_page > 1) {
                         $start_record = $start - $count;
-                        $pages_html .= "<li><a class='button_link' href='" . $url . $start_record . "'>&laquo;</a></li> ";
+                        $pages_html .= "<li><a class='pagination_button' href='" . $url . $start_record . "'><i class='fa-solid fa-backward'></i></a></li> ";
                 }
                 else {
-                        $pages_html .= "<li><a class='button_link' href='#'>&laquo;</a></li>";
+                        $pages_html .= "<li><a class='pagination_button' href='#'><i class='fa-solid fa-backward'></i></a></li>";
                 }
 
                 for ($i=0; $i<$num_pages; $i++) {
@@ -38,17 +38,17 @@ class html {
                                 $pages_html .= "<li>";
                         }
                         $page_number = $i + 1;
-                        $pages_html .= "<a class='button_link' href='" . $url . $start_record . "'>" . $page_number . "</a></li>";
+                        $pages_html .= "<a class='pagination_button' href='" . $url . $start_record . "'>" . $page_number . "</a></li>";
                 }
 
                 if ($current_page < $num_pages) {
                         $start_record = $start + $count;
-                        $pages_html .= "<li><a class='button_link' href='" . $url . $start_record . "'>&raquo;</a></li> ";
+                        $pages_html .= "<li><a class='pagination_button' href='" . $url . $start_record . "'><i class='fa-solid fa-forward'></i></a></li> ";
                 }
                 else {
-                        $pages_html .= "<li disabled><a class='button_link' href='#'>&raquo;</a></li>";
+                        $pages_html .= "<li disabled><a class='pagination_button' href='#'><i class='fa-solid fa-forward'></i></a></li>";
                 }
-                $pages_html .= "</ul></nav>";
+                $pages_html .= "</ul></div>";
                 return $pages_html;
 
         }

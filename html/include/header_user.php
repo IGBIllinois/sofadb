@@ -51,9 +51,10 @@ if(!$member->get_agree_to_terms()) {
 <title><?php echo $title ?></title>
 
 <!-- CSS -->
-<link href="<?php echo($root_url) ?>/css/style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="<?php echo($root_url) ?>/css/style.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo($root_url) ?>/css/jquery.multiselect.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo($root_url) ?>/vendor/components/jqueryui/themes/base/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo($root_url) ?>/vendor/components/font-awesome/css/all.min.css" />
 
 <!-- Javascript -->
 <script type='text/javascript' src='<?php echo($root_url) ?>/js/gen_validatorv4.js'></script>
