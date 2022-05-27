@@ -707,23 +707,20 @@ public function submit_case($submitstatus) {
      */
     public static function get_member_cases($db, $memberid, $start=-1, $pagerows=-1) {
 
-        $q = "SELECT id, casename, casenumber, caseyear, caseagency,submissionstatus,  
-        DATE_FORMAT(datemodified, '%M %d, %Y') AS moddat, 
-        DATE_FORMAT(datesubmitted, '%M %d, %Y') AS subdat 
-        FROM cases WHERE memberid=:memberid 
-        AND submissionstatus>=0 
-        ORDER BY datemodified DESC ";
+        $sql = "SELECT id, casename, casenumber, caseyear, caseagency,submissionstatus, ";
+	$sql .= "DATE_FORMAT(datemodified, '%M %d, %Y') AS moddat, ";
+	$sql .= "DATE_FORMAT(datesubmitted, '%M %d, %Y') AS subdat ";
+	$sql .= "FROM cases WHERE memberid=:memberid ";
+	$sql .= "AND submissionstatus>=0 ";
+	$sql .= "ORDER BY datemodified DESC ";
 
 
         $params = array("memberid"=>$memberid);
         if($start >= 0) {
-                $q .= "LIMIT $start, $pagerows";
+                $sql .= "LIMIT $start, $pagerows";
 
-        } else {
-            // No limit, get all member cases
         }
-
-        $result = $db->get_query_result($q, $params);
+        $result = $db->get_query_result($sql, $params);
 
         $cases = array();
         foreach($result as $case) {

@@ -1144,3 +1144,9 @@ input[type=number] {
 .inline {
      display: inline-block;
 }
+
+.button_link {
+	-webkit-appearance: button;
+	-moz-appearance: button;
+	appearance: button;
+}
