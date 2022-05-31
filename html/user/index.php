@@ -90,7 +90,7 @@ if ($num_cases) {
 			$case_html .= "<input type=submit value=Withdraw></form></td>";
 		}
 		else {
-			$case_html = "<td><form method=POST action=index.php>";
+			$case_html .= "<td><form method=POST action=index.php>";
 			$case_html .= "<input type=hidden name=id value='".$case->get_id()."'>";
 			$case_html .= "<input type=hidden name=status value=1>";
 			$case_html .= "<input type=submit value=Submit></form></td>";
