@@ -14,7 +14,6 @@ require_once('../../include/session.inc.php') ;
 
 $casedata = null;
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Posted form
     
@@ -191,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 }
 
-                if($_POST['LR'] != null) {
+                if (isset($_POST['LR']) && ($_POST['LR'] != null)) {
                     // "LR" is a method type for "left/right" radio button, used to determine
                     // if a left or right bone was used.
                     //
@@ -241,7 +240,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $sel_ref->remove_reference_from_tier2($sel_ref->get_id());
                 }
 
-                if($_POST['references'] != null) {
+                if (isset($_POST['references']) && ($_POST['references'] != null)) {
                     // add references
                     $t2id = $tier2->get_id();
                         $sel_refs = $_POST['references'];

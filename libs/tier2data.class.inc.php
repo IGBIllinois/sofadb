@@ -116,7 +116,7 @@ class tier2data {
 
         $query = "SELECT * from tier3data where tier2id = :id";
         $params = array("id"=>$this->id);
-        if($methodinfoid != null) {
+        if($method_info_option_id != null) {
             $query .= " AND method_info_option_id = :method_info_option_id ";
             $params['method_info_option_id'] = $method_info_option_id;
             

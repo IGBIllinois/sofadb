@@ -589,7 +589,7 @@ class method_infos {
             $values[$option->get_id()] = $option->get_value();
         }
 
-        $output .= "<table class='td_spaced table_full table_horz_spacing>";
+        $output = "<table class='td_spaced table_full table_horz_spacing>";
         if($header) {
             $output .= "<th class='td_spaced'><B><U>".$method_infos->get_header()."</U></B></th></tr>";
         } else {
