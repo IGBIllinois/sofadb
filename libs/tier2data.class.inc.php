@@ -232,9 +232,7 @@ class tier2data {
         
         $method = new method($this->db, $this->methodid);
         $outcome_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_ESTIMATED_OUTCOME);
-        
         $outcomes = $method->get_method_infos_by_type();
-        
         if($outcomes[$outcome_type->get_id()] != null) {
             $method_info_option = new method_info_option($this->db, $est1);
             $output .= $method_info_option->get_value();

@@ -339,7 +339,6 @@ class method {
                 }
                 $return_array[$input_type] = $info_array;
             }
-
             return $return_array;
         }
         

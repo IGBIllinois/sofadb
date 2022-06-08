@@ -1031,8 +1031,13 @@ class method_infos {
                     $references = functions::checkbox_dropdown($mi->get_id(), $mi->get_name(), $ref_list, $selected_refs, 'references', $alt_text);
                 } else {
                     // No references found
-                }
-                $output .= "<td>$references</td></tr>";
+		}
+		if (isset($references)) {
+			$output .= "<td>" . $references . "</td></tr>";
+		}
+		else {
+			$output .= "<td>&nbsp</td></tr>";
+		}
 
             }
             $output .= "</tr>";
@@ -1159,7 +1164,6 @@ class method_infos {
      */
     public static function show_method_info_rhine($db, $method_id, $tier2id=NULL) {
         $output = '';
-        
         $method = new method($db, $method_id);
         // Get main categories
         $cat_type  = input_type::get_input_type_by_name($db, 'category');
@@ -1169,8 +1173,8 @@ class method_infos {
         
         try {
             $typeid = input_type::get_input_id_by_name($db, USER_INTERACTION_TEXT_ENTRY);
-            $orphan_method_infos = $method->get_method_infos_by_type($typeid);
-            $orphan_method_infos = $orphan_method_infos[$typeid];
+	    $orphan_method_infos = $method->get_method_infos_by_type($typeid);
+            //$orphan_method_infos = $orphan_method_infos[$typeid];
             foreach($orphan_method_infos as $orph_info) {
                 if($orph_info != null && 
                         $orph_info->get_parent_id() == null &&

@@ -2,9 +2,6 @@
 $title = "Forensic Anthropology Case Database (FADAMA) -  My Cases";
 require_once('../include/header_user.php') ;
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 ?>
 
   <div id="caseregion"> <h1 class="cntr">My Cases</h1>

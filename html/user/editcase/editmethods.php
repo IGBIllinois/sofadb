@@ -2,7 +2,6 @@
 $title = "Forensic Anthropology Case Database (FADAMA) - Edit Case Methods";
 require_once('../../include/header_user.php');
 require_once('../../include/session.inc.php') ;
-
 ?>
 
 <h1 class="cntr">Edit Case Methods</h1>
@@ -349,30 +348,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </fieldset>
         
     
-   <!-- Method data -->
-   <div class="scroll" name="methodtableholder" id="methodtableholder">
-             
-            
-             
-    <table id="hortable" border="1">
-       <tbody>
-         <tr>
-
-
-            <th>Edit</th>
-            <th>Delete</th>
-             <th>
-
-                Method Type
-            </th>
-                <th>
-                       Method Name
-                </th>
-                <th>
-                       Method Outcomes 
-                </th>
-
-         </tr>
+<!-- Method data -->
+<div class="scroll" name="methodtableholder" id="methodtableholder">
+                          
+<table id="hortable" border="1">
+	<tbody><tr>
+		<th>Edit</th>
+		<th>Delete</th>
+		<th>Method Type</th>
+		<th>Method Name</th>
+		<th>Method Outcomes </th>
+	</tr>
 
          <?php
          // Draw table of all methods used in this  case
@@ -406,27 +392,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                      "</tr>");
          }
 
-    ?>
-
-                </tbody>
-            </table>
-        <div class="clear"></div>
-    
-    </div>
-
-    </div>
-    
-    
-   </div></div>
-	  
-    <div id="casedata_errorloc" class="errorlocation">
-    </div>
-
-    </fieldset>
- 
-  </form>
-
-<?php
-    require_once("../../include/footer.php");
 ?>
+
+	</tbody>
+</table>
+<div class="clear"></div>
+</div>
+</div>
+</div></div>
+	  
+<div id="casedata_errorloc" class="errorlocation">
+</div>
+
+</fieldset>
+ 
+</form>
+
+<?php require_once("../../include/footer.php"); ?>
 
