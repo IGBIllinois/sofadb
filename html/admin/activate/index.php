@@ -34,7 +34,8 @@ if (isset($_POST['id'])) {
         $subject = "FADAMA Membership Denied";
         $txt_message = functions::renderTwigTemplate('email/request_denied.txt.twig', $params);
         $html_message = functions::renderTwigTemplate('email/request_denied.html.twig', $params);
-
+	$emailer = new \IGBIllinois\email(MAIL_HOST, MAIL_PORT);
+	$emailer->set_replyto_emails(ADMIN_EMAIL);
         $emailer->set_to_emails($to);
         $retval = $emailer->send_email(FROM_EMAIL,$subject,$txt_message,$html_message);
         

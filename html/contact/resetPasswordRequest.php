@@ -47,6 +47,8 @@ if(isset($_POST['resetsubmit'])) {
     $html_message = functions::renderTwigTemplate('email/change_password.html.twig', $params);
 
     // Send email
+	$emailer = new \IGBIllinois\email(MAIL_HOST, MAIL_PORT);
+	$emailer->set_replyto_emails(ADMIN_EMAIL);
     $emailer->set_to_emails($to);
     $sent = $emailer->send_email(FROM_EMAIL, $subject, $txt_message, $html_message);
 

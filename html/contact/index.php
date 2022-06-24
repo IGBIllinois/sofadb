@@ -57,8 +57,10 @@ require_once "../include/header_general.php";
             $emailmessage = $_POST['emailmessage']."\n From email: ".$_POST['emailentry']." and Name: ".$_POST['nameentry'];
 
             $reply_emails = array();
-           
-            $emailer->set_to_emails($to);
+
+		$emailer = new \IGBIllinois\email(MAIL_HOST, MAIL_PORT);
+		$emailer->set_replyto_emails(ADMIN_EMAIL);	    
+	        $emailer->set_to_emails($to);
 
             $retval = $emailer->send_email($from,$subject,$emailmessage);
             if( $retval == true )  

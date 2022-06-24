@@ -1,5 +1,9 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once __DIR__ .'/../../vendor/autoload.php';
 require_once(__DIR__ .'/../../libs/functions.class.inc.php');
 
@@ -19,7 +23,6 @@ require_once($filepath . "conf". $ds. 'app.inc.php');
 
 
 date_default_timezone_set(TIMEZONE);
-error_reporting(0);
 
 
 /** Automatically load classes from /libs folder
@@ -60,23 +63,16 @@ try {
 // database class
 $db = new db(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD) OR die ('Could not connect to MySQL' );
 
-// Emailer object from igbillinois-php library
-$emailer = new email(MAIL_HOST, MAIL_PORT);
-
-$session = new \IGBIllinois\session(SESSION_NAME);
-$reply_emails = array();
-
-$reply_emails = explode(",", ADMIN_EMAIL);
-$emailer->set_replyto_emails($reply_emails);
-
 // These lines allow a user to hit the Back button and return to a previously
 // submitted form
 ini_set('session.cache_limiter','public');
 session_cache_limiter(false);
 
-$pagerows = PAGEROWS;
+$session = new \IGBIllinois\session(SESSION_NAME);
 
-session_set_cookie_params(array('secure'=>true,
-                                'SameSite'=>'Lax')
-                        );
+
+// These lines allow a user to hit the Back button and return to a previously
+// submitted form
+
+
 ?>

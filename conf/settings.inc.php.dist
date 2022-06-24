@@ -11,7 +11,7 @@ DEFINE ('DB_PASSWORD', '');
 DEFINE ('DB_HOST', '');
 DEFINE ('DB_NAME', '');
 DEFINE ('TIMEZONE','');
-DEFINE ('ADMIN_EMAIL', '');
+DEFINE ('ADMIN_EMAIL', array());
 DEFINE ('FROM_EMAIL', '');
 
 DEFINE ("ROOT_URL", '');

@@ -353,7 +353,7 @@ class functions {
     * @return array An array of the form (RESULT=>$result, MESSAGE=>$message) where
      *  $result is true or false, and $message is an output message
     */
-   public static function send_register_email($db, $email, $selector, $validator, $emailer, $root_url="sofadb") {
+   public static function send_register_email($db, $email, $selector, $validator,$root_url="sofadb") {
        self::update_password_request($db, $email, $selector, $validator);
 
         $to = $email;
@@ -377,9 +377,11 @@ class functions {
 
         $from = ADMIN_EMAIL;
         // Send email
-        try {
-            $emailer->set_to_emails($to);
-            $sent = $emailer->send_email(FROM_EMAIL,$subject,$txt_message,$html_message);
+	try {
+		$emailer = new \IGBIllinois\email(MAIL_HOST, MAIL_PORT);
+                $emailer->set_replyto_emails(ADMIN_EMAIL);
+ 		$emailer->set_to_emails($to);
+		$sent = $emailer->send_email(FROM_EMAIL,$subject,$txt_message,$html_message);
             
         } catch(Exception $e) {
             echo($e->getTraceAsString());

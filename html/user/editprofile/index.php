@@ -28,16 +28,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             echo("A notification has been sent to the administrators. You will be notified when your account is deleted.");
 
-            $admin_email = ADMIN_EMAIL;              
-            $to = $admin_email;
-
-            $from= FROM_EMAIL;
             $subject = "FADAMA DB ADMIN ALERT: Delete user request";
             $html_message = functions::renderTwigTemplate('email/user_delete_self_request.html.twig', $params);
             $txt_message = functions::renderTwigTemplate('email/user_delete_self_request.txt.twig', $params);
             
-            $to_emails = explode(",", $admin_email);
-            $emailer->set_to_emails($to_emails);
+	    $emailer = new \IGBIllinois\email(MAIL_HOST, MAIL_PORT);
+	    $emailer->set_replyto_emails(ADMIN_EMAIL);
+            $emailer->set_to_emails(ADMIN_EMAIL);
 
             $retval = $emailer->send_email($from, $subject, $txt_message, $html_message);
 

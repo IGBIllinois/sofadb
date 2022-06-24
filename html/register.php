@@ -322,8 +322,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $validator = bin2hex($token);
                     try {
 
-                        // Send email to the address the user provided
-                        $return_val = functions::send_register_email($db, $e, $selector, $validator, $emailer, $root_url);
+			// Send email to the address the user provided
+                        $return_val = functions::send_register_email($db, $e, $selector, $validator, $root_url);
 
                     } catch(Exception $e) {
                         echo($e->getTraceAsString());

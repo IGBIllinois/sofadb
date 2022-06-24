@@ -63,7 +63,8 @@ if ( false !== ctype_xdigit( $selector ) && false !== ctype_xdigit( $validator )
             $subject = "FADAMA DB ADMIN ALERT: Activate new user";
             $html_message = functions::renderTwigTemplate('email/register_admin.html.twig', $params);
             $txt_message = functions::renderTwigTemplate('email/register_admin.txt.twig', $params);
-
+		$emailer = new \IGBIllinois\email(MAIL_HOST, MAIL_PORT);
+		$emailer->set_replyto_emails(ADMIN_EMAIL);
             $emailer->set_to_emails($to);
             $retval = $emailer->send_email(FROM_EMAIL, $subject, $txt_message, $html_message);
 

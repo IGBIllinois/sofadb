@@ -4,14 +4,13 @@
  * 
  */
 
- require_once('../../include/header_admin.php') ;
-
+require_once('../../include/header_admin.php') ;
 ?>
 
-  <div id="memberregion"> <h2 style="text-align:center">Search List of Members</h2> 
+<div id="memberregion"> <h2 style="text-align:center">Search List of Members</h2> 
 
 <div name="searchresults">
- <?php 
+<?php 
 
  // User id to search for
 $id=null;
@@ -289,20 +288,10 @@ _END;
 
 
 ?>
-
-
   
-  
-  
-  </div>
+</div>
+</div>
+<?php require_once("../../include/footer.php"); ?>
 
-
-
-
-
- </div>
-<?php
-    require_once("../../include/footer.php");
-?>
 
 
