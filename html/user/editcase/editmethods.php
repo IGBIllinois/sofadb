@@ -259,7 +259,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // No references
                     }
 
-                    if($_POST['check_select'] != null) {
+                    if(isset($_POST['check_select']) && $_POST['check_select'] != null) {
                         // used for checkbox arrays, like Rios & Cardoso
                         $check_select = $_POST['check_select'];
                         foreach($check_select as $method_info_id=>$option_list) {

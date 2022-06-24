@@ -169,7 +169,7 @@ class functions {
      * @return HTML text for the select input box
      */
     public static function draw_select($options, $selected, $multiple, $default_option = null) {
-        $result = "<select ".( $multiple ? " multiple size='".count($options)."'" : " style='width:200px' " ) ." name='output_data[]' id='$select_id' >";
+        $result = "<select ".( $multiple ? " multiple size='".count($options)."'" : " style='width:200px' " ) ." name='output_data[]'>";
         if($default_option != null) {
             $result .= "<option value='' id='' name='' >$default_option</option>";
         }
