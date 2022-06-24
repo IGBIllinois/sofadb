@@ -31,17 +31,19 @@ require_once('../../include/session.inc.php') ;
 		  
   if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['exportsubmit'])){//not export
 	  $first=0;
-          $race_array = array();
-          foreach($_POST['race'] as $race=>$value) {
-              $race_array[$value] = $race;
-          }
+	  $race_array = array();
+	  if (isset($_POST['race'])) {
+          	foreach($_POST['race'] as $race=>$value) {
+              		$race_array[$value] = $race;
+	  	}
+	  }
           $case_data = array(
               "memberId"=>$_POST['mID'],
               "caseYear"=>$_POST['cyear'],
               "yearRange"=>$_POST['yearrange'],
-              "caseNumber"=>$_POST['cnum'],
-              "caseAgency"=>$_POST['cagency'],
-              "region"=>$_POST['region'],
+              //"caseNumber"=>$_POST['cnum'],
+              //"caseAgency"=>$_POST['cagency'],
+              //"region"=>$_POST['region'],
               "idsex"=>$_POST['sexid'],
               "idage1"=>$_POST['ageid1'],
               "idage2"=>$_POST['ageid2'],
@@ -50,15 +52,15 @@ require_once('../../include/session.inc.php') ;
               "idstature2"=>$_POST['statureid2'],
               "idstatureunits"=>$_POST['statureunits'],
               "race"=>$race_array,
-              "est_sex"=>$_POST['est_sex'],
-              "est_age"=>$_POST['est_age'],
-              "est_stat"=>$_POST['est_stat'],
-              "est_anc"=>$_POST['est_anc'],
+              "est_sex"=>isset($_POST['est_sex']) ? 1:0,
+              "est_age"=>isset($_POST['est_age']) ? 1:0,
+              "est_stat"=>isset($_POST['est_stat']) ? 1:0,
+              "est_anc"=>isset($_POST['est_anc']) ? 1:0,
               "conjunction"=>$_POST['andor'],
               "method_conj"=>$_POST['method_conj'],
               "race_join"=>$_POST['race_join'],
               "prac_join"=>$_POST['prac_join'],
-              "unsubmitted"=>$_POST['unsubmitted']
+              "unsubmitted"=>isset($_POST['unsubmitted']) ? 1:0
                   );
           
              $methods = ($_POST['method_select']);

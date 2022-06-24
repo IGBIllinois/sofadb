@@ -12,7 +12,7 @@
 ## Prerequisites
 - PHP >= 7.2
 - PHP Mysql
-
+- PHP PECL Zip
 1. Clone the source from GitHub, or check out the latest release and put the code in /htdocs/sofadb/
 
 2.  Create an alias in apache configs that points to the html folder.  
