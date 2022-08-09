@@ -26,7 +26,7 @@ require_once "../include/header_general.php";
             
         if($captcha_text == $input) {
             // Captcha matches, send email
-            $session->unset_var("captcha_text");
+            //$session->unset_var("captcha_text");
 
             if(!isset($_POST['emailentry']) || $_POST['emailentry'] == "") {
                 $errors[] = "You must enter your email address.";
