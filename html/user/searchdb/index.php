@@ -19,7 +19,7 @@ $memberid=$session->get_var('id');
 $error=0;
   
 if (isset($_POST['search'])){
-	unset($_SESSION['searched']);
+	$session->unset_session_var('searched');
 }
   
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['exportsubmit'])){//not export
@@ -190,8 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['exportsubmit'])){//no
                         . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
                         . "</form>");
             }
-
-            $_SESSION['searched']=1;
+		$session->set_session_var('searched',1);
 
 
         }//end on error
