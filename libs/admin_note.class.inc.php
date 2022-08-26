@@ -69,6 +69,7 @@ class admin_note {
 	public static function add_admin_note($db, $user_id, $message) {
 		$query = "INSERT INTO admin_notes (user_id, message, date_added) VALUES (:user_id, :message, NOW())";
 		$formatted_message = str_replace("\n", "<br />",$message);
+		$formatted_message = trim($formatted_message);
 		$params = array("user_id"=>$user_id,
                         "message"=>$formatted_message);
         

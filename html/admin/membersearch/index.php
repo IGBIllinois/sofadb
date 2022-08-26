@@ -33,11 +33,11 @@ $region = null;
 // Conjunction used in forming the query. "AND" for all items, "OR" for at least one
 $andor = " AND ";
 
-  $error=0;
+$error=0;
 
-  $params = array();
- 
-
+$params = array();
+$search_html = "";
+$error_html = ""; 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'  ) {
     // New search parameters
     $search_values = array();
@@ -62,13 +62,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'  ) {
 
     }
 	  
-	  
 if(!$error){ 
     // This script retrieves all the records from the users table.
 
     $found_members = member::search_members($db, $id, $first_name, $last_name, $email, $institution, $region, $andor);
     $num_members = count($found_members);
     //set the number of rows per display page
+	$records = count($found_members);
     $pagerows = PAGEROWS;
 
     // Has the total number of pages already been calculated?
@@ -99,26 +99,6 @@ if(!$error){
 if ($num_members > -1) { // If it ran OK, display the records.
 // Table header.
 
-echo '<div class="scroll"><table id="hortable" summary="List of members">
-    <thead>
-    	<tr>
-	    <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
-            <th scope="col">Last Name</th>
-            <th scope="col">First Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Institution</th>
-	    <th scope="col">Date Registered</th>
-            <th scope="col">Last Login</th>
-            <th scope="col">Access</th>
-            <th scope="col">Total Cases</th>
-			
-        </tr>
-    </thead>
-    <tbody>';
-    	
-
-
 // Fetch and print all the records:
 foreach($found_members as $found_member) {
     $status = $member->get_permissionstatus();
@@ -129,7 +109,7 @@ foreach($found_members as $found_member) {
         $perm_status = "Admin";
     }
     
-    echo '<tr>
+    $search_html .= '<tr>
         <td><form method=post action="../editprofile/index.php" name=editprofile id=editprofile><input type=hidden name=edit_member_id value=' . $found_member->get_id().'><input name=editsubmit type=submit value=Edit></form></td>
 	<td><form action="../index.php" method="post" id="deletemember" onsubmit="return confirm(\'Do you really want to delete this member?\nAll member data and cases associated with this user will be deleted.\')">
 	<input name="delid" type="hidden" value="'.$found_member->get_id().'"/>
@@ -145,18 +125,12 @@ foreach($found_members as $found_member) {
 	<td>' . htmlentities($found_member->get_totalcases()) . '</td>
 	</tr>';
 }
-    echo '</tbody></table></div>'; // Close the table.
     
 } else { 
     // If it did not run OK.
     // Public message:
-    echo '<p class="error">No records found.  </p>';
-    // Debugging message:
-    $session->set_session_variable('searched', 1);
+    $error_html = '<p class="error">No records found.  </p>';
 
-    echo '<br/> <a href="index.php?search=1">Search Again</a>';
-    exit();
-    
 } // End of if ($result). Now display the total number of records/members.
 
 echo "<p>Total number of search results: $num_members</p>";
@@ -169,9 +143,8 @@ if ($current_page != 1) {
             . "<input type=hidden name='s' value=".($start-$pagerows).">"
             . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
             . "</form>");
-} else {
-    
 }
+    
 
 if ($current_page != $pages) {
     //Create a Next link
@@ -181,15 +154,11 @@ if ($current_page != $pages) {
             . "<input type=hidden name='s' value=".($start+$pagerows).">"
             . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
             . "</form>");
-} else {
 }
 
-$session->set_session_variable('searched', 1);
 
-echo '<br/> <a href="index.php?search=1">Search Again</a>';
-  }//end on error
 }
-
+}
 ?>
 
  </div>
@@ -213,33 +182,28 @@ if(!isset($finstitution)) $finstitution="";
 // Member email
 if(!isset($femail)) $femail="";
 
-
-$result = $session->get_var('searched');
-
-if( $result == false || $result != 1)
-{
-echo <<<_END
+?>
 <form action="index.php" method="post" id="registration">
 
 <fieldset style="border: solid 2px #cc0000;overflow: hidden;" class="roundedborder">
 
 <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend>Search By Member ID</legend>
-<br><label class="label" for="mID">Member ID</label><input id="mID" type="text" name="mID" size="3" maxlength="5" value="$fmID">
+<br><label class="label" for="mID">Member ID</label><input id="mID" type="text" name="mID" size="3" maxlength="5" value="<?php echo $fmID; ?>">
 
 </fieldset>
 
 <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend>Search By Identification Information</legend>
 
-    <br><label class="label" for="fname">First Name</label><input id="fname" type="text" name="fname" size="30" maxlength="30" value="$ffname">
+    <br><label class="label" for="fname">First Name</label><input id="fname" type="text" name="fname" size="30" maxlength="30" value="<?php echo $ffname; ?>">
     <br>
   
-    <label class="label" for="lname">Last Name</label><input id="lname" type="text" name="lname" size="30" maxlength="40" value="$flname">
+    <label class="label" for="lname">Last Name</label><input id="lname" type="text" name="lname" size="30" maxlength="40" value="<?php echo $flname; ?>">
     
     
     <br> 
-    <label class="label" for="email">Email Address</label><input id="email" type="text" name="email" size="30" maxlength="60" value="$femail" >
+    <label class="label" for="email">Email Address</label><input id="email" type="text" name="email" size="30" maxlength="60" value="<?php echo $femail; ?>" >
     
-    <br/> <label class="label" for="institution">Institution</label><input id="institution" type="text" name="institution" size="30" maxlength="60" value="$finstitution" > 
+    <br/> <label class="label" for="institution">Institution</label><input id="institution" type="text" name="institution" size="30" maxlength="60" value="<?php echo $finstitution; ?>" > 
 
     <br>
 
@@ -272,6 +236,26 @@ echo <<<_END
 
 </form>
 
+<div class="scroll"><table id="hortable" summary="List of members">
+    <thead>
+        <tr>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Institution</th>
+            <th scope="col">Date Registered</th>
+            <th scope="col">Last Login</th>
+            <th scope="col">Access</th>
+            <th scope="col">Total Cases</th>
+
+        </tr>
+    </thead>
+    <tbody>
+	<?php echo $search_html; ?>
+</tbody></table></div>
+<?php echo $error_html; ?>
   <script language="JavaScript" type="text/javascript"
   xml:space="preserve">//<![CDATA[
         
@@ -283,11 +267,6 @@ echo <<<_END
     
 //]]></script>
 
-_END;
-} 
-
-
-?>
   
 </div>
 </div>
