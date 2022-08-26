@@ -623,7 +623,7 @@ class method_infos {
     * @param boolean $text True if this is a text entry (show longer text box)
     * @return string HTML for inputting data for this method_infos object
     */
-    public static function show_method_infos_user_input($db, $method_infos_id, $tier2id = null, $text = null) {
+   public static function show_method_infos_user_input($db, $method_infos_id, $tier2id = null, $text = null) {
         $method_infos = new method_infos($db, $method_infos_id);
         $options = $method_infos->get_method_info_options();
         if($options == null  || count($options) == 0) {
@@ -819,7 +819,7 @@ class method_infos {
     * 
     * @return HTML output for the method
     */
-   public static function show_method_info_text_area($db, $method_infos_id, $tier2id) {
+    public static function show_method_info_text_area($db, $method_infos_id, $tier2id) {
         $method_infos = new method_infos($db, $method_infos_id);
         $value = "";        
         

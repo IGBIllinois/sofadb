@@ -88,8 +88,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // for the method info data.
             //
             // It is in $id=>$value pairs, where $id is the ID of the method_info_option,
-            // and $value is the value associated with it, if any
-            $output_data = $_POST['output_data'];
+	    // and $value is the value associated with it, if any
+	    $output_data = array();
+	    if (isset($_POST['output_data'])) {
+		    $output_data = $_POST['output_data'];
+	    }
+
             
             foreach($output_data as $od) {
                 
@@ -142,8 +146,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $user_interaction = "";
                 $user_interactions = array();
 
-
-                $output_data = $_POST['output_data'];
+		$output_data = array();
+		if (isset($_POST['output_data'])) {
+			$output_data = $_POST['output_data'];
+		}
                 $new_ids = array();
 
                 
