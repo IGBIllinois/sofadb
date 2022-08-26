@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0aa040a37e8fe2fa9f686fb3b914e3c3",
+    "content-hash": "b0198ce21d9ab9614fc731543bc547e9",
     "packages": [
         {
             "name": "amenadiel/jpgraph",
@@ -308,16 +308,16 @@
         },
         {
             "name": "igbillinois/igbillinois-php",
-            "version": "1.2.2",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/IGBIllinois/IGBIllinois-php.git",
-                "reference": "9d0598981a7912622ab0393944681604e82e09d3"
+                "reference": "70c5d2a08e7e74baef28a5aa28d1b8b5d671d5ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IGBIllinois/IGBIllinois-php/zipball/9d0598981a7912622ab0393944681604e82e09d3",
-                "reference": "9d0598981a7912622ab0393944681604e82e09d3",
+                "url": "https://api.github.com/repos/IGBIllinois/IGBIllinois-php/zipball/70c5d2a08e7e74baef28a5aa28d1b8b5d671d5ba",
+                "reference": "70c5d2a08e7e74baef28a5aa28d1b8b5d671d5ba",
                 "shasum": ""
             },
             "require": {
@@ -357,10 +357,10 @@
                 "template"
             ],
             "support": {
-                "source": "https://github.com/IGBIllinois/IGBIllinois-php/tree/1.2.2",
+                "source": "https://github.com/IGBIllinois/IGBIllinois-php/tree/1.2.3",
                 "issues": "https://github.com/IGBIllinois/IGBIllinois-php/issues"
             },
-            "time": "2022-04-19T18:07:16+00:00"
+            "time": "2022-08-26T19:58:46+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -1527,16 +1527,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v3.4.1",
+            "version": "v3.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "e939eae92386b69b49cfa4599dd9bead6bf4a342"
+                "reference": "e07cdd3d430cd7e453c31b36eb5ad6c0c5e43077"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/e939eae92386b69b49cfa4599dd9bead6bf4a342",
-                "reference": "e939eae92386b69b49cfa4599dd9bead6bf4a342",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/e07cdd3d430cd7e453c31b36eb5ad6c0c5e43077",
+                "reference": "e07cdd3d430cd7e453c31b36eb5ad6c0c5e43077",
                 "shasum": ""
             },
             "require": {
@@ -1587,7 +1587,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twigphp/Twig/issues",
-                "source": "https://github.com/twigphp/Twig/tree/v3.4.1"
+                "source": "https://github.com/twigphp/Twig/tree/v3.4.2"
             },
             "funding": [
                 {
@@ -1599,7 +1599,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-17T05:48:52+00:00"
+            "time": "2022-08-12T06:47:24+00:00"
         }
     ],
     "packages-dev": [],

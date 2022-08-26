@@ -69,7 +69,7 @@ class db {
         public function get_query_result($query_string, $query_array=null) {
             $statement = $this->get_link()->prepare($query_string, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
             $statement->execute($query_array);
-            $result = $statement->fetchAll();
+	    $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
 
         }

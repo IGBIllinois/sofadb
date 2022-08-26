@@ -284,17 +284,11 @@ class functions {
     * @param type $date If given, only get records from on or after this date. If null, get all records
     */
    public static function download_data_report($db, $date = null) {
-        header('Content-Type: text/csv; charset=utf-8');
-        ob_end_clean();
         $today = date("m_d_Y_H_i_s");
         $filename='DownloadReport_'.$today.".csv";
 
-        header("Content-type: application/octet-stream");
-        header('Content-Disposition: attachment; filename='.$filename);
 
-        $header1 = array("Name", "Email", "Download Date");
-
-        $query = "SELECT * from downloads";
+        $query = "SELECT name as Name,email as Email,date as 'Download Date' FROM downloads";
         $params = array();
 
         if($date != null) {
@@ -302,19 +296,9 @@ class functions {
             $params['date'] = $date;
         }
 
-        $download_results = $db->get_query_result($query, $params);
-
-         // create a file pointer connected to the output stream
-         $output = fopen('php://output', 'w');
-         fputcsv($output, $header1);
-
-        foreach($download_results as $result) {
-            $data = array($result['name'], $result['email'], $result['date']);
-            fputcsv($output, $data);
-        }
-
-        fclose($output);
-
+	$download_results = $db->get_query_result($query, $params);
+	\IGBIllinois\report::create_csv_report($download_results,$filename);
+	
    }
 
    /** Gets an array of emails for users
