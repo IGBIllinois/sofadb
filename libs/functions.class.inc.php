@@ -78,7 +78,7 @@ class functions {
 	    $parameters = array('selector'=>$selector,
 		    	'time'=>date('Y-M-D G:i:s')
 		);
-        $results = $db->get_query_result($sql,$parameters);
+        $results = $db->query($sql,$parameters);
 
         if ( empty( $results ) ) {
             return array('RESULT'=>FALSE,
@@ -109,7 +109,7 @@ class functions {
 
             if ( $update == true ) {
                 // New password. New session.
-		$db->get_update_result("DELETE FROM password_reset WHERE selector=:selector AND token=:token",
+		$db->non_select_query("DELETE FROM password_reset WHERE selector=:selector AND token=:token",
 			array(":selector"=>$selector,
 			":token"=>$token));
                 return array('RESULT'=>TRUE,
@@ -138,7 +138,7 @@ class functions {
 	    $parameters = array('selector'=>$selector,
                         'time'=>date('Y-M-D G:i:s')
 		);
-	    $results = $db->get_query_result($sql,$parameters);
+	    $results = $db->query($sql,$parameters);
 
         if ( empty( $results ) ) {
             return array('RESULT'=>FALSE,
@@ -243,11 +243,11 @@ class functions {
         $expires = new DateTime('NOW');
         $expires->add(new DateInterval('PT24H')); // 24 hours
 
-       $db->get_update_result("DELETE from password_reset where email=:email", 
+       $db->non_select_query("DELETE from password_reset where email=:email", 
         array("email"=>$email));
 
         // Insert reset token into database
-        $insert = $db->get_insert_result("insert into password_reset (email, selector, token, expires) VALUES (:email, :selector, :token, :expires)",
+        $insert = $db->insert_query("insert into password_reset (email, selector, token, expires) VALUES (:email, :selector, :token, :expires)",
             array(
                 'email'     =>  $email,
                 'selector'  =>  $selector, 
@@ -296,7 +296,7 @@ class functions {
             $params['date'] = $date;
         }
 
-	$download_results = $db->get_query_result($query, $params);
+	$download_results = $db->query($query, $params);
 	\IGBIllinois\report::create_csv_report($download_results,$filename);
 	
    }
@@ -314,7 +314,7 @@ class functions {
        } else {
            $query .= " = 2";
        }
-       $result = $db->get_query_result($query);
+       $result = $db->query($query);
        
        $return_result = array();
        foreach($result as $data) {

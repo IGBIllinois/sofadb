@@ -166,7 +166,7 @@ class method {
                                 "top"=>$top,
                                 "id"=>$this->id);
 
-                $result = $this->db->get_update_result($query, $params);
+                $result = $this->db->non_select_query($query, $params);
                 if ($result) { // If it ran OK.
                     return $result;
                 } else {
@@ -206,7 +206,7 @@ class method {
         $check_query = "SELECT id from methods where methodname=:name and methodtypenum=:typenum";
         $check_params = array("name"=>$name, "typenum"=>$type_num);
         
-        $check_result = $db->get_query_result($check_query, $check_params);
+        $check_result = $db->query($check_query, $check_params);
         
         if(count($check_result)>0) {
             // A method with this name already exists
@@ -248,7 +248,7 @@ class method {
                         "top"=>$top,
                         "prompt"=>$prompt_id);
         
-        $result = $db->get_insert_result($query, $params);
+        $result = $db->insert_query($query, $params);
 
 	if ($result > 0) { // If it ran OK.
             return array("RESULT"=>TRUE,
@@ -270,7 +270,7 @@ class method {
         $est_input_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_ESTIMATED_OUTCOME);
         $est_query = "SELECT id from method_info_options where method_infos_id = (select id from method_infos where methodid=:methodid and input_type=:input_type)";
         $est_params = array("methodid"=>$this->get_id(), "input_type"=>$est_input_type->get_id());
-        $result = $this->db->get_query_result($est_query, $est_params);
+        $result = $this->db->query($est_query, $est_params);
         $return_result = array();
         if(count($result) > 0){ 
             foreach($result as $data) {
@@ -290,7 +290,7 @@ class method {
         public function get_method_infos() {
             $query = "SELECT id from method_infos where methodid=:methodid ORDER BY id";
             $params = array("methodid"=>$this->id);
-            $result = $this->db->get_query_result($query, $params);
+            $result = $this->db->query($query, $params);
             
             $return_result = array();
             if(count($result) > 0) {
@@ -317,7 +317,7 @@ class method {
                 $type_query = "SELECT DISTINCT input_type from method_infos where methodid = :methodid ORDER BY FIELD(input_type,$number_type, $text_type) DESC";
 
                 $type_params =array("methodid"=>$this->id);
-                $type_result = $this->db->get_query_result($type_query, $type_params);
+		$type_result = $this->db->query($type_query, $type_params);
             } else {
                 $type_result = array('input_type'=>$type);
             }
@@ -331,7 +331,7 @@ class method {
                 $input_type = $type['input_type'];
                 $infos_query = "SELECT id from method_infos where methodid= :methodid and input_type=:type";
                 $infos_params = array("methodid"=>$this->id, "type"=>$input_type);
-                $info_result = $this->db->get_query_result($infos_query, $infos_params);
+                $info_result = $this->db->query($infos_query, $infos_params);
                 
                 foreach($info_result as $info) {
                     $method_infos = new method_infos($this->db, $info['id']);
@@ -374,7 +374,7 @@ class method {
         if($parent_id !=  null) {
             $params["parent_id"] = $parent_id;
         }
-        $result = $this->db->get_insert_result($query, $params);
+        $result = $this->db->insert_query($query, $params);
         if($result > 0) {
             if($input_type == input_type::get_input_id_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY) ||
                     $input_type == input_type::get_input_id_by_name($this->db, USER_INTERACTION_TEXT_ENTRY) ||
@@ -415,7 +415,7 @@ class method {
         
         $query = "DELETE FROM method_infos where id = :method_info_id";
         $params = array("method_info_id"=>$method_info_id);
-        $result = $this->db->get_update_result($query, $params);
+        $result = $this->db->non_select_query($query, $params);
         
         return $result;
     }
@@ -435,7 +435,7 @@ class method {
             }
             $query = "SELECT prompt from prompts where id = :id";
             $params = array("id"=>$promptid);
-            $result = $this->db->get_query_result($query, $params);
+            $result = $this->db->query($query, $params);
             if(count($result) > 0) {
                 return $result[0]['prompt'];
             } else {
@@ -479,7 +479,7 @@ class method {
         } else {
             // Don't use a start point or limit
         }
-        $result = $db->get_query_result($query, $params);
+        $result = $db->query($query, $params);
         $methods = array();
         foreach($result as $method) {
             $id = $method['id'];
@@ -500,7 +500,7 @@ class method {
             $query = "SELECT methodname,id FROM methods WHERE active=:active AND methodtypenum=:methodtypenum ";
             $query .= " ORDER BY top desc, methodname";
             $params = array("methodtypenum"=>$type_id, "active"=>$active);
-            $result = $db->get_query_result($query, $params);
+            $result = $db->query($query, $params);
             $methods = array();
             foreach($result as $method) {
                 $curr_method = new method($db, $method['id']);
@@ -520,7 +520,7 @@ class method {
     public static function get_all_prompts($db) {
         
         $query = "SELECT * from prompts ";
-        $result = $db->get_query_result($query);
+        $result = $db->query($query);
         
         $return_array = array();
         foreach($result as $prompt) {
@@ -544,7 +544,7 @@ class method {
         $query = "INSERT INTO prompts (prompt_name, prompt) VALUES (:prompt_name, :prompt_text)";
         $params = array("prompt_name"=>$prompt_name, "prompt_text"=>$prompt_text);
         
-        $result = $db->get_insert_result($query, $params);
+        $result = $db->insert_query($query, $params);
         
         if($result > 0) {
             return array("RESULT"=>TRUE,
@@ -569,10 +569,10 @@ class method {
     public static function delete_prompt($db, $prompt_id) {
         $update_query = "UPDATE methods set prompt=NULL where prompt=:prompt_id";
         $params = array("prompt_id"=>$prompt_id);
-        $update_result = $db->get_update_result($update_query, $params);
+        $update_result = $db->non_select_query($update_query, $params);
         
         $query = "DELETE FROM prompts where id=:prompt_id";
-        $delete_result = $db->get_update_result($query, $params);
+        $delete_result = $db->non_select_query($query, $params);
         
         if($delete_result > 0) {
             return array("RESULT"=>TRUE,
@@ -607,7 +607,7 @@ class method {
         $del_query = "DELETE FROM methods where id = :method_id";
         $del_params = array("method_id"=>$method_id);
 
-        $result = $db->get_update_result($del_query, $del_params);
+        $result = $db->non_select_query($del_query, $del_params);
         
         if($result > 0) {
             return array("RESULT"=>true,
@@ -627,7 +627,7 @@ class method {
      private function load_method($id) {
          $query = "SELECT * from methods where id = :id";
          $params = array("id"=>$id);
-         $result = $this->db->get_query_result($query, $params);
+         $result = $this->db->query($query, $params);
 
          if(count($result) > 0) {
              $data = $result[0];

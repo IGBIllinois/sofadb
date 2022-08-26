@@ -35,7 +35,7 @@ class input_type {
     public static function get_input_types($db) {
         
         $query = "SELECT * from input_types";
-        $result = $db->get_query_result($query);
+        $result = $db->query($query);
         $types = array();
         foreach($result as $input) {
 
@@ -59,7 +59,7 @@ class input_type {
         
         $query = "SELECT id from input_types where input_type=:name";
         $params = array("name"=>$name);
-        $result = $db->get_query_result($query, $params);
+        $result = $db->query($query, $params);
         if(count($result) > 0) {
         
             $input = $result[0];
@@ -83,7 +83,7 @@ class input_type {
         
         $query = "SELECT id from input_types where input_type=:name";
         $params = array("name"=>$name);
-        $result = $db->get_query_result($query, $params);
+        $result = $db->query($query, $params);
         if(count($result) > 0) {
         
             $input = $result[0];
@@ -101,7 +101,7 @@ class input_type {
        $query = "SELECT * from input_types where id=:id";
 
        $params = array("id"=>$id);
-       $result = $this->db->get_query_result($query, $params);
+       $result = $this->db->query($query, $params);
 
        if(count($result) > 0) {
            $data = $result[0];

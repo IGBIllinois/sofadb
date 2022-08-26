@@ -32,7 +32,7 @@ class reference {
     public static function get_references($db) {
         
         $query = "SELECT * from reference";
-        $result = $db->get_query_result($query);
+        $result = $db->query($query);
         $refs = array();
         foreach($result as $input) {
 
@@ -56,7 +56,7 @@ class reference {
         $query = "INSERT INTO reference_data (tier2id, method_info_id, reference_id) VALUES (:tier2id, :methodinfoid, :ref_id)";
         $params = array("tier2id"=>$tier2id, "methodinfoid"=>$method_info_id, "ref_id"=>$this->get_id());
         
-        $result = $this->db->get_insert_result($query, $params);
+        $result = $this->db->insert_query($query, $params);
         if($result > 0) {
             return array("RESULT"=>TRUE,
                     "MESSAGE"=>"Reference added successfully.",
@@ -79,7 +79,7 @@ class reference {
         $query = "delete from reference_data where id = :reference_data_id";
         $params = array(":reference_data_id"=>$reference_data_id);
         
-        $result = $this->db->get_update_result($query, $params);
+        $result = $this->db->non_select_query($query, $params);
         if($result > 0) {
             return array("RESULT"=>TRUE,
                     "MESSAGE"=>"Reference removed successfully.");
@@ -103,14 +103,14 @@ class reference {
     public static function add_reference($db, $ref_name) {
         $check_query = "SELECT * from reference where reference_name=:name";
         $params = array("name"=>$ref_name);
-        $result = $db->get_query_result($check_query, $params);
+        $result = $db->query($check_query, $params);
         if(count($result) > 0) {
             return array("RESULT"=>FALSE,
                          "MESSAGE"=>"A reference with the name $ref_name already exists. Please choose a different name before adding.");
         }
         
         $add_query = "INSERT INTO reference (reference_name) VALUES (:name)";
-        $result = $db->get_insert_result($add_query, $params);
+        $result = $db->insert_query($add_query, $params);
         if($result > 0) {
             return array("RESULT"=>TRUE,
                         "MESSAGE"=>"Reference $ref_name added successfully.");
@@ -143,7 +143,7 @@ class reference {
         $del_ref_data = "DELETE from reference_data where reference_id=:id";
         
         // delete from reference data
-       $data_result = $db->get_update_result($del_ref_data, $del_params);
+       $data_result = $db->non_select_query($del_ref_data, $del_params);
        
        if($data_result == 0) {
            return array("RESULT"=>FALSE,
@@ -151,7 +151,7 @@ class reference {
        }
         
         // delete from method info reference list
-        $info_result = $db->get_update_result($del_info_query, $del_params);
+        $info_result = $db->non_select_query($del_info_query, $del_params);
         
         if($info_result == 0) {
            return array("RESULT"=>FALSE,
@@ -159,7 +159,7 @@ class reference {
        }
         
         // delete from references
-        $ref_result = $db->get_update_result($del_ref_query, $del_params);
+        $ref_result = $db->non_select_query($del_ref_query, $del_params);
         if($ref_result == 0) {
            return array("RESULT"=>FALSE,
                "MESSAGE"=>"Could not delete from reference table.");
@@ -176,7 +176,7 @@ class reference {
        $query = "SELECT * from reference where id=:id";
 
        $params = array("id"=>$id);
-       $result = $this->db->get_query_result($query, $params);
+       $result = $this->db->query($query, $params);
 
        if(count($result) > 0) {
            $data = $result[0];

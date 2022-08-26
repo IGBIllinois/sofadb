@@ -343,7 +343,7 @@ class sofa_case {
         
         
                 try {
-                $caseid = $db->get_insert_result($q, $data);
+                $caseid = $db->insert_query($q, $data);
                 } catch(Exception $e) {
                     echo $e->getTraceAsString();
                 }
@@ -404,7 +404,7 @@ class sofa_case {
                         "estimated_outcome_2"=>$estimated_outcome_2,
                         "estimated_outcome_units"=>$estimated_outcome_units);
 
-                $casemethodid = $this->db->get_insert_result($q, $data);
+                $casemethodid = $this->db->insert_query($q, $data);
                 
                  
                  if($casemethodid > 0) {
@@ -437,7 +437,7 @@ public function submit_case($submitstatus) {
 
 	$params = array("status"=>$submitstatus, "caseid"=>$this->get_id());
 
-	$result = $this->db->get_update_result($q, $params);
+	$result = $this->db->non_select_query($q, $params);
 
 	if(count($result) == 0) {
 	return array("RESULT"=>FALSE,
@@ -506,7 +506,7 @@ public function submit_case($submitstatus) {
                 . "fdb_consent=:fdb_consent"
                 . " WHERE id=:caseeditid";
 
-        $this->db->get_update_result($q, $data);
+        $this->db->non_select_query($q, $data);
         return array("RESULT"=>TRUE,
                     "MESSAGE"=>"Case ".$this->get_casename() . " edited successfully.");
 				
@@ -521,7 +521,7 @@ public function submit_case($submitstatus) {
     public function get_case_methods() {
         $query = "SELECT * from tier2data where caseid = :id order by id DESC";
         $params = array("id"=>$this->id);
-        $result = $this->db->get_query_result($query, $params);
+        $result = $this->db->query($query, $params);
         $tier2s = array();
         foreach($result as $id) {
             $tier2 = new tier2data($this->db, $id['id']);
@@ -566,7 +566,7 @@ public function submit_case($submitstatus) {
 
             $query = "INSERT INTO tier3data $fields VALUES $values";
 
-            $result = $this->db->get_insert_result($query, $params);
+            $result = $this->db->insert_query($query, $params);
             if($result > 0) {
                 return array("RESULT"=>TRUE,
                             "MESSAGE"=>"Tier 3 data added successfully.",
@@ -595,7 +595,7 @@ public function submit_case($submitstatus) {
         $query = "DELETE FROM tier3data where tier2id=:tier2id and methodinfoid=:methodinfoid";
         $params = array("tier2id"=>$t2id,
                         "methodinfoid"=>$methodinfoid);
-        $result = $this->db->get_update_result($query, $params);
+        $result = $this->db->non_select_query($query, $params);
 
         if($result > 0) {
             return array("RESULT"=>TRUE,
@@ -621,7 +621,7 @@ public function submit_case($submitstatus) {
         // TODO: Delete all data. Right now, only deletes one, but there may be several
         $query = "DELETE FROM tier3data where id=:t3id";
         $params = array("t3id"=>$t3id);
-        $result = $this->db->get_update_result($query, $params);
+        $result = $this->db->non_select_query($query, $params);
 
         if($result > 0) {
             return array("RESULT"=>TRUE,
@@ -642,7 +642,7 @@ public function submit_case($submitstatus) {
         $query1 = "SELECT * from tier3data where tier2id = :t2id";
         $params = array("t2id"=>$t2id);
         
-        $result = $this->db->get_query_result($query1, $params);
+        $result = $this->db->query($query1, $params);
         
         return $result;
 
@@ -657,10 +657,10 @@ public function submit_case($submitstatus) {
         $query1 = "DELETE FROM tier2data where id = :t2id";
         $params = array("t2id"=>$t2id);
         
-        $result = $this->db->get_update_result($query1, $params);
+        $result = $this->db->non_select_query($query1, $params);
         
         $query2 = "DELETE from tier3data where tier2id = :t2id";
-        $result2 = $this->db->get_update_result($query2, $params);
+        $result2 = $this->db->non_select_query($query2, $params);
     }
     
     /** Permanently deletes a case from the database
@@ -685,7 +685,7 @@ public function submit_case($submitstatus) {
             $this->remove_method($t2->get_id());
         }
 
-        $result = $this->db->get_update_result($delete_case_query, $delete_case_params);
+        $result = $this->db->non_select_query($delete_case_query, $delete_case_params);
         if(count($result) > 0) {
             return array("RESULT"=>TRUE,
                         "MESSAGE"=>"Case deleted successfully.");
@@ -720,7 +720,7 @@ public function submit_case($submitstatus) {
                 $sql .= "LIMIT $start, $pagerows";
 
         }
-        $result = $db->get_query_result($sql, $params);
+        $result = $db->query($sql, $params);
 
         $cases = array();
         foreach($result as $case) {
@@ -749,7 +749,7 @@ public function submit_case($submitstatus) {
                         "casenum"=>$casenum,
                         "caseeditid"=>$caseid);
 
-        $result = $db->get_query_result($q, $params);
+        $result = $db->query($q, $params);
         if(count($result) > 0) {
             return true;
         } else {
@@ -772,7 +772,7 @@ public function submit_case($submitstatus) {
                         "casename"=>$casename,
                         "casenum"=>$casenum);
 
-        $result = $db->get_query_result($q, $params);
+        $result = $db->query($q, $params);
         if(count($result) > 0) {
             return true;
         } else {
@@ -1085,7 +1085,7 @@ public function submit_case($submitstatus) {
 
         $query .= " ORDER BY id ";
         
-        $result = $db->get_query_result($query, $params);
+        $result = $db->query($query, $params);
         $results = array();
         
         foreach($result as $casedata) {
@@ -1378,7 +1378,7 @@ public function submit_case($submitstatus) {
             $download_query = "INSERT INTO downloads (name, email, date) VALUES (:name, :email, NOW())";
             $download_params = array("name"=>$username,
                                     "email"=>$email);
-            $db->get_insert_result($download_query, $download_params);
+            $db->insert_query($download_query, $download_params);
         } else {
             // FDB report, don't record
         }
@@ -1821,7 +1821,7 @@ public function submit_case($submitstatus) {
     private function load_case($id) {
         
         $query = "SELECT * from cases where id=  :id";
-        $mresult = $this->db->get_query_result($query, array("id"=>$id));
+        $mresult = $this->db->query($query, array("id"=>$id));
         if(!$mresult) {
             echo 'Could not load data from database';
             return;

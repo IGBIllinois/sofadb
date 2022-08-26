@@ -78,7 +78,7 @@ class tier3data {
         $params = array("t2id"=>$t2id,
                         "option_id"=>$option_id);
 
-        $result = $db->get_query_result($query, $params);
+        $result = $db->query($query, $params);
         if(count($result)>0) {
             return new tier3data($db, $result[0]['id']);
         } else {
@@ -100,7 +100,7 @@ class tier3data {
         $query = "DELETE FROM tier3data where tier2id=:tier2id and method_info_option_id=:method_info_option_id";
         $params = array("tier2id"=>$t2id,
                         "method_info_option_id"=>$method_info_option_id);
-        $result = $db->get_update_result($query, $params);
+        $result = $db->non_select_query($query, $params);
 
         if($result > 0) {
             return array("RESULT"=>TRUE,
@@ -124,7 +124,7 @@ class tier3data {
 
         $query = "DELETE FROM tier3data where id=:t3id";
         $params = array("t3id"=>$t3id);
-        $result = $db->get_update_result($query, $params);
+        $result = $db->non_select_query($query, $params);
 
         if($result > 0) {
             return array("RESULT"=>TRUE,
@@ -140,7 +140,7 @@ class tier3data {
     private function load_tier3data($id) {
        $query = "SELECT * from tier3data where id=:id";
        $params = array("id"=>$id);
-       $result = $this->db->get_query_result($query, $params);
+       $result = $this->db->query($query, $params);
 
        if(count($result) > 0) {
             $data = $result[0];

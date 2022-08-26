@@ -125,7 +125,7 @@ class tier2data {
         }
         $query .= " ORDER BY id";
 
-        $result = $this->db->get_query_result($query, $params);
+        $result = $this->db->query($query, $params);
         $tier3s = array();
         foreach($result as $tier3) {
             $id = $tier3['id'];
@@ -198,7 +198,7 @@ class tier2data {
 		"est2"=>$estimated_outcome_2, 
 		"units"=>$units
 	);
-	return $this->db->get_update_result($sql, $params);
+	return $this->db->non_select_query($sql, $params);
     }
     
     
@@ -262,7 +262,7 @@ class tier2data {
         $query = "SELECT reference_id from reference_data where tier2id=:tier2id and method_info_id = :method_info_id";
         $params = array("tier2id"=>$this->get_id(),
                         "method_info_id"=>$method_info_id);
-        $result = $this->db->get_query_result($query, $params);
+        $result = $this->db->query($query, $params);
         
         $return_result = array();
         foreach($result as $ref) {
@@ -279,7 +279,7 @@ class tier2data {
     public function get_all_selected_references() {
        $query = "SELECT reference_id from reference_data where tier2id=:tier2id ";
         $params = array("tier2id"=>$this->get_id());
-        $result = $this->db->get_query_result($query, $params);
+        $result = $this->db->query($query, $params);
         
         $return_result = array();
         foreach($result as $ref) {
@@ -296,7 +296,7 @@ class tier2data {
         $query = 'select * from method_infos where id in (SELECT method_infos_id from method_info_options where id in(SELECT method_info_option_id FROM tier3data where tier2id=:t2id))';
         $params = array("t2id"=>$this->id);
         
-        $result = $this->db->get_query_result($query, $params);
+        $result = $this->db->query($query, $params);
         
         $return_result = array();
         
@@ -322,7 +322,7 @@ class tier2data {
     public static function delete_tier2($db, $tier2id) {
         $query = "DELETE from tier2data where id=:tier2id ";
         $params = array("tier2id"=>$tier2id);
-        $result = $db->get_update_result($query, $params);
+        $result = $db->non_select_query($query, $params);
         if($result > 0) {
             return array("RESULT"=>TRUE,
                 "MESSAGE"=>"Tier 2 data deleted successfully");
@@ -344,7 +344,7 @@ class tier2data {
 
         $params = array("method_id"=>$method_id);
         
-        $result = $db->get_query_result($query, $params);
+        $result = $db->query($query, $params);
         $return_result = array();
         if(count($result) > 0) {
             foreach($result as $data) {
@@ -361,7 +361,7 @@ class tier2data {
     private function load_tier2data($id) {
        $query = "SELECT * from tier2data where id=:id";
        $params = array("id"=>$id);
-       $result = $this->db->get_query_result($query, $params);
+       $result = $this->db->query($query, $params);
 
        if(count($result) > 0) {
             $data = $result[0];

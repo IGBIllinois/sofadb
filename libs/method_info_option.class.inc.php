@@ -60,7 +60,7 @@ class method_info_option {
 
         $query = "SELECT * from method_info_options where id=:id";
         $params = array("id"=>$id);
-        $result = $this->db->get_query_result($query, $params);
+        $result = $this->db->query($query, $params);
 
         if(count($result) > 0) {
             $data = $result[0];

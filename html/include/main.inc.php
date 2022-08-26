@@ -64,7 +64,7 @@ try {
 
 
 // database class
-$db = new db(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD) OR die ('Could not connect to MySQL' );
+$db = new \IGBIllinois\db(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD) OR die ('Could not connect to MySQL' );
 
 // These lines allow a user to hit the Back button and return to a previously
 // submitted form

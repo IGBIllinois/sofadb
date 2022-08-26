@@ -86,7 +86,7 @@ class method_infos {
         $query = "SELECT id from method_info_options where method_infos_id = :method_infos_id";
         $params = array("method_infos_id"=>$this->get_id());
 
-        $result = $this->db->get_query_result($query, $params);
+        $result = $this->db->query($query, $params);
         
         $return_result = array();
         if(count($result) > 0) {
@@ -111,7 +111,7 @@ class method_infos {
     public function get_references() {
        $query = "SELECT reference_id from method_info_reference_list where method_infos_id=:mi_id";
        $params = array("mi_id"=>$this->get_id());
-       $results = $this->db->get_query_result($query, $params);
+       $results = $this->db->query($query, $params);
 
        $return_result = array();
        foreach($results as $ref) {
@@ -130,7 +130,7 @@ class method_infos {
        $query = "SELECT id from method_infos where parent_id = :parent_id";
        $params = array("parent_id"=>$this->get_id());
 
-       $result = $this->db->get_query_result($query, $params);
+       $result = $this->db->query($query, $params);
        $return_result = array();
        foreach($result as $mi) {
 
@@ -151,7 +151,7 @@ class method_infos {
                . "(:method_infos_id, :value)";
        $params = array("method_infos_id"=>$this->get_id(),
                         "value"=>$value);
-       $result = $this->db->get_insert_result($query, $params);
+       $result = $this->db->insert_query($query, $params);
        
        return $result; 
    }
@@ -166,7 +166,7 @@ class method_infos {
        $query = "DELETE FROM method_info_options where id=:id";
        $params = array("id"=>$option_id);
        
-       $result = $this->db->get_update_result($query, $params);
+       $result = $this->db->non_select_query($query, $params);
        
        return $result; 
    }
@@ -180,7 +180,7 @@ class method_infos {
        $query = "UPDATE method_info_options set value=:value where id=:option_id";
        $params = array("value"=>$new_value,
                        "option_id"=>$option_id);
-       $result = $this->db->get_update_result($query, $params);
+       $result = $this->db->non_select_query($query, $params);
        return $result;
        
    }
@@ -937,7 +937,7 @@ class method_infos {
 
         $cat_params = array("methodid"=>$method_id, 'input_type'=>$cat_input_type->get_id());
 
-        $categories = $db->get_query_result($cat_query, $cat_params);
+        $categories = $db->query($cat_query, $cat_params);
         $tmp_cat = $categories[0];
 
         $category_info = new method_infos($db, $tmp_cat['id']);
@@ -1095,7 +1095,7 @@ class method_infos {
 
         $cat_params = array("methodid"=>$method_id, 'input_type'=>$cat_type_id);
 
-        $categories = $db->get_query_result($cat_query, $cat_params);
+        $categories = $db->query($cat_query, $cat_params);
         $output = "";
         $output_header = $categories[0]['header'];
         
@@ -1198,7 +1198,7 @@ class method_infos {
 
             $cat_params = array("methodid"=>$method_id, 'input_type'=>$cat_type_id);
 
-            $categories = $db->get_query_result($cat_query, $cat_params);
+            $categories = $db->query($cat_query, $cat_params);
 
             foreach($categories as $category) {
                 // Get method_infos
@@ -1209,7 +1209,7 @@ class method_infos {
                 
                 $info_params = array("methodid"=>$method_id, 'parentid'=>$category_info->get_id());
 
-                $infos = $db->get_query_result($info_query, $info_params);
+                $infos = $db->query($info_query, $info_params);
 
                 // Draw each category in its own box
                 $output .= ("<fieldset class='methodinfobox'>");
@@ -1334,7 +1334,7 @@ class method_infos {
 
         $cat_params = array("methodid"=>$method_id, 'input_type'=>$cat_type_id);
 
-        $categories = $db->get_query_result($cat_query, $cat_params);
+        $categories = $db->query($cat_query, $cat_params);
         $output = "";
         $output_header = $categories[0]['header'];
 
@@ -1360,7 +1360,7 @@ class method_infos {
             $subcat_query = "SELECT * from method_infos where methodid = :methodid and input_type = :input_type and parent_id = :parentid";
             $subcat_params = array("methodid"=>$method_id, 'input_type'=>$cat_type_id, 'parentid'=>$category_info->get_id());
 
-            $sub_categories = $db->get_query_result($subcat_query, $subcat_params);
+            $sub_categories = $db->query($subcat_query, $subcat_params);
             
             if(count($sub_categories) == 0) {
                 $sub_categories = array($category);
@@ -1380,7 +1380,7 @@ class method_infos {
                 
                 $info_params = array("methodid"=>$method_id, 'parentid'=>$subcategory_info->get_id());
 
-                $infos = $db->get_query_result($info_query, $info_params);
+                $infos = $db->query($info_query, $info_params);
 
                 
                 $output .= ("<fieldset class='methodinfobox'>");
@@ -1450,7 +1450,7 @@ class method_infos {
         $query = "SELECT * from method_infos where id=:id";
         $params = array("id"=>$id);
 
-        $result = $this->db->get_query_result($query, $params);
+        $result = $this->db->query($query, $params);
 
         if(count($result) > 0) {
             $data = $result[0];

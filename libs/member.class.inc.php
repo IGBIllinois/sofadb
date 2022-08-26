@@ -161,7 +161,7 @@ public function set_permission($status) {
     $q="UPDATE members SET permissionstatus=:status WHERE id=:idactivate";
     $params = array("status"=>$status,
                     "idactivate"=>$this->id);
-    $result = $this->db->get_update_result($q, $params);
+    $result = $this->db->non_select_query($q, $params);
     
     if($result > 0) {
         return array("RESULT"=>TRUE,
@@ -181,7 +181,7 @@ public function set_permission($status) {
 public function get_num_active_cases() {
     $q = "SELECT COUNT(id) as count FROM cases WHERE memberid=:memberid AND submissionstatus>=0";
     $params = array("memberid"=>$this->id);
-    $result = $this->db->get_query_result($q, $params);
+    $result = $this->db->query($q, $params);
     if(count($result)> 0) {
         return $result[0]['count'];
     } else {
@@ -199,7 +199,7 @@ public function get_num_active_cases() {
 public function get_num_unsubmitted_cases() {
     $q = "SELECT COUNT(id) as count FROM cases WHERE memberid=:memberid AND submissionstatus=0";
     $params = array("memberid"=>$this->id);
-    $result = $this->db->get_query_result($q, $params);
+    $result = $this->db->query($q, $params);
     if(count($result)> 0) {
         return $result[0]['count'];
     } else {
@@ -216,7 +216,7 @@ public function get_num_unsubmitted_cases() {
 public function update_login_time() {
     $q = "UPDATE members SET lastlogin=NOW() WHERE id=:id";
     $params = array("id"=>$this->id);
-    $result = $this->db->get_update_result($q, $params);
+    $result = $this->db->non_select_query($q, $params);
     if($result > 0) {
         return array("RESULT"=>TRUE,
                         "MESSAGE"=>"Member updated successfully.");
@@ -239,7 +239,7 @@ public function reset_password($new_pass) {
     $query = "UPDATE members set pwd=:new_pass where id=:id";
     $params = array("new_pass"=>$new_pass_hash,
                     "id"=>$this->id);
-    $result = $this->db->get_update_result($query, $params);
+    $result = $this->db->non_select_query($query, $params);
     if($result > 0) {
         return array("RESULT"=>TRUE,
                     "MESSAGE"=>"Password updated successfully.");
@@ -294,11 +294,11 @@ public function delete_member($delete_member_id) {
    
     $delete_cases_query = "DELETE FROM cases where memberid = :memberid ";
     $delete_cases_params = array("memberid"=>$delete_member_id);
-    $delete_cases_result = $this->db->get_update_result($delete_cases_query, $delete_cases_params);
+    $delete_cases_result = $this->db->non_select_query($delete_cases_query, $delete_cases_params);
     
     $delete_user_query = "DELETE FROM members where id = :memberid";
     $delete_user_params = array("memberid"=>$delete_member_id);
-    $delete_user_result = $this->db->get_update_result($delete_user_query, $delete_user_params);
+    $delete_user_result = $this->db->non_select_query($delete_user_query, $delete_user_params);
     
     if($delete_user_result > 0) {
         return array("RESULT"=>TRUE,
@@ -321,7 +321,7 @@ public function update_terms_agreement($signature, $signature_date, $agree) {
                     "signature_date"=>$signature_date,
                     "agree"=>$agree,
                     "id"=>$this->id);
-    $result = $this->db->get_update_result($query, $params);
+    $result = $this->db->non_select_query($query, $params);
     if($result > 0) {
         $this->agree_to_terms = $agree;
     }
@@ -340,7 +340,7 @@ public static function authenticate($db, $name, $chkpwd) {
     $query = "SELECT pwd from members where uname=:name";
     $params = array("name"=>$name);
     
-    $pwd_result = $db->get_query_result($query, $params);
+    $pwd_result = $db->query($query, $params);
     
     $pwd = $pwd_result[0]['pwd'];
 
@@ -370,7 +370,7 @@ public static function get_members($db, $start=-1, $pagerows=-1) {
             $q .= " LIMIT $start, $pagerows";	
     }
 
-    $result = $db->get_query_result($q);
+    $result = $db->query($q);
 
     $members = array();
     foreach($result as $member) {
@@ -467,7 +467,7 @@ public static function search_members(
         
         $query = "SELECT id from members WHERE $searchstring ";
         
-        $result = $db->get_query_result($query, $params);
+        $result = $db->query($query, $params);
         $found_members = array();
         foreach($result as $member) {
             $this_member = new member($db, $member['id']);
@@ -490,7 +490,7 @@ public static function get_members_permission($db, $permission_status) {
     
     $params = array("permissionstatus"=>$permission_status);
     
-    $result = $db->get_query_result($q, $params);
+    $result = $db->query($q, $params);
     
     $members = array();
     foreach($result as $member) {
@@ -569,7 +569,7 @@ public static function add_member($db, $params) {
                 . ":signature_date"
             . ")";		
 
-    $result = $db->get_insert_result($q, $params);
+    $result = $db->insert_query($q, $params);
     if($result > 0) {
         return array("RESULT"=>TRUE,
                     "MESSAGE"=>"User added successfully.",
@@ -624,7 +624,7 @@ public static function update_member($db, $params, $pwd=null) {
         $params['pwd'] = $hash_pwd;
     }
 
-    $result = $db->get_update_result($q, $params);
+    $result = $db->non_select_query($q, $params);
     if($result > 0) {
         return array("RESULT"=>TRUE,
                     "MESSAGE"=>"User updated successfully.",
@@ -645,7 +645,7 @@ public static function update_member($db, $params, $pwd=null) {
     public static function member_exists($db, $uname) {
         $query = "SELECT id from members where uname=:uname";
         $params = array("uname"=>$uname);
-        $result = $db->get_query_result($query, $params);
+        $result = $db->query($query, $params);
         
 
         if(count($result) > 0) {
@@ -658,7 +658,7 @@ public static function update_member($db, $params, $pwd=null) {
     public static function load_member_by_name($db, $name) {
         $query1 = "SELECT id from members where uname = :uname";
         $params = array("uname"=>$name);
-        $result = $db->get_query_result($query1, $params);
+        $result = $db->query($query1, $params);
         if(count($result) >0) {
             $id = $result[0]['id'];
             return new member($db, $id);
@@ -672,9 +672,9 @@ public static function update_member($db, $params, $pwd=null) {
      * @param int $id ID of the member to get data for
      */
     private function load_member($id) {
-        $query = "SELECT * from members where id = :id";
+        $query = "SELECT * from members where id = :id LIMIT 1";
         $params = array("id"=>$id);
-        $result = $this->db->get_query_result($query, $params);
+        $result = $this->db->query($query, $params);
         
         if(count($result) > 0) {
             $member_data = $result[0];

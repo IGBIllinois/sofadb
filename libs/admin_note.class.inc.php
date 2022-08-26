@@ -73,7 +73,7 @@ class admin_note {
 		$params = array("user_id"=>$user_id,
                         "message"=>$formatted_message);
         
-		$result = $db->get_insert_result($query, $params);
+		$result = $db->insert_query($query, $params);
         
 		if($result > 0) {
 			$return_result = array("RESULT"=>TRUE,
@@ -95,7 +95,7 @@ class admin_note {
         $query = "DELETE FROM admin_notes where id=:id";
         $params = array("id"=>$id);
         
-        $db->get_update_result($query, $params);
+        $db->non_select_query($query, $params);
         
     }
     
@@ -110,7 +110,7 @@ class admin_note {
         $params = array("message"=>$message,
                         "id"=>$id);
         
-        $db->get_update_result($query, $params);
+        $db->non_select_query($query, $params);
     }
     
     /** Gets an array of all the admin notes
@@ -120,7 +120,7 @@ class admin_note {
      */
     public static function get_all_admin_notes($db) {
         $query = "SELECT id from admin_notes ORDER BY id DESC";
-        $result = $db->get_query_result($query);
+        $result = $db->query($query);
         
         $return_result = array();
         foreach($result as $admin_note) {
@@ -136,7 +136,7 @@ class admin_note {
         $query = "SELECT * from admin_notes where id=:id";
 
        $params = array("id"=>$id);
-       $result = $this->db->get_query_result($query, $params);
+       $result = $this->db->query($query, $params);
 
        if(count($result) > 0) {
            $data = $result[0];

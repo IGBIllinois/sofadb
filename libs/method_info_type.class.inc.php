@@ -38,7 +38,7 @@ class method_info_type {
     public static function get_method_info_types($db) {
         
         $query = "SELECT * from method_info_types";
-        $result = $db->get_query_result($query);
+        $result = $db->query($query);
         $types = array();
         foreach($result as $info) {
 
@@ -61,7 +61,7 @@ class method_info_type {
         
         $query = "SELECT id from method_info_types where method_type=:name";
         $params = array("name"=>$name);
-        $result = $db->get_query_result($query, $params);
+        $result = $db->query($query, $params);
         if(count($result) > 0) {
         
             $input = $result[0];
@@ -82,7 +82,7 @@ class method_info_type {
        $query = "SELECT * from method_info_types where id=:id";
 
        $params = array("id"=>$id);
-       $result = $this->db->get_query_result($query, $params);
+       $result = $this->db->query($query, $params);
 
        if(count($result) > 0) {
             $data = $result[0];
