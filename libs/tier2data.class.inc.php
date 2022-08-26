@@ -191,30 +191,14 @@ class tier2data {
      * @param string $units The new estimated outcome units (optional)
      * @return type
      */
-    public function update_estimated_outcomes($estimated_outcome_1 = "", $estimated_outcome_2 = "", $units=null) {
-        
-        $tier2id = $this->id;
-        $query = "update tier2data set estimated_outcome_1=:est1 where id=:tier2id";
-        $params = array("tier2id"=>$tier2id, "est1"=>$estimated_outcome_1);
-        
-        if($estimated_outcome_2 != null) {
-            $query = "update tier2data set estimated_outcome_1=:est1 , estimated_outcome_2=:est2 where id=:tier2id";
-            $params = array("tier2id"=>$tier2id, "est1"=>$estimated_outcome_1, "est2"=>$estimated_outcome_2);
-            
-            if($units != null) {
-                $query = "update tier2data set estimated_outcome_1=:est1 , estimated_outcome_2=:est2, estimated_outcome_units=:units where id=:tier2id";
-                $params = array("tier2id"=>$tier2id, "est1"=>$estimated_outcome_1, "est2"=>$estimated_outcome_2, "units"=>$units);
-            } else {
-                // Don't add units
-            }
-        } else {
-            // Don't add second outcome
-        }
-        
-        
-        
-        $result = $this->db->get_update_result($query, $params);
-        return $result;
+    public function update_estimated_outcomes($estimated_outcome_1 = "", $estimated_outcome_2 = "blah", $units=null) {
+	$sql = "UPDATE tier2data SET estimated_outcome_1=:est1 , estimated_outcome_2=:est2, estimated_outcome_units=:units WHERE id=:tier2id";
+	$params = array("tier2id"=>$this->id, 
+		"est1"=>$estimated_outcome_1, 
+		"est2"=>$estimated_outcome_2, 
+		"units"=>$units
+	);
+	return $this->db->get_update_result($sql, $params);
     }
     
     

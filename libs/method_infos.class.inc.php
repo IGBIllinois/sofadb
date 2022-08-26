@@ -209,7 +209,8 @@ class method_infos {
         if($method->get_method_type_num() == METHOD_DATA_SEX_ID) {
             // Sex method
             
-            $selected = false;
+		$selected = false;
+		$estimated_outcome = "";
             if($tier2id != null) {
                 $tier2 = new tier2data($db, $tier2id);
                 $estimated_outcome = $tier2->get_estimated_outcome_1();

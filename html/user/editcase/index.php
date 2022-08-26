@@ -185,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         
         // Add Left/Right data, if applicable
-        if($_POST['LR'] != null) {
+        if(isset($_POST['LR']) && $_POST['LR'] != null) {
         
             $lr = $_POST['LR'];
             // process left/right options
@@ -203,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         
         
-        if($_POST['check_select'] != null) {
+        if(isset($_POST['check_select']) && $_POST['check_select'] != null) {
             // used for checkbox arrays, like Rios & Cardoso
 
             $check_select = $_POST['check_select'];

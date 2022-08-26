@@ -61,13 +61,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $est1 = null;
             $est2 = null;
             $units = null;
-
             if(isset($_POST['estimated_outcome_1'])) {
-                $est1 = $_POST['estimated_outcome_1'];
+                $est1 = trim($_POST['estimated_outcome_1']);
             }
 
             if(isset($_POST['estimated_outcome_2'])) {
-                $est2 = $_POST['estimated_outcome_2'];
+                $est2 = trim($_POST['estimated_outcome_2']);
             }
 
             if(isset($_POST['estimated_outcome_units'])) {
@@ -79,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if(($est1 != null && $est1 !=  "" && !is_numeric($est1)) ||
                         ($est2 != null && $est2 !=  "" && !(is_numeric($est2)))) {
                     $numerrors++;
-		    $errors[] = "Estimated outcome must be numeric.";
+		    $errors[] = "Estimated outcome must empty or numeric.";
 
                 } 
             } 
