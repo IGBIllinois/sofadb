@@ -191,7 +191,7 @@ class tier2data {
      * @param string $units The new estimated outcome units (optional)
      * @return type
      */
-    public function update_estimated_outcomes($estimated_outcome_1, $estimated_outcome_2 = null, $units=null) {
+    public function update_estimated_outcomes($estimated_outcome_1 = "", $estimated_outcome_2 = "", $units=null) {
         
         $tier2id = $this->id;
         $query = "update tier2data set estimated_outcome_1=:est1 where id=:tier2id";

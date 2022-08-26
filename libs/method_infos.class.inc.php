@@ -257,7 +257,9 @@ class method_infos {
             $output .= $prompt;
         } else if($method->get_method_type_num() == METHOD_DATA_AGE_ID) {
             // Age method
-            
+
+		$estimated_outcome_1 = "";
+		$estimated_outcome_2 = "";	
             if($tier2id != null) {
                 $tier2 = new tier2data($db, $tier2id);
                 $estimated_outcome_1 = $tier2->get_estimated_outcome_1();
@@ -269,10 +271,10 @@ class method_infos {
 
             $estimated_outcomes = $method->get_estimated_outcomes();
 
-            $output .= ("<BR>Estimated Age range from this method:");
+            $output .= ("<br>Estimated Age range from this method:");
             $output .= ("<input type='number' step='0.001' size=6 id='estimated_outcome_1' name='estimated_outcome_1' value='$estimated_outcome_1'> to ");
             $output .= ("<input type='number' step='0.001' size=6 id='estimated_outcome_2' name='estimated_outcome_2' value='$estimated_outcome_2'> years");
-            $output .= ("<BR>");
+            $output .= ("<br>");
             $output .= $prompt;
 
         } else if($method->get_method_type_num() == METHOD_DATA_ANCESTRY_ID) {
@@ -661,7 +663,7 @@ class method_infos {
         } else {
             // Don't reset size for text field
         }
-        $output .= "<table class=' td_spaced'>";
+        $output = "<table class=' td_spaced'>";
         foreach($options as $op) {
             $output .= "<tr><td class='td_spaced width_250px'>".$op->get_value().": </td><td class='align_left'><input style='width:".$size."em' type='$typename' ".(($tname == USER_INTERACTION_NUMERIC_ENTRY) ? " step='0.001'" : "")." name=output_data[][".$op->get_id()."] ".(($value != "") ? ("value ='$value'") : "" )."></input></td>";
         }
@@ -842,7 +844,7 @@ class method_infos {
                 }
             }
 
-            $output .= "<table class=' td_spaced'>";
+            $output = "<table class=' td_spaced'>";
             foreach($options as $op) {
 
                 $output .= "<tr><td style='width:250px'>".$op->get_value().": </td></tr><tr><td class='align_left'><textarea  rows=10 cols=50 name=output_data[][".$op->get_id()."]>$value</textarea></td></tr>";
@@ -1015,7 +1017,7 @@ class method_infos {
                         $ref_list[] = array($ref->get_id(), $ref->get_reference_name());
                     }
                     $selected_refs = array();
-                    if($tier2 != null) {
+                    if(isset($tier2) && $tier2 != null) {
                         $sel_ref_list = $tier2->get_selected_references($mi->get_id());
 
                         foreach($sel_ref_list as $sel_ref) {

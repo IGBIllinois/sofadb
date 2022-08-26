@@ -64,37 +64,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if(isset($_POST['estimated_outcome_1'])) {
                 $est1 = $_POST['estimated_outcome_1'];
-            } else {
-                // No estimated outcome 1 given
             }
 
             if(isset($_POST['estimated_outcome_2'])) {
                 $est2 = $_POST['estimated_outcome_2'];
-            } else {
-                // No estimated outcome 2 given
             }
 
             if(isset($_POST['estimated_outcome_units'])) {
                 $units = $_POST['estimated_outcome_units'];
-            } else {
-                // No estimated outcome units given
             }
-
-
 
             if($method->get_method_type_num() == METHOD_DATA_STATURE_ID ||
                     $method->get_method_type_num() == METHOD_DATA_AGE_ID) {
                 if(($est1 != null && $est1 !=  "" && !is_numeric($est1)) ||
                         ($est2 != null && $est2 !=  "" && !(is_numeric($est2)))) {
                     $numerrors++;
-                    $errors[] = "Estimated outcome must be numeric.";
+		    $errors[] = "Estimated outcome must be numeric.";
 
-                } else {
-                    // estimated outcome data is correctly formatted
-                }
-            } else {
-                // No estimated outcome data needed
-            }
+                } 
+            } 
 
             // Check for errors
             // $_POST[output_data] is the results of all the data given

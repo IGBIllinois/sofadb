@@ -58,30 +58,32 @@ class admin_note {
         
     }
     
-    // Static functions
+	// Static functions
     
-    /** Adds a new admin note
-     * 
-     * @param db $db The database object
-     * @param int $user_id ID of the user adding the message
-     * @param string $message Text of the message
-     */
-    public static function add_admin_note($db, $user_id, $message) {
-        $query = "INSERT INTO admin_notes (user_id, message, date_added) VALUES (:user_id, :message, NOW())";
-        $params = array("user_id"=>$user_id,
-                        "message"=>$message);
+	/** Adds a new admin note
+	* 
+	* @param db $db The database object
+	* @param int $user_id ID of the user adding the message
+	* @param string $message Text of the message
+	*/
+	public static function add_admin_note($db, $user_id, $message) {
+		$query = "INSERT INTO admin_notes (user_id, message, date_added) VALUES (:user_id, :message, NOW())";
+		$formatted_message = str_replace("\n", "<br />",$message);
+		$params = array("user_id"=>$user_id,
+                        "message"=>$formatted_message);
         
-        $result = $db->get_insert_result($query, $params);
+		$result = $db->get_insert_result($query, $params);
         
-        if($result > 0) {
-            $return_result = array("RESULT"=>TRUE,
+		if($result > 0) {
+			$return_result = array("RESULT"=>TRUE,
                                     "MESSAGE"=>"The note has been added.",
                                     "id"=>$result);
-        } else {
-            $return_result = array("RESULT"=>FALSE,
+		}
+		else {
+			$return_result = array("RESULT"=>FALSE,
                                     "MESSAGE"=>"There was an error. The note has not been added.");
-        }
-    }
+		}
+	}
     
     /** Deletes an admin note
      * 

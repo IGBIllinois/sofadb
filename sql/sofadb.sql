@@ -4,7 +4,7 @@ SET GLOBAL event_scheduler = ON;
 CREATE TABLE `admin_notes` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) unsigned DEFAULT NULL,
-  `message` varchar(500) DEFAULT NULL,
+  `message` TEXT DEFAULT NULL,
   `date_added` timestamp NOT NULL DEFAULT current_timestamp(),
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -790,6 +790,7 @@ public function submit_case($submitstatus) {
      * @return a list of case objects that fit the criteria
      */
     public static function search_cases($db, $memberid, $case_data, $methods=null, $unsubmitted = 0) {
+	    print_r($case_data);
         $submission_status = " where submissionstatus = 1 ";
         if($unsubmitted == 1) {
             // get submitted and unsubmitted

@@ -5,7 +5,6 @@
 
 $title = "Forensic Anthropology Case Database (FADAMA) - Edit Case";
 require_once('../../include/header_user.php');
-
 ?>
 <br/>
   <h1 class="cntr">Edit Case Information</h1>
