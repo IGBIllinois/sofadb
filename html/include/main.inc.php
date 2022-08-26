@@ -1,9 +1,5 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once __DIR__ .'/../../vendor/autoload.php';
 require_once(__DIR__ .'/../../libs/functions.class.inc.php');
 
@@ -20,7 +16,6 @@ $filepath = __DIR__ . "$ds..$ds..$ds";
 
 require_once($filepath. "conf". $ds. 'settings.inc.php');
 require_once($filepath . "conf". $ds. 'app.inc.php');
-
 
 date_default_timezone_set(TIMEZONE);
 
@@ -41,6 +36,15 @@ function my_autoloader($class_name) {
     }
 }
 
+spl_autoload_register('my_autoloader');
+
+if (settings::get_debug()) {
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+}
+
+
 if(isset($_SERVER['CONTEXT_PREFIX'])) {
     $root_url = $_SERVER['CONTEXT_PREFIX'];
     
@@ -48,7 +52,6 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
     $root_url = ROOT_URL;
 }
 
-spl_autoload_register('my_autoloader');
 
 // Initialize Twig
 try {

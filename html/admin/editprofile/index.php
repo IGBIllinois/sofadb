@@ -74,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
 	
 	
 	// Check for a password and match it against the confirmed password:
+	$pwdflag = 0;
 	if (!empty($_POST['psword1']) && !$_POST['psword1'] == "") {
             $pwdflag = 1;
             if ($_POST['psword1'] != $_POST['psword2']) {
