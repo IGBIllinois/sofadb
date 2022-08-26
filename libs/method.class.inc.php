@@ -463,10 +463,11 @@ class method {
         // $active = -1: Show all methods
         
         $active_test = ($active >= 0) ? " where active=:active " : "";
-        $query = "SELECT id from methods $active_test  ORDER BY $order ";
+	$query = "SELECT id from methods $active_test  ORDER BY $order ";
+	$params = array();
         if($active >= 0) {
             // Only show active methods?
-            $params = array("active"=>$active);
+            $params["active"] =$active;
         } else {
             
         }

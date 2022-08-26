@@ -50,36 +50,6 @@ echo("<div id='memberregion'> <h2 style='text-align:center'>List of methods</h2>
 
 echo("<a href='add_method.php'>Add new method</A><BR>");
 echo("<BR><BR>");
-if ($pages > 1) {
-
-//What number is the current page?
-
-
-if ($current_page != 1) {
-   // Create a Previous Link
-    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
-            . "<input type=submit value='Previous Page'>"
-            . "<input type=hidden name='p' value=$pages>"
-            . "<input type=hidden name='s' value=".($start-$pagerows).">"
-            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
-            . "</form>");
-} else {
-    
-}
-
-if ($current_page != $pages) {
-//Create a Next link
-    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
-            . "<input type=submit value='Next Page'>"
-            . "<input type=hidden name='p' value=$pages>"
-            . "<input type=hidden name='s' value=".($start+$pagerows).">"
-            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
-            . "</form>");
-} else {
-}
-
-
-}
 
 echo '<div class="scroll"><table id="hortable" summary="List of methods">
     <thead>

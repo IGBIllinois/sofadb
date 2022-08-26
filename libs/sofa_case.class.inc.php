@@ -790,7 +790,6 @@ public function submit_case($submitstatus) {
      * @return a list of case objects that fit the criteria
      */
     public static function search_cases($db, $memberid, $case_data, $methods=null, $unsubmitted = 0) {
-	    print_r($case_data);
         $submission_status = " where submissionstatus = 1 ";
         if($unsubmitted == 1) {
             // get submitted and unsubmitted
@@ -799,7 +798,7 @@ public function submit_case($submitstatus) {
         $query = "SELECT id from cases ".$submission_status."  ";
         $param_string = "";
         $conjunction = " AND ";
-        
+       	$params = array(); 
         // determine the conjuction to use ("AND" if matching every criteria, "OR" if any criteria can match)
         if($case_data['conjunction'] == 2) {
             $conjunction = " OR ";

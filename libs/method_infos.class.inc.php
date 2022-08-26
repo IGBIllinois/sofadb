@@ -279,7 +279,9 @@ class method_infos {
             $output .= $prompt;
 
         } else if($method->get_method_type_num() == METHOD_DATA_ANCESTRY_ID) {
-            // Ancestry method
+		// Ancestry method
+		$estimated_outcome_1 = null;
+		$estimated_outcome_2 = null;
             if($tier2id != null) {
                 $tier2 = new tier2data($db, $tier2id);
                 $estimated_outcome_1 = $tier2->get_estimated_outcome_1();
@@ -883,11 +885,11 @@ class method_infos {
 
         $value = '';
         $method_info = new method_infos($db, $method_infos_id);
-        $options = $method_info->get_method_info_options();
+	$options = $method_info->get_method_info_options();
+	$t3_opt_ids = array();
         if($tier2id !=null) {
             $tier2 = new tier2data($db, $tier2id);
             $t3s = $tier2->get_tier3data();
-            $t3_opt_ids = array();
             foreach($t3s as $t3) {
                 $t3_opt_ids[] = $t3->get_method_info_option_id();
             }

@@ -2,42 +2,35 @@
 $title = "Forensic Anthropology Case Database (FADAMA) - Search";
 require_once('../../include/header_user.php');
 require_once('../../include/session.inc.php') ;
-
- 
+require_once(__DIR__ . "/exportdata.php"); 
 ?>
 
-<BR/>
-  <h1 class="cntr">Search Cases</h1>
-  <center>(<a target='blank' href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Downloaded_data_sheet'>Search tutorial</a>)</center><BR>
+<br/>
+<h1 class="cntr">Search Cases</h1>
+<center>(<a target='blank' href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Downloaded_data_sheet'>Search tutorial</a>)</center><BR>
 
- <div id="searchregion"> 
-
+<div id="searchregion"> 
 <div name="searchresults">
- <?php 
+<?php 
   
- // Get the member id from the session
- $memberid=$session->get_var('id');
+// Get the member id from the session
+$memberid=$session->get_var('id');
 
-  $error=0;
+$error=0;
   
-  if (isset($_POST['search'])){
-    unset($_SESSION['searched']);
-    unset($_SESSION['searchstring']);
-  }
+if (isset($_POST['search'])){
+	unset($_SESSION['searched']);
+}
   
-  if ($_SERVER['REQUEST_METHOD'] == 'POST') {  
-       require('exportdata.php');
-  }
-		  
-  if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['exportsubmit'])){//not export
-	  $first=0;
-	  $race_array = array();
-	  if (isset($_POST['race'])) {
-          	foreach($_POST['race'] as $race=>$value) {
-              		$race_array[$value] = $race;
-	  	}
-	  }
-          $case_data = array(
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['exportsubmit'])){//not export
+	$first=0;
+	$race_array = array();
+	if (isset($_POST['race'])) {
+		foreach($_POST['race'] as $race=>$value) {
+			$race_array[$value] = $race;
+		}
+	}
+	$case_data = array(
               "memberId"=>$_POST['mID'],
               "caseYear"=>$_POST['cyear'],
               "yearRange"=>$_POST['yearrange'],
@@ -62,25 +55,23 @@ require_once('../../include/session.inc.php') ;
               "prac_join"=>$_POST['prac_join'],
               "unsubmitted"=>isset($_POST['unsubmitted']) ? 1:0
                   );
-          
-             $methods = ($_POST['method_select']);
-             $method_list = array();
-             foreach($methods as $index=>$result) {
-                 foreach($result as $id=>$option) {
-                     if($id != 0) {
-                         $method_list[] = $id;
-                     }
-                 }
-             }
-            $case_results = sofa_case::search_cases($db, $memberid, $case_data, $method_list);
-            echo("<BR>");
+		$method_list = array();
+		if (isset($_POST['method_select'])) {
+			$methods = ($_POST['method_select']);
+             		foreach($methods as $index=>$result) {
+				foreach($result as $id=>$option) {
+					if($id != 0) {
+						$method_list[] = $id;
+					}
+				}
+			}
+		}
+
+	$case_results = sofa_case::search_cases($db, $memberid, $case_data, $method_list);
+	echo("<BR>");
 
         if(!$error){
 
-            if (isset($_SESSION['searchstring']) && isset($_SESSION['searched'])){
-                $searchstring=$_SESSION['searchstring'];
-
-            }
 
             $pagerows = PAGEROWS;
 
@@ -147,29 +138,6 @@ require_once('../../include/session.inc.php') ;
 
                 echo "<p class='dbresults'>Total number of search results: $cases. Showing records  $startingrecord - $endingrecord </p>";
                 echo("<BR>");
-                if ($current_page != 1) {
-                   // Create a Previous Link
-                    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
-                            . "<input type=submit value='Previous Page'>"
-                            . "<input type=hidden name='p' value=$pages>"
-                            . "<input type=hidden name='s' value=".($start-$pagerows).">"
-                            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
-                            . "</form>");
-                } else {
-
-                }
-
-                if ($current_page != $pages) {
-                //Create a Next link
-                    echo("<form class='inline' method=post action=index.php name='regsubmit'>"
-                            . "<input type=submit value='Next Page'>"
-                            . "<input type=hidden name='p' value=$pages>"
-                            . "<input type=hidden name='s' value=".($start+$pagerows).">"
-                            . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
-                            . "</form>");
-                } else {
-                }
-
                 echo '<div class="scroll"><table id="hortable" summary="List of cases">
                     <thead>
                         <tr>
@@ -210,9 +178,8 @@ require_once('../../include/session.inc.php') ;
                         . "<input type=hidden name='s' value=".($start-$pagerows).">"
                         . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
                         . "</form>");
-            } else {
-
             }
+
 
             if ($current_page != $pages) {
             //Create a Next link
@@ -222,11 +189,9 @@ require_once('../../include/session.inc.php') ;
                         . "<input type=hidden name='s' value=".($start+$pagerows).">"
                         . "<input type=hidden name=querystring value='".$session->get_var('querystring')."'>"
                         . "</form>");
-            } else {
             }
 
             $_SESSION['searched']=1;
-            $_SESSION['searchstring']=$searchstring;
 
 
         }//end on error
