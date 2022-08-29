@@ -41,7 +41,9 @@ $error_html = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST'  ) {
     // New search parameters
     $search_values = array();
-
+	foreach ($_POST as &$var) {
+		$var = trim($var);
+	}
     $id = (empty($_POST['mID']) ? null : $_POST['mID']);
     $first_name = (empty($_POST['fname']) ? null : $_POST['fname']);
     $last_name = (empty($_POST['lname']) ? null : $_POST['lname']);
@@ -194,16 +196,16 @@ if(!isset($femail)) $femail="";
 
 <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend>Search By Identification Information</legend>
 
-    <br><label class="label" for="fname">First Name</label><input id="fname" type="text" name="fname" size="30" maxlength="30" value="<?php echo $ffname; ?>">
+    <br><label class="label" for="fname">First Name</label><input id="fname" type="text" name="fname" size="30" maxlength="30" value="<?php echo $first_name; ?>">
     <br>
   
-    <label class="label" for="lname">Last Name</label><input id="lname" type="text" name="lname" size="30" maxlength="40" value="<?php echo $flname; ?>">
+    <label class="label" for="lname">Last Name</label><input id="lname" type="text" name="lname" size="30" maxlength="40" value="<?php echo $last_name; ?>">
     
     
     <br> 
-    <label class="label" for="email">Email Address</label><input id="email" type="text" name="email" size="30" maxlength="60" value="<?php echo $femail; ?>" >
+    <label class="label" for="email">Email Address</label><input id="email" type="text" name="email" size="30" maxlength="60" value="<?php echo $email; ?>" >
     
-    <br/> <label class="label" for="institution">Institution</label><input id="institution" type="text" name="institution" size="30" maxlength="60" value="<?php echo $finstitution; ?>" > 
+    <br/> <label class="label" for="institution">Institution</label><input id="institution" type="text" name="institution" size="30" maxlength="60" value="<?php echo $institution; ?>" > 
 
     <br>
 
