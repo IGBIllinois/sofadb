@@ -21,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if(isset($_POST['caseid'])) {
         // Edit existing case
-	
         $case = new sofa_case($db, $_POST['caseid']);
         if($case->get_memberid() != $session->get_var('id')) {
             // No permission to view this case

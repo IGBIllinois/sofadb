@@ -66,7 +66,6 @@ $endrecord = $start + PAGEROWS;
 if ($endrecord > $num_cases) {
 	$endrecord = $num_cases;
 }
-
 $case_html = "";
 // Fetch and print all the records:
 if ($num_cases) {

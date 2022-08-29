@@ -712,16 +712,14 @@ public function submit_case($submitstatus) {
 	$sql .= "DATE_FORMAT(datesubmitted, '%M %d, %Y') AS subdat ";
 	$sql .= "FROM cases WHERE memberid=:memberid ";
 	$sql .= "AND submissionstatus>=0 ";
-	$sql .= "ORDER BY datemodified DESC ";
-
+	$sql .= "ORDER BY datemodified DESC, id ASC ";
 
         $params = array("memberid"=>$memberid);
         if($start >= 0) {
                 $sql .= "LIMIT $start, $pagerows";
 
-        }
+	}
         $result = $db->query($sql, $params);
-
         $cases = array();
         foreach($result as $case) {
                 $newcase = new sofa_case($db, $case['id']);
