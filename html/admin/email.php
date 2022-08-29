@@ -16,6 +16,9 @@ require_once "../include/header_admin.php";
   <?php 
   
    if($_SERVER['REQUEST_METHOD'] == 'POST') {
+	foreach ($_POST as &$var) {
+                $var = trim($var);
+        }
        
         $admin_email = ADMIN_EMAIL;
 
