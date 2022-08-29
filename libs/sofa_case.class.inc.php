@@ -686,7 +686,7 @@ public function submit_case($submitstatus) {
         }
 
         $result = $this->db->non_select_query($delete_case_query, $delete_case_params);
-        if(count($result) > 0) {
+        if($result) {
             return array("RESULT"=>TRUE,
                         "MESSAGE"=>"Case deleted successfully.");
         } else {

@@ -315,16 +315,14 @@ class method {
                 $text_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_TEXT_ENTRY)->get_id();
                 $number_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY)->get_id();
                 $type_query = "SELECT DISTINCT input_type from method_infos where methodid = :methodid ORDER BY FIELD(input_type,$number_type, $text_type) DESC";
-
-                $type_params =array("methodid"=>$this->id);
+		$type_params =array("methodid"=>$this->id);
 		$type_result = $this->db->query($type_query, $type_params);
             } else {
-                $type_result = array('input_type'=>$type);
+                $type_result = array(array('input_type'=>$type));
             }
 
             $text_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_TEXT_ENTRY);
-            $numeric_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY);
-            
+	    $numeric_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY);
 	    $return_array = array();
             foreach($type_result as $type) {
 		    $info_array = array();
