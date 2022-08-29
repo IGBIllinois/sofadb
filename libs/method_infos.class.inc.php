@@ -1180,7 +1180,7 @@ class method_infos {
             $typeid = input_type::get_input_id_by_name($db, USER_INTERACTION_TEXT_ENTRY);
 	    $orphan_method_infos = $method->get_method_infos_by_type($typeid);
             //$orphan_method_infos = $orphan_method_infos[$typeid];
-            foreach($orphan_method_infos as $orph_info) {
+	    foreach($orphan_method_infos[$typeid] as $orph_info) {
                 if($orph_info != null && 
                         $orph_info->get_parent_id() == null &&
                         $method->get_method_info_type() == METHOD_INFO_TYPE_RHINE) {

@@ -325,21 +325,21 @@ class method {
             $text_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_TEXT_ENTRY);
             $numeric_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY);
             
-            $return_array = array();
+	    $return_array = array();
             foreach($type_result as $type) {
-                $info_array = array();
-                $input_type = $type['input_type'];
-                $infos_query = "SELECT id from method_infos where methodid= :methodid and input_type=:type";
-                $infos_params = array("methodid"=>$this->id, "type"=>$input_type);
-                $info_result = $this->db->query($infos_query, $infos_params);
-                
-                foreach($info_result as $info) {
-                    $method_infos = new method_infos($this->db, $info['id']);
-                    $info_array[] = $method_infos;
-                }
-                $return_array[$input_type] = $info_array;
-            }
-            return $return_array;
+		    $info_array = array();
+		    $input_type = $type['input_type'];
+		    $infos_query = "SELECT id from method_infos where methodid= :methodid and input_type=:type";
+		    $infos_params = array("methodid"=>$this->id, "type"=>$input_type);
+		    $info_result = $this->db->query($infos_query, $infos_params);
+
+		    foreach($info_result as $info) {
+			    $method_infos = new method_infos($this->db, $info['id']);
+			    $info_array[] = $method_infos;
+		    }
+		    $return_array[$input_type] = $info_array;
+	    }
+	    return $return_array;
         }
         
     

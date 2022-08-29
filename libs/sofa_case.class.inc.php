@@ -439,7 +439,7 @@ public function submit_case($submitstatus) {
 
 	$result = $this->db->non_select_query($q, $params);
 
-	if(count($result) == 0) {
+	if(!$result) {
 	return array("RESULT"=>FALSE,
 	"MESSAGE"=>'System Error: Could not update submit data.');
 	}
