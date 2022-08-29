@@ -218,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
         }
         
-        if($_POST['references'] != null) {
+        if(isset($_POST['references']) && ($_POST['references'] != null)) {
             // add references
 
             $sel_refs = $_POST['references'];

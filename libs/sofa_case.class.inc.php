@@ -770,7 +770,7 @@ public function submit_case($submitstatus) {
         $q = "SELECT id FROM cases WHERE memberid=:memberid AND casename=:casename AND casenumber=:casenum";
         $params = array("memberid"=>$memberid,
                         "casename"=>$casename,
-                        "casenum"=>$casenum);
+                        "casenum"=>$casenumber);
 
         $result = $db->query($q, $params);
         if(count($result) > 0) {
