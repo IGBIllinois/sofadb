@@ -39,7 +39,10 @@ class method {
     
     /** Is this method active? */
     private $active;
-    
+
+    /** Time Created */
+    private $time_created;
+
     private $db; // Database object
     
     public function __construct($db, $id = null) {
@@ -119,7 +122,9 @@ class method {
         return $this->active;
     }
     
-
+	public function get_time_created() {
+		return $this->time_created;
+	}
     /**
      * Updates a method with new data
      * 
@@ -640,7 +645,8 @@ class method {
          $this->prompt_id = $data['prompt'];
          $this->fdb = $data['fdb'];
          $this->top = $data['top'];
-         $this->active = $data['active'];
+	 $this->active = $data['active'];
+	 $this->time_created = $data['time_created'];
          }
          
      }

@@ -54,8 +54,15 @@ if(!isset($_POST['id'])) {
         $fdb = $method->get_fdb();
 } 
     
-    
-if(isset($_POST['edit_method_submit'])) {
+if(isset($_POST['delete_method'])) {
+	$id = $_POST['id'];
+	$result = method::delete_method($db, $id);
+	echo($result['MESSAGE']);
+	exit();
+
+}
+
+elseif(isset($_POST['edit_method_submit'])) {
     
     // Submit data for an edited method
     
@@ -379,6 +386,17 @@ echo(method_infos::show_method_info($db, $method->get_id()));
 echo("<BR>");
 echo("</fieldset>");
 echo("<BR>");
+$times_method_used = count(tier2data::get_used_methods($db, $id));
+$delete_alert_message = 'Are you sure you want to delete this method?\nAll method data and method infos associated with it will be deleted.';
+if($times_method_used > 0) {
+	$delete_alert_message .= '\nThis method is currently used in '.$times_method_used.' cases.';
+}
+
+echo "\n<fieldset style='border: solid 1px #000000;overflow: hidden;' class='roundedborder'><legend>Delete Method</legend>";
+echo "<form action='edit_method.php' method='post' id='delete_method_form' onsubmit=\"return confirm(\'" . $delete_alert_message. "\')\">";
+echo "<input name='id' type='hidden' value=" . $id . "/>";
+echo "<input id='delete_method' name='delete_method' type='submit' value='Delete' /> </form>";
+echo "</fieldset><br>";
 
 
 require_once "../../include/footer.php";

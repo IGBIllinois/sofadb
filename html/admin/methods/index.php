@@ -55,13 +55,13 @@ echo '<div class="scroll"><table id="hortable" summary="List of methods">
     <thead>
     	<tr>
             <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
             <th scope="col">Method</th>
             <th scope="col">Type</th>
             <th scope="col">Measurement Type</th>
             <th scope="col">Description</th>
             <th scope="col">Instructions</th>	
-            <th scope="col">Active</th>
+	    <th scope="col">Active</th>
+	    <th scope="col">Time Created</th>
         </tr>
     </thead>
     <tbody>';
@@ -70,27 +70,19 @@ echo '<div class="scroll"><table id="hortable" summary="List of methods">
 $methods = method::get_methods($db, $start, $pagerows, 'methodname, id', -1);
 foreach($methods as $method) {
     $method_id = $method->get_id();
-    $times_method_used = count(tier2data::get_used_methods($db, $method_id));
-    $delete_alert_message = 'Are you sure you want to delete this method?\nAll method data and method infos associated with it will be deleted.';
-    if($times_method_used > 0) {
-        $delete_alert_message .= '\nThis method is currently used in '.$times_method_used.' cases.';
-    }
     echo("<td>".
             "<form action='edit_method.php' name=editmethod method=POST>"
             . "<input type=hidden name='id' value='".$method->get_id()."'>"
             . "<input type=submit value=Edit>"
             . "</form></td>");
-    echo('
-	<td><form action="index.php?s='.$start.'&p='.$pages.'" method="post" id="delete_method_form" onsubmit="return confirm(\''.$delete_alert_message.'\')">
-	<input name="del_method_id" type="hidden" value="'.$method_id.'"/>
-	<input id="delete_method" name="delete_method" type="submit" value="Delete" /> </form>');
     echo("</td>".
              "<td>".$method->get_name(). "</td>".
             "<td>".$method->get_method_type()."</td>".
             "<td>".$method->get_measurement_type()."</td>".
             "<td>".$method->get_description()."</td>".
             "<td>".$method->get_instructions()."</td>".
-            "<td>".($method->get_active() ? "Active" : "Inactive")."</td>".
+	    "<td>".($method->get_active() ? "Active" : "Inactive")."</td>".
+	    "<td>" . $method->get_time_created() . "</td>" .
         "</tr>");
 }
 
