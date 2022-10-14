@@ -6,6 +6,9 @@
  * and open the template in the editor.
  */
 
+DEFINE('VERSION','1.4');
+DEFINE('WEBSITE_URL','https://github.com/IGBIllinois/sofadb');
+
 DEFINE ("PAGEROWS", 20);
 
 // Number of columns for method_info fields

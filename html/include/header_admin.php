@@ -115,6 +115,6 @@ elseif($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')
     <li><a href="<?php echo($root_url) ?>/admin/email.php">Send email</a></li> 
     <li><a href="<?php echo($root_url) ?>/admin/admin_notes.php">Admin notes</a></li>
     <li><a href="<?php echo($root_url) ?>/admin/user_view.php">User View</a></li>
-    
+    <li><a href="<?php echo($root_url) ?>/admin/about.php">About</a></li> 
   </ul>
     </div>
