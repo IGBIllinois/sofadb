@@ -354,18 +354,22 @@ class functions {
         
         $params = array ("url"=>$url,
                          "user_name"=>$name,
-                         "from_email"=>FROM_EMAIL);
+                         "from_email"=>settings::get_from_email());
 
         $html_message = functions::renderTwigTemplate('email/register_verify.html.twig', $params);
         $txt_message = functions::renderTwigTemplate('email/register_verify.txt.twig', $params);
 
-        $from = ADMIN_EMAIL;
+        $from = settings::get_admin_email();
         // Send email
 	try {
-		$emailer = new \IGBIllinois\email(MAIL_HOST, MAIL_PORT);
-                $emailer->set_replyto_emails(ADMIN_EMAIL);
+		$emailer = new \IGBIllinois\email(settings::get_smtp_host(),
+			settings::get_smtp_port(),
+			settings::get_smtp_username(),
+			settings::get_smtp_password()
+		);
+                $emailer->set_replyto_emails(settings::get_admin_email());
  		$emailer->set_to_emails($to);
-		$sent = $emailer->send_email(FROM_EMAIL,$subject,$txt_message,$html_message);
+		$sent = $emailer->send_email(settings::get_from_email(),$subject,$txt_message,$html_message);
             
         } catch(Exception $e) {
             echo($e->getTraceAsString());

@@ -44,11 +44,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Send email
 
-            $admin_email = ADMIN_EMAIL;
+            $admin_email = settings::get_admin_email();
             $to = $user_email;
-            $from = FROM_EMAIL;
+            $from = settings::get_from_email();
             $params = array("full_name"=>$full_name);
-
+		$emailer = new \IGBIllinois\email(settings::get_smtp_host(),
+                	settings::get_smtp_port(),
+	                settings::get_smtp_username(),
+        	        settings::get_smtp_password()
+	        );
+		$emailer->set_to_emails($to);
            $subject = "SOFA DB ADMIN ALERT: Delete User Account";
            $txt_message = functions::renderTwigTemplate('email/user_delete.txt.twig', $params);
            $html_message = functions::renderTwigTemplate('email/user_delete.html.twig', $params);

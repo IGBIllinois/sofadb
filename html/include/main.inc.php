@@ -17,8 +17,6 @@ $filepath = __DIR__ . "$ds..$ds..$ds";
 require_once($filepath. "conf". $ds. 'settings.inc.php');
 require_once($filepath . "conf". $ds. 'app.inc.php');
 
-date_default_timezone_set(TIMEZONE);
-
 
 /** Automatically load classes from /libs folder
  * 
@@ -37,6 +35,8 @@ function my_autoloader($class_name) {
 }
 
 spl_autoload_register('my_autoloader');
+
+date_default_timezone_set(settings::get_timezone());
 
 if (settings::get_debug()) {
         ini_set('display_errors', 1);
@@ -64,14 +64,20 @@ try {
 
 
 // database class
-$db = new \IGBIllinois\db(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD) OR die ('Could not connect to MySQL' );
+$db = new \IGBIllinois\db(settings::get_mysql_host(), 
+	settings::get_mysql_database(),
+	settings::get_mysql_user(),
+	settings::get_mysql_password(),
+	settings::get_mysql_ssl(),
+	settings::get_mysql_port()
+) OR die ('Could not connect to MySQL' );
 
 // These lines allow a user to hit the Back button and return to a previously
 // submitted form
 ini_set('session.cache_limiter','public');
 session_cache_limiter(false);
 
-$session = new \IGBIllinois\session(SESSION_NAME);
+$session = new \IGBIllinois\session(settings::get_session_name());
 
 
 // These lines allow a user to hit the Back button and return to a previously

@@ -29,11 +29,15 @@ require_once "../include/header_admin.php";
 
         $message = $_POST['emailmessage'];
         
-        $emails_array = functions::get_emails($db);
-	$emailer = new \IGBIllinois\email(MAIL_HOST, MAIL_PORT);
-	$emailer->set_replyto_emails(ADMIN_EMAIL);        
+	$emails_array = functions::get_emails($db);
+	   $emailer = new \IGBIllinois\email(settings::get_smtp_host(),
+                        settings::get_smtp_port(),
+                        settings::get_smtp_username(),
+                        settings::get_smtp_password()
+                );
+	$emailer->set_replyto_emails(settings::get_admin_email());        
         $emailer->set_bcc_emails($emails_array);
-        $retval = $emailer->send_emai(FROM_EMAIL, $subject, $message);
+        $retval = $emailer->send_email(settings::get_from_email(), $subject, $message);
         
         if( $retval == true )  
         {

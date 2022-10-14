@@ -31,7 +31,7 @@ if ( false !== ctype_xdigit( $selector ) && false !== ctype_xdigit( $validator )
                 $user->set_permission(member::PERMISSION_REQUESTED);
 
             // Send admin email
-            $admin_email = ADMIN_EMAIL;              
+            $admin_email = settings::get_admin_email();              
             $to = $admin_email;
             
             $params = array(
@@ -59,21 +59,25 @@ if ( false !== ctype_xdigit( $selector ) && false !== ctype_xdigit( $validator )
             "signature"=>$user->get_signature(),
             "signature_date"=>$user->get_signature_date());
 
-            $from= FROM_EMAIL;
+            $from= settings::get_from_email();
             $subject = "FADAMA DB ADMIN ALERT: Activate new user";
             $html_message = functions::renderTwigTemplate('email/register_admin.html.twig', $params);
             $txt_message = functions::renderTwigTemplate('email/register_admin.txt.twig', $params);
-		$emailer = new \IGBIllinois\email(MAIL_HOST, MAIL_PORT);
-		$emailer->set_replyto_emails(ADMIN_EMAIL);
+	    $emailer = new \IGBIllinois\email(settings::get_smtp_host(), 
+		    settings::get_smtp_port(),
+		    settings::get_smtp_username(),
+	    		settings::get_smtp_password()
+		);
+		$emailer->set_replyto_emails(settings::get_admin_email());
             $emailer->set_to_emails($to);
-            $retval = $emailer->send_email(FROM_EMAIL, $subject, $txt_message, $html_message);
+            $retval = $emailer->send_email(settings::get_from_email(), $subject, $txt_message, $html_message);
 
             // Send user email
             $user_to = $user->get_uname();
             $user_subject = "FADAMA Membership Request";
 
             $user_params = array("user_name"=>($user->get_firstname() . " ".$user->get_lastname()),
-                                "from_email"=>FROM_EMAIL);
+                                "from_email"=>settings::get_from_email());
             
             $user_html_message = functions::renderTwigTemplate("email/register_user.html.twig", $user_params);
             $user_txt_message = functions::renderTwigTemplate("email/register_user.txt.twig", $user_params);

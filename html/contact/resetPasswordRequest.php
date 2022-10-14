@@ -41,16 +41,20 @@ if(isset($_POST['resetsubmit'])) {
 
     $params = array ("url"=>$url,
                      "name"=>$name,
-                     "from_email"=>FROM_EMAIL);
+                     "from_email"=>settings::get_from_email());
 
     $txt_message = functions::renderTwigTemplate('email/change_password.txt.twig', $params);
     $html_message = functions::renderTwigTemplate('email/change_password.html.twig', $params);
 
     // Send email
-	$emailer = new \IGBIllinois\email(MAIL_HOST, MAIL_PORT);
-	$emailer->set_replyto_emails(ADMIN_EMAIL);
+    $emailer = new \IGBIllinois\email(settings::get_smtp_host(), 
+	    settings::get_smtp_port(),
+    		settings::get_smtp_username(),
+		settings::get_smtp_password()
+    );
+	$emailer->set_replyto_emails(settings::get_admin_email());
     $emailer->set_to_emails($to);
-    $sent = $emailer->send_email(FROM_EMAIL, $subject, $txt_message, $html_message);
+    $sent = $emailer->send_email(settings::get_from_email(), $subject, $txt_message, $html_message);
 
         if($sent) {
         echo("An email has been sent to $to with a link to reset the password for that account.");

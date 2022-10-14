@@ -30,14 +30,18 @@ if (isset($_POST['id'])) {
 
         $to = $member->get_uname();
         $params = array("username"=>($member->get_firstname() . " " . $member->get_lastname()));
-        $from_email = FROM_EMAIL;
+        $from_email = settings::get_from_email();
         $subject = "FADAMA Membership Denied";
         $txt_message = functions::renderTwigTemplate('email/request_denied.txt.twig', $params);
         $html_message = functions::renderTwigTemplate('email/request_denied.html.twig', $params);
-	$emailer = new \IGBIllinois\email(MAIL_HOST, MAIL_PORT);
-	$emailer->set_replyto_emails(ADMIN_EMAIL);
+	$emailer = new \IGBIllinois\email(settings::get_smtp_host(), 
+		settings::get_smtp_port(),
+		settings::get_smtp_username(),
+		settings::get_smtp_password()
+	);
+	$emailer->set_replyto_emails(settings::get_admin_email());
         $emailer->set_to_emails($to);
-        $retval = $emailer->send_email(FROM_EMAIL,$subject,$txt_message,$html_message);
+        $retval = $emailer->send_email(settings::get_from_email(),$subject,$txt_message,$html_message);
         
         
        if( $retval == true )  {
@@ -66,15 +70,20 @@ if (isset($_POST['id'])) {
         } else {
 
             $to = $member->get_uname();
-            $from_email = FROM_EMAIL;
+            $from_email = settings::get_from_email();
             $subject = "FADAMA Membership Approved";
 
             $params = array("url"=>($_SERVER['HTTP_HOST']. $_SERVER['CONTEXT_PREFIX']));
             $html_message = functions::renderTwigTemplate("email/request_approved.html.twig", $params);
             $txt_message = functions::renderTwigTemplate("email/request_approved.txt.twig", $params);
+		$emailer = new \IGBIllinois\email(settings::get_smtp_host(),
+                settings::get_smtp_port(),
+                settings::get_smtp_username(),
+                settings::get_smtp_password()
+        	);
 
             $emailer->set_to_emails($to);
-            $retval = $emailer->send_email(FROM_EMAIL,$subject,$txt_message,$html_message);
+            $retval = $emailer->send_email($from_email,$subject,$txt_message,$html_message);
 
             if( $retval == true )  
             {

@@ -48,9 +48,9 @@ require_once "../include/header_general.php";
                 }
                 echo("</div>");
             } else {
-             $admin_email = ADMIN_EMAIL;
+             $admin_email = settings::get_admin_email();
              $to = $admin_email;
-             $from = FROM_EMAIL;
+             $from = settings::get_from_email();
 
             $subject = "SOFA DB ADMIN ALERT: Comments and Questions";
             $message = $_POST['emailmessage'];
@@ -58,8 +58,12 @@ require_once "../include/header_general.php";
 
             $reply_emails = array();
 
-		$emailer = new \IGBIllinois\email(MAIL_HOST, MAIL_PORT);
-		$emailer->set_replyto_emails(ADMIN_EMAIL);	    
+	    $emailer = new \IGBIllinois\email(settings::get_smtp_host(), 
+		    settings::get_smtp_port(),
+	    	settings::get_smtp_username(),
+		settings::get_smtp_password()
+	    );
+		$emailer->set_replyto_emails(settings::get_admin_email());	    
 	        $emailer->set_to_emails($to);
 
             $retval = $emailer->send_email($from,$subject,$emailmessage);

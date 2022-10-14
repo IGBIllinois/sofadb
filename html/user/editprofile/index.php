@@ -32,9 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $html_message = functions::renderTwigTemplate('email/user_delete_self_request.html.twig', $params);
             $txt_message = functions::renderTwigTemplate('email/user_delete_self_request.txt.twig', $params);
             
-	    $emailer = new \IGBIllinois\email(MAIL_HOST, MAIL_PORT);
-	    $emailer->set_replyto_emails(ADMIN_EMAIL);
-            $emailer->set_to_emails(ADMIN_EMAIL);
+	    $emailer = new \IGBIllinois\email(settings::get_smtp_host(),
+                        settings::get_smtp_port(),
+                        settings::get_smtp_username(),
+                        settings::get_smtp_password()
+                );
+	    $emailer->set_replyto_emails(settings::get_admin_email());
+            $emailer->set_to_emails(settings::get_admin_email());
 
             $retval = $emailer->send_email($from, $subject, $txt_message, $html_message);
 

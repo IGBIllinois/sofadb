@@ -52,7 +52,7 @@ class settings {
 		if (defined("DB_HOST")) {
 			return DB_HOST;
 		}
-		return self::MYSQL_HOST;
+		return self::DB_HOST;
 
 	}
 
@@ -65,7 +65,7 @@ class settings {
 
 	public static function get_mysql_password() {
 		if (defined("DB_PASSWORD")) {
-			return MYSQL_PASSWORD;
+			return DB_PASSWORD;
 		}
 		return false;
 	}

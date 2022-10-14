@@ -2,7 +2,7 @@
 require_once("main.inc.php");
 
  if($session == null) {
-     $session=new \IGBIllinois\session(SESSION_NAME);
+     $session=new \IGBIllinois\session(settings::get_session_name());
  }
 $login_user = "";
 
@@ -23,7 +23,7 @@ if (($session->get_var('loggedin'))) {
         header('Location: ' .  $_SERVER['CONTEXT_PREFIX']);
         exit();
     }
-    elseif (time() > (intval($session->get_var('timeout')) + intval(SESSION_TIMEOUT))) {
+    elseif (time() > (intval($session->get_var('timeout')) + intval(settings::get_session_timeout()))) {
         // Timed out
         header('Location: '.$root_url.'/logout.php');
     }

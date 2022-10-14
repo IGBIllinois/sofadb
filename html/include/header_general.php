@@ -16,7 +16,7 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
        //session_start();
       require_once("main.inc.php"); 
       require_once("session.inc.php"); 
-      $session = new \IGBIllinois\session(SESSION_NAME);
+      $session = new \IGBIllinois\session(settings::get_session_name());
   }
     require_once(__DIR__. "/../../conf/settings.inc.php");
     
