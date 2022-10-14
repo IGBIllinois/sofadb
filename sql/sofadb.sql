@@ -126,6 +126,7 @@ CREATE TABLE `methods` (
   `active` tinyint(1) DEFAULT NULL,
   `top` tinyint(1) DEFAULT NULL,
   `fdb` tinyint(1) DEFAULT NULL,
+  `time_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -137,6 +138,7 @@ CREATE TABLE `method_infos` (
   `option_header` varchar(100) DEFAULT NULL,
   `input_type` int(10) unsigned DEFAULT NULL,
   `parent_id` int(10) unsigned DEFAULT NULL,
+  `time_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -199,6 +201,7 @@ CREATE TABLE `tier2data` (
   `estimated_outcome_1` varchar(100) DEFAULT NULL,
   `estimated_outcome_2` varchar(100) DEFAULT NULL,
   `estimated_outcome_units` varchar(50) DEFAULT NULL,
+  `time_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
    PRIMARY KEY (`id`),
    KEY `memberid` (`memberid`,`caseid`,`methodid`),
    KEY `methodtype` (`methodtype`)
@@ -209,6 +212,7 @@ CREATE TABLE `tier3data` (
   `tier2id` int(11) DEFAULT NULL,
   `value` text DEFAULT NULL,
   `method_info_option_id` int(10) unsigned DEFAULT NULL,
+  `time_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

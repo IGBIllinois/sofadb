@@ -8,7 +8,6 @@ require_once "../include/header_admin.php";
 ?>
 
 <div id="memberregion">
-<div class="scroll">
 <table id='hortable'>
 	<tbody>
 		<tr><td>Code Website</td></td><td><a href='<?php echo settings::get_website_url(); ?>' target='_blank'><?php echo settings::get_website_url(); ?></a></td></tr>
@@ -47,7 +46,6 @@ require_once "../include/header_admin.php";
 		<tr><td>ADMIN_EMAIL</td><td><?php echo implode(",",settings::get_admin_email()); ?></td></tr>
 	</tbody>
 </table>
-</div>
 <?php 
 require_once("../include/footer.php");
 ?>
