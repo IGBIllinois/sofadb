@@ -163,7 +163,7 @@ class method_infos {
     * $return int The number of options removed
     */
    public function delete_option($option_id) {
-       $query = "DELETE FROM method_info_options where id=:id";
+       $query = "DELETE FROM method_info_options where id=:id LIMIT 1";
        $params = array("id"=>$option_id);
        
        $result = $this->db->non_select_query($query, $params);

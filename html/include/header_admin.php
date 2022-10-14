@@ -72,8 +72,14 @@ elseif($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')
 
 
 <body>
-<div id="top" class='header'>
+<?php
+if (settings::get_debug()) {
+	echo "<div class='debug'>DEBUG MODE - Errors will be shown</div>";
 
+}
+
+?>
+<div id='top' class='header'>
     <div class='header_logo'>
             <img class='align_left' src="<?php echo($root_url) ?>/images/header.png">
     </div>

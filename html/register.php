@@ -41,6 +41,13 @@ require_once("include/main.inc.php");
 </head>
 
 <body>
+<?php
+if (settings::get_debug()) {
+        echo "<div class='debug'>DEBUG MODE - Errors will be shown</div>";
+
+}
+?>
+
 <div id="top" class='header'>
 
     <div class='header_logo'>

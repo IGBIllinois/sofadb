@@ -70,6 +70,12 @@ if(!$member->get_agree_to_terms()) {
 
 
 <body>
+<?php
+if (settings::get_debug()) {
+        echo "<div class='debug'>DEBUG MODE - Errors will be shown</div>";
+
+}
+?>
 <div id="top" class='header'>
 
     <div class='header_logo'>

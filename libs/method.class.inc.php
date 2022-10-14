@@ -411,7 +411,7 @@ class method {
             $method_info->delete_option($option->get_id());
         }
         
-        $query = "DELETE FROM method_infos where id = :method_info_id";
+        $query = "DELETE FROM method_infos where id = :method_info_id LIMIT 1";
         $params = array("method_info_id"=>$method_info_id);
         $result = $this->db->non_select_query($query, $params);
         
@@ -602,7 +602,7 @@ class method {
             $del_method->delete_method_info($info->get_id());
         }
         
-        $del_query = "DELETE FROM methods where id = :method_id";
+        $del_query = "DELETE FROM methods where id = :method_id LIMIT 1";
         $del_params = array("method_id"=>$method_id);
 
         $result = $db->non_select_query($del_query, $del_params);

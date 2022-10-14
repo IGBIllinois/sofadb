@@ -1177,3 +1177,14 @@ a.pagination_button {
 a.pagination_button:hover {
 	background-color: #0000FF;
 }
+
+.debug {
+	background-color:#ff0000; 
+	width: 100%;
+	height: 30px;
+	font-weight: bold;
+	font-size: 18px;
+	color: black;
+
+}
+

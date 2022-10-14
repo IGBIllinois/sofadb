@@ -56,6 +56,12 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
 </head>
 
 <body OnLoad="document.login.email.focus();">
+<?php
+if (settings::get_debug()) {
+        echo "<div class='debug'>DEBUG MODE - Errors will be shown</div>";
+
+}
+?>
 <div id="top" class='header'>
 
     <div class='header_logo'>
