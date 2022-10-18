@@ -788,6 +788,7 @@ public function submit_case($submitstatus) {
      * @return a list of case objects that fit the criteria
      */
     public static function search_cases($db, $memberid, $case_data, $methods=null, $unsubmitted = 0) {
+	    print_r($case_data);
         $submission_status = " where submissionstatus = 1 ";
         if($unsubmitted == 1) {
             // get submitted and unsubmitted
@@ -970,7 +971,7 @@ public function submit_case($submitstatus) {
         }
         
         // Race
-        // $case_data['race'] is an array of "idrace$value" as keys
+	// $case_data['race'] is an array of "idrace$value" as keys
         if ($case_data['race'] != null) {
             $race_string = "";
             if($param_string != "") {
@@ -994,7 +995,7 @@ public function submit_case($submitstatus) {
         
         $est_string = "";
         $est_join = " AND ";
-        if($case['est_join'] == 2) {
+        if($case_data['est_join'] == 2) {
             $est_join = " OR ";
         }
         // Estimated sex
@@ -1082,15 +1083,14 @@ public function submit_case($submitstatus) {
         $query .= $param_string;
 
         $query .= " ORDER BY id ";
-        
         $result = $db->query($query, $params);
         $results = array();
         
         foreach($result as $casedata) {
             $case = new sofa_case($db, $casedata['id']);
-            $results[] = $case;
+	    $results[] = $case;
+	    
         }
-        
         return $results;
 
 }
@@ -1838,8 +1838,8 @@ public function submit_case($submitstatus) {
         $this->faage2 = $casedata['faage2'];
         $this->faageunits = $casedata['faageunits'];
         $this->faageunits2 = $casedata['faageunits2'];
-        $this->faage_notes = $casedata['faage_notes'];
-        $this->faancestryas = $casedata['faancestryas'];
+	$this->faage_notes = $casedata['faage_notes'];
+	$this->faancestryas = $casedata['faancestryas'];
         $this->faancestryeuro = $casedata['faancestryeuro'];
         $this->faancestryaf = $casedata['faancestryaf'];
         $this->faancestryhi = $casedata['faancestryhi'];
