@@ -1223,10 +1223,14 @@ public function submit_case($submitstatus) {
         // Add methods to header row
         $method_info_ids = $headerrow2; // for proper order of method_infos
 
+	$sx_methods = array();
+	$age_methods = array();
+	$anc_methods = array();
+	$stat_methods = array();
         $sx_methods = method::get_methods_by_type($db, METHOD_DATA_SEX_ID);
-        $age_methods = method::get_methods_by_type($db, METHOD_DATA_AGE_ID);
-        $anc_methods = method::get_methods_by_type($db, METHOD_DATA_ANCESTRY_ID);
-        $stat_methods = method::get_methods_by_type($db, METHOD_DATA_STATURE_ID);
+        //$age_methods = method::get_methods_by_type($db, METHOD_DATA_AGE_ID);
+        //$anc_methods = method::get_methods_by_type($db, METHOD_DATA_ANCESTRY_ID);
+        //$stat_methods = method::get_methods_by_type($db, METHOD_DATA_STATURE_ID);
         
         // Order methods by type
         $all_methods = array_merge($sx_methods, $age_methods, $anc_methods, $stat_methods);
