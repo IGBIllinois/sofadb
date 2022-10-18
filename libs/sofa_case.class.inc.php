@@ -777,19 +777,19 @@ public function submit_case($submitstatus) {
         $conjunction = " AND ";
        	$params = array(); 
         // determine the conjuction to use ("AND" if matching every criteria, "OR" if any criteria can match)
-        if($case_data['conjunction'] == 2) {
+        if(isset($case_data['conjunction']) && $case_data['conjunction'] == 2) {
             $conjunction = " OR ";
         }
         
         // Member ID
-        if (isset($case_data['memberId']) && ($case_data['memberId'] != null && $case_data['memberId'] != "")) { 		
+        if (isset($case_data['memberId']) && $case_data['memberId'] != null && $case_data['memberId'] != "") { 		
 		$query .= " AND memberid =:memberId  ";
                 $params["memberId"] = $case_data['memberId'];
 		
 	}
        
         // Case Year
-        if ($case_data['caseYear'] != null && $case_data['caseYear'] != "") {
+        if (isset($case_data['caseYear']) && $case_data['caseYear'] != null && $case_data['caseYear'] != "") {
             $yearRange = $case_data['yearRange'];
             $yearJoiner = " = ";
                 if($yearRange==1){
@@ -835,7 +835,7 @@ public function submit_case($submitstatus) {
         }
         
         // Sex id
-        if ($case_data['idsex'] != null && $case_data['idsex'] != "") {
+        if (isset($case_data['idsex']) && $case_data['idsex'] != null && $case_data['idsex'] != "") {
             if($param_string != "") {
                 $param_string .= $conjunction;
             }
@@ -844,8 +844,8 @@ public function submit_case($submitstatus) {
         }
                 
         // Age range 
-        if (($case_data['idage1'] != null && $case_data['idage1'] != "") &&
-                ($case_data['idage2'] != null && $case_data['idage2'] != "")) {
+        if ((isset($case_data['idage1']) && $case_data['idage1'] != null && $case_data['idage1'] != "") &&
+                (isset($case_data['idage2']) && $case_data['idage2'] != null && $case_data['idage2'] != "")) {
             
             if($case_data['idageunits'] == 'years') {
                 $alt_ageunits = "months";
@@ -879,8 +879,8 @@ public function submit_case($submitstatus) {
         }
         
         // Stature
-        if (($case_data['idstature1'] != null && $case_data['idstature1'] != "") &&
-                ($case_data['idstature2'] != null && $case_data['idstature2'] != "")) {
+        if ((isset($case_data['idstature1']) && $case_data['idstature1'] != null && $case_data['idstature1'] != "") &&
+                (isset($case_data['idstature2']) && $case_data['idstature2'] != null && $case_data['idstature2'] != "")) {
 
             if($case_data['idstatureunits'] == 'in') {
                 $alt_idstatureunits = "cm";
@@ -928,7 +928,7 @@ public function submit_case($submitstatus) {
         
         // Race
 	// $case_data['race'] is an array of "idrace$value" as keys
-        if ($case_data['race'] != null) {
+        if (isset($case_data['race']) && $case_data['race'] != null) {
             $race_string = "";
             if($param_string != "") {
                 $param_string .= $conjunction;
@@ -949,12 +949,12 @@ public function submit_case($submitstatus) {
         
         $est_string = "";
         $est_join = " AND ";
-        if($case_data['prac_join'] == 2) {
+        if(isset($case_data['prac_join']) && $case_data['prac_join'] == 2) {
             $est_join = " OR ";
 	}
 
         // Estimated sex               
-        if ($case_data['est_sex'] != null && $case_data['est_sex'] == 1 ) {
+        if (isset($case_data['est_sex']) && $case_data['est_sex'] != null && $case_data['est_sex'] == 1 ) {
             if($est_string != "") {
                 $est_string .= $est_join;
             }
@@ -963,7 +963,7 @@ public function submit_case($submitstatus) {
         }
         
         // Estimated age
-        if($case_data['est_age'] != null && $case_data['est_age'] == 1) {
+        if(isset($case_data['est_age']) && $case_data['est_age'] != null && $case_data['est_age'] == 1) {
             if($est_string != "") {
                 $est_string .= $est_join;
             }
@@ -973,7 +973,7 @@ public function submit_case($submitstatus) {
         }
         
         // Estimated stature
-        if($case_data['est_stat'] != null && $case_data['est_stat'] == 1) {
+        if(isset($case_data['est_stat']) && $case_data['est_stat'] != null && $case_data['est_stat'] == 1) {
             if($est_string != "") {
                 $est_string .= $est_join;
             }
@@ -983,7 +983,7 @@ public function submit_case($submitstatus) {
         }
         
         // Estimated ancestry
-        if($case_data['est_anc'] != null && $case_data['est_anc'] == 1) {
+        if(isset($case_data['est_anc']) && $case_data['est_anc'] != null && $case_data['est_anc'] == 1) {
             if($est_string != "") {
                 $est_string .= $est_join;
             }

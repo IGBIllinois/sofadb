@@ -18,11 +18,13 @@ if (isset($_POST['exportMy'])) {
         sofa_case::write_report($db, $case_results, $name, $email, false, true);
         die();
 }
-elseif (isset($_POST['exportsubmit']) || isset($_POST['exportall'])) {
+elseif (isset($_POST['exportsubmit'])) {
               
 	$race_array = array();
-	foreach($_POST['race'] as $race=>$value) {
-		$race_array[$value] = $race;
+	if (isset($_POST['race'])) {
+		foreach($_POST['race'] as $race=>$value) {
+			$race_array[$value] = $race;
+		}
 	}
 	$case_data = array(
 		"memberId"=>$_POST['mID'],
@@ -48,12 +50,14 @@ elseif (isset($_POST['exportsubmit']) || isset($_POST['exportall'])) {
 		"race_join"=>$_POST['race_join'],
 		"prac_join"=>$_POST['prac_join']
 	);
-	$methods = ($_POST['method_select']);
+
 	$method_list = array();
-	foreach($methods as $index=>$result) {
-		foreach($result as $id=>$option) {
-			if($id != 0) {
-				$method_list[] = $id;
+	if (isset($_POST['method_select'])) {
+		foreach($_POST['method_select'] as $index=>$result) {
+			foreach($result as $id=>$option) {
+				if($id != 0) {
+					$method_list[] = $id;
+				}
 			}
 		}
 	}
@@ -64,4 +68,11 @@ elseif (isset($_POST['exportsubmit']) || isset($_POST['exportall'])) {
 	//sofa_case::write_report($db, $case_results, $name, $email);
 } 
 
+elseif (isset($_POST['exportall'])) {
+	$case_data = array();
+	$method_list = array();
+	$unsubmitted = null;
+	$case_results = sofa_case::search_cases($db, $case_data, $method_list, $unsubmitted);
+	sofa_case::write_report($db, $case_results, $name, $email);
+}
 ?>
