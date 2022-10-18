@@ -101,23 +101,6 @@ class sofa_case {
     /** Current submission status */
     private $submissionstatus;
     
-    /** Forensic Anthropology estimated ancestry: Asian */
-    private $faancestryas;
-    /** Forensic Anthropology estimated ancestry: European */
-    private $faancestryeuro;
-    
-    /** Forensic Anthropology estimated ancestry: African */
-    private $faancestryaf;
-    
-    /** Forensic Anthropology estimated ancestry: North American */
-    private $faancestryna;
-    
-    /** Forensic Anthropology estimated ancestry: Hispanic */
-    private $faancestryhi;
-    
-    /** Forensic Anthropology estimated ancestry: Other */
-    private $faancestryot;
-    
     /** Forensic Anthropology estimated ancestry: Other text */
     private $faancestryottext;
     
@@ -201,13 +184,6 @@ class sofa_case {
     public function get_datemodified() { return $this->datemodified; }
     public function get_datesubmitted() { return $this->datesubmitted; }
     public function get_submissionstatus() { return $this->submissionstatus; }
-    public function get_faancestryas()  { return $this->faancestryas; }
-    public function get_faancestryeuro()  { return $this->faancestryeuro; }
-    public function get_faancestryaf()  { return $this->faancestryaf; }
-    public function get_faancestrywh()  { return $this->faancestrywh; }
-    public function get_faancestryhi()  { return $this->faancestryhi; }
-    public function get_faancestryna()  { return $this->faancestryna; }
-    public function get_faancestryot()  { return $this->faancestryot; }
     public function get_faancestryottext()  { return $this->faancestryottext; }
     public function get_idraceas()  { return $this->idraceas; }
     public function get_idraceaf()  { return $this->idraceaf; }
@@ -1426,33 +1402,6 @@ public function submit_case($submitstatus) {
             $curr_row[] = $curr_case->get_faage_notes();
             $faancestry = "";
             
-            // Get the list of Forensic Anthropology estimated ancestry
-            if ($curr_case->get_faancestryas()!=0) {
-                $faancestry=$faancestry.'[Asian/Pacific Islander]';
-            } else {
-                // Not listed
-            }
-            if ($curr_case->get_faancestryaf()!=0) {
-                $faancestry=$faancestry.'[African-American/Black]';
-            } else {
-                // Not listed
-            }
-            if ($curr_case->get_faancestryhi()!=0) {
-                $faancestry=$faancestry.'[Hispanic]';
-            } else {
-                // Not listed
-            }
-            if ($curr_case->get_faancestryna()!=0) {
-                $faancestry=$faancestry.'[Native Ameriacan]';
-            } else {
-                // Not listed
-            }
-            if ($curr_case->get_faancestrywh()!=0) {
-                $faancestry=$faancestry.'[White]';
-            
-            } else {
-                // Not listed
-            }
             if ($curr_case->get_faancestryottext()!= null &&
                     $curr_case->get_faancestryottext() != '') {
                 $faancestry=$faancestry.'['.$curr_case->get_faancestryottext().']';
@@ -1839,12 +1788,6 @@ public function submit_case($submitstatus) {
         $this->faageunits = $casedata['faageunits'];
         $this->faageunits2 = $casedata['faageunits2'];
 	$this->faage_notes = $casedata['faage_notes'];
-	$this->faancestryas = $casedata['faancestryas'];
-        $this->faancestryeuro = $casedata['faancestryeuro'];
-        $this->faancestryaf = $casedata['faancestryaf'];
-        $this->faancestryhi = $casedata['faancestryhi'];
-        $this->faancestryna = $casedata['faancestryna'];
-        $this->faancestryot = $casedata['faancestryot'];
         $this->faancestryottext = $casedata['faancestryottext'];
         $this->fastature = $casedata['fastature'];
         $this->fastature2 = $casedata['fastature2'];
