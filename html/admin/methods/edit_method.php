@@ -392,11 +392,11 @@ if($times_method_used > 0) {
 	$delete_alert_message .= '\nThis method is currently used in '.$times_method_used.' cases.';
 }
 
-echo "\n<fieldset style='border: solid 1px #000000;overflow: hidden;' class='roundedborder'><legend>Delete Method</legend>";
+echo "\n<fieldset style='border: solid 1px #000000;' class='roundedborder'><legend>Delete Method</legend>";
 echo "<form action='edit_method.php' method='post' id='delete_method_form' onsubmit=\"return confirm(\'" . $delete_alert_message. "\')\">";
 echo "<input name='id' type='hidden' value=" . $id . "/>";
-echo "<input id='delete_method' name='delete_method' type='submit' value='Delete' /> </form>";
-echo "</fieldset><br>";
+echo "<input id='delete_method' name='delete_method' type='submit' value='Delete Method' />&nbsp;<label style='background-color: #FF0000; color: black; '><b>WARNING:</b> This will delete the method permanently from the database</label>";
+echo "</form></fieldset><br>";
 
 
 require_once "../../include/footer.php";
