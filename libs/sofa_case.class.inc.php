@@ -764,7 +764,7 @@ public function submit_case($submitstatus) {
      * @return a list of case objects that fit the criteria
      */
     public static function search_cases($db, $memberid, $case_data, $methods=null, $unsubmitted = 0) {
-	    print_r($case_data);
+	print_r($case_data);
         $submission_status = " where submissionstatus = 1 ";
         if($unsubmitted == 1) {
             // get submitted and unsubmitted
@@ -777,21 +777,15 @@ public function submit_case($submitstatus) {
         // determine the conjuction to use ("AND" if matching every criteria, "OR" if any criteria can match)
         if($case_data['conjunction'] == 2) {
             $conjunction = " OR ";
-        } else {
-            // Already set to "AND"
         }
         
         // Member ID
-        if ($case_data['memberId'] != null && $case_data['memberId'] != "") { 
-		
+        if (isset($case_data['memberId']) && ($case_data['memberId'] != null && $case_data['memberId'] != "")) { 		
 		$query .= " AND memberid =:memberId  ";
                 $params["memberId"] = $case_data['memberId'];
 		
-	} else {
-            // Get all
-            $query .= " AND memberid IS NOT NULL ";
-        }
-        
+	}
+       
         // Case Year
         if ($case_data['caseYear'] != null && $case_data['caseYear'] != "") {
             $yearRange = $case_data['yearRange'];
@@ -811,12 +805,10 @@ public function submit_case($submitstatus) {
 	}
         
         // Case number
-        if ($case_data['caseNumber'] != null && $case_data['caseNumber'] != "") {
+        if (isset($case_data['caseNumber']) && ($case_data['caseNumber'] != null && $case_data['caseNumber'] != "")) {
             $casenumber = $case_data['caseNumber'];
 		if($param_string != "") {
                     $param_string .= $conjunction;
-                } else {
-                    // No conjuction needed in query string yet
                 }
                 $param_string .= " casenumber LIKE CONCAT ('%', :caseyear, '%') ";
                 $params["caseyear"] = $case_data['caseYear'];
@@ -824,22 +816,18 @@ public function submit_case($submitstatus) {
         }
         
         // Case agency
-        if ($case_data['caseAgency'] != null && $case_data['caseAgency'] != "") {
+        if (isset($case_data['caseAgency']) && ($case_data['caseAgency'] != null && $case_data['caseAgency'] != "")) {
             if($param_string != "") {
                 $param_string .= $conjunction;
-            } else {
-                    // No conjuction needed in query string yet
             }
             $param_string .= " caseagency LIKE CONCAT ('%', :caseagency, '%') ";
             $params["caseagency"] = $case_data['caseAgency'];
         }
         
         // Region
-        if ($case_data['region'] != null && $case_data['region'] != "") {
+        if (isset($case_data['region']) && ($case_data['region'] != null && $case_data['region'] != "")) {
             if($param_string != "") {
                 $param_string .= $conjunction;
-            } else {
-                    // No conjuction needed in query string yet
             }
             $param_string .= " members.region = :region ";
             $params["region"] = $case_data['region'];
@@ -849,15 +837,12 @@ public function submit_case($submitstatus) {
         if ($case_data['idsex'] != null && $case_data['idsex'] != "") {
             if($param_string != "") {
                 $param_string .= $conjunction;
-            } else {
-                    // No conjuction needed in query string yet
             }
             $param_string .= " idsex = :idsex ";
             $params["idsex"] = $case_data['idsex'];
         }
                 
-        // Age range
-        
+        // Age range 
         if (($case_data['idage1'] != null && $case_data['idage1'] != "") &&
                 ($case_data['idage2'] != null && $case_data['idage2'] != "")) {
             
@@ -872,9 +857,8 @@ public function submit_case($submitstatus) {
             }
             if($param_string != "") {
                 $param_string .= $conjunction;
-            } else {
-                    // No conjuction needed in query string yet
             }
+
             if($case_data['idageunits'] == 'fmonths') {
                 $params["idage1"] = $case_data['idage1'];
                 $params["idage2"] = $case_data['idage2'];
@@ -906,12 +890,9 @@ public function submit_case($submitstatus) {
                 $alt_idstature1 = $case_data['idstature1'] / 2.54;
                 $alt_idstature2 = $case_data['idstature2'] / 2.54;
             }
-            
-            
+                        
             if($param_string != "") {
                 $param_string .= $conjunction;
-            } else {
-                    // No conjuction needed in query string yet
             }
             $param_string .= " ( (idstatureunits = :idstatureunits AND (idstature between :idstature1 AND :idstature2) )".
                     " OR (idstatureunits = :alt_idstatureunits AND (idstature between :alt_idstature1 AND :alt_idstature2)))";
@@ -924,7 +905,7 @@ public function submit_case($submitstatus) {
         }
         
         // Submit date
-        if($case_data['datesubmitted'] != null) {
+        if(isset($case_data['datasubmitted']) && ($case_data['datesubmitted'] != null)) {
             if($param_string != "") {
                 $param_string .= $conjunction;
             } else {
@@ -935,11 +916,9 @@ public function submit_case($submitstatus) {
         }
                 
         // FDB consent
-        if($case_data['fdb_consent'] != null && $case_data['fdb_consent'] == true) {
+        if(isset($case_data['fdb_consent']) && ($case_data['fdb_consent'] != null && $case_data['fdb_consent'] == true)) {
             if($param_string != "") {
                 $param_string .= $conjunction;
-            } else {
-                    // No conjuction needed in query string yet
             }
             
             $param_string .= " fdb_consent = 'consent'";
@@ -952,8 +931,6 @@ public function submit_case($submitstatus) {
             $race_string = "";
             if($param_string != "") {
                 $param_string .= $conjunction;
-            } else {
-                    // No conjuction needed in query string yet
             }
             foreach ($case_data['race'] as $name=>$value) {
                 $race_join = " AND ";
@@ -971,11 +948,11 @@ public function submit_case($submitstatus) {
         
         $est_string = "";
         $est_join = " AND ";
-        if($case_data['est_join'] == 2) {
+        if($case_data['prac_join'] == 2) {
             $est_join = " OR ";
-        }
-        // Estimated sex
-                
+	}
+
+        // Estimated sex               
         if ($case_data['est_sex'] != null && $case_data['est_sex'] == 1 ) {
             if($est_string != "") {
                 $est_string .= $est_join;

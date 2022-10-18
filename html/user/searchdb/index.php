@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['exportsubmit'])){//no
 		}
 	}
 	$case_data = array(
-              "memberId"=>$_POST['mID'],
+              //"memberId"=>$_POST['mID'],
               "caseYear"=>$_POST['cyear'],
               "yearRange"=>$_POST['yearrange'],
               //"caseNumber"=>$_POST['cnum'],
@@ -399,7 +399,7 @@ echo <<<_END
         </span> 
     
         <br ><br>
-        <label class="label" for="regsubmit">Click here to search</label>
+	<label class="label" for="regsubmit">Click here to search</label>
         <input name="regsubmit" id="regsubmit" type="submit" class="showybutton" value="Search"/><br />
    
     
