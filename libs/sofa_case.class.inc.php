@@ -757,14 +757,12 @@ public function submit_case($submitstatus) {
     /**
      * Search for cases based on given criteria
      * @param type $db The database object
-     * @param int memberid The currently logged in member
      * @param type $case_data array of name=>value pairs of database info to search for
      * $param boolean $unsubmitted Allow unsubmitted cases? Defaults to false
      * 
      * @return a list of case objects that fit the criteria
      */
-    public static function search_cases($db, $memberid, $case_data, $methods=null, $unsubmitted = 0) {
-	print_r($case_data);
+    public static function search_cases($db, $case_data, $methods=null, $unsubmitted = 0) {
         $submission_status = " where submissionstatus = 1 ";
         if($unsubmitted == 1) {
             // get submitted and unsubmitted

@@ -18,7 +18,8 @@
 		"components/jqueryui": "1.12.1",
 		"twig/twig":"3.4.2",
 		"components/font-awesome": "6.1.1",
-		"igbillinois/igbillinois-php": "1.2.3"
+		"igbillinois/igbillinois-php": "1.2.3",
+		"phpmd/phpmd": "^2.13"
 	},
 	"scripts": {
 		"post-update-cmd": [
@@ -32,5 +33,3 @@
 	}
 
 }
-
-

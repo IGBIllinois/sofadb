@@ -84,6 +84,7 @@ class admin_note {
 			$return_result = array("RESULT"=>FALSE,
                                     "MESSAGE"=>"There was an error. The note has not been added.");
 		}
+		return $return_result;
 	}
     
     /** Deletes an admin note
@@ -107,7 +108,7 @@ class admin_note {
      */
     public static function edit_admin_note($db, $id, $new_message) {
         $query = "UPDATE admin_notes set message = :message where id=:id";
-        $params = array("message"=>$message,
+        $params = array("message"=>$new_message,
                         "id"=>$id);
         
         $db->non_select_query($query, $params);

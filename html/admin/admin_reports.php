@@ -38,7 +38,7 @@ require_once "../include/header_admin.php";
      } else {
          // No errors; Write report
         $params['fdb_consent'] = true;
-        $caselist = sofa_case::search_cases($db, null, $params, null);
+        $caselist = sofa_case::search_cases($db, $params, null);
         sofa_case::write_report($db, $caselist, null, null, 1,0);
         die();
      }

@@ -60,7 +60,7 @@ class reference {
         if($result > 0) {
             return array("RESULT"=>TRUE,
                     "MESSAGE"=>"Reference added successfully.",
-                    $id=>$result);
+                    "id"=>$result);
         
         } else {
             return array("RESULT"=>FALSE, 

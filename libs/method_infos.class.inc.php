@@ -591,7 +591,7 @@ class method_infos {
         foreach($options as $option) {
             $id = $option->get_id();
             $value = $option->get_value();
-            $values[$option->get_id()] = $option->get_value();
+            $values[$id] = $option->get_value();
         }
 
         $output = "<table class='td_spaced table_full table_horz_spacing>";
@@ -1096,7 +1096,6 @@ class method_infos {
         $cat_params = array("methodid"=>$method_id, 'input_type'=>$cat_type_id);
 
         $categories = $db->query($cat_query, $cat_params);
-        $output = "";
         $output_header = $categories[0]['header'];
         
         $headers = array();

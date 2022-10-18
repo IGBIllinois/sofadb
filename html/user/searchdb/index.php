@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['exportsubmit'])){//no
 			}
 		}
 
-	$case_results = sofa_case::search_cases($db, $memberid, $case_data, $method_list);
+	$case_results = sofa_case::search_cases($db, $case_data, $method_list);
 	echo("<BR>");
 
         if(!$error){
@@ -125,8 +125,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['exportsubmit'])){//no
 
                 echo ('<form action="confirm.php?'.$_SERVER['QUERY_STRING'].'" method="post" id="export">');
                 if(isset($_POST)) {
-                    foreach($_POST as $name=>$value) {
-                        echo("<input type=hidden name='$name' value='$value'>");
+			foreach($_POST as $name=>$value) {
+				echo("<input type=hidden name='$name' value='$value'>");
                     }
                 }
                 echo'<br/><p>Click here to export results to CSV File

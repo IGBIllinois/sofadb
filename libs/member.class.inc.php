@@ -300,7 +300,7 @@ public function delete_member($delete_member_id) {
     $delete_user_params = array("memberid"=>$delete_member_id);
     $delete_user_result = $this->db->non_select_query($delete_user_query, $delete_user_params);
     
-    if($delete_user_result > 0) {
+    if (($delete_cases_result > 0) && ($delete_user_result > 0)) {
         return array("RESULT"=>TRUE,
         "MESSAGE"=>"Member $del_member_name ($del_member_email) successfully deleted.");       
     } else {

@@ -359,7 +359,6 @@ class functions {
         $html_message = functions::renderTwigTemplate('email/register_verify.html.twig', $params);
         $txt_message = functions::renderTwigTemplate('email/register_verify.txt.twig', $params);
 
-        $from = settings::get_admin_email();
         // Send email
 	try {
 		$emailer = new \IGBIllinois\email(settings::get_smtp_host(),

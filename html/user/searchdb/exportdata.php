@@ -13,7 +13,7 @@ if (isset($_POST['exportMy'])) {
         $name=$_POST['name'];
         $email = $_POST['email'];
 
-        $case_results = sofa_case::search_cases($db, null, $case_data, null, $unsubmitted);
+        $case_results = sofa_case::search_cases($db, $case_data, null, $unsubmitted);
 
         sofa_case::write_report($db, $case_results, $name, $email, false, true);
         die();
@@ -60,7 +60,7 @@ elseif (isset($_POST['exportsubmit']) || isset($_POST['exportall'])) {
 	$name=$_POST['name'];
 	$email = $_POST['email'];
 	$unsubmitted = $_POST['unsubmitted'];
-	$case_results = sofa_case::search_cases($db, null, $case_data, $method_list, $unsubmitted);
+	$case_results = sofa_case::search_cases($db, $case_data, $method_list, $unsubmitted);
 	//sofa_case::write_report($db, $case_results, $name, $email);
 } 
 
