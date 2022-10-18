@@ -572,7 +572,7 @@ class method {
     public static function delete_prompt($db, $prompt_id) {
         $update_query = "UPDATE methods set prompt=NULL where prompt=:prompt_id";
         $params = array("prompt_id"=>$prompt_id);
-        $update_result = $db->non_select_query($update_query, $params);
+        $db->non_select_query($update_query, $params);
         
         $query = "DELETE FROM prompts where id=:prompt_id";
         $delete_result = $db->non_select_query($query, $params);

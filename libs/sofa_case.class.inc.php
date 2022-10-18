@@ -636,7 +636,11 @@ public function submit_case($submitstatus) {
         $result = $this->db->non_select_query($query1, $params);
         
         $query2 = "DELETE from tier3data where tier2id = :t2id";
-        $result2 = $this->db->non_select_query($query2, $params);
+	$result2 = $this->db->non_select_query($query2, $params);
+	if ($result && $result2) {
+		return true;
+	}
+	return false;
     }
     
     /** Permanently deletes a case from the database
@@ -804,12 +808,11 @@ public function submit_case($submitstatus) {
         
         // Case number
         if (isset($case_data['caseNumber']) && ($case_data['caseNumber'] != null && $case_data['caseNumber'] != "")) {
-            $casenumber = $case_data['caseNumber'];
 		if($param_string != "") {
                     $param_string .= $conjunction;
                 }
-                $param_string .= " casenumber LIKE CONCAT ('%', :caseyear, '%') ";
-                $params["caseyear"] = $case_data['caseYear'];
+                $param_string .= " casenumber LIKE CONCAT ('%', :casenumber, '%') ";
+                $params["casenumber"] = $case_data['caseNumber'];
                 
         }
         

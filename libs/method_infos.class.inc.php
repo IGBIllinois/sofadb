@@ -196,11 +196,11 @@ class method_infos {
     */
    public static function show_method_info($db, $methodid, $tier2id=null) {
        $method = new method($db, $methodid);
-
        if($method == null) {
            echo "Method not found.";
            return;
-       } else {
+       } 
+       else {
        
         $output = "";
 
@@ -209,7 +209,6 @@ class method_infos {
         if($method->get_method_type_num() == METHOD_DATA_SEX_ID) {
             // Sex method
             
-		$selected = false;
 		$estimated_outcome = "";
             if($tier2id != null) {
                 $tier2 = new tier2data($db, $tier2id);
@@ -591,7 +590,7 @@ class method_infos {
         foreach($options as $option) {
             $id = $option->get_id();
             $value = $option->get_value();
-            $values[$id] = $option->get_value();
+            $values[$id] = $value;
         }
 
         $output = "<table class='td_spaced table_full table_horz_spacing>";
@@ -882,8 +881,6 @@ class method_infos {
     */
     public static function show_method_infos_radio($db, $method_infos_id, $tier2id=null, $name = "LR") {
         $output = '';
-
-        $value = '';
         $method_info = new method_infos($db, $method_infos_id);
 	$options = $method_info->get_method_info_options();
 	$t3_opt_ids = array();
@@ -957,7 +954,7 @@ class method_infos {
         
 
         $selected = array();
-        $methodinfos = array();
+        $method_infos = array();
 
         if($tier2id != null) {
 
@@ -981,9 +978,6 @@ class method_infos {
         $headers .= ("<table><tr><th><U><B>".$header1."</B></U></th>");
         $headers .= ("<th><U><B>".$header2."</B></U></th>");
         $headers .= ("<th><U><B>".$header3."</B></U></th>");
-
-        $value = null;
-
 
         foreach($categories as $category) {
             $cat = new method_infos($db, $category['id']);
