@@ -1,8 +1,10 @@
 <?php
 
-require_once('../../include/session.inc.php') ;
+require_once(__DIR__ . '/../../include/main.inc.php');
+require_once(__DIR__ . '/../../include/session.inc.php') ;
 set_time_limit ( 0 );
- 
+
+$zip_file = "";
 if (isset($_POST['exportMy'])) {
 	$unsubmitted = false;
 	if(isset($_POST['unsubmitted'])) {
@@ -15,8 +17,7 @@ if (isset($_POST['exportMy'])) {
 
         $case_results = sofa_case::search_cases($db, $case_data, null, $unsubmitted);
 
-        sofa_case::write_report($db, $case_results, $name, $email, false, true);
-        die();
+	$zip_file = sofa_case::write_report($db, $case_results, $name, $email, false, true);
 }
 elseif (isset($_POST['exportsubmit'])) {
               
@@ -65,7 +66,7 @@ elseif (isset($_POST['exportsubmit'])) {
 	$email = $_POST['email'];
 	$unsubmitted = $_POST['unsubmitted'];
 	$case_results = sofa_case::search_cases($db, $case_data, $method_list, $unsubmitted);
-	//sofa_case::write_report($db, $case_results, $name, $email);
+	$zip_file = sofa_case::write_report($db, $case_results, $name, $email);
 } 
 
 elseif (isset($_POST['exportall'])) {
@@ -73,6 +74,17 @@ elseif (isset($_POST['exportall'])) {
 	$method_list = array();
 	$unsubmitted = null;
 	$case_results = sofa_case::search_cases($db, $case_data, $method_list, $unsubmitted);
-	sofa_case::write_report($db, $case_results, $name, $email);
+	$zip_file = sofa_case::write_report($db, $case_results, $name, $email);
+}
+
+if (file_exists($zip_file)) {
+	header("Content-type: application/zip");
+	header("Content-Disposition: attachment; filename='" . basename($zip_file) ."'");
+	header("Content-Type: application/zip");
+	header("Pragma: no-cache");
+	header("Expires: 0");
+	readfile($zip_file);
+	unlink($zip_file);
+
 }
 ?>

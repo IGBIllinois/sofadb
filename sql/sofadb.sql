@@ -9,56 +9,61 @@ CREATE TABLE `admin_notes` (
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE region (
+        `id` INT NOT NULL AUTO_INCREMENT,
+        `name` VARCHAR(50) DEFAULT '',
+        PRIMARY KEY (`id`)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `cases` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `casenumber` varchar(100) CHARACTER SET utf8 NOT NULL,
-  `caseyear` int(11) unsigned DEFAULT NULL,
-  `casename` varchar(100) CHARACTER SET utf8 NOT NULL,
-  `caseagency` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
-  `memberid` int(11) unsigned NOT NULL,
-  `fasex` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  `id` int(11) UNSIGNED NOT NULL,
+  `casenumber` varchar(100) NOT NULL,
+  `caseyear` int(11) UNSIGNED DEFAULT NULL,
+  `origcaseyear` int(11) UNSIGNED DEFAULT NULL,
+  `casename` varchar(100) NOT NULL,
+  `caseagency` varchar(100) DEFAULT NULL,
+  `caseregion` int(11) NOT NULL DEFAULT 0,
+  `memberid` int(11) UNSIGNED NOT NULL,
+  `fasex` varchar(50) DEFAULT NULL,
   `faage` float UNSIGNED DEFAULT NULL,
   `faage2` float UNSIGNED DEFAULT NULL,
-  `faageunits` varchar(25) CHARACTER SET utf8 DEFAULT NULL,
-  `faageunits2` varchar(25) CHARACTER SET utf8 DEFAULT NULL,
+  `faageunits` varchar(25) DEFAULT NULL,
+  `faageunits2` varchar(25) DEFAULT NULL,
   `faage_notes` varchar(100) DEFAULT NULL,
-  `faancestryottext` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
-  `fastature` float unsigned DEFAULT NULL,
-  `fastature2` float unsigned DEFAULT NULL,
-  `fastatureunits` varchar(25) CHARACTER SET utf8 DEFAULT NULL,
-  `idsex` varchar(25) CHARACTER SET utf8 DEFAULT NULL,
+  `faancestryottext` varchar(100) DEFAULT NULL,
+  `fastature` float UNSIGNED DEFAULT NULL,
+  `fastature2` float UNSIGNED DEFAULT NULL,
+  `fastatureunits` varchar(25) DEFAULT NULL,
+  `idsex` varchar(25) DEFAULT NULL,
   `idsex_notes` varchar(100) DEFAULT NULL,
-  `idage` float unsigned DEFAULT NULL,
+  `idage` float UNSIGNED DEFAULT NULL,
   `idage_notes` varchar(100) DEFAULT NULL,
-  `idageunits` varchar(25) CHARACTER SET utf8 DEFAULT NULL,
-  `idraceas` boolean default 0,
-  `idraceaf` boolean default 0,
-  `idracewh` boolean default 0,
-  `idracehi` boolean default 0,
-  `idracena` boolean default 0,
-  `idraceot` boolean default 0,
-  `idraceottext` text CHARACTER SET utf8 DEFAULT NULL,
-  `idancaddtext` text CHARACTER SET utf32 COLLATE utf32_bin DEFAULT NULL,
-  `idstature` float unsigned DEFAULT NULL,
-  `idstatureunits` text CHARACTER SET utf8 DEFAULT NULL,
+  `idageunits` varchar(25) DEFAULT NULL,
+  `idraceas` tinyint(1) DEFAULT 0,
+  `idraceaf` tinyint(1) DEFAULT 0,
+  `idracewh` tinyint(1) DEFAULT 0,
+  `idracehi` tinyint(1) DEFAULT 0,
+  `idracena` tinyint(1) DEFAULT 0,
+  `idraceot` tinyint(1) DEFAULT 0,
+  `idraceottext` text DEFAULT NULL,
+  `idancaddtext` text DEFAULT NULL,
+  `idstature` float UNSIGNED DEFAULT NULL,
+  `idstatureunits` text DEFAULT NULL,
   `idstature_notes` varchar(100) DEFAULT NULL,
-  `idsource` text CHARACTER SET utf8 DEFAULT NULL,
-  `known_none` tinyint(1) unsigned DEFAULT NULL,
-  `known_sex` tinyint(1) unsigned DEFAULT NULL,
-  `known_age` tinyint(1) unsigned DEFAULT NULL,
-  `known_ancestry` tinyint(1) unsigned DEFAULT NULL,
-  `known_stature` tinyint(1) unsigned DEFAULT NULL,
-  `known_unable_to_determine` tinyint(1) unsigned DEFAULT NULL,
+  `idsource` text DEFAULT NULL,
+  `known_none` tinyint(1) UNSIGNED DEFAULT NULL,
+  `known_sex` tinyint(1) UNSIGNED DEFAULT NULL,
+  `known_age` tinyint(1) UNSIGNED DEFAULT NULL,
+  `known_ancestry` tinyint(1) UNSIGNED DEFAULT NULL,
+  `known_stature` tinyint(1) UNSIGNED DEFAULT NULL,
+  `known_unable_to_determine` tinyint(1) UNSIGNED DEFAULT NULL,
   `fdb_consent` varchar(20) DEFAULT NULL,
-  `nummethods` int(11) DEFAULT NULL,
-  `casenotes` text CHARACTER SET utf8 DEFAULT NULL,
+  `casenotes` text DEFAULT NULL,
   `datestarted` date DEFAULT NULL,
   `datemodified` date DEFAULT NULL,
   `datesubmitted` date DEFAULT NULL,
-  `submissionstatus` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `memberid` (`memberid`),
-  KEY `submissionstatus` (`submissionstatus`)
+  `submissionstatus` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -88,7 +93,7 @@ CREATE TABLE `members` (
   `fieldofstudy` varchar(100) NOT NULL,
   `aafsstatus` int(11) unsigned NOT NULL,
   `institution` varchar(100) NOT NULL,
-  `region` int(11) unsigned NOT NULL,
+  `region` INT NOT NULL DEFAULT 0,
   `mailaddress` varchar(100) NOT NULL,
   `mailaddress2` varchar(100) DEFAULT NULL,
   `city` varchar(50) NOT NULL,
@@ -218,8 +223,8 @@ CREATE DEFINER='root'@'localhost' EVENT password_reset
         DO
                 DELETE FROM password_reset WHERE expires < CURRENT_TIMESTAMP;
 
-INSERT INTO members (uname, pwd, firstname, lastname, title, degree, degreeyear, fieldofstudy, aafsstatus, institution, region, mailaddress, city, state, zip, permissionstatus) VALUES
-('admin@admin.com', '$2y$10$xZD6cdVskRHYhHkk7l4Mf.oz/VQaVdiQ6LrnzMC31PFevhBxisTyG', 'ADMIN', 'User', '', '',0, '', 0, '', 0,'', '', '' ,'', 2);
+INSERT INTO members (uname, pwd, firstname, lastname, title, degree, degreeyear, fieldofstudy, aafsstatus, institution, mailaddress, city, state, zip, permissionstatus) VALUES
+('admin@admin.com', '$2y$10$xZD6cdVskRHYhHkk7l4Mf.oz/VQaVdiQ6LrnzMC31PFevhBxisTyG', 'ADMIN', 'User', '', '',0, '', 0, '', '', '', '' ,'', 2);
 
 INSERT INTO `input_types` (`id`, `input_type`) VALUES(1, 'multiselect');
 INSERT INTO `input_types` (`id`, `input_type`) VALUES(2, 'singleselect');
@@ -233,4 +238,18 @@ INSERT INTO `input_types` (`id`, `input_type`) VALUES(9, 'estimated_outcome');
 INSERT INTO `input_types` (`id`, `input_type`) VALUES(13, 'two-column');
 INSERT INTO `input_types` (`id`, `input_type`) VALUES(14, 'checkbox_select');
 INSERT INTO `input_types` (`id`, `input_type`) VALUES(16, 'left_right');
+
+INSERT INTO region(id,name) VALUES('1','U.S. Northeast');
+INSERT INTO region(id,name) VALUES('2','U.S. West');
+INSERT INTO region(id,name) VALUES('3','U.S. Midwest');
+INSERT INTO region(id,name) VALUES('4','U.S. South');
+INSERT INTO region(id,name) VALUES('5','Africa');
+INSERT INTO region(id,name) VALUES('6','Asia Pacific');
+INSERT INTO region(id,name) VALUES('7','Central America');
+INSERT INTO region(id,name) VALUES('8','Canada');
+INSERT INTO region(id,name) VALUES('9','Caribbean');
+INSERT INTO region(id,name) VALUES('10','Europe');
+INSERT INTO region(id,name) VALUES('11','Middle East');
+INSERT INTO region(id,name) VALUES('12','South America');
+
 

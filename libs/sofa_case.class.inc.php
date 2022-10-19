@@ -1061,7 +1061,6 @@ public function submit_case($submitstatus) {
      */
     public static function write_report($db, $case_list, $username=null, $email=null, $fdb=0, $mine=0, $method_type = null) {
         
-        ob_end_clean();
         $today = date("m_d_Y_H_i_s");
         
         // Excel filename
@@ -1734,13 +1733,7 @@ public function submit_case($submitstatus) {
             $zip->addFile("../../docs/Report_Info.docx", "Report_Info.docx");
 
             $zip->close();
-
-            header("Content-type: application/zip"); 
-            header("Content-Disposition: attachment; filename=$zip_filename"); 
-            header("Pragma: no-cache"); 
-            header("Expires: 0"); 
-            readfile($zip_filepath);
-            unlink($zip_filepath);
+		return $zip_filepath;
         } catch(Exception $e) {
             echo("Error:".$e->getTraceAsString());
         }
