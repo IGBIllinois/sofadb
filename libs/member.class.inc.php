@@ -337,18 +337,18 @@ public function update_terms_agreement($signature, $signature_date, $agree) {
  * @return boolean True if the passwords match, else false
  */
 public static function authenticate($db, $name, $chkpwd) {
-    $query = "SELECT pwd from members where uname=:name";
-    $params = array("name"=>$name);
-    
-    $pwd_result = $db->query($query, $params);
-    
-    $pwd = $pwd_result[0]['pwd'];
-
-    $result = password_verify($chkpwd, $pwd);
-
-    // Returns true if successful, else false;
-    return $result;
-    
+	$sql = "SELECT pwd from members where uname=:name LIMIT 1";
+	$params = array("name"=>$name);
+	$result = false;    
+	$result = $db->query($sql, $params);
+	if (!count($result)) {
+		$result = false;
+	}
+	else {
+		$password_hash = $result[0]['pwd'];
+		$result = password_verify($chkpwd, $password_hash);
+	}
+	return $result;
 }
 
 /** Gets a list of database members

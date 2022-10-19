@@ -1,7 +1,8 @@
 <?php
 $title="Contact Us";
-require_once("../../conf/settings.inc.php");
-require_once "../include/header_general.php";
+
+require_once __DIR__ . "/../include/main.inc.php";
+require_once __DIR__ . "/../include/header_general.php";
 ?>
 
 <div id="templatecontainer">
@@ -110,7 +111,7 @@ Bone(s) used by method:">'.
 </textarea>
 <BR>
 <label for="captcha">Please Enter the Captcha Text</label><BR>
-    <img src="../include/captcha_image.php" alt="CAPTCHA" class="captcha-image"><i class="fas fa-redo refresh-captcha"></i>
+    <img src="../include/captcha_image.php" alt="CAPTCHA" class="captcha-image">
     <br>
     <input type="text" id="captcha" name="captcha">
     

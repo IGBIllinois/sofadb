@@ -1,5 +1,12 @@
-<!DOCTYPE html >
 <?php
+if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
+	$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	header('HTTP/1.1 301 Moved Permanently');
+	header('Location: ' . $location);
+	exit;
+}
+
+require_once("main.inc.php");
 
 if(isset($_SERVER['CONTEXT_PREFIX'])) {
     $root_url = $_SERVER['CONTEXT_PREFIX'];
@@ -8,20 +15,11 @@ if(isset($_SERVER['CONTEXT_PREFIX'])) {
     $root_url = ROOT_URL;
 }
 
+$session = new \IGBIllinois\session(settings::get_session_name());
 
-  if(!isset($session) || $session->get_var('loggedin') != 1)
-  {
-     require_once("main.inc.php"); 
-  } else {
-       //session_start();
-      require_once("main.inc.php"); 
-      require_once("session.inc.php"); 
-      $session = new \IGBIllinois\session(settings::get_session_name());
-  }
-    require_once(__DIR__. "/../../conf/settings.inc.php");
-    
+
 ?>
-
+<!DOCTYPE html>
 <html >
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />

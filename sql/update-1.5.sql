@@ -18,3 +18,5 @@ ALTER TABLE cases DROP COLUMN faancestryeuro,
         DROP COLUMN faancestryot;
 
 
+ALTER TABLE cases CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE tier2data CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;

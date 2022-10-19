@@ -1,103 +1,24 @@
 <?php
+$title = "Forensic Anthropology Case Database (FADAMA) - Register";
 
-
-  if(isset($session) && $session->get_var('loggedin') == 1)
-  {
-     require_once("include/session.inc.php"); 
-  } else {
-       session_start();
-  }
-require_once("../conf/settings.inc.php");
-require_once("../conf/app.inc.php");
 require_once("include/main.inc.php");
 
-
-?>
-
-<!DOCTYPE html>
-<html>
-
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Forensic Anthropology Case Database (FADAMA) - Register</title>
-
-<!-- JS -->
-<script type="text/javascript" src='vendor/components/jquery/jquery.js'></script>
-<script type="text/javascript" src='vendor/components/jqueryui/jquery-ui.js'></script>
-<script type="text/javascript" src='js/gen_validatorv4.js'></script>
-<script type="text/javascript" src='js/jquery.are-you-sure.js'></script>
-<script type="text/javascript" src='js/sofa_javascript.js'></script>
-
-<!-- CSS -->
-<link rel="stylesheet" href="css/style.css"  type="text/css" />
-<link rel="stylesheet" type="text/css" href="css/jquery.multiselect.css" />
-<link rel="stylesheet" type="text/css" href="vendor/components/jqueryui/themes/base/jquery-ui.css" />
-
-
-<title>Register</title>
-
-
-<!-- // Load Javascript -->
-</head>
-
-<body>
-<?php
-if (settings::get_debug()) {
-        echo "<div class='debug'>DEBUG MODE - Errors will be shown</div>";
-
+if(isset($session) && $session->get_var('loggedin') == 1) {
+	require_once("include/session.inc.php"); 
 }
+else {
+       session_start();
+}
+
+require_once(__DIR__ . "/include/header_general.php");
+
+if(isset($session) && $session->get_var('loggedin') == 1) {
+	echo "<div id='navigation'></div>";
+}
+
 ?>
 
-<div id="top" class='header'>
-
-    <div class='header_logo'>
-            <img class='align_left' src="images/header.png">
-    </div>
-            <table style='float:right'><tr><td class='align_center' >
-              <a href="http://www.sofainc.org" target="_blank"><img  src="images/sofaLogo.png"></a>
-            </td></tr><tr><td class='align_center' >
-              <a href="https://illinois.edu" target="_blank"><img src="images/illinois.png"></a>
-            </td></tr><tr><td class='align_center' >
-              <a href="https://www.csufresno.edu" target="_blank"><img src="images/fresnostate.png"></a>
-            </td></tr></table>
-
-
-</div>
-
-<div id="hline">
-<hr size="3" />
-</div>
-
-
-
-<div id="navbar">
-  <ul>
-    <li><a href="index.php">Home</a></li>
-<?php
-    if(isset($session) && $session->get_var('loggedin') == 1) {
-?>
-    <li><a href="user/searchdb/?search=1">Search</a></li>
-    <li><a href="faq.php">FAQ</a></li>
-    <li><a href="contact/">Contact Us</a></li>
-<?php
-
-    }
-?>
-  </ul>
-</div>
-
-<div id="hline">
-<hr size="3" />
-</div>
-<?php
-    if(isset($session) && $session->get_var('loggedin') == 1) {
-?>
     
-<div id="navigation"></div>
-<?php
-
-    }
-?>
 <div> 
   </br>
     

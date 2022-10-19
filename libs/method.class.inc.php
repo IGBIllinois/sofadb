@@ -326,8 +326,8 @@ class method {
                 $type_result = array(array('input_type'=>$type));
             }
 
-            $text_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_TEXT_ENTRY);
-	    $numeric_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY);
+            //$text_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_TEXT_ENTRY);
+	    //$numeric_type = input_type::get_input_type_by_name($this->db, USER_INTERACTION_NUMERIC_ENTRY);
 	    $return_array = array();
             foreach($type_result as $type) {
 		    $info_array = array();

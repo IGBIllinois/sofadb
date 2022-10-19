@@ -4,9 +4,9 @@
  */
 
 $title="Reset Password";
-require_once("../../conf/settings.inc.php");
-require_once("../include/header_general.php");
 require_once("../include/main.inc.php");
+require_once("../include/header_general.php");
+
 $contactURL = "https://". $_SERVER['HTTP_HOST']. $root_url. "/contact/";
 ?>
 <div id="wrapper" style="width:20%">

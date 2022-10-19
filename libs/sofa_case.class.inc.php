@@ -1057,8 +1057,9 @@ public function submit_case($submitstatus) {
      * @param string $email Email of the user making the request
      * @param bool $fdb True if this is an FDB report (only show methods from the FDB database)
      * @param bool $mine True if this is a report for the given user's cases (show case number and agency)
+     * @param string A method type to create report
      */
-    public static function write_report($db, $case_list, $username=null, $email=null, $fdb=0, $mine=0) {
+    public static function write_report($db, $case_list, $username=null, $email=null, $fdb=0, $mine=0, $method_type = null) {
         
         ob_end_clean();
         $today = date("m_d_Y_H_i_s");
@@ -1223,14 +1224,16 @@ public function submit_case($submitstatus) {
         // Add methods to header row
         $method_info_ids = $headerrow2; // for proper order of method_infos
 
-	$sx_methods = array();
-	$age_methods = array();
-	$anc_methods = array();
-	$stat_methods = array();
+	//$all_methods = array();
+
+        //if ($method_type != null) {
+	//	$all_methods = method::get_methods_by_type($db,$method_type);
+	//}
+
         $sx_methods = method::get_methods_by_type($db, METHOD_DATA_SEX_ID);
-        //$age_methods = method::get_methods_by_type($db, METHOD_DATA_AGE_ID);
-        //$anc_methods = method::get_methods_by_type($db, METHOD_DATA_ANCESTRY_ID);
-        //$stat_methods = method::get_methods_by_type($db, METHOD_DATA_STATURE_ID);
+        $age_methods = method::get_methods_by_type($db, METHOD_DATA_AGE_ID);
+        $anc_methods = method::get_methods_by_type($db, METHOD_DATA_ANCESTRY_ID);
+        $stat_methods = method::get_methods_by_type($db, METHOD_DATA_STATURE_ID);
         
         // Order methods by type
         $all_methods = array_merge($sx_methods, $age_methods, $anc_methods, $stat_methods);

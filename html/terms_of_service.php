@@ -1,15 +1,13 @@
 <?php
+require_once("include/main.inc.php");
 
-
-  if(isset($session) && $session->get_var('loggedin') == 1)
-  {
-     require_once("include/session.inc.php"); 
+if(isset($session) && $session->get_var('loggedin') == 1) {
+	require_once("include/session.inc.php"); 
      
-  } else {
-       session_start();
-  }
-  require_once("include/main.inc.php");
-  require_once("../conf/settings.inc.php");
+}
+else {
+	$session = new \IGBIllinois\session(settings::get_session_name());
+}
 
 $errors = array();
 
@@ -51,60 +49,11 @@ if(isset($_POST['regsubmit'])) {
     }
 }
 
+require_once __DIR__ . "/include/header_general.php";
 ?>
-
-<!DOCTYPE html>
-<html>
-
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Terms and Conditions</title>
-<!-- CSS -->
-<link href="css/style.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="/css/jquery.multiselect.css" />
-
-<script type="text/javascript" src="vendor/components/jquery/jquery.js"></script>
-<script type="text/javascript" src="vendor/components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
-<script type="text/javascript" src='js/jquery.are-you-sure.js'></script>
-<script type="text/javascript" src='js/sofa_javascript.js'></script>
-
-
-<!-- // Load Javascipt -->
-</head>
-
-<body>
-<div id="top" class='header'>
-
-    <div class='header_logo'>
-            <img class='align_left' src="images/header.png">
-    </div>
-            <table style='float:right'><tr><td class='align_center' >
-              <a href="http://www.sofainc.org" target="_blank"><img  src="images/sofaLogo.png"></a>
-            </td></tr><tr><td class='align_center' >
-              <a href="https://illinois.edu" target="_blank"><img src="images/illinois.png"></a>
-            </td></tr><tr><td class='align_center' >
-              <a href="https://www.csufresno.edu" target="_blank"><img src="images/fresnostate.png"></a>
-            </td></tr></table>
-
-
-</div>
-
-<div id="hline">
-<hr size="3" />
-</div>
 
 <div id="wrapper" style="width:80%">
 <?php
-if(count($errors) > 0) {
-    foreach($errors as $error) {
-        echo($error . "<BR>");
-    }
-    echo("<BR>");
-}
-?>
-
-<?php  
-
 if(!isset($POST['submitted'])) {
     echo("<BR>");
     echo("<fieldset style='border: solid 1px #000000;overflow: hidden;' class='roundedborder'><legend class='boldlegend'>Terms of Service</legend>");
@@ -130,6 +79,12 @@ if(!isset($POST['submitted'])) {
 }
 ?>
 </div>
-<?php 
+<?php
+if(count($errors) > 0) {
+	foreach($errors as $error) {
+		echo($error . "<BR>");
+	}
+	echo("<BR>");
+}
     require_once("include/footer.php");
 ?>

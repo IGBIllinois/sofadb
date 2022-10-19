@@ -7,8 +7,8 @@ if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
     exit;
 }
 
-require_once('main.inc.php');
-require_once('session.inc.php');
+require_once(__DIR__ . '/main.inc.php');
+require_once(__DIR__ . '/session.inc.php');
 
 if(isset($_SERVER['CONTEXT_PREFIX'])) {
     $root_url = $_SERVER['CONTEXT_PREFIX'];

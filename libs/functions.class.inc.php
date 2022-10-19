@@ -264,17 +264,29 @@ class functions {
     * @param array  $context
     */
    public static function renderTwigTemplate($template, $context) {
-       global $twig;
+	try {
+		$loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../templates');
+		$twig = new \Twig\Environment($loader, array());
+	}
+	catch(Exception $e) {
+		echo($e->getMessage());
+		echo($e->getTraceAsString());
+	}
+
+
        try {
            $template = $twig->load($template);
            return $template->render($context);
-       } catch (LoaderError $e) {
+	}
+	catch (\Twig\Error\LoaderError $e) {
+		echo $e->getMessage();
+	} 
+	catch (\Twig\Error\RuntimeError $e) {
            echo $e->getMessage();
-       } catch (RuntimeError $e) {
+	}
+	catch (\Twig\Error\SyntaxError $e) {
            echo $e->getMessage();
-       } catch (SyntaxError $e) {
-           echo $e->getMessage();
-       }
+	}
    }
    
    /** Creates a report (.csv file) of names, emails, and dates of people

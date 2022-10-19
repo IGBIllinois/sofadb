@@ -9,8 +9,8 @@ if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
 
 
 
-require_once('main.inc.php');
-require_once('session.inc.php') ;
+require_once(__DIR__ . '/main.inc.php');
+require_once(__DIR__ . '/session.inc.php') ;
 
 if($session->get_var('loggedin')==1 && $session->get_var('permissionstatus')==member::PERMISSION_USER)
 {}

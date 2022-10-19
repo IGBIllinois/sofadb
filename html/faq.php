@@ -1,18 +1,19 @@
 <?php
 
-require_once("./include/header_general.php");
+require_once(__DIR__ . "/include/main.inc.php");
+
+$session = new \IGBIllinois\session(settings::get_session_name());
+
+require_once(__DIR__ . "/include/header_general.php");
 
 ?>
 
 <?php
-    if(isset($session) && $session->get_var('loggedin') == 1) {
+if(isset($session) && $session->get_var('loggedin') == 1) {
+	echo "<div id='navigation'></div>";
+}
 ?>
     
-<div id="navigation"></div>
-<?php
-
-    }
-?>
 <div id="templatecontainer">
 <div id="caseregion" style='margin-left:200px;'>
 
@@ -281,6 +282,7 @@ The Case Notes section is the ideal place to include case notes. However, we ask
 <BR>
      
 </div></div>
-      <?php
+
+<?php
 require_once("include/footer.php");
 ?>

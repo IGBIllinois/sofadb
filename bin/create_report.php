@@ -6,15 +6,8 @@ chdir(dirname(__FILE__));
 $include_paths = array('../libs');
 set_include_path(get_include_path() . ":" . implode(':',$include_paths));
 
-function my_autoloader($class_name) {
-	if(file_exists("../libs/" . $class_name . ".class.inc.php")) {
-		require_once $class_name . '.class.inc.php';
-	}
-}
-spl_autoload_register('my_autoloader');
-
 require_once '../conf/settings.inc.php';
-require_once '../vendor/autoload.php';
+require_once '../html/include/main.inc.php';
 
 
 //Command parameters
@@ -46,6 +39,11 @@ if (php_sapi_name() != 'cli') {
 	}
 
 
+	$case_data = array();
+        $method_list = array();
+        $unsubmitted = null;
+        $case_results = sofa_case::search_cases($db, $case_data, $method_list, $unsubmitted);
+        sofa_case::write_report($db, $case_results, null, null);
 
 
 
