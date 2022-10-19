@@ -400,4 +400,10 @@ class functions {
 
    }
 
+   public static function get_regions($db) {
+		$sql = "SELECT * FROM region ORDER BY id ASC";
+		$result = $db->query($sql);
+		return $result;
+
+   }
 }

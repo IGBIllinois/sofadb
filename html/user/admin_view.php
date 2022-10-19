@@ -6,6 +6,7 @@ require_once('../include/main.inc.php') ;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+$session = new \IGBIllinois\session(settings::get_session_name());
 
 $member = new member($db, $session->get_var('id'));
 if($member->get_permissionstatus() == member::PERMISSION_ADMIN) {

@@ -17,13 +17,15 @@ require_once('../../include/session.inc.php') ;
   <?php
 
 // Has the form been submitted?
+$selected_region = 0;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
     if(isset($_POST['editsubmit'])) {
         // Get member id and display current info
         
         $memberid=$_POST['edit_member_id'];
-        $edit_member = new member($db, $memberid);
+	$edit_member = new member($db, $memberid);
+	$selected_region = $edit_member->get_region();
     } else if(isset($_POST["submit"])){
         //Update with new info
         
@@ -132,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
 	if (empty($_POST['region'])) {
             $errors[] = 'You forgot to enter your region of practice.';
 	} else {
-            $region = trim($_POST['region']);
+            $selected_region = trim($_POST['region']);
 	}
 	
 	if (empty($_POST['aafs'])) {
@@ -197,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
             "fieldofstudy"=>$field,
             "aafsstatus"=>$aafs,
             "institution"=>$inst,
-            "region"=>$region,
+            "region"=>$selected_region,
             "mailaddress1"=>$ad1,
             "mailaddress2"=>$ad2,
             "city"=>$cty,
@@ -249,7 +251,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
     }
     // End of the main Submit conditional.
 }
-?></div>
+
+
+$regions_html = "";
+$regions = functions::get_regions($db);
+foreach ($regions as $region) {
+	if ($selected_region == $region['id']) {
+		$regions_html .= "<option value='" . $region['id'] . "' selected>" . $region['name'] . "</option>";
+	}
+	else {
+		$regions_html .= "<option value='" . $region['id'] . "'>" . $region['name'] . "</option>";
+	}
+}
+?>
+</div>
   
   
   
@@ -296,21 +311,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' ) {
         </select>
         <br><label class="label" for="region">Region of Practice*</label>
             <select name="region">
-        <option value="">- Select -</option>
-        <option value="1"<?php if (isset($_POST['region']) AND ($_POST['region'] == '1')) echo ' selected="selected"'; ?>>U.S. Northeast</option>
-        <option value="2"<?php if (isset($_POST['region']) AND ($_POST['region'] == '2')) echo ' selected="selected"'; ?>>U.S. West</option>
-        <option value="3"<?php if (isset($_POST['region']) AND ($_POST['region'] == '3')) echo ' selected="selected"'; ?>>U.S. Midwest</option>
-        <option value="4"<?php if (isset($_POST['region']) AND ($_POST['region'] == '4')) echo ' selected="selected"'; ?>>U.S. South</option>
-        <option value="5"<?php if (isset($_POST['region']) AND ($_POST['region'] == '5')) echo ' selected="selected"'; ?>>Africa</option>
-        <option value="6"<?php if (isset($_POST['region']) AND ($_POST['region'] == '6')) echo ' selected="selected"'; ?>>Asia Pacific</option>
-        <option value="7"<?php if (isset($_POST['region']) AND ($_POST['region'] == '7')) echo ' selected="selected"'; ?>>Central America</option>
-        <option value="8"<?php if (isset($_POST['region']) AND ($_POST['region'] == '8')) echo ' selected="selected"'; ?>>Canada</option>
-        <option value="9"<?php if (isset($_POST['region']) AND ($_POST['region'] == '9')) echo ' selected="selected"'; ?>>Caribbean</option>
-        <option value="10"<?php if (isset($_POST['region']) AND ($_POST['region'] == '10')) echo ' selected="selected"'; ?>>Europe</option>
-        <option value="11"<?php if (isset($_POST['region']) AND ($_POST['region'] == '11')) echo ' selected="selected"'; ?>>Middle East</option>
-        <option value="12"<?php if (isset($_POST['region']) AND ($_POST['region'] == '12')) echo ' selected="selected"'; ?>>South America</option>
-        
-        
+	<option value="">- Select -</option>
+	<?php echo $regions_html; ?>
+
         </select>
         
     

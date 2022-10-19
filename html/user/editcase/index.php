@@ -16,6 +16,7 @@ require_once('../../include/header_user.php');
 
 $casedata = null;
 $errors = array();
+$caseregion = 0;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -32,7 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             exit;
         } else {
             $caseeditid=$_POST['caseid'];
-            $casedata = new sofa_case($db, $caseeditid);
+	    $casedata = new sofa_case($db, $caseeditid);
+	    $caseregion = $casedata->get_caseregion();
         }
     } else {
         echo("Please enter a valid case to edit.");
@@ -710,7 +712,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit();
                 } else {
                     echo($result["MESSAGE"]);
-                    $casedata = new sofa_case($db, $caseeditid);
+		    $casedata = new sofa_case($db, $caseeditid);
+		    $caseregion = $casedata->get_caseregion();
                 }
 
 	} else {
@@ -738,6 +741,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else {
     // No submit
 }
+
+$regions_html = "";
+$regions = functions::get_regions($db);
+foreach ($regions as $region) {
+        if ($caseregion == $region['id']) {
+                $regions_html .= "<option value='" . $region['id'] . "' selected>" . $region['name'] . "</option>";
+        }
+        else {
+                $regions_html .= "<option value='" . $region['id'] . "'>" . $region['name'] . "</option>";
+        }
+}
+
 ?>
 
 
@@ -784,19 +799,7 @@ above.</span>
   <br><label class="label" for="caseregion">Case Region</label>
     <select name="caseregion">
         <option value="">- Select -</option>
-        <option value="1"<?php if ($casedata->get_caseregion() == '1') echo ' selected="selected"'; ?>>U.S. Northeast</option>
-        <option value="2"<?php if ($casedata->get_caseregion() == '2') echo ' selected="selected"'; ?>>U.S. West</option>
-        <option value="3"<?php if ($casedata->get_caseregion() == '3') echo ' selected="selected"'; ?>>U.S. Midwest</option>
-        <option value="4"<?php if ($casedata->get_caseregion() == '4') echo ' selected="selected"'; ?>>U.S. South</option>
-        <option value="5"<?php if ($casedata->get_caseregion() == '5') echo ' selected="selected"'; ?>>Africa</option>
-        <option value="6"<?php if ($casedata->get_caseregion() == '6') echo ' selected="selected"'; ?>>Asia Pacific</option>
-        <option value="7"<?php if ($casedata->get_caseregion() == '7') echo ' selected="selected"'; ?>>Central America</option>
-        <option value="8"<?php if ($casedata->get_caseregion() == '8') echo ' selected="selected"'; ?>>Canada</option>
-        <option value="9"<?php if ($casedata->get_caseregion() == '9') echo ' selected="selected"'; ?>>Caribbean</option>
-        <option value="10"<?php if ($casedata->get_caseregion() == '10') echo ' selected="selected"'; ?>>Europe</option>
-        <option value="11"<?php if ($casedata->get_caseregion() == '11') echo ' selected="selected"'; ?>>Middle East</option>
-        <option value="12"<?php if ($casedata->get_caseregion() == '12') echo ' selected="selected"'; ?>>South America</option>
-
+	<?php echo $regions_html; ?>
 
     </select>
   

@@ -24,9 +24,11 @@ if(isset($session) && $session->get_var('loggedin') == 1) {
     
   <h1 class="cntr">Membership Registration</h1>
   
-  <?php
+<?php
+$selected_region = 0;
 // This code inserts a record into the users table
 // Has the form been submitted?
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
     echo('<div id="wrapper" style="width:500px">');
@@ -148,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if (empty($_POST['region'])) {
 		$errors[] = 'You forgot to enter your region of practice.';
 	} else {
-		$region = trim($_POST['region']);
+		$selected_region = $_POST['region'];
 	}
 	
 	if (empty($_POST['aafs'])) {
@@ -212,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "fieldofstudy"=>$field,
             "aafsstatus"=>$aafs,
             "institution"=>$inst,
-            "region"=>$region,
+            "region"=>$selected_region,
             "mailaddress1"=>$ad1,
             "mailaddress2"=>$ad2,
             "city"=>$cty,
@@ -286,6 +288,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo("ERROR:".$e->getTraceAsString());
 }
 }
+
+$regions_html = "";
+$regions = functions::get_regions($db);
+foreach ($regions as $region) {
+        if ($selected_region == $region['id']) {
+                $regions_html .= "<option value='" . $region['id'] . "' selected>" . $region['name'] . "</option>";
+        }
+        else {
+                $regions_html .= "<option value='" . $region['id'] . "'>" . $region['name'] . "</option>";
+        }
+}
+
 echo("</div>");
 ?>
   
@@ -342,19 +356,7 @@ echo("</div>");
       <br><label class="label" for="region">Current Region of Practice*</label>
       <select name="region">
         <option value="">- Select -</option>
-        <option value="1"<?php if (isset($_POST['region']) AND ($_POST['region'] == '1')) echo ' selected="selected"'; ?>>U.S. Northeast</option>
-        <option value="2"<?php if (isset($_POST['region']) AND ($_POST['region'] == '2')) echo ' selected="selected"'; ?>>U.S. West</option>
-        <option value="3"<?php if (isset($_POST['region']) AND ($_POST['region'] == '3')) echo ' selected="selected"'; ?>>U.S. Midwest</option>
-        <option value="4"<?php if (isset($_POST['region']) AND ($_POST['region'] == '4')) echo ' selected="selected"'; ?>>U.S. South</option>
-        <option value="5"<?php if (isset($_POST['region']) AND ($_POST['region'] == '5')) echo ' selected="selected"'; ?>>Africa</option>
-        <option value="6"<?php if (isset($_POST['region']) AND ($_POST['region'] == '6')) echo ' selected="selected"'; ?>>Asia Pacific</option>
-        <option value="7"<?php if (isset($_POST['region']) AND ($_POST['region'] == '7')) echo ' selected="selected"'; ?>>Central America</option>
-        <option value="8"<?php if (isset($_POST['region']) AND ($_POST['region'] == '8')) echo ' selected="selected"'; ?>>Canada</option>
-        <option value="9"<?php if (isset($_POST['region']) AND ($_POST['region'] == '9')) echo ' selected="selected"'; ?>>Caribbean</option>
-        <option value="10"<?php if (isset($_POST['region']) AND ($_POST['region'] == '10')) echo ' selected="selected"'; ?>>Europe</option>
-        <option value="11"<?php if (isset($_POST['region']) AND ($_POST['region'] == '11')) echo ' selected="selected"'; ?>>Middle East</option>
-        <option value="12"<?php if (isset($_POST['region']) AND ($_POST['region'] == '12')) echo ' selected="selected"'; ?>>South America</option>
-        
+	<?php echo $regions_html; ?> 
         
         </select>
       <br><label class="label" for="degree">Education*</label>

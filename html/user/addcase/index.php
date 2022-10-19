@@ -6,6 +6,8 @@ require_once(__DIR__ . '/../../include/session.inc.php');
 $addcase = 1;
 $title = "Forensic Anthropology Case Database (FADAMA) -  Add Case";
 
+$caseregion = 0;
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     $errors = array(); // Start an array to hold the errors
@@ -442,6 +444,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }// End of else (empty($errors))
 } // End of the main Submit conditional.
 
+$regions_html = "";
+$regions = functions::get_regions($db);
+foreach ($regions as $region) {
+        if ($caseregion == $region['id']) {
+                $regions_html .= "<option value='" . $region['id'] . "' selected>" . $region['name'] . "</option>";
+        }
+        else {
+                $regions_html .= "<option value='" . $region['id'] . "'>" . $region['name'] . "</option>";
+        }
+}
   
 require_once('../../include/header_user.php');
 
@@ -492,19 +504,7 @@ above.</span>
       <label class="label" for="caseregion">Case Region</label>
       <select name="caseregion">
         <option value="">- Select -</option>
-        <option value="1"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '1')) echo ' selected="selected"'; ?>>U.S. Northeast</option>
-        <option value="2"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '2')) echo ' selected="selected"'; ?>>U.S. West</option>
-        <option value="3"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '3')) echo ' selected="selected"'; ?>>U.S. Midwest</option>
-        <option value="4"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '4')) echo ' selected="selected"'; ?>>U.S. South</option>
-        <option value="5"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '5')) echo ' selected="selected"'; ?>>Africa</option>
-        <option value="6"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '6')) echo ' selected="selected"'; ?>>Asia Pacific</option>
-        <option value="7"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '7')) echo ' selected="selected"'; ?>>Central America</option>
-        <option value="8"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '8')) echo ' selected="selected"'; ?>>Canada</option>
-        <option value="9"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '9')) echo ' selected="selected"'; ?>>Caribbean</option>
-        <option value="10"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '10')) echo ' selected="selected"'; ?>>Europe</option>
-        <option value="11"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '11')) echo ' selected="selected"'; ?>>Middle East</option>
-        <option value="12"<?php if (isset($_POST['caseregion']) AND ($_POST['caseregion'] == '12')) echo ' selected="selected"'; ?>>South America</option>
-        
+       	<?php echo $regions_html; ?> 
         
         </select>
     
