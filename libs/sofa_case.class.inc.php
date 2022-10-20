@@ -1115,6 +1115,15 @@ public function submit_case($submitstatus) {
 			$output_filepath = $output_dir . "/" . $zip_filename;
 			rename($zip_filepath,$output_filepath);
 		}
+		if(!$fdb) {
+	    
+			// Add record of download request to database
+			$download_query = "INSERT INTO downloads (name, email, date) VALUES (:name, :email, NOW())";
+			$download_params = array("name"=>$username,
+                                    "email"=>$email);
+			$db->insert_query($download_query, $download_params);
+		} 
+
 		return $output_filepath;
 	
     }
@@ -1281,13 +1290,8 @@ public function submit_case($submitstatus) {
         $method_info_ids = $headerrow2; // for proper order of method_infos
 
 
-//        $sx_methods = method::get_methods_by_type($db, METHOD_DATA_SEX_ID);
-//        $age_methods = method::get_methods_by_type($db, METHOD_DATA_AGE_ID);
-//        $anc_methods = method::get_methods_by_type($db, METHOD_DATA_ANCESTRY_ID);
- //       $stat_methods = method::get_methods_by_type($db, METHOD_DATA_STATURE_ID);
        	$all_methods = method::get_methods_by_type($db,$method_type); 
         // Order methods by type
-   //     $all_methods = array_merge($sx_methods, $age_methods, $anc_methods, $stat_methods);
         
         foreach($all_methods as $method) {
             // Create header rows for methods
@@ -1383,15 +1387,6 @@ public function submit_case($submitstatus) {
             } // end foreach($method_infos)
         } // end creating header rows
          
-        if(!$fdb) {
-            // Add record of download request to database
-            $download_query = "INSERT INTO downloads (name, email, date) VALUES (:name, :email, NOW())";
-            $download_params = array("name"=>$username,
-                                    "email"=>$email);
-            $db->insert_query($download_query, $download_params);
-        } else {
-            // FDB report, don't record
-        }
         
         // create a file pointer connected to the output stream
         $output = fopen('php://temp', 'w');

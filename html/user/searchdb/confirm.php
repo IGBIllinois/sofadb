@@ -1,6 +1,7 @@
 <?php
 $title = "Forensic Anthropology Case Database (FADAMA) - Confirm";
-
+require_once(__DIR__ . '/../../include/main.inc.php');
+require_once(__DIR__ . '/../../include/session.inc.php') ;
 
 $errors = 0;
 $error_messages = array();
@@ -60,18 +61,22 @@ if(isset($_POST['submit_consent'])) {
     }
 }
 require_once('../../include/header_user.php');
-echo("<div id='searchregion'>");
-echo("<div id='searchform'>");
-echo('<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Confirm</legend>');
 
-echo("<form action='confirm.php' method=POST name='confirmform'>");
+?>
 
+<div id='searchregion'>
+<div id='searchform'>
+<fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">Confirm</legend>
+
+<form action='confirm.php' method='POST' name='confirmform'>
+
+<?php
 // Re-add the POST search variables to this form
 foreach($_POST as $name=>$value) {
     echo("<input type=hidden name=$name value='$value'>");
 }
 
-echo <<<_END
+?>
 
 <input type=hidden value='submit_consent' name="submit_consent" id='submit_consent'>
 <BR>
@@ -86,19 +91,16 @@ echo <<<_END
 <input type="checkbox" name="terms" id="terms"> By checking this box, I hereby agree to be bound by the terms and conditions contained within the agreement.
 <BR>
 <BR>
-_END;
 
-echo("
 <table>
     <tr><td>Name:</td><td><input type='text' name='name' id='name'></td></tr>
     <tr><td>Email:</td><td><input type='text' name='email' id='email'></td></tr>
 </table>
 <BR>
-<input name='$submitid' id='$submitid' type='submit' value='Export Case Data'></p>
+<input name='<?php echo $submitid; ?>' id='<?php echo $submitid; ?>' type='submit' value='Export Case Data'></p>
 <BR>    
 </form>
 <a href='index.php'>Back to search</a><BR><BR>
 </fieldset>
 </div></div>
 
-");

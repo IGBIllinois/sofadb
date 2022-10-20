@@ -424,7 +424,7 @@ if(!isset($fageid2)) $fageid2="";
     
 <form action="confirm.php" method="post" id="export">
 
-<input type=hidden name='mId' value='$memberid'>
+<input type=hidden name='mId' value='<?php echo $memberid; ?>'>
 
     
 
