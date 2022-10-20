@@ -52,8 +52,6 @@ mysql -u root -p sofadb < sql/prompts.sql
 
 ```composer install```
  
-Copy the created /vendor folder to the /html folder.
-
 8. Default username is "admin@admin.com" with password 'password'
 * After logging in, change your password
 

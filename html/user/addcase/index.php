@@ -6,7 +6,7 @@ require_once(__DIR__ . '/../../include/session.inc.php');
 $addcase = 1;
 $title = "Forensic Anthropology Case Database (FADAMA) -  Add Case";
 
-$caseregion = 0;
+$region_id = 0;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
@@ -67,10 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Check for a case agency:
-    if (empty($_POST['caseregion'])) {
-        $caseregion=NULL;
+    if (empty($_POST['region_id'])) {
+        $region_id = 0;
     } else {
-        $caseregion = trim($_POST['caseregion']);
+        $region_id = $_POST['region_id'];
     }
     
     
@@ -368,7 +368,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 "origcaseyear"=>$origcaseyear,
                 "memberid"=>$memberid,
                 "caseag"=>$caseag,
-                "caseregion"=>$caseregion,
+                "region_id"=>$region_id,
                 "fasex"=>$fasex,
                 "faage"=>$faage,
                 "faage2"=>$faage2,
@@ -447,7 +447,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $regions_html = "";
 $regions = functions::get_regions($db);
 foreach ($regions as $region) {
-        if ($caseregion == $region['id']) {
+        if ($region_id == $region['id']) {
                 $regions_html .= "<option value='" . $region['id'] . "' selected>" . $region['name'] . "</option>";
         }
         else {
@@ -501,8 +501,8 @@ above.</span>
   <label class="label" for="caseagency">Case Agency</label><input id="caseagency" type="text" name="caseagency" size="30"  value="<?php if (isset($_POST['caseagency'])) echo $_POST['caseagency']; ?>"/>
   <br />
   
-      <label class="label" for="caseregion">Case Region</label>
-      <select name="caseregion">
+      <label class="label" for="region_id">Case Region</label>
+      <select name="region_id">
         <option value="">- Select -</option>
        	<?php echo $regions_html; ?> 
         

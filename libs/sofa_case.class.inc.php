@@ -31,7 +31,10 @@ class sofa_case {
     
     /** Case region */
     private $caseregion;
-    
+   
+    /** Region ID */
+    private $region_id;
+
     /** Forensic Anthropology estimated sex */
     private $fasex;
     
@@ -161,6 +164,7 @@ class sofa_case {
     public function get_memberid() { return $this->memberid; }
     public function get_caseagency() { return $this->caseagency; }
     public function get_caseregion() { return $this->caseregion; }
+    public function get_region_id() { return $this->region_id; }
     public function get_fasex() { return $this->fasex; }
     public function get_faage() { return $this->faage; }
     public function get_faage2() { return $this->faage2; }
@@ -228,7 +232,7 @@ class sofa_case {
                 . "origcaseyear,"
                 . "memberid,"
                 . "caseagency,"
-                . "caseregion," 
+                . "region_id," 
                 . "fasex,"
                 . "faage,"
                 . "faage2,"
@@ -275,7 +279,7 @@ class sofa_case {
                     . ":origcaseyear,"
                     . ":memberid,"
                     . ":caseag,"
-                    . ":caseregion,"
+                    . ":region_id,"
                     . ":fasex,"
                     . ":faage,"
                     . ":faage2,"
@@ -443,7 +447,7 @@ public function submit_case($submitstatus) {
                 . "origcaseyear=:origcaseyear,"
                 . "casenumber=:casenum,"
                 . "caseagency=:caseag,"
-                . "caseregion=:caseregion," 
+                . "region_id=:region_id," 
                 . "fasex=:fasex,"
                 . "faage=:faage,"
                 . "faage2=:faage2,"
@@ -826,12 +830,12 @@ public function submit_case($submitstatus) {
         }
         
         // Region
-        if (isset($case_data['region']) && ($case_data['region'] != null && $case_data['region'] != "")) {
+        if (isset($case_data['region_id']) && ($case_data['region_id'] != null && $case_data['region_id'] != "")) {
             if($param_string != "") {
                 $param_string .= $conjunction;
             }
-            $param_string .= " members.region = :region ";
-            $params["region"] = $case_data['region'];
+            $param_string .= " cases.region_id = :region_id ";
+            $params["region_id"] = $case_data['region_id'];
         }
         
         // Sex id
@@ -1745,7 +1749,9 @@ public function submit_case($submitstatus) {
     
     private function load_case($id) {
         
-        $query = "SELECT * from cases where id=  :id";
+	    $query = "SELECT cases.*,region.name as caseregion,region.id as region_id from cases ";
+	    $query .= "LEFT JOIN region ON region_id=cases.region_id ";
+	    $query .= "WHERE cases.id=  :id";
         $mresult = $this->db->query($query, array("id"=>$id));
         if(!$mresult) {
             echo 'Could not load data from database';
@@ -1759,7 +1765,8 @@ public function submit_case($submitstatus) {
         $this->orig_case_year = $casedata['origcaseyear'];
         $this->memberid = $casedata['memberid'];
         $this->caseagency = $casedata['caseagency'];
-        $this->caseregion = $casedata['caseregion'];
+	$this->caseregion = $casedata['caseregion'];
+	$this->region_id = $casedata['region_id'];
         $this->fasex = $casedata['fasex'];
         $this->faage = $casedata['faage'];
         $this->faage2 = $casedata['faage2'];

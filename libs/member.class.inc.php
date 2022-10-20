@@ -45,7 +45,10 @@ class member {
     
     /** Region user works in */
     private $region;
-    
+
+    /** Region ID */
+    private $region_id;
+
     /** Mailing address 1 */
     private $mailaddress;
     
@@ -107,6 +110,7 @@ public function get_fieldofstudy() { return $this->fieldofstudy; }
 public function get_aafsstatus() { return $this->aafsstatus; }
 public function get_institution() { return $this->institution; }
 public function get_region() { return $this->region; }
+public function get_region_id() { return $this->region_id; }
 public function get_mailaddress() { return $this->mailaddress; }
 public function get_mailaddress2() { return $this->mailaddress2; }
 public function get_city() { return $this->city; }
@@ -526,7 +530,7 @@ public static function add_member($db, $params) {
             . "fieldofstudy,"
             . "aafsstatus,"
             . "institution,"
-            . "region,"
+            . "region_id,"
             . "mailaddress,"
             . "mailaddress2,"
             . "city,"
@@ -552,7 +556,7 @@ public static function add_member($db, $params) {
                 . ":fieldofstudy,"
                 . ":aafsstatus,"
                 . ":institution,"
-                . ":region,"
+                . ":region_id,"
                 . ":mailaddress1,"
                 . ":mailaddress2,"
                 . ":city,"
@@ -606,7 +610,7 @@ public static function update_member($db, $params, $pwd=null) {
             . "fieldofstudy = :fieldofstudy,"
             . "aafsstatus = :aafsstatus,"
             . "institution = :institution,"
-            . "region = :region,"
+            . "region_id = :region_id,"
             . "mailaddress = :mailaddress1,"
             . "mailaddress2 = :mailaddress2,"
             . "city = :city,"
@@ -672,9 +676,11 @@ public static function update_member($db, $params, $pwd=null) {
      * @param int $id ID of the member to get data for
      */
     private function load_member($id) {
-        $query = "SELECT * from members where id = :id LIMIT 1";
-        $params = array("id"=>$id);
-        $result = $this->db->query($query, $params);
+	    $query = "SELECT members.*,region.id as region_id, region.name as region from members ";
+	    $query .= "LEFT JOIN region ON region.id=members.region_id ";
+	    $query .= "WHERE members.id = :id LIMIT 1";
+	    $params = array("id"=>$id);
+            $result = $this->db->query($query, $params);
         
         if(count($result) > 0) {
             $member_data = $result[0];
@@ -689,7 +695,8 @@ public static function update_member($db, $params, $pwd=null) {
             $this->fieldofstudy = $member_data['fieldofstudy'];
             $this->aafsstatus = $member_data['aafsstatus'];
             $this->institution = $member_data['institution'];
-            $this->region = $member_data['region'];
+	    $this->region = $member_data['region'];
+	    $this->region_id = $member_data['region_id'];
             $this->mailaddress = $member_data['mailaddress'];
             $this->mailaddress2 = $member_data['mailaddress2'];
             $this->city = $member_data['city'];

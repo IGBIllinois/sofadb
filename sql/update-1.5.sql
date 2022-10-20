@@ -43,5 +43,9 @@ INSERT INTO region(id,name) VALUES('12','South America');
 
 UPDATE cases SET caseregion=0 WHERE caseregion IS NULL;
 UPDATE members SET region=0 WHERE region IS NULL;
-ALTER TABLE cases MODIFY caseregion INT NOT NULL DEFAULT 0;
-ALTER TABLE members MODIFY region INT NOT NULL DEFAULT 0;
+
+ALTER TABLE cases CHANGE caseregion region_id INT NOT NULL DEFAULT 0;
+ALTER TABLE members CHANGE region region_id INT NOT NULL DEFAULT 0; 
+UPDATE cases SET region_id=0 WHERE region_id IS NULL;
+UPDATE members SET region_id=0 WHERE region_id IS NULL;
+

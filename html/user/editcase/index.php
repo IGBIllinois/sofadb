@@ -16,7 +16,7 @@ require_once('../../include/header_user.php');
 
 $casedata = null;
 $errors = array();
-$caseregion = 0;
+$region_id = 0;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $caseeditid=$_POST['caseid'];
 	    $casedata = new sofa_case($db, $caseeditid);
-	    $caseregion = $casedata->get_caseregion();
+	    $region_id = $casedata->get_region_id();
         }
     } else {
         echo("Please enter a valid case to edit.");
@@ -308,12 +308,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	}
         
         // Check for a case agency:
-	if (empty($_POST['caseregion'])) {
-            $caseregion=NULL;
+	if (empty($_POST['region_id'])) {
+            $region_id = 0;
         
 	} 
         else {
-            $caseregion = trim($_POST['caseregion']);
+            $region_id = $_POST['region_id'];
 	}
 	
         // Check for a FA sex
@@ -649,7 +649,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     "caseyear"=>$caseyear,
                     "origcaseyear"=>$origcaseyear,
                     "caseag"=>$caseag,
-                    "caseregion"=>$caseregion,
+                    "region_id"=>$region_id,
 
                     "fasex"=>$fasex,
                     "faage"=>$faage,
@@ -713,7 +713,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 } else {
                     echo($result["MESSAGE"]);
 		    $casedata = new sofa_case($db, $caseeditid);
-		    $caseregion = $casedata->get_caseregion();
+		    $region_id = $casedata->get_region_id();
                 }
 
 	} else {
@@ -745,7 +745,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $regions_html = "";
 $regions = functions::get_regions($db);
 foreach ($regions as $region) {
-        if ($caseregion == $region['id']) {
+        if ($region_id == $region['id']) {
                 $regions_html .= "<option value='" . $region['id'] . "' selected>" . $region['name'] . "</option>";
         }
         else {
@@ -796,8 +796,8 @@ above.</span>
     
   <label class="label" for="caseagency">Case Agency</label><input id="caseagency" type="text" name="caseagency" size="30" maxlength="30" value="<?php echo $casedata->get_caseagency(); ?>"/>
  
-  <br><label class="label" for="caseregion">Case Region</label>
-    <select name="caseregion">
+  <br><label class="label" for="region_id">Case Region</label>
+    <select name="region_id">
         <option value="">- Select -</option>
 	<?php echo $regions_html; ?>
 

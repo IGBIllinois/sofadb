@@ -13,7 +13,7 @@ require_once('../../include/session.inc.php') ;
 
 $memberid=$session->get_var('id');
 $edit_member = new member($db, $memberid);
-$selected_region = $edit_member->get_region();
+$region_id = $edit_member->get_region_id();
 
 // Connect to the database.
 // This code inserts a record into the users table
@@ -151,10 +151,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $ph = NULL;
 	}
 	
-	if (empty($_POST['region'])) {
+	if (empty($_POST['region_id'])) {
 		$errors[] = 'You forgot to enter your region of practice.';
 	} else {
-		$selected_region = $_POST['region'];
+		$region_id = $_POST['region_id'];
 	}
 	
 	if (empty($_POST['aafs'])) {
@@ -219,7 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "fieldofstudy"=>$field,
             "aafsstatus"=>$aafs,
             "institution"=>$inst,
-            "region"=>$selected_region,
+            "region_id"=>$region_id,
             "mailaddress1"=>$ad1,
             "mailaddress2"=>$ad2,
             "city"=>$cty,
@@ -274,7 +274,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $regions_html = "";
 $regions = functions::get_regions($db);
 foreach ($regions as $region) {
-        if ($selected_region == $region['id']) {
+        if ($region_id == $region['id']) {
                 $regions_html .= "<option value='" . $region['id'] . "' selected>" . $region['name'] . "</option>";
         }
         else {
@@ -331,8 +331,8 @@ foreach ($regions as $region) {
         
         <option value="4"<?php if ($edit_member->get_aafsstatus() == 4) echo ' selected="selected"'; ?>>Not A Member</option>
         </select>
-         <br><label class="label" for="region">Region of Practice*</label>
-      <select name="region">
+         <br><label class="label" for="region_id">Region of Practice*</label>
+      <select name="region_id">
 	<option value="">- Select -</option>
 	<?php echo $regions_html; ?>
         </select>
@@ -428,7 +428,7 @@ foreach ($regions as $region) {
   frmvalidator.addValidation("degreeyear","numeric", "Degree year must be a number in YYYY format");
    frmvalidator.addValidation("degreeyear","gt=1900");
 
-   frmvalidator.addValidation("region","req","Please select your region");
+   frmvalidator.addValidation("region_id","req","Please select your region");
    
    frmvalidator.addValidation("aafs","req","Please select your AAFS membership status");
 
