@@ -1,4 +1,5 @@
 <?php
+require_once(__DIR__ . '/../../include/session.inc.php') ;
 
 $zip_file = "";
 if (isset($_POST['exportMy'])) {

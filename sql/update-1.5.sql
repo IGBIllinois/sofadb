@@ -49,3 +49,5 @@ ALTER TABLE members CHANGE region region_id INT NOT NULL DEFAULT 0;
 UPDATE cases SET region_id=0 WHERE region_id IS NULL;
 UPDATE members SET region_id=0 WHERE region_id IS NULL;
 
+DELETE FROM cases WHERE memberid=0;
+

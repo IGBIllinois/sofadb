@@ -217,9 +217,26 @@ if(!isset($fageid2)) $fageid2="";
 
 ?>
 
-<form action="index.php" method="post" id="search">
     <fieldset class="enclosefieldset">
     <br>
+        <fieldset class="caseinfobox"><legend class="boldlegend">Export Database</legend>
+<br>
+ If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Downloaded_data_sheet' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring. The size of the database prohibits a real-time download of all data in FADAMA. Instead, the data downloads every night at 11:59PM CST and prepared in the .zip file accessible through the Export All button below. There are four spreadsheets, with data related to methods for each of the four biological profile components.
+
+    <BR><BR>
+<form action="confirm.php" method="post" id="export">
+<span><label class="label" for="exportall">Click here to export all cases</label><input name="exportall" type="submit" id="exportall" title="Export All" value="Export All"></span>
+</form>
+<?php echo basename(sofa_case::get_latest_full_report()); ?>
+
+
+<br>
+</fieldset>
+</fieldset>
+<br>
+<form action="index.php" method="post" id="search">
+<fieldset class='enclosefieldset'>
+
    <fieldset class="caseinfobox"><legend class="boldlegend">Search By Identification Information</legend>
     
     <br><label class="label" for="sexid">Identified Sex</label>
@@ -368,7 +385,6 @@ if(!isset($fageid2)) $fageid2="";
     
     <br ><br>
 
-     </fieldset>  
      
     
 <br> 
@@ -377,7 +393,6 @@ if(!isset($fageid2)) $fageid2="";
    
     </fieldset>
 	<br >
-	<fieldset class="enclosefieldset">
 	<fieldset class="caseinfobox"><legend class="boldlegend">Search Options</legend>
         <br>
         <label class="label" for="searchtype">List Cases That Meet:</label>
@@ -397,30 +412,14 @@ if(!isset($fageid2)) $fageid2="";
     
     <br>
     </fieldset>
+
     <br>
-    </fieldset>
-    <br>
-
-</form>
-
-
-<form action="confirm.php" method="post" id="export">
-    
-<fieldset class="enclosefieldset">
-	<fieldset class="caseinfobox"><legend class="boldlegend">Export Database</legend>
-<br>
-    If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Downloaded_data_sheet' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.
-    <BR><BR>
-<span><label class="label" for="exportall">Click here to export all cases</label><input name="exportall" type="submit" id="exportall" title="Export All" value="Export All"></span>
-<?php echo basename(sofa_case::get_latest_full_report()); ?>
-
-
-<br>
 </fieldset>
-	<br>
-	</fieldset>
+    <br>
+
 </form>
-<BR>
+
+
     
 <form action="confirm.php" method="post" id="export">
 

@@ -1093,10 +1093,10 @@ public function submit_case($submitstatus) {
 		} 
 
 
-		$sex_method_data = self::write_report($db,$case_list,$username,$email,$fdb,$mine,METHOD_DATA_SEX_ID);
-		$age_method_data = self::write_report($db,$case_list,$username,$email,$fdb,$mine,METHOD_DATA_AGE_ID);
-		$anc_method_data = self::write_report($db,$case_list,$username,$email,$fdb,$mine,METHOD_DATA_ANCESTRY_ID);
-		$stat_method_data = self::write_report($db,$case_list,$username,$email,$fdb,$mine,METHOD_DATA_STATURE_ID);
+		$sex_method_data = self::write_report($db,$case_list,$fdb,$mine,METHOD_DATA_SEX_ID);
+		$age_method_data = self::write_report($db,$case_list,$fdb,$mine,METHOD_DATA_AGE_ID);
+		$anc_method_data = self::write_report($db,$case_list,$fdb,$mine,METHOD_DATA_ANCESTRY_ID);
+		$stat_method_data = self::write_report($db,$case_list,$fdb,$mine,METHOD_DATA_STATURE_ID);
 
 		try {
 			$zip->addFile(__DIR__ . "/../html/docs/Report_Info.docx", "Report_Info.docx");
@@ -1133,24 +1133,11 @@ public function submit_case($submitstatus) {
      * 
      * @param db $db The database object
      * @param \sofa_case $case_list List of case objects
-     * @param string $name Name of the user making the request
-     * @param string $email Email of the user making the request
      * @param bool $fdb True if this is an FDB report (only show methods from the FDB database)
      * @param bool $mine True if this is a report for the given user's cases (show case number and agency)
      * @param string A method type to create report
      */
-    public static function write_report($db, $case_list, $username=null, $email=null, $fdb=0, $mine=0, $method_type = null) {
-        
-        $today = date("m_d_Y_H_i_s");
-        
-        // Excel filename
-        $filename='SOFADBExport_'.$today.".csv";
-        
-        if($fdb) {
-            // Excel filename
-            $filename = 'SOFADB_FDB_Export_'.$today.".csv";
-            
-        }
+    private static function write_report($db, $case_list,$fdb=0, $mine=0, $method_type = null) {
         
        // make header rows for data
        if($fdb) {
@@ -1398,8 +1385,6 @@ public function submit_case($submitstatus) {
 
         foreach($case_list as $curr_case) {
             $curr_row = array();
-
-            $member = new member($db, $curr_case->get_memberid());
 
             $curr_row[] = $curr_case->get_id();
 

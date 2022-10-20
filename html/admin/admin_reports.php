@@ -39,7 +39,17 @@ require_once "../include/header_admin.php";
          // No errors; Write report
         $params['fdb_consent'] = true;
         $caselist = sofa_case::search_cases($db, $params, null);
-        sofa_case::write_report($db, $caselist, null, null, 1,0);
+	$zip_file = sofa_case::write_full_report($db, $caselist, null, null, 1,0);
+	if (file_exists($zip_file)) {
+        	header("Content-type: application/zip");
+	        header("Content-Disposition: attachment; filename=" . basename($zip_file));
+        	header("Content-Type: application/zip");
+	        header("Content-Length: " . filesize($zip_file));
+        	header("Pragma: no-cache");
+	        header("Expires: 0");
+        	readfile($zip_file);
+	}
+
         die();
      }
 
