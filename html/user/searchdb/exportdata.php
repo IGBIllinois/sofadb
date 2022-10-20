@@ -70,17 +70,15 @@ elseif (isset($_POST['exportsubmit'])) {
 } 
 
 elseif (isset($_POST['exportall'])) {
-	$case_data = array();
-	$method_list = array();
-	$unsubmitted = null;
-	$case_results = sofa_case::search_cases($db, $case_data, $method_list, $unsubmitted);
-	$zip_file = sofa_case::write_report($db, $case_results, $name, $email);
+	$report_dir = settings::get_report_dir();
+	$zip_file = sofa_case::get_latest_full_report();
 }
 
 if (file_exists($zip_file)) {
 	header("Content-type: application/zip");
-	header("Content-Disposition: attachment; filename='" . basename($zip_file) ."'");
+	header("Content-Disposition: attachment; filename=" . basename($zip_file));
 	header("Content-Type: application/zip");
+	header("Content-Length: " . filesize($zip_file));
 	header("Pragma: no-cache");
 	header("Expires: 0");
 	readfile($zip_file);

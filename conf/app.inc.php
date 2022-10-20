@@ -8,7 +8,7 @@
 
 DEFINE('VERSION','1.4');
 DEFINE('WEBSITE_URL','https://github.com/IGBIllinois/sofadb');
-
+DEFINE('REPORT_DIR','reports');
 DEFINE ("PAGEROWS", 20);
 
 // Number of columns for method_info fields

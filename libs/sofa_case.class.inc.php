@@ -1051,7 +1051,74 @@ public function submit_case($submitstatus) {
         }
         return $results;
 
-}
+    }
+
+	public static function get_latest_full_report() {
+		$latest_ctime = 0;
+		$latest_filename = '';
+		$files = glob(settings::get_report_dir() . "/SOFADBExport_*.zip");
+		foreach ($files as $file) {
+			if (is_file($file) && filectime($file) > $latest_ctime) {
+				$latest_ctime = filectime($file);
+				$latest_filename = $file;
+			
+			}
+
+
+		}
+		return $latest_filename;
+	}
+
+    public static function write_full_report($db,$case_list,$username=null,$email=null,$fdb=0,$mine=0,$output_dir = null) {
+		$today = date("m_d_Y_H_i_s");
+
+		// Zip filename
+		$zip_filename= "SOFADBExport_" . $today . ".zip";
+		$sex_filename= "SOFADBExport_sex_" . $today . ".csv";
+		$age_filename= "SOFADBExport_age_" . $today . ".csv";
+		$anc_filename= "SOFADBExport_anc_" . $today . ".csv";
+		$stat_filename= "SOFADBExport_stat_" . $today . ".csv";
+		if($fdb) {
+			// Zip filename
+			$zip_filename = "SOFADB_FDB_Export_" . $today . ".zip";
+			$sex_filename= "SOFADB_FDB_Export_sex_" . $today . ".csv";
+			$age_filename= "SOFADB_FDB_Export_age_" . $today . ".csv";
+			$anc_filename= "SOFADB_FDB_Export_anc_" . $today . ".csv";
+			$stat_filename= "SOFADB_FDB_Export_stat_" . $today . ".csv";
+		}
+		$zip_filepath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $zip_filename;
+		$zip = new ZipArchive();
+		if ($zip->open($zip_filepath, ZIPARCHIVE::CREATE )!==TRUE) {
+			exit("cannot open <$zip_filename>\n");
+		} 
+
+
+		$sex_method_data = self::write_report($db,$case_list,$username,$email,$fdb,$mine,METHOD_DATA_SEX_ID);
+		$age_method_data = self::write_report($db,$case_list,$username,$email,$fdb,$mine,METHOD_DATA_AGE_ID);
+		$anc_method_data = self::write_report($db,$case_list,$username,$email,$fdb,$mine,METHOD_DATA_ANCESTRY_ID);
+		$stat_method_data = self::write_report($db,$case_list,$username,$email,$fdb,$mine,METHOD_DATA_STATURE_ID);
+
+		try {
+			$zip->addFile(__DIR__ . "/../html/docs/Report_Info.docx", "Report_Info.docx");
+			$zip->AddFromString($sex_filename,$sex_method_data);
+			$zip->AddFromString($age_filename,$age_method_data);
+			$zip->AddFromString($anc_filename,$anc_method_data);
+			$zip->AddFromString($stat_filename,$stat_method_data);
+			$zip->close();
+
+		}
+		catch(Exception $e) {
+                        echo("Error:".$e->getTraceAsString());
+		}
+		$output_filepath = $zip_filepath;
+		if ($output_dir != null) {
+			$output_filepath = $output_dir . "/" . $zip_filename;
+			rename($zip_filepath,$output_filepath);
+		}
+		return $output_filepath;
+	
+    }
+
     /** Creates a zip file containing an excel sheet with data from the given cases
      * and an additional information text document.
      * 
@@ -1070,24 +1137,10 @@ public function submit_case($submitstatus) {
         // Excel filename
         $filename='SOFADBExport_'.$today.".csv";
         
-        // Zip filename
-        $zip_filename='SOFADBExport_'.$today.".zip";
-        
         if($fdb) {
             // Excel filename
             $filename = 'SOFADB_FDB_Export_'.$today.".csv";
             
-            // Zip filename
-            $zip_filename = 'SOFADB_FDB_Export_'.$today.".zip";
-        }
-        
-
-        $zip_filepath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $zip_filename;
-        $zip = new ZipArchive();
-        if ($zip->open($zip_filepath, ZIPARCHIVE::CREATE )!==TRUE) {
-            exit("cannot open <$zip_filename>\n");
-        } else {
-            // Zip file created okay
         }
         
        // make header rows for data
@@ -1227,19 +1280,14 @@ public function submit_case($submitstatus) {
         // Add methods to header row
         $method_info_ids = $headerrow2; // for proper order of method_infos
 
-	//$all_methods = array();
 
-        //if ($method_type != null) {
-	//	$all_methods = method::get_methods_by_type($db,$method_type);
-	//}
-
-        $sx_methods = method::get_methods_by_type($db, METHOD_DATA_SEX_ID);
-        $age_methods = method::get_methods_by_type($db, METHOD_DATA_AGE_ID);
-        $anc_methods = method::get_methods_by_type($db, METHOD_DATA_ANCESTRY_ID);
-        $stat_methods = method::get_methods_by_type($db, METHOD_DATA_STATURE_ID);
-        
+//        $sx_methods = method::get_methods_by_type($db, METHOD_DATA_SEX_ID);
+//        $age_methods = method::get_methods_by_type($db, METHOD_DATA_AGE_ID);
+//        $anc_methods = method::get_methods_by_type($db, METHOD_DATA_ANCESTRY_ID);
+ //       $stat_methods = method::get_methods_by_type($db, METHOD_DATA_STATURE_ID);
+       	$all_methods = method::get_methods_by_type($db,$method_type); 
         // Order methods by type
-        $all_methods = array_merge($sx_methods, $age_methods, $anc_methods, $stat_methods);
+   //     $all_methods = array_merge($sx_methods, $age_methods, $anc_methods, $stat_methods);
         
         foreach($all_methods as $method) {
             // Create header rows for methods
@@ -1728,19 +1776,10 @@ public function submit_case($submitstatus) {
 
         } // end foreach($caselist)
         
-        // Now create the Excel sheet and add it and the info document to a zip file.
         rewind($output);
         $data = stream_get_contents($output);
-        fclose($output);
-        try {
-            $zip->addFromString($filename, $data);
-            $zip->addFile("../../docs/Report_Info.docx", "Report_Info.docx");
-
-            $zip->close();
-		return $zip_filepath;
-        } catch(Exception $e) {
-            echo("Error:".$e->getTraceAsString());
-        }
+	fclose($output);
+	return $data;
 
     }
     

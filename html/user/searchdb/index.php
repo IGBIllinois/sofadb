@@ -215,11 +215,8 @@ if(!isset($fyear)) $fyear="";
 if(!isset($fageid1)) $fageid1="";
 if(!isset($fageid2)) $fageid2="";
 
+?>
 
-
-echo <<<_END
-    
-    
 <form action="index.php" method="post" id="search">
     <fieldset class="enclosefieldset">
     <br>
@@ -233,8 +230,8 @@ echo <<<_END
 	<option value="Female">Female</option>
     </select>
 
-    <br><label class="label" for="ageid1">Range of Identified Ages</label><input id="ageid1" type="text" name="ageid1" size="5" maxlength="5" value="$fageid1"/>&nbsp; to &nbsp;
-    <input id="ageid2" type="text" name="ageid2" size="5" maxlength="5" value="$fageid2"/>
+    <br><label class="label" for="ageid1">Range of Identified Ages</label><input id="ageid1" type="text" name="ageid1" size="5" maxlength="5" value="<?php echo $fageid1; ?>"/>&nbsp; to &nbsp;
+<input id="ageid2" type="text" name="ageid2" size="5" maxlength="5" value="<?php echo $fageid2; ?>"/>
     <select name="ageidunits">
       <option value="years">years</option>
       <option value="months">months</option>
@@ -274,7 +271,7 @@ echo <<<_END
 	   </fieldset>  
 	<br>
      <fieldset class="caseinfobox"><legend class="boldlegend">Search By Forensic Anthropology Report Information</legend>
-	 <br><label class="label" for="cyear">Case Year</label><input id="cyear" type="text" name="cyear" size="5" maxlength="4" value="$fyear"> <select name="yearrange" id="yearrange">
+     <br><label class="label" for="cyear">Case Year</label><input id="cyear" type="text" name="cyear" size="5" maxlength="4" value="<?php echo $fyear; ?>"> <select name="yearrange" id="yearrange">
 	<option value="1">On or After</option>
 	<option value="2">On or Before</option>
 	<option value="3">Only</option>
@@ -298,13 +295,10 @@ echo <<<_END
 
         
     <fieldset class="caseinfobox"><legend class="boldlegend">Search By Method</legend>
-        
-_END;
 
+<?php 	
     // Draw dropdown lists of all the methods, organized by type
-
     // Sex methods
-
     $sx_methods = method::get_methods_by_type($db, METHOD_DATA_SEX_ID);
     $list = array();
     foreach($sx_methods as $sx_method) {
@@ -359,9 +353,7 @@ _END;
     echo("</tr></table><BR>");
     
     
-
-    
-echo <<<_END
+?>
     
      <br><label class="label" for="searchtype">Search for cases that contain:</label>
   
@@ -419,7 +411,8 @@ echo <<<_END
 <br>
     If you plan to analyze this data, please be sure to review the FADAMA tutorials on how the .csv organizes and presents case data. There is important information provided in <B><U><a href='https://github.com/andicyim/FADAMA/wiki/FADAMA-User-Tutorial#Downloaded_data_sheet' target=_blank>these tutorials</a></U></B> that can help ensure that misinterpretation of the data is not occurring.
     <BR><BR>
-<span><label class="label" for="exportall">Click here to export all cases</label><input name="exportall" type="submit" id="exportall" title="Export All" value="Export All"></span><br>
+<span><label class="label" for="exportall">Click here to export all cases</label><input name="exportall" type="submit" id="exportall" title="Export All" value="Export All"></span>
+<?php echo basename(sofa_case::get_latest_full_report()); ?>
 
 
 <br>
@@ -431,12 +424,9 @@ echo <<<_END
     
 <form action="confirm.php" method="post" id="export">
 
-_END;
-
-    echo("<input type=hidden name='mId' value='$memberid'>");
+<input type=hidden name='mId' value='$memberid'>
 
     
-    echo <<<_END
 
     <fieldset class="enclosefieldset">
             <fieldset class="caseinfobox"><legend class="boldlegend">Export My Cases</legend>
@@ -481,9 +471,7 @@ _END;
 //]]>
 </script>
 
-_END;
 
-?>
 </div>
 
 <?php

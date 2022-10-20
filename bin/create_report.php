@@ -42,9 +42,9 @@ if (php_sapi_name() != 'cli') {
 	$case_data = array();
         $method_list = array();
         $unsubmitted = null;
-        $case_results = sofa_case::search_cases($db, $case_data, $method_list, $unsubmitted);
-	$zip_file = sofa_case::write_report($db, $case_results, null, null);
-	rename($zip_file,"/var/www/sofadb/reports/" . basename($zip_file));
+	$case_results = sofa_case::search_cases($db, $case_data, $method_list, $unsubmitted);
+	$output_dir = "/var/www/sofadb/reports";
+	$zip_file = sofa_case::write_full_report($db, $case_results, null, null,0,0,$output_dir);
 	
 
 

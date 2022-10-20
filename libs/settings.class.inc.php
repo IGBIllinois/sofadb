@@ -28,6 +28,10 @@ class settings {
 		return WEBSITE_URL;
 	}
 
+	public static function get_report_dir() {
+		return dirname(__DIR__) . "/" . REPORT_DIR;
+
+	}
 	public static function get_timezone() {
 		if (defined("TIMEZONE") && (TIMEZONE != "")) {
 			return TIMEZONE;
