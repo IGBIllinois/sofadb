@@ -15,8 +15,6 @@ function my_autoloader($class_name) {
 
 spl_autoload_register('my_autoloader');
 
-$root_dir = $_SERVER['SERVER_NAME'] . $_SERVER['CONTEXT_PREFIX'];
-
 date_default_timezone_set(settings::get_timezone());
 
 if (settings::get_debug()) {
@@ -26,12 +24,7 @@ if (settings::get_debug()) {
 }
 
 
-if(isset($_SERVER['CONTEXT_PREFIX'])) {
-    $root_url = $_SERVER['CONTEXT_PREFIX'];
-    
-} else {
-    $root_url = ROOT_URL;
-}
+$root_url = ROOT_URL;
 
 
 // database class

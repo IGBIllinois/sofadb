@@ -38,14 +38,20 @@ if (php_sapi_name() != 'cli') {
 		exit;
 	}
 
-
+	echo date('Y-m-d H:i:s') . ": Creating Full Report\n";
 	$case_data = array();
         $method_list = array();
         $unsubmitted = null;
 	$case_results = sofa_case::search_cases($db, $case_data, $method_list, $unsubmitted);
 	$output_dir = "/var/www/sofadb/reports";
-	$zip_file = sofa_case::write_full_report($db, $case_results, null, null,0,0,$output_dir);
-	
-
+	try {
+		$zip_file = sofa_case::write_full_report($db, $case_results, null, null,0,0,$output_dir);
+		echo date('Y-m-d H:i:s') . ": Report created at " . $zip_file . "\n";
+		exit();
+	}
+	catch (Exception $e) {
+		echo date('Y-m-d H:i:s') . ":" . $e->getMessage() . "\n";
+		exit(1);
+	}
 
 ?>

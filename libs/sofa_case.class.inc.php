@@ -1089,7 +1089,7 @@ public function submit_case($submitstatus) {
 		$zip_filepath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $zip_filename;
 		$zip = new ZipArchive();
 		if ($zip->open($zip_filepath, ZIPARCHIVE::CREATE )!==TRUE) {
-			exit("cannot open <$zip_filename>\n");
+			throw new Exception("cannot open " . $zip_filename);
 		} 
 
 
@@ -1108,7 +1108,7 @@ public function submit_case($submitstatus) {
 
 		}
 		catch(Exception $e) {
-                        echo("Error:".$e->getTraceAsString());
+			throw $e;
 		}
 		$output_filepath = $zip_filepath;
 		if ($output_dir != null) {
