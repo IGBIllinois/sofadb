@@ -84,7 +84,7 @@ if (settings::get_debug()) {
             <img class='align_left' src="<?php echo($root_url) ?>/images/header.png">
     </div>
             <table style='float:right'><tr><td class='align_center' >
-              <a href="http://www.sofainc.org" target="_blank"><img  src="<?php echo($root_url) ?>/images/sofaLogo.png"></a>
+              <a href="https://sites.google.com/site/forensicanthropologysofa/home" target="_blank"><img  src="<?php echo($root_url) ?>/images/sofaLogo.png"></a>
             </td></tr><tr><td class='align_center' >
               <a href="https://illinois.edu" target="_blank"><img src="<?php echo($root_url) ?>/images/illinois.png"></a>
             </td></tr><tr><td class='align_center' >

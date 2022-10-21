@@ -12,7 +12,7 @@
   <br /><br /><br /><br />
   </div>
   <CENTER>
-  <div id="footer">Copyright &copy2014-<?php echo date('Y'); ?> by <a href="http://www.sofainc.org/" target="_blank">SOFA</a>.</div>
+  <div id="footer">Copyright &copy2014-<?php echo date('Y'); ?> by <a href="https://sites.google.com/site/forensicanthropologysofa/home" target="_blank">SOFA</a>.</div>
   </CENTER>
 </div>
 </div>
