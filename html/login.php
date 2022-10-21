@@ -61,7 +61,8 @@ if (isset($_POST['login'])) {
                                                 $message = "<p>The email you provided has not yet been verified. Please check the email provided during registration and follow its instructions.</p>";
                                                 $message .= "To resend the verification email, please <a href='contact/resend_verify_request.php'>click here</a>.";
                                                 break;
-                                }
+				}
+				$log->send_log("User: " . $session->get_var('username') . ": Logged In");
 			}
 			else { 
 		       		$message .= '<p class="error">The email address and password entered do not match our records.<br>Perhaps you need to register, click the Register button on the header menu</p>';

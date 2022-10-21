@@ -86,8 +86,9 @@ if(isset($_POST['add_method_submit'])) {
     
     if(count($errors) == 0) {
         $result = method::create_method($db, $name, $type_id, $measurement_type, $description, $instructions, $method_info_type, $prompt, $fdb, $top);
-
-        if($result['RESULT'] == TRUE) {
+	
+	if($result['RESULT'] == TRUE) {
+		$log->send_log("Username: " . $session->get_var('username') . ": " . $result['MESSAGE']);
             $id = $result['id'];
         
             if($id > 0) {
