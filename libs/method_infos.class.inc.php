@@ -927,7 +927,7 @@ class method_infos {
     public static function show_method_info_3_col_with_ref($db, $method_id, $tier2id=null) {
 
         $output = "";
-        $method = new method($db, $method_id);
+        //$method = new method($db, $method_id);
         $cat_input_type = input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY);
         
         $cat_query = "SELECT * from method_infos where methodid = :methodid and input_type = :input_type and parent_id is null";
@@ -1065,7 +1065,7 @@ class method_infos {
     */
     public static function show_method_infos_rios_cardoso($db, $method_id, $tier2id=null) {
         
-        $method = new method($db, $method_id);
+        //$method = new method($db, $method_id);
         
         $selected = array();
         
@@ -1319,7 +1319,7 @@ class method_infos {
      */
     public static function show_method_info_spradley_jantz($db, $method_id, $tier2id=null) {
 
-        $method = new method($db, $method_id);
+        //$method = new method($db, $method_id);
         // Get main categories
         $cat_type  = input_type::get_input_type_by_name($db, 'category');
         $cat_type_id = $cat_type->get_id();

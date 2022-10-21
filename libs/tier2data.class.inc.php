@@ -158,13 +158,13 @@ class tier2data {
         $output = "";
         foreach($info as $tier_info) {
             
-            $method = new method($this->db, $this->get_methodid());
+            //$method = new method($this->db, $this->get_methodid());
             
             $mi_option_id = $tier_info->get_method_info_option_id();
 
             $option = new method_info_option($this->db, $mi_option_id);
 
-            $method_infos = $tier_info->get_method_infos();
+            //$method_infos = $tier_info->get_method_infos();
             
             if($tier_info->get_value() != null && $tier_info->get_value() != "") {
                 $output .= $tier_info->get_value();
