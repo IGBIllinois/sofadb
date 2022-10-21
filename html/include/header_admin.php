@@ -121,6 +121,7 @@ if (settings::get_debug()) {
     <li><a href="<?php echo($root_url) ?>/admin/email.php">Send email</a></li> 
     <li><a href="<?php echo($root_url) ?>/admin/admin_notes.php">Admin notes</a></li>
     <li><a href="<?php echo($root_url) ?>/admin/user_view.php">User View</a></li>
+    <li><a href="<?php echo($root_url) ?>/admin/log.php">View Log</a></li>
     <li><a href="<?php echo($root_url) ?>/admin/about.php">About</a></li> 
   </ul>
     </div>

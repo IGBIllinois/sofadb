@@ -8,6 +8,7 @@ require_once "../include/header_admin.php";
 ?>
 
 <div id="memberregion">
+<h1>About</h1>
 <table id='hortable'>
 	<tbody>
 		<tr><td>Code Website</td></td><td><a href='<?php echo settings::get_website_url(); ?>' target='_blank'><?php echo settings::get_website_url(); ?></a></td></tr>

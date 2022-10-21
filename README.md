@@ -55,4 +55,4 @@ mysql -u root -p sofadb < sql/prompts.sql
 8. Default username is "admin@admin.com" with password 'password'
 * After logging in, change your password
 
-
+9. If logging is enabled.  Copy conf/log_rotate.conf.dist to /etc/logrotate.d/sofadb and edit the log file path

@@ -36,4 +36,6 @@ $db = new \IGBIllinois\db(settings::get_mysql_host(),
 	settings::get_mysql_port()
 ) OR die ('Could not connect to MySQL' );
 
+$log = new \IGBIllinois\log(settings::get_log_enabled(),settings::get_logfile());
+
 ?>

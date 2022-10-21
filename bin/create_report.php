@@ -38,7 +38,7 @@ if (php_sapi_name() != 'cli') {
 		exit;
 	}
 
-	echo date('Y-m-d H:i:s') . ": Creating Full Report\n";
+	$log->send_log("Creating Full Report");
 	$case_data = array();
         $method_list = array();
         $unsubmitted = null;
@@ -46,11 +46,11 @@ if (php_sapi_name() != 'cli') {
 	$output_dir = "/var/www/sofadb/reports";
 	try {
 		$zip_file = sofa_case::write_full_report($db, $case_results, null, null,0,0,$output_dir);
-		echo date('Y-m-d H:i:s') . ": Report created at " . $zip_file . "\n";
+		$log->send_log("Report created at " . $zip_file);
 		exit();
 	}
 	catch (Exception $e) {
-		echo date('Y-m-d H:i:s') . ":" . $e->getMessage() . "\n";
+		$log->send_log($e->getMessage(),log::ERROR);
 		exit(1);
 	}
 
