@@ -39,7 +39,8 @@ if (isset($_POST['login'])) {
                                                 'created'=>time(),
                                                 'lastactivity'=>time(),
                                                 'timeout'=>time(),
-                                                'id'=>$member->get_id(),
+						'id'=>$member->get_id(),
+						'username'=>$member->get_uname(),
                                                 'ipaddress'=>$_SERVER['REMOTE_ADDR']
 				);
 				switch($member->get_permissionstatus()) {

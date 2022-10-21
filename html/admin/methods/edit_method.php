@@ -57,6 +57,7 @@ if(!isset($_POST['id'])) {
 if(isset($_POST['delete_method'])) {
 	$id = $_POST['id'];
 	$result = method::delete_method($db, $id);
+	$log->send_log("User: " . $session->get_var('username') . ": " . $result['MESSAGE']);
 	echo($result['MESSAGE']);
 	exit();
 
