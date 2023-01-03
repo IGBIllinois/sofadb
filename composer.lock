@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "33a5fe884b975772172cbcd4f0518106",
+    "content-hash": "0215969cd0ed162f93e5410283cb5551",
     "packages": [
         {
             "name": "amenadiel/jpgraph",
@@ -455,16 +455,16 @@
         },
         {
             "name": "igbillinois/igbillinois-php",
-            "version": "1.2.3",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/IGBIllinois/IGBIllinois-php.git",
-                "reference": "1edc8c91ce3750e62db7024d45d78bc976b9d82a"
+                "reference": "fa25c49ca925e34b9afa1b92d130c69fc8f3abbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IGBIllinois/IGBIllinois-php/zipball/1edc8c91ce3750e62db7024d45d78bc976b9d82a",
-                "reference": "1edc8c91ce3750e62db7024d45d78bc976b9d82a",
+                "url": "https://api.github.com/repos/IGBIllinois/IGBIllinois-php/zipball/fa25c49ca925e34b9afa1b92d130c69fc8f3abbe",
+                "reference": "fa25c49ca925e34b9afa1b92d130c69fc8f3abbe",
                 "shasum": ""
             },
             "require": {
@@ -504,10 +504,10 @@
                 "template"
             ],
             "support": {
-                "source": "https://github.com/IGBIllinois/IGBIllinois-php/tree/1.2.3",
+                "source": "https://github.com/IGBIllinois/IGBIllinois-php/tree/1.2.4",
                 "issues": "https://github.com/IGBIllinois/IGBIllinois-php/issues"
             },
-            "time": "2022-08-26T21:05:05+00:00"
+            "time": "2023-01-03T19:54:47+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -1830,16 +1830,16 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v5.4.16",
+            "version": "v5.4.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "a93e1863500940780fc1235f52d54397be2d14b3"
+                "reference": "58f2988128d2d278280781db037677a32cf720db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/a93e1863500940780fc1235f52d54397be2d14b3",
-                "reference": "a93e1863500940780fc1235f52d54397be2d14b3",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/58f2988128d2d278280781db037677a32cf720db",
+                "reference": "58f2988128d2d278280781db037677a32cf720db",
                 "shasum": ""
             },
             "require": {
@@ -1899,7 +1899,7 @@
             "description": "Allows you to standardize and centralize the way objects are constructed in your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/dependency-injection/tree/v5.4.16"
+                "source": "https://github.com/symfony/dependency-injection/tree/v5.4.17"
             },
             "funding": [
                 {
@@ -1915,7 +1915,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-11-25T07:33:13+00:00"
+            "time": "2022-12-28T13:55:51+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
