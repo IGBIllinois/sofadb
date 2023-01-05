@@ -13,7 +13,7 @@ if (isset($_POST['SendMessage'])) {
 	
 	if(!isset($_POST['captcha'])) {
 		$errors[] = ("Please enter captcha text.<BR>");
-		$session->unset_var("captcha_text");
+		$session->unset_session_var("captcha_text");
 	} 
 	else {
 		$captcha_text = $session->get_var("captcha_text");
@@ -24,7 +24,7 @@ if (isset($_POST['SendMessage'])) {
             
 		if ($captcha_text == $input) {
 			// Captcha matches, send email
-			$session->unset_var("captcha_text");
+			$session->unset_session_var("captcha_text");
 
 			if(!isset($_POST['emailentry']) || $_POST['emailentry'] == "") {
 				$errors[] = "You must enter your email address.";
@@ -81,7 +81,7 @@ if (isset($_POST['SendMessage'])) {
                		echo("<div class=error>");
 	                echo("Your captcha input doesn't match the text. The email has not been sent. Please try again.<BR>");
        		        echo("</div>");
-                	$session->unset_var("captcha_text");
+                	$session->unset_session_var("captcha_text");
 		}
 	}
 }

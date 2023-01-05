@@ -572,7 +572,6 @@ public static function add_member($db, $params) {
                 . ":signature,"
                 . ":signature_date"
             . ")";		
-
     $result = $db->insert_query($q, $params);
     if($result > 0) {
         return array("RESULT"=>TRUE,
