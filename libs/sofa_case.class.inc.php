@@ -1768,7 +1768,7 @@ public function submit_case($submitstatus) {
     
     private function load_case($id) {
         
-	    $query = "SELECT cases.*,region.name as caseregion,region.id as region_id from cases ";
+	    $query = "SELECT cases.*,region.name AS caseregion FROM cases ";
 	    $query .= "LEFT JOIN region ON region_id=cases.region_id ";
 	    $query .= "WHERE cases.id=  :id";
         $mresult = $this->db->query($query, array("id"=>$id));

@@ -60,6 +60,7 @@ if(isset($_POST['instructions'])) {
     $instructions = $_POST['instructions'];
 }
 
+$method_info_type = 0;
 if(isset($_POST['method_info_type'])) {
     $method_info_type = $_POST['method_info_type'];
 
