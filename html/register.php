@@ -1,20 +1,9 @@
 <?php
 $title = "Forensic Anthropology Case Database (FADAMA) - Register";
 
-require_once("include/main.inc.php");
-
-if(isset($session) && $session->get_var('loggedin') == 1) {
-	require_once("include/session.inc.php"); 
-}
-else {
-       session_start();
-}
-
+require_once(__DIR__ . "/include/main.inc.php");
 require_once(__DIR__ . "/include/header_general.php");
 
-if(isset($session) && $session->get_var('loggedin') == 1) {
-	echo "<div id='navigation'></div>";
-}
 
 ?>
 
