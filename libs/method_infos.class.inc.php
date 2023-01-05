@@ -112,7 +112,6 @@ class method_infos {
        $query = "SELECT reference_id from method_info_reference_list where method_infos_id=:mi_id";
        $params = array("mi_id"=>$this->get_id());
        $results = $this->db->query($query, $params);
-
        $return_result = array();
        foreach($results as $ref) {
            $ref = new reference($this->db, $ref['reference_id']);
@@ -569,7 +568,6 @@ class method_infos {
     * @return type HTML output for inputting data
     */
     public static function show_method_infos_select($db, $method_infos_id, $tier2id = null, $header = true, $multiple=true, $default_option = null) {
-
         $method_infos = new method_infos($db, $method_infos_id);
         $options = $method_infos->get_method_info_options();
 
@@ -700,7 +698,6 @@ class method_infos {
      * @return string HTML for inputting data for this method_infos object
      */
     public static function show_method_infos_select_each($db, $method_infos_id, $tier2id = null, $inner_table = true, $checkboxes = false) {
-
         $method_infos = new method_infos($db, $method_infos_id);
         $options = $method_infos->get_method_info_options();
         $output = "";
@@ -925,7 +922,6 @@ class method_infos {
     * @return string HTML for inputting data for this method_infos object
     */
     public static function show_method_info_3_col_with_ref($db, $method_id, $tier2id=null) {
-
         $output = "";
         //$method = new method($db, $method_id);
         $cat_input_type = input_type::get_input_type_by_name($db, USER_INTERACTION_CATEGORY);
@@ -988,8 +984,8 @@ class method_infos {
             $output .= $cat->get_name();
             $output .= "</td>";
             
-            
-            foreach($method_infos as $mi) {
+            $references = ""; 
+	    foreach($method_infos as $mi) {
                 $values = array();
                 $options = $mi->get_method_info_options();
                 
@@ -1001,34 +997,34 @@ class method_infos {
                 }
 
                 // Draw the third column data, a drop-down menu of options
-                $output .= "<td>".(functions::draw_select($values, $selected, false, " ")). "</td>";
+                $output .= "<td class='td_spaced'>".(functions::draw_select($values, $selected, false, " ")). "</td>";
 
                 // Draw references, if any,, as a checkbox-multiselect
-                $refs = $mi->get_references();
-                if(count($refs) > 0) {
+		$refs = $mi->get_references();
+		if(count($refs) > 0) {
+			$has_refs = true;
 
-                    $has_refs = true;
+			$ref_list= array();
+			foreach($refs as $ref) {
+				$ref_list[] = array($ref->get_id(), $ref->get_reference_name());
+			}
+			$selected_refs = array();
+			if(isset($tier2) && $tier2 != null) {
+				$sel_ref_list = $tier2->get_selected_references($mi->get_id());
+				foreach($sel_ref_list as $sel_ref) {
+					$selected_refs[] = $sel_ref->get_id();
+				}
 
-                    $ref_list= array();
-                    foreach($refs as $ref) {
-                        $ref_list[] = array($ref->get_id(), $ref->get_reference_name());
-                    }
-                    $selected_refs = array();
-                    if(isset($tier2) && $tier2 != null) {
-                        $sel_ref_list = $tier2->get_selected_references($mi->get_id());
+			}
+			else {
+        	                // No tier2 data given
+			}
 
-                        foreach($sel_ref_list as $sel_ref) {
-
-                            $selected_refs[] = $sel_ref->get_id();
-                        }
-
-                    } else {
-                        // No tier2 data given
-                    }
-
-                    $alt_text = "(Click to view selected references)";
-                    $references = functions::checkbox_dropdown($mi->get_id(), $mi->get_name(), $ref_list, $selected_refs, 'references', $alt_text);
-                } else {
+			$alt_text = "(Click to view selected references)";
+			$references = functions::checkbox_dropdown($mi->get_id(), $mi->get_name(), $ref_list, $selected_refs, 'references', $alt_text);
+		} 
+		else {
+			$references = "";
                     // No references found
 		}
 		if (isset($references)) {

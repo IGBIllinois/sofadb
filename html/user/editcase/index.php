@@ -2,7 +2,6 @@
 /**
  *  This page allows a user to edit an existing case of theirs
  */
-
 $title = "Forensic Anthropology Case Database (FADAMA) - Edit Case";
 require_once('../../include/header_user.php');
 ?>
@@ -222,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if(isset($_POST['references']) && ($_POST['references'] != null)) {
             // add references
 
-            $sel_refs = $_POST['references'];
+		$sel_refs = $_POST['references'];
             foreach($sel_refs as $id=>$ref_list) {
                 foreach($ref_list as $ref=>$ref_name) {
                     if($ref > 0) {                

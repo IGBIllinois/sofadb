@@ -44,8 +44,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Send email
 
-            $admin_email = settings::get_admin_email();
-            $to = $user_email;
+		$admin_email = settings::get_admin_email();
+		if (settings::get_debug()) {
+	                $to = settings::get_admin_email();
+
+        	}
+		else {
+            		$to = $user_email;
+		}
             $from = settings::get_from_email();
             $params = array("full_name"=>$full_name);
 		$emailer = new \IGBIllinois\email(settings::get_smtp_host(),
@@ -205,8 +211,7 @@ foreach($members as $member) {
 } 
 
 $total_members = count($all_members);
-
-echo "<p>Total membership: $total_members</p>";
+echo "<br><p>Total membership: $total_members</p>";
 $current_page = ($start/$pagerows) + 1;
 
 if ($current_page != 1) {
@@ -240,8 +245,7 @@ if ($pages > 1) {
 }
 ?>
 
-  </div>
-
+</div>
 </div>
 <?php
     require_once("../include/footer.php");

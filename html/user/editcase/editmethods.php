@@ -12,7 +12,6 @@ require_once('../../include/session.inc.php') ;
   <?php
 
 $casedata = null;
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Posted form
     

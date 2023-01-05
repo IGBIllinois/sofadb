@@ -329,7 +329,6 @@ class sofa_case {
                 }
 
                 if($caseid == 0) {
-                    print_r($data);
                     return array("RESULT"=>FALSE,
                             "MESSAGE"=>"<h2>System Error</h2>
 				<p class='error'>Saving failed because of a system error. We apologize for any inconvenience.</p>
