@@ -147,7 +147,7 @@ $method_info_types = method_info_type::get_method_info_types($db);
 foreach($method_info_types as $type) {
     $id = $type->get_id();
     $name = $type->get_method_info_type();
-    echo("<option value='".$name."' ".(($method_info_type_id == $id)?" selected ": "").">".$name."</option>");
+    echo("<option value='".$name."' ".(($method_info_type == $id)?" selected ": "").">".$name."</option>");
 }
 echo("</select>");
 echo(" <a href='methodFAQ.php' target='blank'>(More info on Method Info Types)</A>");

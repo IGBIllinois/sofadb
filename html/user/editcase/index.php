@@ -744,6 +744,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $regions_html = "";
 $regions = functions::get_regions($db);
+echo "region id " . $region_id;
 foreach ($regions as $region) {
         if ($region_id == $region['id']) {
                 $regions_html .= "<option value='" . $region['id'] . "' selected>" . $region['name'] . "</option>";

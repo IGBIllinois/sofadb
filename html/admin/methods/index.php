@@ -48,7 +48,7 @@ if (isset($_POST['s']) && is_numeric($_POST['s'])) {//already been calculated
 $current_page = ($start/$pagerows) + 1;
 echo("<div id='memberregion'> <h2 style='text-align:center'>List of methods</h2> ");
 
-echo("<a href='add_method.php'>Add new method</A><BR>");
+echo("<a href='add_method.php'><button>Add new method</button></A><BR>");
 echo("<BR><BR>");
 
 echo '<div class="scroll"><table id="hortable" summary="List of methods">

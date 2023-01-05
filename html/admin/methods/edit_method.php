@@ -28,7 +28,8 @@ $method_type_list = array(METHOD_DATA_SEX_ID=>METHOD_DATA_SEX,
     METHOD_DATA_STATURE_ID=>METHOD_DATA_STATURE);
 
 if(!isset($_POST['id'])) {
-    echo("Please enter a valid method.");
+	echo("Please enter a valid method.");
+	exit();
 } else {
         // showing form for first time
         $id = $_POST['id'];
