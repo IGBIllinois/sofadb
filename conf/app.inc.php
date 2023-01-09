@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-DEFINE('VERSION','1.5.1');
+DEFINE('VERSION','1.5.2');
 DEFINE('WEBSITE_URL','https://github.com/IGBIllinois/sofadb');
 DEFINE('REPORT_DIR','reports');
 DEFINE ("PAGEROWS", 20);
