@@ -1028,8 +1028,10 @@ public function submit_case($submitstatus) {
                     // No conjuction needed in query string yet
                 }
                 $param_string .= "( id in (SELECT caseid FROM `tier2data` where ($tmp_str) ".
-                        " group by caseid having count( caseid)=$num_methods and caseid not in (select id from cases where id in (SELECT caseid FROM `tier2data` group by caseid having (count(methodid) > count(distinct methodid))))))";
-            }
+			" group by caseid having count( caseid)=$num_methods and caseid not in (select id from cases where id in (SELECT caseid FROM `tier2data` group by caseid having (count(methodid) > count(distinct methodid))))))";
+		echo "<br>Temp string: " . $tmp_str;
+	    }
+		echo "<br>param string: " . $param_string;
         }
         
         if($param_string != "") {

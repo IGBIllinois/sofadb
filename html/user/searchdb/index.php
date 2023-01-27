@@ -3,6 +3,7 @@ $title = "Forensic Anthropology Case Database (FADAMA) - Search";
 require_once('../../include/header_user.php');
 require_once('../../include/session.inc.php') ;
 require_once(__DIR__ . "/exportdata.php"); 
+
 ?>
 
 <br/>
@@ -49,8 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['exportsubmit'])){//no
               "est_age"=>isset($_POST['est_age']) ? 1:0,
               "est_stat"=>isset($_POST['est_stat']) ? 1:0,
               "est_anc"=>isset($_POST['est_anc']) ? 1:0,
-              "conjunction"=>$_POST['andor'],
-              "method_conj"=>$_POST['method_conj'],
+	      "conjunction"=>$_POST['andor'],
+	      "method_conj"=>$_POST['method_conj'],
               "race_join"=>$_POST['race_join'],
               "prac_join"=>$_POST['prac_join'],
               "unsubmitted"=>isset($_POST['unsubmitted']) ? 1:0
@@ -295,10 +296,10 @@ if(!isset($fageid2)) $fageid2="";
       <input type="checkbox" name="est_anc" value="1" />Ancestry
        <input type="checkbox" name="est_stat" value="1" />Stature<br />
         
-        <BR><label class="label" for="searchtype">Search for cases that contain:</label>
+        <br><label class="label" for="searchtype">Search for cases that contain:</label>
         <select name="prac_join">
-	<option value="1">All Selected Estimations</option>
-	<option value="2">At Least One of Selected Estimations</option>
+		<option value="1">All Selected Estimations</option>
+		<option value="2">At Least One of Selected Estimations</option>
       </select> 
         <span class="tooltip"><img class="img-bottom" src="../../images/tooltip.png">
             <span class="tooltiptext">If you've selected multiple boxes for "Practitioner Estimated", then use the dropdown menu here to clarify your search. For example, if you selected Sex and Stature, clicking "All Selected Estimations" will only return cases where both sex AND stature were estimated. </span>
