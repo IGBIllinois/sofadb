@@ -7,7 +7,6 @@ $addcase = 1;
 $title = "Forensic Anthropology Case Database (FADAMA) -  Add Case";
 
 $region_id = 0;
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     $errors = array(); // Start an array to hold the errors
@@ -89,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     else {
         $faage2_test = trim($_POST['faage2']);
         if(is_numeric($faage2_test) && $faage2_test > MAXAGE) {
-            $errors[] = "Forensic Anthropology estimated age must be less than ".MAXAGE.".";
+            $errors[] = "Forensic Anthropology estimated age must be less than ".MAXAGE .".";
         } else {
             $faage2 = $faage2_test;
             $faageunits2 = trim($_POST['faageunits2']);
@@ -112,9 +111,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
         
-    if(isset($_POST['faage_notes'])) {
+    if (strlen($_POST['faage_notes']) > sofa_case::NOTES_MAX_LENGTH) {
+                $errors[] = "Age notes must be less than " . sofa_case::NOTES_MAX_LENGTH . ".";
+    }
+    elseif(isset($_POST['faage_notes'])) {
         $faage_notes = $_POST['faage_notes'];
-    } else {
+    }
+
+
+    else {
         $faage_notes = null;
     }
 	
@@ -160,9 +165,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    if(isset($_POST['idsex_notes'])) {
+    if (strlen($_POST['idsex_notes']) > sofa_case::NOTES_MAX_LENGTH) {
+                $errors[] = "Sex notes must be less than " . sofa_case::NOTES_MAX_LENGTH . ".";
+    }
+    elseif(isset($_POST['idsex_notes'])) {
         $idsex_notes = $_POST['idsex_notes'];
-    } else {
+    }
+
+    else {
         $idsex_notes = null;
     }
     
@@ -182,9 +192,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     
         
-    if(isset($_POST['idage_notes'])) {
+    if (strlen($_POST['idage_notes']) > sofa_case::NOTES_MAX_LENGTH) {
+		$errors[] = "ID Ages notes must be less than " . sofa_case::NOTES_MAX_LENGTH . ".";
+    }
+    elseif(isset($_POST['idage_notes'])) {
         $idage_notes = $_POST['idage_notes'];
-    } else {
+    }
+
+    else {
         $idage_notes = null;
     }
 
@@ -205,9 +220,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
     }
    
-    if(isset($_POST['idstature_notes'])) {
-        $idstature_notes = $_POST['idstature_notes'];
-    } else {
+    if (strlen($_POST['idstature_notes']) > sofa_case::NOTES_MAX_LENGTH) {
+                $errors[] = "Stature notes must be less than " . sofa_case::NOTES_MAX_LENGTH . ".";
+    }
+	elseif(isset($_POST['idstature_notes'])) {
+		$idstature_notes = $_POST['idstature_notes'];
+    }
+
+    else {
         $idstature_notes = null;
     }
     
@@ -620,12 +640,12 @@ above.</span>
         <option value="cm">cm</option>
         </select>
       <BR>
-      <label class="label" for="idstature_notes">Stature Notes</label><input id="faage" type="text" name="idstature_notes" size="30"  value="<?php if (isset($_POST['idstature_notes'])) echo $_POST['idstature_notes']; ?>"/>
+      <label class="label" for="idstature_notes">Stature Notes</label><input id="faage" type="text" name="idstature_notes" size="30"  value="<?php if (isset($_POST['idstature_notes'])) { echo $_POST['idstature_notes']; } ?>"/>
       
       <BR>
       <BR>
       
-      <label class="label" for="idsource">Information Source</label><input id="idsource" type="text" name="idsource" size="30" maxlength="60" value="<?php if (isset($_POST['idsource'])) echo $_POST['idsource']; ?>" />
+      <label class="label" for="idsource">Information Source</label><input id="idsource" type="text" name="idsource" size="30" maxlength="60" value="<?php if (isset($_POST['idsource'])) { echo $_POST['idsource']; } ?>" />
       
       </fieldset>
       <!-- Prior information -->

@@ -706,8 +706,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Error message:
                     echo '<h2>System Error</h2>
                     <p class="error">Registration failed because of a system error. We apologize for any inconvenience.</p>'; 
-                    // Debugging message:
-                    echo '<p>' . $db->errorInfo()[2] . '<br/><br/>Query: ' . $q . '</p>';
                     exit();
                 } else {
                     echo($result["MESSAGE"]);

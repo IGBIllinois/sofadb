@@ -155,7 +155,10 @@ class sofa_case {
     
     /** If this was a cold case, this is the original year of the case */
     private $orig_case_year;
-    
+
+    /** Notes max length */
+    public const NOTES_MAX_LENGTH = 255;
+
     // getters
     public function get_id() { return $this->id; }
     public function get_casename() { return $this->casename; }
@@ -331,8 +334,7 @@ class sofa_case {
                 if($caseid == 0) {
                     return array("RESULT"=>FALSE,
                             "MESSAGE"=>"<h2>System Error</h2>
-				<p class='error'>Saving failed because of a system error. We apologize for any inconvenience.</p>
-				<p> " . $db->errorInfo()[2] ."<br/><br/>Query: " . $q . "</p>"
+				<p class='error'>Saving failed because of a system error.</p>"
                         );
                 }
                 

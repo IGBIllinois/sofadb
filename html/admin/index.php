@@ -207,7 +207,6 @@ foreach($members as $member) {
 // Public message:
 	echo '<p class="error">The current record could not be retrieved. We apologize for any inconvenience.</p>';
 	// Debugging message:
-	echo '<p>' . $db->errorInfo[2]. '<br></p>';
 } 
 
 $total_members = count($all_members);
