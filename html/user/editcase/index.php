@@ -361,8 +361,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
             
     }
-    
-    if(isset($_POST['faage_notes'])) {
+
+    if (strlen($_POST['faage_notes']) > sofa_case::NOTES_MAX_LENGTH) {
+                $errors[] = "Age notes must be less than " . sofa_case::NOTES_MAX_LENGTH . ".";
+    }
+ 
+    elseif(isset($_POST['faage_notes'])) {
         $faage_notes = $_POST['faage_notes'];
     } else {
         $faage_notes = null;
@@ -419,8 +423,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $idsex = trim($_POST['idsexother']);
         }
     }
-    
-    if(isset($_POST['idsex_notes'])) {
+
+    if (strlen($_POST['idsex_notes']) > sofa_case::NOTES_MAX_LENGTH) {
+                $errors[] = "Sex notes must be less than " . sofa_case::NOTES_MAX_LENGTH . ".";
+    }
+ 
+    elseif(isset($_POST['idsex_notes'])) {
         $idsex_notes = $_POST['idsex_notes'];
     } else {
         $idsex_notes = null;
@@ -445,8 +453,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
     }
-    
-    if(isset($_POST['idage_notes'])) {
+
+    if (strlen($_POST['idsex_notes']) > sofa_case::NOTES_MAX_LENGTH) {
+                $errors[] = "Sex notes must be less than " . sofa_case::NOTES_MAX_LENGTH . ".";
+    } 
+    elseif(isset($_POST['idage_notes'])) {
         $idage_notes = $_POST['idage_notes'];
     } else {
         $idage_notes = null;
@@ -470,8 +481,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $idstatureunits = trim($_POST['idstatureunits']);
             }
     }
-    
-    if(isset($_POST['idstature_notes'])) {
+
+    if (strlen($_POST['idstature_notes']) > sofa_case::NOTES_MAX_LENGTH) {
+                $errors[] = "Stature notes must be less than " . sofa_case::NOTES_MAX_LENGTH . ".";
+    }
+ 
+    elseif(isset($_POST['idstature_notes'])) {
         $idstature_notes = $_POST['idstature_notes'];
     } else {
         $idstature_notes = null;
