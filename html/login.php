@@ -140,7 +140,7 @@ if (settings::get_debug()) {
 		<div id="password_input">
 			<div id="password_inputleft"></div>
 			<div id="password_inputmiddle">
-				<input type="password" name="psword" id="url" value="" onclick="this.value = ''" tabindex="2">
+				<input type="password" name="psword" id="url" placeholder="Password" value="" onclick="this.value = ''" tabindex="2">
 				<img id="url_password" src="./images/passicon.png" alt="">
 				
 			</div>

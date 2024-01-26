@@ -1,0 +1,2 @@
+#SofaDB Cron file
+0 11 * * * root source /etc/profile && php /var/www/sofadb/bin/create_report.php --output /var/www/sofadb/reports

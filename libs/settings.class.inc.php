@@ -4,8 +4,8 @@ class settings {
 
 	private const DEBUG = false;
 	private const TIMEZONE = "UTC";
-	private const SESSION_NAME = "PHPSESSID";
-	private const SESSION_TIME = 300;
+	private const SESSION_NAME = "sofadb";
+	private const SESSION_TIME = 7200;
 	private const DB_HOST = "localhost";
 	private const DB_PORT = 3306;
 	private const DB_SSL = false;
