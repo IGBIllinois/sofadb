@@ -87,7 +87,7 @@ require_once "../include/header_admin.php";
 <br>
     <form action="admin_reports.php" method="post" id="export" name='fdb_report'>
     Only get cases submitted after: (if left blank, all cases will be retrieved.)
-<input type="date" id="datesubmitted" name="datesubmitted">
+    <input type="date" id="datesubmitted" name="datesubmitted" min="2015-01-01" max="<?php echo date('Y-m-d'); ?>">
  
 <br/><p>Click here to export FDB report results to a CSV file
 <input name="fdb" type="hidden" value="1">
@@ -101,7 +101,7 @@ require_once "../include/header_admin.php";
 <br>
     <form action="admin_reports.php" method="post" id="export" name='admin_report'>
     Only get cases submitted after: (if left blank, all cases will be retrieved.)
-<input type="date" id="date" name="date">
+    <input type="date" id="date" name="date" min="2015-01-01" max="<?php echo date('Y-m-d'); ?>">
  
 <br/><p>Click here to export downloaded data report results to a CSV file
 <input name="fdb" type="hidden" value="1">
