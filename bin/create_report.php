@@ -57,8 +57,9 @@ if (php_sapi_name() != 'cli') {
 	$log->send_log("Creating Full Report",\IGBIllinois\log::NOTICE,$verbose);
 	$case_data = array();
         $method_list = array();
-        $unsubmitted = null;
-	$case_results = sofa_case::search_cases($db, $case_data, $method_list, $unsubmitted);
+	$unsubmitted = null;
+	$add_download = 0;
+	$case_results = sofa_case::search_cases($db, $case_data, $method_list, $unsubmitted,$add_download);
 	try {
 		$zip_file = sofa_case::write_full_report($db, $case_results, null, null,0,0,$output_dir);
 		$log->send_log("Report created at " . $zip_file,\IGBIllinois\log::NOTICE,$verbose);

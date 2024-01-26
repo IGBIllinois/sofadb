@@ -57,16 +57,18 @@ elseif (isset($_POST['exportsubmit'])) {
 			}
 		}
 	}
-	$name=$_POST['name'];
+	$name = $_POST['name'];
 	$email = $_POST['email'];
 	$unsubmitted = $_POST['unsubmitted'];
+	$add_download = 1;
 	$case_results = sofa_case::search_cases($db, $case_data, $method_list, $unsubmitted);
-	$zip_file = sofa_case::write_full_report($db, $case_results, $name, $email);
+	$zip_file = sofa_case::write_full_report($db, $case_results, $name, $email,$add_download);
 } 
 
 elseif (isset($_POST['exportall'])) {
-	$report_dir = settings::get_report_dir();
-	$zip_file = sofa_case::get_latest_full_report();
+	$name = $_POST['name'];
+	$email = $_POST['email'];
+	$zip_file = sofa_case::get_latest_full_report($db,$name,$email);
 }
 
 if (file_exists($zip_file)) {

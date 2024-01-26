@@ -30,6 +30,8 @@ $institution = null;
 // Region to search for
 $region = null;
 
+$num_members = -1;
+
 // Conjunction used in forming the query. "AND" for all items, "OR" for at least one
 $andor = " AND ";
 
@@ -135,7 +137,6 @@ foreach($found_members as $found_member) {
 
 } // End of if ($result). Now display the total number of records/members.
 
-echo "<p>Total number of search results: $num_members</p>";
 $current_page = ($start/$pagerows) + 1;
 if ($current_page != 1) {
    // Create a Previous Link
@@ -233,11 +234,17 @@ if(!isset($femail)) $femail="";
         
    <div id="registration_errorloc" class="errorlocation">
    </div>
-   
+   <br> 
 </fieldset>
 
 </form>
 
+<?php if ($num_members > -1) {
+
+	echo "<br>Total number of search results: " . $num_members . "</p>";
+}
+
+?>
 <div class="scroll"><table id="hortable" summary="List of members">
     <thead>
         <tr>

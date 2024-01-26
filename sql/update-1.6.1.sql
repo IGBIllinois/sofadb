@@ -1,0 +1,6 @@
+ALTER TABLE `methods` MODIFY active BOOLEAN DEFAULT 0;
+ALTER TABLE `methods` MODIFY prompt INT DEFAULT 0;
+UPDATE `methods` SET prompt=0 WHERE prompt IS NULL;
+ALTER TABLE `downloads` MODIFY name VARCHAR(100) DEFAULT "";
+ALTER TABLE `downloads` MODIFY email VARCHAR(100) DEFAULT "";
+DELETE FROM `downloads` WHERE name IS NULL;

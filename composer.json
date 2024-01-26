@@ -18,7 +18,7 @@
 		"components/jqueryui": "1.12.1",
 		"twig/twig":"3.4.3",
 		"components/font-awesome": "6.1.1",
-		"igbillinois/igbillinois-php": "dev-main",
+		"igbillinois/igbillinois-php": "1.4.0",
 		"phpmd/phpmd": "^2.13"
 	},
 	"scripts": {

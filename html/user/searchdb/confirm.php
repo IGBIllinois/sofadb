@@ -16,9 +16,8 @@ if(isset($_POST['exportsubmit'])) {
 } else if (isset($_POST['exportMy'])) {
     // export only user's cases
     $submitid = "exportMy";
-} else {
-    
 }
+    
 
 if(isset($_POST['submit_consent'])) {
     // Check that all terms have been agreed to
@@ -73,8 +72,8 @@ require_once('../../include/header_user.php');
 
 <?php
 // Re-add the POST search variables to this form
-foreach($_POST as $name=>$value) {
-    echo("<input type=hidden name=$name value='$value'>");
+foreach($_POST as $key=>$value) {
+    echo("<input type=hidden name='" .$key . "' value='" . $value . "'>");
 }
 
 ?>

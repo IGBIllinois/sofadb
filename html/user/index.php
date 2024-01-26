@@ -96,7 +96,12 @@ if ($num_cases) {
 		$case_html .= "<td>" . htmlentities($case->get_casenumber()) . "</td>";
 		$case_html .= "<td>" . htmlentities($case->get_caseagency()) . "</td>";
 		$case_html .= "<td>" . htmlentities($case->get_datemodified()) . "</td>";
-		$case_html .= "<td>" . htmlentities($case->get_datesubmitted()) . "</td>";
+		if ($case->get_datesubmitted() != null) {
+			$case_html .= "<td>" . htmlentities($case->get_datesubmitted()) . "</td>";
+		}
+		else {
+			$case_html .= "<td>&nbsp;</td>";
+		}
 		$case_html .= "</tr>";
 	}
 }

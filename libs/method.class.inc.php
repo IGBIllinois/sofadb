@@ -192,7 +192,6 @@ class method {
      * @param int $prompt_id ID of the prompt to use (from the 'prompts' table. Defaults to null
      * @param bool $fdb Whether or not this method is included in FDB reports. Defaults to false
      * @param bool $top Whether or not this method should be displayed at the top (Defaults to false)
-     * $param bool $active Whether or not the method is active. Defaults to 0 when adding a new method.
      * @return array
      */
     public static function create_method(
@@ -203,10 +202,10 @@ class method {
             $description,
             $instructions, 
             $method_info_type,
-            $prompt_id = null,
             $fdb,
             $top,
-            $active = 0) {
+    		$prompt_id = 0
+    	) {
         
         $check_query = "SELECT id from methods where methodname=:name and methodtypenum=:typenum";
         $check_params = array("name"=>$name, "typenum"=>$type_num);
@@ -229,8 +228,7 @@ class method {
                 " methodinfotype,".    
                 " prompt,".
                 " fdb, ".
-                " top, ".
-                " active)".
+                " top ) ".
             " VALUES (".
                ":methodname, ".
                ":methodtypenum, ".
@@ -240,15 +238,13 @@ class method {
                ":methodinfotype,".
                ":prompt, ".
                ":fdb, ".
-               ":top, ".
-               ":active) ";
+               ":top) ";
         $params = array("methodname"=>$name,
                         "methodtypenum"=>$type_num,
                         "measurementtype"=>$measurement_type,
                         "description"=>$description,
                         "instructions"=>$instructions,
                         "methodinfotype"=>$method_info_type,
-                        "active"=>$active,
                         "fdb"=>$fdb,
                         "top"=>$top,
                         "prompt"=>$prompt_id);

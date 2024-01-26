@@ -1054,7 +1054,7 @@ public function submit_case($submitstatus) {
 
     }
 
-	public static function get_latest_full_report() {
+	public static function get_latest_full_report($db,$name,$email) {
 		$latest_ctime = 0;
 		$latest_filename = '';
 		$files = glob(settings::get_report_dir() . "/SOFADBExport_*.zip");
@@ -1067,10 +1067,18 @@ public function submit_case($submitstatus) {
 
 
 		}
+		try {
+			self::add_download($db,$name,$email);
+		}
+		catch (\PDOException $e) {
+
+			echo $e->getMessage();
+		}
+
 		return $latest_filename;
 	}
 
-    public static function write_full_report($db,$case_list,$username=null,$email=null,$fdb=0,$mine=0,$output_dir = null) {
+    public static function write_full_report($db,$case_list,$username=null,$email=null,$fdb=0,$mine=0,$output_dir = null,$add_download = 1) {
 		$today = date("m_d_Y_H_i_s");
 
 		// Zip filename
@@ -1116,19 +1124,41 @@ public function submit_case($submitstatus) {
 			$output_filepath = $output_dir . "/" . $zip_filename;
 			rename($zip_filepath,$output_filepath);
 		}
-		if(!$fdb) {
-	    
-			// Add record of download request to database
-			$download_query = "INSERT INTO downloads (name, email, date) VALUES (:name, :email, NOW())";
-			$download_params = array("name"=>$username,
-                                    "email"=>$email);
-			$db->insert_query($download_query, $download_params);
+		if(!$fdb && $add_download) {
+			try {
+				self::add_download($db,$username,$email);
+			}
+			catch (\PDOException $e) {
+				echo $e->getMessage();
+			}
 		} 
 
 		return $output_filepath;
 	
     }
 
+    /** Adds Downloads to downloads table
+     *
+     * @param db $db The database object
+     * @param string $name Person Name
+     * @param string $email Email of Person
+     * @return int insert id from database, 0 otherwise
+     */
+    private static function add_download($db,$name,$email) {
+	$sql = "INSERT INTO downloads (name, email) VALUES (:name, :email)";
+	$parameters = array("name"=>$name,
+		"email"=>$email);
+	try {
+		$insert_id = $db->insert_query($sql, $parameters);
+	}
+	catch (\PDOException $e) {
+		throw $e;
+		return 0;
+	}
+	return $insert_id;
+
+
+    }
     /** Creates a zip file containing an excel sheet with data from the given cases
      * and an additional information text document.
      * 

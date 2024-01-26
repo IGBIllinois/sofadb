@@ -50,7 +50,7 @@ mysql -u root -p sofadb < sql/prompts.sql
 
 7.  Run composer to install php dependencies
 
-```composer install```
+```composer install --no-dev```
  
 8. Default username is "admin@admin.com" with password 'password'
 * After logging in, change your password

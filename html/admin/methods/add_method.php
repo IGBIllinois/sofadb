@@ -26,7 +26,7 @@ $description = null;
 $instructions = null;
 
 // Method prompt
-$prompt = null;
+$prompt = 0;
 
 $method_type_list = array(METHOD_DATA_SEX_ID=>METHOD_DATA_SEX, 
     METHOD_DATA_AGE_ID=>METHOD_DATA_AGE,
@@ -86,7 +86,7 @@ if(isset($_POST['add_method_submit'])) {
     // Add a new method
     
     if(count($errors) == 0) {
-        $result = method::create_method($db, $name, $type_id, $measurement_type, $description, $instructions, $method_info_type, $prompt, $fdb, $top);
+        $result = method::create_method($db, $name, $type_id, $measurement_type, $description, $instructions, $method_info_type, $fdb, $top,$prompt);
 	
 	if($result['RESULT'] == TRUE) {
 		$log->send_log("Username: " . $session->get_var('username') . ": " . $result['MESSAGE']);

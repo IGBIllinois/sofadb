@@ -82,7 +82,7 @@ require_once "../include/header_admin.php";
      }
  }
 
-echo <<<_END
+?>
 <fieldset style="border: solid 1px #000000;overflow: hidden;" class="roundedborder"><legend class="boldlegend">FDB Report</legend>
 <br>
     <form action="admin_reports.php" method="post" id="export" name='fdb_report'>
@@ -111,6 +111,7 @@ echo <<<_END
    </form>'
  </fieldset>
 
-_END;
- 
+<?php 
 require_once "../include/footer.php";
+
+?>

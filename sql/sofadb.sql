@@ -69,8 +69,8 @@ CREATE TABLE `cases` (
 
 CREATE TABLE `downloads` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
+  `name` varchar(100) DEFAULT '',
+  `email` varchar(100) DEFAULT '',
   `date` timestamp NOT NULL DEFAULT current_timestamp(),
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -121,8 +121,8 @@ CREATE TABLE `methods` (
   `description` varchar(100) DEFAULT NULL,
   `instructions` varchar(100) DEFAULT NULL,
   `methodinfotype` varchar(100) DEFAULT NULL,
-  `prompt` int(10) unsigned DEFAULT NULL,
-  `active` tinyint(1) DEFAULT NULL,
+  `prompt` INT DEFAULT 0,
+  `active` tinyint(1) DEFAULT 0,
   `top` tinyint(1) DEFAULT NULL,
   `fdb` tinyint(1) DEFAULT NULL,
   `time_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
