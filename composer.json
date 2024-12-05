@@ -16,10 +16,9 @@
 		"ext-zip": "*",
 		"components/jquery": "3.4.1",
 		"components/jqueryui": "1.12.1",
-		"twig/twig":"3.14.0",
+		"twig/twig":"v3.14.2",
 		"components/font-awesome": "6.1.1",
-		"igbillinois/igbillinois-php": "1.4.1",
-		"phpmd/phpmd": "^2.13"
+		"igbillinois/igbillinois-php": "1.4.3"
 	},
 	"scripts": {
 		"post-update-cmd": [
@@ -30,6 +29,8 @@
 
 
 		]
+	},
+	"require-dev": {
+		"phpmd/phpmd": "^2.13"
 	}
-
 }
