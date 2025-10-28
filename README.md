@@ -26,20 +26,25 @@ Alias /sofadb /var/www/sofadb/html
 	Require all granted
 </Directory>
 ```
+3.  Edit /etc/httpd/conf.modules.d/00-proxy.conf
+```
+Timeout 1200
+ProxyTimeout 1200
+```
 
-3.  Create the database and a user/password on the mysql server which has select/insert/delete/update permissions on the database.
+4.  Create the database and a user/password on the mysql server which has select/insert/delete/update permissions on the database.
 ```
 CREATE DATABASE sofadb;
 CREATE USER 'sofadb'@'localhost' IDENTIFIED BY 'STRONG_PASSWORD';
 GRANT SELECT,INSERT,DELETE,UPDATE ON sofadb.* to 'sofadb'@'localhost';
 ```
 
-4.  Run sql/sofadb.sql on the mysql server.
+5.  Run sql/sofadb.sql on the mysql server.
 
 ```mysql -u root -p sofadb < sql/sofadb.sql```
 
 
-5. Run the additional .sql files to populate the information databases
+6. Run the additional .sql files to populate the information databases
 ```
 mysql -u root -p sofadb < sql/methods.sql
 mysql -u root -p sofadb < sql/method_infos.sql
@@ -49,7 +54,7 @@ mysql -u root -p sofadb < sql/method_info_reference_list.sql
 mysql -u root -p sofadb < sql/prompts.sql
 ```
 
-6.  Edit /conf/settings.inc.php to reflect your settings.
+7.  Edit /conf/settings.inc.php to reflect your settings.
 ```
 DEFINE ('DB_USER', '');
 DEFINE ('DB_PASSWORD', '');
@@ -73,18 +78,18 @@ DEFINE("DEBUG",false);
 DEFINE("ENABLE_LOG",false);
 DEFINE("LOG_FILE","");
 ```
-7.  Run composer to install php dependencies
+8.  Run composer to install php dependencies
 
 ```composer install --no-dev```
  
-8. Default username is "admin@admin.com" with password 'password'
+9. Default username is "admin@admin.com" with password 'password'
 * After logging in, change your password
 
-9. If logging is enabled.  Copy conf/log_rotate.conf.dist to /etc/logrotate.d/sofadb and edit the log file path
+10. If logging is enabled.  Copy conf/log_rotate.conf.dist to /etc/logrotate.d/sofadb and edit the log file path
 ```
 cp conf/log_rotate.conf.dist /etc/logrotate.d/sofadb
 ```
-10. Copy conf/cron.dist to /etc/cron.d/sofadb.  This creates the full reports each night
+11. Copy conf/cron.dist to /etc/cron.d/sofadb.  This creates the full reports each night
 ```
 cp conf/cron.dist /etc/cron.d/sofadb
 ```
