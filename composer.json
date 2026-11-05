@@ -16,7 +16,7 @@
 		"ext-zip": "*",
 		"components/jquery": "v3.7.1",
 		"components/jqueryui": "1.12.1",
-		"twig/twig":"v3.14.2",
+		"twig/twig":"v3.27.0",
 		"components/font-awesome": "6.1.1",
 		"igbillinois/igbillinois-php": "1.4.6"
 	},
